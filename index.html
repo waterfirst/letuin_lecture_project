@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>렛유인 AI 강의 - Fine Tech Engineering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .card .label {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .card .tech-stack {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card .tech-tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        }
+
+        .project-card h3 {
+            color: #d63031;
+        }
+
+        .project-card .label {
+            background: #d63031;
+        }
+
+        .level-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .level-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .level-beginner {
+            background: #D1F2EB;
+            color: #16A085;
+        }
+
+        .level-intermediate {
+            background: #FFF3CD;
+            color: #F39C12;
+        }
+
+        .level-advanced {
+            background: #F8D7DA;
+            color: #C0392B;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            padding: 2rem;
+            opacity: 0.9;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .github-link:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 렛유인 AI 강의</h1>
+            <p>Fine Tech Engineering - 비전공자를 위한 AI 실무 적용 교육</p>
+        </div>
+
+        <div class="section">
+            <h2>📚 Lectures (11-17)</h2>
+            <div class="cards-grid">
+                <a href="./lecture_11/index.html" class="card">
+                    <span class="label">Lecture 11</span>
+                    <h3>AI 프롬프트 기초</h3>
+                    <p>AI의 정의와 의도 기반 프롬프트 작성법. Before → Prompt → After 패턴 학습.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Gemini API</span>
+                        <span class="tech-tag">프롬프트 엔지니어링</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_12/index.html" class="card">
+                    <span class="label">Lecture 12</span>
+                    <h3>Python 기초</h3>
+                    <p>Python 기본 문법과 pandas, plotly를 활용한 데이터 처리 및 시각화 실습.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">pandas</span>
+                        <span class="tech-tag">plotly</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_13/index.html" class="card">
+                    <span class="label">Lecture 13</span>
+                    <h3>데이터 분석 자동화</h3>
+                    <p>CSV 자동 분석, Gemini AI 인사이트 추출, Streamlit 대시보드 구축.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">pandas</span>
+                        <span class="tech-tag">Gemini API</span>
+                        <span class="tech-tag">Streamlit</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_14/index.html" class="card">
+                    <span class="label">Lecture 14</span>
+                    <h3>이미지 분석 자동화</h3>
+                    <p>Gemini Vision API로 이미지 자동 분류 및 불량 판정 시스템 구축.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Gemini Vision</span>
+                        <span class="tech-tag">PIL</span>
+                        <span class="tech-tag">asyncio</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_15/index.html" class="card">
+                    <span class="label">Lecture 15</span>
+                    <h3>센서 데이터 예측</h3>
+                    <p>Prophet 시계열 예측과 Isolation Forest 이상 탐지, Multi-channel 알림 시스템.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Prophet</span>
+                        <span class="tech-tag">scikit-learn</span>
+                        <span class="tech-tag">Slack API</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_16/index.html" class="card">
+                    <span class="label">Lecture 16</span>
+                    <h3>통합 대시보드</h3>
+                    <p>Streamlit Multi-page로 데이터 분석, 이미지 검사, 센서 예측 통합 대시보드.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Streamlit</span>
+                        <span class="tech-tag">Multi-page</span>
+                        <span class="tech-tag">GitHub Pages</span>
+                    </div>
+                </a>
+
+                <a href="./lecture_17/index.html" class="card">
+                    <span class="label">Lecture 17</span>
+                    <h3>기술 면접 & 피칭</h3>
+                    <p>STAR 기법, 3분 프로젝트 피칭 템플릿, 예상 질문 TOP 10 & 답변 전략.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">면접 준비</span>
+                        <span class="tech-tag">STAR 기법</span>
+                        <span class="tech-tag">피칭 스킬</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Projects (1-3)</h2>
+            <div class="cards-grid">
+                <a href="./project_01/index.html" class="card project-card">
+                    <span class="label">Project 01</span>
+                    <h3>데이터 분석 자동화</h3>
+                    <p>CSV 파일 분석부터 FastAPI + Prophet ML까지 3단계 프로그레시브 학습.</p>
+                    <div class="level-badges">
+                        <span class="level-badge level-beginner">초급</span>
+                        <span class="level-badge level-intermediate">중급</span>
+                        <span class="level-badge level-advanced">고급</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">pandas</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">Prophet</span>
+                        <span class="tech-tag">Docker</span>
+                    </div>
+                </a>
+
+                <a href="./project_02/index.html" class="card project-card">
+                    <span class="label">Project 02</span>
+                    <h3>이미지 분석 & 비전 AI</h3>
+                    <p>단일 이미지 분류부터 실시간 영상 분석 + PyTorch 파인튜닝까지.</p>
+                    <div class="level-badges">
+                        <span class="level-badge level-beginner">초급</span>
+                        <span class="level-badge level-intermediate">중급</span>
+                        <span class="level-badge level-advanced">고급</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Gemini Vision</span>
+                        <span class="tech-tag">OpenCV</span>
+                        <span class="tech-tag">PyTorch</span>
+                        <span class="tech-tag">FastAPI</span>
+                    </div>
+                </a>
+
+                <a href="./project_03/index.html" class="card project-card">
+                    <span class="label">Project 03</span>
+                    <h3>실시간 대시보드 & 배포</h3>
+                    <p>로컬 Streamlit 대시보드부터 Docker + CI/CD + 클라우드 배포까지.</p>
+                    <div class="level-badges">
+                        <span class="level-badge level-beginner">초급</span>
+                        <span class="level-badge level-intermediate">중급</span>
+                        <span class="level-badge level-advanced">고급</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Streamlit</span>
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">GitHub Actions</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>© 2026 LettUin Edu | Fine Tech Engineering AI Education</strong></p>
+            <p>반도체 · 디스플레이 · 배터리 · 바이오 분야 엔지니어를 위한 AI 실무 교육</p>
+            <a href="https://github.com/waterfirst/letuin_lecture_project" class="github-link" target="_blank">
+                📦 GitHub Repository
+            </a>
+        </div>
+    </div>
+</body>
+</html>
