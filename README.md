@@ -1,260 +1,503 @@
-# 🖥️ 디스플레이 취업준비생을 위한 AI 바이브 코딩 실전 강의
+# 🎓 렛유인 AI 강의 - Fine Tech Engineering (Lectures 11-17 & Projects 1-3)
 
-> **"코드 한 줄 없이 AI로 실제 앱을 만든다"**
+**비전공자를 위한 AI 실무 적용 교육 프로그램**
 
-[![강의 상태](https://img.shields.io/badge/상태-준비중-yellow)](.)
-[![총 강의](https://img.shields.io/badge/총%20강의-20강-blue)](.)
-[![강의시간](https://img.shields.io/badge/총%20시간-약%208.5시간-green)](.)
-[![Claude Pro](https://img.shields.io/badge/Claude%20Pro-1개월%20제공-orange)](.)
+반도체, 디스플레이, 배터리, 바이오 분야 엔지니어를 위한 실전 AI 강의와 프로젝트 시리즈입니다.
 
 ---
 
-## 강의 철학
+## 📚 강의 구성
 
-- **직접 코딩하지 않는다.** AI와 대화하며 설계하고 배포한다.
-- **이론은 "왜?"** 를 이해하기 위해, **실습은 직접 만들어본다.**
-- **Claude Pro 1개월 제공** — 마음껏 쓰고, 마음껏 실험한다.
-- **재미있어야 배운다.** 지루한 강의는 없다.
-
----
-
-## 🎓 수강 대상
-
-### 주 대상
-- 디스플레이 관련 학과 대학교 3~4학년
-- 취업준비생 (디스플레이 업계 지망)
-
-### 확대 대상
-- 디스플레이 업계 재직자
-- 이직 준비생
+### Lecture 11-17: AI 실무 적용 강의
+### Project 1-3: 단계별 실습 프로젝트 (초급 → 중급 → 고급)
 
 ---
 
 ## 🎯 강의 목표
 
-1. **코드 없이 AI(Claude·Gemini)로 실제 배포 앱 제작**
-2. **GitHub 포트폴리오 완성**
-3. **디스플레이 도메인(공정·수율·소재) × AI 개발 접목**
-4. **배포 플랫폼 다양한 경험 (Streamlit Cloud, GitHub Pages 등)**
+- **AI 도구 활용**: Gemini API, ChatGPT, Claude를 업무에 즉시 적용
+- **데이터 자동화**: pandas, plotly, Streamlit으로 반복 업무 제거
+- **이미지 분석**: Gemini Vision API와 OpenCV로 비전 AI 구축
+- **실시간 대시보드**: Streamlit으로 웹 대시보드 개발 및 클라우드 배포
+- **포트폴리오 구축**: GitHub 공개 프로젝트로 취업 경쟁력 강화
 
 ---
 
-## 📋 목차
+## 📖 강의 시리즈 (Lecture 11-17)
 
-| 구분 | 내용 | 링크 |
-|------|------|------|
-| 📋 KDC 강의계획서 | 렛유인 제출용 공식 강의계획서 (xlsx) | [렛유인_KDC_강의계획서.xlsx](docs/렛유인_KDC_강의계획서.xlsx) |
-| 📝 사전 테스트 | 필수 26문항 + 보너스 9문항 | [pre_test.md](docs/pre_test.md) |
-| 📚 강사용 타임테이블 | 강의별 시간 배분 & 체크리스트 | [full_course_plan.md](docs/full_course_plan.md) |
-| 🎯 프로젝트 1 | 소개 웹페이지 (상/중/하) | [project1/](projects/project1/README.md) |
-| 🎯 프로젝트 2 | 공정 시뮬레이터 (상/중/하) | [project2/](projects/project2/README.md) |
-| 🎯 프로젝트 3 | AI 디스플레이 도구 (상/중/하) | [project3/](projects/project3/README.md) |
-| 📦 강의 슬라이드 | Quarto RevealJS 강의록 (1~16강) | [lectures/](lectures/) |
-| 📎 참고 자료 | 치트시트, 링크 모음 | [resources/cheatsheets.md](resources/cheatsheets.md) |
+### 📌 Lecture 11: AI란 무엇인가? (AI 프롬프트 기초)
 
-### 📑 강의별 슬라이드 (Quarto RevealJS)
+**핵심 개념**
+- AI의 정의와 기본 동작 원리
+- 의도 기반 프롬프트 작성법
+- Before → Prompt → After 패턴
 
-| 강 | 제목 | 슬라이드 |
-|----|------|---------|
-| 1강 | 바이브 코딩 입문 | [lecture_01.qmd](lectures/lecture_01.qmd) |
-| 2강 | AI 도구 최적화 | [lecture_02.qmd](lectures/lecture_02.qmd) |
-| 3강 | AI 명령의 기술 | [lecture_03.qmd](lectures/lecture_03.qmd) |
-| 4강 | Claude Code 구축 | [lecture_04.qmd](lectures/lecture_04.qmd) |
-| 5강 | 커리어 웹 구축 | [lecture_05.qmd](lectures/lecture_05.qmd) |
-| 6강 | 웹 서비스 배포 | [lecture_06.qmd](lectures/lecture_06.qmd) |
-| 7강 | 문서 자동화 기술 | [lecture_07.qmd](lectures/lecture_07.qmd) |
-| 8강 | 데이터 시각화 기초 | [lecture_08.qmd](lectures/lecture_08.qmd) |
-| 9강 | Streamlit 서비스 | [lecture_09.qmd](lectures/lecture_09.qmd) |
-| 10강 | [미션 1] 스펙 도구 | [lecture_10.qmd](lectures/lecture_10.qmd) |
-| 11강 | API 통합 연동 | [lecture_11.qmd](lectures/lecture_11.qmd) |
-| 12강 | 전공 지식 챗봇 | [lecture_12.qmd](lectures/lecture_12.qmd) |
-| 13강 | 픽셀 구조 시각화 | [lecture_13.qmd](lectures/lecture_13.qmd) |
-| 14강 | 수율 시뮬레이터 | [lecture_14.qmd](lectures/lecture_14.qmd) |
-| 15강 | 전문 배포 전략 | [lecture_15.qmd](lectures/lecture_15.qmd) |
-| 16강 | 보안 및 환경 관리 | [lecture_16.qmd](lectures/lecture_16.qmd) |
-| 17강 | 메시징 자동화 | [lecture_17.qmd](lectures/lecture_17.qmd) |
-| 18강 | [미션 2] 감시 시스템 | [lecture_18.qmd](lectures/lecture_18.qmd) |
-| 19강 ⏱️60분 | [최종] 솔루션 개발 | [lecture_19.qmd](lectures/lecture_19.qmd) |
-| 20강 | 취업 및 커리어 전략 | [lecture_20.qmd](lectures/lecture_20.qmd) |
+**주요 기술**
+- Gemini API
+- 프롬프트 엔지니어링
+- 의도 기반 명령어 작성
 
-> **렌더링 방법**: `quarto render lectures/lecture_01.qmd` → HTML 슬라이드 생성
+**학습 결과물**
+- 효과적인 프롬프트 템플릿
+- 업무별 프롬프트 사례집
+
+**적용 분야**
+- 반도체 공정 데이터 분석
+- 디스플레이 불량 패턴 해석
+- 배터리 수명 예측
+- 바이오 실험 결과 분석
 
 ---
 
-## 🔥 이 강의에서 배우는 것들
+### 📌 Lecture 12: Python 기초 (실전 자동화)
+
+**핵심 개념**
+- Python 기본 문법 (변수, 조건문, 반복문, 함수)
+- pandas로 CSV 데이터 처리
+- plotly로 인터랙티브 차트 생성
+
+**주요 기술**
+- Python 3.10+
+- pandas (데이터 처리)
+- plotly (시각화)
+
+**학습 결과물**
+- CSV 자동 분석 스크립트
+- 추세 그래프 자동 생성
+
+**실습 예제**
+```python
+import pandas as pd
+import plotly.express as px
+
+# CSV 로드
+df = pd.read_csv('fab_yield.csv')
+
+# 통계 계산
+avg_yield = df.groupby('Line')['Yield'].mean()
+
+# 차트 생성
+fig = px.line(df, x='Date', y='Yield', color='Line')
+fig.show()
+```
+
+---
+
+### 📌 Lecture 13: 데이터 분석 자동화 & AI 인사이트
+
+**핵심 개념**
+- pandas로 CSV 자동 분석
+- Gemini API로 AI 인사이트 추출
+- Streamlit으로 대시보드 자동 생성
+
+**주요 기술**
+- pandas (데이터 처리)
+- Gemini API (인사이트 생성)
+- Streamlit (대시보드)
+- plotly (시각화)
+
+**학습 결과물**
+- CSV 업로드 → 자동 분석 → AI 인사이트
+- 인터랙티브 대시보드 (Streamlit)
+
+**Deep Dive 섹션**
+1. Excel 수동 분석 → pandas 자동화
+2. 단순 차트 → Gemini AI 인사이트
+3. 정적 그래프 → Streamlit 대시보드
+
+---
+
+### 📌 Lecture 14: 이미지 분석 자동화 (Gemini Vision API)
+
+**핵심 개념**
+- Gemini Vision API로 이미지 자동 분류
+- PIL로 이미지 전처리
+- asyncio로 배치 처리
+
+**주요 기술**
+- Gemini Vision API
+- PIL (Pillow)
+- asyncio (병렬 처리)
+- SQLite (결과 저장)
+
+**학습 결과물**
+- 단일 이미지 불량 판정
+- 수백 장 이미지 배치 분석
+- 불량 유형별 통계 리포트
+
+**적용 사례**
+- Wafer 표면 결함 검사 (반도체)
+- Panel 불량 자동 검출 (디스플레이)
+- 전극 코팅 불량 검사 (배터리)
+- 세포 이미지 분석 (바이오)
+
+---
+
+### 📌 Lecture 15: 센서 데이터 예측 & 알림 시스템
+
+**핵심 개념**
+- Prophet으로 시계열 예측
+- Isolation Forest로 이상 탐지
+- Multi-channel 알림 (이메일, Slack, SMS)
+
+**주요 기술**
+- Prophet (시계열 예측)
+- scikit-learn (Isolation Forest)
+- smtplib (이메일)
+- slack-sdk (Slack)
+- twilio (SMS)
+
+**학습 결과물**
+- 센서 데이터 미래 예측
+- 이상 패턴 자동 감지
+- 실시간 알림 발송
+
+**Deep Dive 섹션**
+1. 수동 모니터링 → Prophet 자동 예측
+2. 단순 임계값 → ML 이상 탐지
+3. 이메일 수동 → Multi-channel 자동 알림
+
+---
+
+### 📌 Lecture 16: 통합 대시보드 & 포트폴리오
+
+**핵심 개념**
+- Streamlit Multi-page 구조
+- 데이터 분석 + 이미지 검사 + 센서 예측 통합
+- GitHub Pages 배포
+
+**주요 기술**
+- Streamlit (Multi-page)
+- pandas, plotly, Gemini API
+- GitHub Pages / Streamlit Cloud
+
+**학습 결과물**
+- 통합 분석 대시보드
+- 공개 웹 URL
+- GitHub 포트폴리오
+
+**통합 기능**
+- 📊 데이터 분석: CSV 자동 분석 + AI 인사이트
+- 🖼️ 이미지 검사: Gemini Vision 불량 판정
+- 📈 센서 예측: Prophet 시계열 예측 + 알림
+
+---
+
+### 📌 Lecture 17: 기술 면접 & 프로젝트 피칭
+
+**핵심 개념**
+- STAR 기법 (Situation, Task, Action, Result)
+- 3분 프로젝트 피칭 템플릿
+- 예상 질문 TOP 10 & 답변 전략
+
+**주요 내용**
+- 기술 면접 준비 (Python, AI, 데이터 분석)
+- 행동 면접 대응 (STAR 기법)
+- 프로젝트 발표 스킬 (3분 피치)
+
+**면접 준비 자료**
+- Python 기술 질문 TOP 10
+- AI/ML 개념 질문 TOP 10
+- 프로젝트 시연 체크리스트
+
+**Deep Dive 섹션**
+1. 기술 면접 대응 전략
+2. 프로젝트 프레젠테이션 스킬
+3. 행동 면접 STAR 기법
+
+---
+
+## 🚀 실습 프로젝트 (Project 1-3)
+
+### 📦 Project 01: 데이터 분석 자동화
+
+**3단계 프로그레시브 학습**
+
+#### Level 1 (초급) - 2-3시간
+- CSV 파일 기본 분석
+- pandas + plotly 자동 차트
+- Gemini API로 인사이트 추출
+
+**기술 스택**: pandas, plotly, Gemini API
+
+**결과물**: CSV → 자동 분석 → AI 리포트
+
+#### Level 2 (중급) - 1주
+- 다중 파일 배치 처리
+- SQLite 데이터베이스 저장
+- 통합 리포트 자동 생성
+
+**기술 스택**: asyncio, SQLite, pandas, plotly
+
+**결과물**: 배치 처리 자동화 시스템
+
+#### Level 3 (고급) - 2-3주
+- 실시간 데이터 파이프라인
+- FastAPI REST API
+- Prophet ML 예측
+- Docker 배포
+
+**기술 스택**: FastAPI, Prophet, Docker, GitHub Actions
+
+**결과물**: 클라우드 배포 API 시스템
+
+---
+
+### 📦 Project 02: 이미지 분석 & 비전 AI
+
+**3단계 프로그레시브 학습**
+
+#### Level 1 (초급) - 2-3시간
+- 단일 이미지 분류
+- Gemini Vision API 호출
+- 불량 여부 자동 판정
+
+**기술 스택**: Gemini Vision API, PIL, Python
+
+**결과물**: 이미지 자동 분류 스크립트
+
+#### Level 2 (중급) - 1주
+- 수백 장 배치 처리
+- asyncio 병렬 처리
+- SQLite 결과 저장
+- 불량 통계 리포트
+
+**기술 스택**: asyncio, SQLite, pandas, plotly
+
+**결과물**: 배치 이미지 분석 시스템
+
+#### Level 3 (고급) - 2-3주
+- 실시간 영상 분석
+- PyTorch 커스텀 모델 파인튜닝
+- FastAPI REST API
+- Docker 배포
+
+**기술 스택**: OpenCV, PyTorch, FastAPI, Docker
+
+**결과물**: 실시간 비전 AI 시스템
+
+**적용 사례**
+- Wafer 결함 검사 (반도체)
+- Panel 불량 검출 (디스플레이)
+- 코팅 불량 검사 (배터리)
+- 세포 이미지 분석 (바이오)
+
+---
+
+### 📦 Project 03: 실시간 대시보드 & 배포
+
+**3단계 프로그레시브 학습**
+
+#### Level 1 (초급) - 2-3시간
+- 기본 Streamlit 대시보드
+- CSV 데이터 시각화
+- 사이드바 필터링
+
+**기술 스택**: Streamlit, pandas, plotly
+
+**결과물**: 로컬 실행 대시보드
+
+#### Level 2 (중급) - 1주
+- SQLite 데이터베이스 연동
+- Streamlit Multi-page 구조
+- Gemini API 통합
+- st.cache_data 성능 최적화
+
+**기술 스택**: Streamlit, SQLite, Gemini API
+
+**결과물**: DB 연동 웹 앱
+
+#### Level 3 (고급) - 2-3주
+- Docker 컨테이너화
+- GitHub Actions CI/CD
+- Streamlit Cloud 배포
+- Prometheus + Grafana 모니터링
+
+**기술 스택**: Docker, GitHub Actions, Prometheus, Grafana
+
+**결과물**: 클라우드 배포 대시보드
+
+**배포 URL 예시**: https://your-app.streamlit.app
+
+---
+
+## 🛠️ 기술 스택 요약
+
+### 데이터 분석
+- **Python**: pandas, numpy
+- **시각화**: plotly, matplotlib
+- **AI**: Gemini API, Prophet
+
+### 이미지 분석
+- **Vision AI**: Gemini Vision API
+- **이미지 처리**: PIL, OpenCV
+- **ML**: PyTorch, scikit-learn
+
+### 웹 대시보드
+- **프레임워크**: Streamlit
+- **데이터베이스**: SQLite
+- **배포**: Docker, Streamlit Cloud
+
+### DevOps
+- **CI/CD**: GitHub Actions
+- **컨테이너**: Docker, docker-compose
+- **모니터링**: Prometheus, Grafana
+
+---
+
+## 📂 프로젝트 구조
 
 ```
-Claude Code  ·  Claude Projects  ·  Gemini Studio  ·  GitHub
-Python Streamlit  ·  Plotly 시각화  ·  Markdown 문서 자동화
-디스플레이 시뮬레이터  ·  Telegram Bot API
-클라우드 배포 전략  ·  보안 관리  ·  AI 포트폴리오 전략
+Letuin_AI_Lecture/
+├── lecture_11/          # AI 프롬프트 기초
+├── lecture_12/          # Python 기초
+├── lecture_13/          # 데이터 분석 자동화
+├── lecture_14/          # 이미지 분석 자동화
+├── lecture_15/          # 센서 데이터 예측
+├── lecture_16/          # 통합 대시보드
+├── lecture_17/          # 기술 면접 & 피칭
+├── project_01/          # 데이터 분석 (초급→중급→고급)
+├── project_02/          # 이미지 분석 (초급→중급→고급)
+├── project_03/          # 대시보드 배포 (초급→중급→고급)
+└── README.md            # 이 문서
 ```
 
-### 강의 곳곳에서 만나는 "핫한 것들"
-
-- 🤫 **Claude의 유출된 System Prompt** — AI 회사들이 숨긴 지시사항들
-- 🧑‍💻 **Andrej Karpathy의 "바이브 코딩" 선언** — 미래 개발자는 이렇게 일한다
-- 💰 **Pieter Levels의 $5M AI 스타트업** — 혼자서 AI로 만든 앱으로 부자 된 사람
-- 📈 **GitHub 2024~2025 Top Trending** — 지금 전 세계 개발자들이 만드는 것
-- 🔬 **디스플레이 × AI** — 삼성/LG에서 실제로 AI를 어떻게 쓰는가
+각 강의와 프로젝트는 독립적인 React + TypeScript 앱으로 구성되어 있습니다.
 
 ---
 
-## 전체 커리큘럼
+## 🎯 학습 경로 추천
 
-### PART 1 — AI 바이브 코딩 입문 (1~4강)
+### 초보자 (비전공자)
+1. Lecture 11: AI 프롬프트 기초 이해
+2. Lecture 12: Python 기초 문법 학습
+3. Lecture 13: 데이터 분석 자동화
+4. **Project 01 Level 1**: CSV 자동 분석 실습
+5. Lecture 14: 이미지 분석 입문
+6. **Project 02 Level 1**: 이미지 분류 실습
 
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 1강 | 바이브 코딩 입문 | AI가 코드를 짜는 시대의 변화, Claude/Gemini 인터페이스 익히기 | AI 협업 마인드셋 정립 |
-| 2강 | AI 도구 최적화 | 모델별 강점 비교, Claude Projects/Gemini Studio 설정 | 전문가용 AI 환경 세팅 |
-| 3강 | AI 명령의 기술 | 고품질 프롬프트 설계, 디버깅 요청법 | 나만의 프롬프트 가이드북 |
-| 4강 | Claude Code 구축 | 터미널과 CLI 이해, Claude Code 설치 | 자연어 개발 환경 완성 |
+### 중급자 (Python 기초 보유)
+1. Lecture 13-15: 데이터/이미지/센서 자동화
+2. **Project 01 Level 2**: 배치 처리 시스템
+3. **Project 02 Level 2**: 배치 이미지 분석
+4. Lecture 16: 통합 대시보드
+5. **Project 03 Level 2**: DB 연동 웹 앱
 
-### PART 2 — 포트폴리오 웹사이트 구축 (5~7강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 5강 | 커리어 웹 구축 | HTML/CSS 포트폴리오 메인 페이지 구축 | 포트폴리오 웹사이트 초안 |
-| 6강 | 웹 서비스 배포 | Git/GitHub 핵심 개념, GitHub Pages 배포 | 공유 가능한 웹사이트 URL |
-| 7강 | 문서 자동화 기술 | Markdown 기반 공정 분석 보고서 템플릿 | 자동화된 공정 보고서 |
-
-### PART 3 — 데이터 시각화 & 앱 개발 (8~10강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 8강 | 데이터 시각화 기초 | Plotly로 엑셀 데이터를 인터랙티브 차트로 변환 | 수율 트렌드 대시보드 |
-| 9강 | Streamlit 서비스 | Python 웹 프레임워크로 10줄 코드 웹 UI 구현 | 개인용 데이터 분석 앱 |
-| 10강 | **[미션 1] 스펙 도구** | **PPI / 휘도 / 색역 계산기 구현 및 배포** | **실무형 스펙 계산기 앱** |
-
-### PART 4 — AI API 통합 & 전공 지식 챗봇 (11~12강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 11강 | API 통합 연동 | API Key 발급 및 보안, 앱에 AI 지능 심기 | AI 연결 모듈 완성 |
-| 12강 | 전공 지식 챗봇 | 디스플레이 전공 서적/논문 기반 챗봇 구축 | 전공 면접 대비 챗봇 |
-
-### PART 5 — 디스플레이 시뮬레이터 개발 (13~15강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 13강 | 픽셀 구조 시각화 | AI로 RGB 패턴 시뮬레이션 구현 | 픽셀 시뮬레이션 인터페이스 |
-| 14강 | 수율 시뮬레이터 | 주요 변수와 수율 상관관계 앱 구축 | 공정 최적화 시뮬레이터 |
-| 15강 | 전문 배포 전략 | Streamlit Cloud 원클릭 배포 및 버전 관리 | 클라우드 기반 서비스 URL |
-
-### PART 6 — 보안 & 메시징 자동화 (16~18강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 16강 | 보안 및 환경 관리 | .env 파일 활용, GitHub Secrets 설정 | 보안 강화된 프로젝트 레포 |
-| 17강 | 메시징 자동화 | Telegram 봇 API 연동, 자동 메시지 발송 | 텔레그램 알림 봇 기초 |
-| 18강 | **[미션 2] 감시 시스템** | **실시간 텔레그램 리포트 전송 시스템** | **지능형 공정 감시 시스템** |
-
-### PART 7 — 종합 프로젝트 & 취업 전략 (19~20강)
-
-| 강 | 제목 | 핵심 내용 | 결과물 |
-|----|------|----------|--------|
-| 19강 ⏱️60분 | **[최종] 솔루션 개발** | **개인 주제 선정, 종합 기능 구현 및 디버깅** | **개인별 AI 솔루션 앱** |
-| 20강 | 취업 및 커리어 전략 | 제작물의 직무 역량 어필법, AI 포트폴리오 자소서 반영 | 완성된 AI 포트폴리오 세트 |
+### 고급자 (실무 적용 목표)
+1. **Project 01 Level 3**: FastAPI + Prophet ML
+2. **Project 02 Level 3**: PyTorch 파인튜닝 + 실시간 영상
+3. **Project 03 Level 3**: Docker + CI/CD + Cloud 배포
+4. Lecture 17: 기술 면접 & 포트폴리오 완성
+5. GitHub 공개 + 기술 블로그 작성
 
 ---
 
-## 🎯 프로젝트 개요
+## 💼 취업 포트폴리오 구축
 
-| 프로젝트 | 주제 | 제출 시기 | 난이도 |
-|---------|------|----------|--------|
-| 미션 1 (10강) | 실무형 스펙 도구 (PPI/휘도/색역 계산기) | 10강 후 1주일 | 상/중/하 선택 |
-| 미션 2 (18강) | 지능형 공정 감시 시스템 (텔레그램 연동) | 18강 후 1주일 | 상/중/하 선택 |
-| 최종 프로젝트 (19강) | 나만의 AI 디스플레이 솔루션 (전체 스택) | 19강 후 2주일 | 상/중/하 선택 |
+### 1단계: GitHub 공개
+- 프로젝트 1, 2, 3을 GitHub에 공개
+- README에 프로젝트 설명과 실행 방법 작성
+- 코드에 주석과 docstring 추가
 
-> 상/중/하는 **동일한 주제**를 얼마나 많은 힌트를 받고 구현하는지에 따른 구분입니다.
-> 자신의 수준에 맞게 선택하세요.
+### 2단계: 배포 URL 획득
+- Streamlit Cloud에 대시보드 배포
+- FastAPI를 Render 또는 Railway에 배포
+- README에 실행 가능한 URL 추가
+
+### 3단계: 기술 블로그 작성
+- Medium, Velog, tistory 등에 프로젝트 과정 작성
+- 문제 해결 경험과 인사이트 공유
+- 기술 역량 증명
+
+### 4단계: 면접 준비
+- Lecture 17 기술 면접 자료 복습
+- 프로젝트 3분 피칭 연습
+- STAR 기법으로 경험 정리
 
 ---
 
-## 📂 바로 실행 가능한 예제 코드
+## 🌟 핵심 특징
 
-수강생이 복사해서 바로 실행할 수 있는 완성 코드입니다.
+### 1. Before → Prompt → After 패턴
+- **Before**: 수동 작업의 비효율성
+- **Prompt**: AI에게 주는 명확한 지시문
+- **After**: 자동화된 결과물
 
-| 파일 | 강의 | 설명 |
-|------|------|------|
-| [lectures/examples/ppi_calculator.py](lectures/examples/ppi_calculator.py) | 10강 | 디스플레이 PPI/휘도/색역 계산기 (Streamlit) |
-| [lectures/examples/display_chatbot.py](lectures/examples/display_chatbot.py) | 12강 | 디스플레이 전공 지식 챗봇 (Gemini API) |
-| [lectures/examples/pixel_simulator.py](lectures/examples/pixel_simulator.py) | 13강 | 픽셀 구조 시각화 시뮬레이터 |
-| [lectures/examples/telegram_bot.py](lectures/examples/telegram_bot.py) | 17강 | 텔레그램 알림 봇 기초 |
+### 2. 4개 도메인 적용 가능
+- **반도체**: Wafer 수율, 공정 데이터
+- **디스플레이**: Panel 불량, Mura 검출
+- **배터리**: 충전 사이클, 용량 감소
+- **바이오**: 세포 이미지, 실험 결과
 
-각 폴더에 `.env.example`과 `requirements.txt`가 포함되어 있습니다.
+### 3. Deep Dive 실전 사례
+- 각 강의마다 3개의 Deep Dive 섹션
+- 실무 적용 가능한 구체적 코드
+- 검증 체크리스트 제공
+
+### 4. 프로그레시브 학습 (초급 → 고급)
+- 단계별 난이도 상승
+- 누구나 따라할 수 있는 구조
+- 실무 배포까지 완성
+
+---
+
+## 🚀 시작하기
+
+### 1. 환경 설정
 
 ```bash
-# 실행 예시 (PPI 계산기)
-cd lectures/examples
+# Python 3.10+ 설치 확인
+python --version
+
+# 필수 패키지 설치
+pip install pandas plotly streamlit google-generativeai
+pip install python-dotenv pillow opencv-python
+pip install scikit-learn prophet
+```
+
+### 2. Gemini API Key 발급
+
+1. https://makersuite.google.com/app/apikey 접속
+2. API Key 생성
+3. `.env` 파일 생성:
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+### 3. 강의 실행 (Vite + React)
+
+```bash
+cd lecture_13
+npm install
+npm run dev
+```
+
+### 4. 프로젝트 실행 (Streamlit)
+
+```bash
+cd project_03
 pip install -r requirements.txt
-streamlit run ppi_calculator.py
+streamlit run app.py
 ```
 
 ---
 
-## 🛠️ 준비물 체크리스트
+## 📞 문의 및 지원
 
-**필수 계정 (강의 전 생성)**
-- [ ] [GitHub](https://github.com)
-- [ ] [Claude.ai](https://claude.ai) — Pro 이용권 강의 당일 지급
-- [ ] [Google AI Studio](https://aistudio.google.com) — Gemini API Key 발급용
-- [ ] [Streamlit Community Cloud](https://share.streamlit.io)
-- [ ] Telegram 앱 설치
-
-**필수 설치**
-```bash
-# Node.js LTS 설치 후
-npm install -g @anthropic-ai/claude-code
-
-# Python 3.11+
-pip install streamlit pandas plotly python-dotenv google-generativeai anthropic python-telegram-bot
-```
-
-**추천 도구**
-- [cokacdir](https://github.com/waterfirst/cokacdir) — AI 자연어 명령 터미널 파일 매니저
-- VS Code 또는 선호하는 텍스트 에디터
+- **GitHub Repository**: https://github.com/waterfirst/letuin_lecture_project
+- **Issues**: 버그 리포트 및 질문
+- **Discussions**: 학습 관련 토론
 
 ---
 
-## 📊 실습에 활용하는 공개 데이터셋
+## 📄 라이선스
 
-| 데이터셋 | URL | 활용 강의 |
-|---------|-----|----------|
-| 공공데이터포털 | https://www.data.go.kr | 프로젝트 2/3 |
-| IEEE DataPort | https://ieee-dataport.org | 프로젝트 2/3 |
-| Kaggle | https://www.kaggle.com/datasets | 프로젝트 2/3 |
-| SECOM (UCI) | https://archive.ics.uci.edu/dataset/179/secom | 프로젝트 2 추천 |
+이 프로젝트는 교육 목적으로 제공되며, 개인 학습 및 포트폴리오 용도로 자유롭게 사용할 수 있습니다.
 
 ---
 
-## 📚 참고 레포지토리
+## 🙏 감사의 말
 
-| 레포 | 설명 | 관련 강의 |
-|------|------|----------|
-| [waterfirst/cokacdir](https://github.com/waterfirst/cokacdir) | AI 터미널 파일 매니저 (Rust) | 3강 |
-| [waterfirst/CLI-Anything](https://github.com/waterfirst/CLI-Anything) | 어떤 소프트웨어든 AI 에이전트 CLI로 변환 | 4강 |
-| [waterfirst/gemini_telebot](https://github.com/waterfirst/gemini_telebot) | Gemini + Google Workspace + 텔레그램 봇 | 14강 |
+이 강의와 프로젝트는 반도체, 디스플레이, 배터리, 바이오 분야의 비전공 엔지니어들이 AI를 실무에 적용할 수 있도록 설계되었습니다. 모든 분들의 성공적인 커리어 전환을 응원합니다!
 
----
-
-## 🗓️ 업데이트 이력
-
-| 날짜 | 내용 |
-|------|------|
-| 2026-04-11 | **렛유인_KDC_강의계획서_수정2.xlsx 반영: 16강→20강 확장**, 미션 1·2 강의 내 실습 방식 변경, 커리어/취업 전략 강화 (19~20강), 수강 대상 명확화 |
-| 2026-04-06 | GPT-4o로 1~16강 Quarto RevealJS 강의록 자동 생성 (lectures/lecture_01~16.qmd) |
-| 2026-04-06 | 렛유인 KDC 강의계획서 xlsx 추가 (수강 대상 명확화: 대학 3~4학년·취업준비생 주 대상, 재직자·이직준비생 확대 대상 반영) |
-| 2026-04-05 | 리뷰 피드백 반영: 예제 코드 추가, Antigravity→Firebase Studio 교체, R/RStudio 사전 준비 안내, 텔레그램 치트시트, 공개 데이터셋, Claude vs Gemini 비교표, 사전 테스트 F파트 보너스 분리, 15강 60분 조정, 강사용 타임테이블 재편 |
-| 2026-04-04 | 초안 작성 (16강 커리큘럼, 사전 테스트 35문항, 프로젝트 3종 상/중/하) |
-
----
-
-<div align="center">
-
-**질문 및 피드백**: [Issues](https://github.com/waterfirst-suji/Letuin_AI_Lecture/issues) 탭에 남겨주세요
-
-*이 강의안은 지속적으로 업데이트됩니다.*
-
-</div>
+**© 2026 LettUin Edu | Fine Tech Engineering AI Education**

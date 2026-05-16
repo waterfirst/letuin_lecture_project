@@ -1,0 +1,184 @@
+===============================================================================
+Lecture 11 이미지 생성 프롬프트 (Google AI Studio / DALL-E 3 사용)
+===============================================================================
+
+아래 프롬프트를 Google AI Studio (https://aistudio.google.com)의 Imagen 2/3
+또는 ChatGPT Plus의 DALL-E 3에 붙여넣어 이미지를 생성하세요.
+
+===============================================================================
+1. gemini-ecosystem.png
+===============================================================================
+
+Create a modern tech ecosystem diagram showing 5 interconnected Google AI tools arranged in a pentagon:
+1. Gemini Pro (center, blue robot icon with "Pro" badge)
+2. NotebookLM (top right, green book/notebook icon)
+3. AI Studio (right, yellow code/terminal icon)
+4. Firebase (bottom right, orange cloud/flame icon)
+5. Telegram Bot (bottom left, blue chat/telegram icon)
+
+Connect them with curved arrows showing data flow.
+Add small text labels under each icon with tool names.
+Style: Clean, flat design, rounded icons, professional tech illustration.
+Color scheme: Google brand colors (blue #4285F4, red #EA4335, yellow #FBBC04, green #34A853).
+Background: White with subtle light blue gradient.
+Size: 1200x800px, high resolution.
+
+===============================================================================
+2. api-key-workflow.png
+===============================================================================
+
+Create a 3-step horizontal workflow diagram for API key setup:
+
+Step 1 (Left): "Get API Key"
+- Icon: Key with sparkles
+- Visual: Google AI Studio interface screenshot mockup
+- Arrow pointing right
+
+Step 2 (Center): "Save to .env"
+- Icon: Lock and document
+- Visual: VSCode editor with .env file showing GEMINI_API_KEY=AIzaSy...
+- Arrow pointing right
+
+Step 3 (Right): "Call API"
+- Icon: Code brackets with checkmark
+- Visual: Python terminal showing successful API response
+- Green success indicator
+
+Style: Modern tech tutorial, clean UI mockup style, step numbers in circles.
+Colors: Blue gradient background, white cards for each step.
+Annotations with small text explaining each step.
+Size: 1600x600px.
+
+===============================================================================
+3. notebooklm-demo.png
+===============================================================================
+
+Create a UI mockup of NotebookLM in action:
+
+Layout: Split screen vertical design
+
+Left side (40%): Source documents panel
+- 3 PDF thumbnails with academic paper icons
+- Titles: "Battery Degradation Study", "NCM811 Research", "Li-ion Safety"
+- Upload button at bottom
+
+Right side (60%): Chat interface
+- User question: "이 논문의 핵심 기여는 무엇인가요?"
+- AI response with 3 bullet points
+- Source citations at bottom: "출처: 논문 3페이지, Figure 2" with clickable link
+- Small shield icon indicating "출처 기반 답변"
+
+Style: Modern chat UI, Google Material Design, clean typography.
+Colors: White background, green accent (#34A853) for AI responses.
+Add subtle shadow effects for depth.
+Size: 1400x900px.
+
+===============================================================================
+4. pricing-comparison.png
+===============================================================================
+
+Create a modern comparison table/chart showing 3 AI models:
+
+Models (columns):
+1. Gemini Pro (highlighted with blue border)
+2. Claude Pro
+3. GPT-4 Pro
+
+Comparison rows:
+- Price: $20/mo (all same)
+- Context: 1M tokens vs 200K vs 128K (bar chart visualization)
+- Deep Research: ✓ full vs ✗ none vs △ limited
+- Free API: ✓ 15 req/min vs ✗ none vs △ limited
+- NotebookLM: ✓ yes vs ✗ no vs ✗ no
+- Firebase: ✓ yes vs ✗ no vs ✗ no
+- Overall Score: 95 vs 72 vs 68 (progress bar)
+
+Highlight Gemini Pro column with blue background.
+Add insight box at bottom: "Same price, 5x longer context, free API, full ecosystem"
+
+Style: Modern data visualization, card-based layout, clean typography.
+Colors: Google brand blue for Gemini, neutral gray for others.
+Size: 1200x800px.
+
+===============================================================================
+5. firebase-setup.png
+===============================================================================
+
+Create a 5-step vertical workflow for Firebase setup:
+
+Step 1: Browser icon → "Firebase Console 접속" → Screenshot of firebase.google.com
+Step 2: Folder+ icon → "Add Project" → Project name input field
+Step 3: Terminal icon → "Firebase CLI 설치" → Command: npm install -g firebase-tools
+Step 4: Key icon → "Firebase Login" → Command: firebase login with green checkmark
+Step 5: Zap icon → "Firebase Init" → Command: firebase init hosting with success message
+
+Each step in a rounded card with:
+- Large icon on left
+- Step number badge
+- Title and description
+- Expected output/result
+- Estimated duration (e.g., "30초")
+
+Connect steps with vertical arrows.
+
+Style: Clean tutorial design, modern UI, step-by-step guide aesthetic.
+Colors: Orange/red Firebase brand color (#EA4335) accents.
+Background: Light gray gradient.
+Size: 800x1600px (vertical).
+
+===============================================================================
+6. security-checklist.png
+===============================================================================
+
+Create an infographic-style security checklist for API keys:
+
+Title at top: "API Key 보안 체크리스트"
+
+8 checklist items in 2 columns (4 each):
+
+Column 1:
+1. ✓ Lock icon: ".env 파일은 로컬에만 보관"
+2. ✓ GitHub X icon: ".gitignore에 .env 추가"
+3. ✓ Refresh icon: "노출 시 즉시 재발급"
+4. ✓ Team icon: "팀원은 각자 발급"
+
+Column 2:
+5. ✓ Chart icon: "Google Cloud에서 사용량 모니터링"
+6. ✓ Bell icon: "무료 할당량 초과 알림 설정"
+7. ✓ Env icon: "프로덕션은 환경변수로 주입"
+8. ✓ Shield icon: "Firebase Functions로 숨기기"
+
+Each item has:
+- Green checkmark
+- Icon visualization
+- Short text description
+
+Bottom warning box: "⚠️ GitHub 커밋 절대 금지!"
+
+Style: Infographic, clean icons, checklist format.
+Colors: Green for checkmarks, red for warnings, blue accents.
+Size: 1000x1200px.
+
+===============================================================================
+사용 방법
+===============================================================================
+
+1. Google AI Studio 방법 (무료, 추천):
+   - https://aistudio.google.com 접속
+   - "Generate image" 또는 Imagen 탭 선택
+   - 위 프롬프트 복사 → 붙여넣기
+   - Generate 클릭 → 다운로드
+   - public/ 폴더에 저장
+
+2. ChatGPT Plus 방법 ($20/월 구독 필요):
+   - ChatGPT 접속 (GPT-4 선택)
+   - 위 프롬프트 복사 → 붙여넣기
+   - 자동으로 DALL-E 3 실행
+   - 다운로드 → public/ 폴더에 저장
+
+3. Python 자동화 방법:
+   - .env 파일에 OPENAI_API_KEY 추가
+   - pip install openai requests python-dotenv
+   - python generate_images.py 실행
+
+===============================================================================

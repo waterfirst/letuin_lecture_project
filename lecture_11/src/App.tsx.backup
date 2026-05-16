@@ -1,0 +1,1497 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Activity,
+  AlertCircle,
+  ArrowRight,
+  BarChart3,
+  Battery,
+  BookOpen,
+  Bot,
+  Check,
+  CheckCircle2,
+  Clock,
+  Cloud,
+  Code,
+  Copy,
+  Cpu,
+  Database,
+  Dna,
+  ExternalLink,
+  FileText,
+  FolderPlus,
+  Headphones,
+  Key,
+  Link,
+  Lock,
+  MessageCircle,
+  Mic,
+  Monitor,
+  Play,
+  Quote,
+  Shield,
+  Sparkles,
+  Terminal,
+  Upload,
+  Zap,
+} from 'lucide-react';
+
+// ============================================================================
+// DATA ARRAYS - Gemini Ecosystem (풍부한 데이터)
+// ============================================================================
+
+const learningGoals = [
+  {
+    step: '학습목표 1',
+    title: 'Gemini API Key 발급 및 첫 호출',
+    body: 'Google AI Studio에서 API Key를 발급하고 Python으로 첫 번째 AI 호출을 실행합니다. 반도체, 디스플레이, 배터리, 바이오 4개 분야 프롬프트를 테스트합니다.',
+    icon: Bot,
+    type: 'api',
+    color: '#4285F4',
+  },
+  {
+    step: '학습목표 2',
+    title: 'NotebookLM 지식 베이스 구축',
+    body: '연구 논문을 업로드하여 개인화된 AI 연구 노트를 만들고 출처 기반 답변을 받습니다. 할루시네이션 없이 정확한 정보만 추출합니다.',
+    icon: BookOpen,
+    type: 'knowledge',
+    color: '#34A853',
+  },
+  {
+    step: '학습목표 3',
+    title: 'Firebase 프로젝트 생성 및 배포 준비',
+    body: 'Firebase 프로젝트를 생성하고 Hosting 환경을 설정하여 웹앱 배포를 준비합니다. Firestore와 Auth도 함께 활성화합니다.',
+    icon: Cloud,
+    type: 'deploy',
+    color: '#FBBC04',
+  },
+];
+
+const lessonFlow = [
+  { time: '3분', label: '목표 확인', detail: 'Gemini 생태계 전체 구조 이해' },
+  { time: '7분', label: '개념·비유', detail: 'API, NotebookLM, Firebase 역할 분담' },
+  { time: '8분', label: '실무 사례', detail: '4개 분야 프롬프트 예제' },
+  { time: '17분', label: '지시문·실습', detail: 'API Key 발급 → 첫 호출 → NotebookLM' },
+  { time: '5분', label: '검증·정리', detail: '체크리스트 및 12강 예고' },
+];
+
+const roleFlow = [
+  { owner: '엔지니어', task: 'API Key 관리, NotebookLM 자료 업로드, Firebase 설정, 보안 체크' },
+  { owner: 'Gemini', task: '데이터 분석, 논문 요약, 출처 기반 답변, 코드 생성' },
+  { owner: 'NotebookLM', task: '논문 인덱싱, 출처 추적, 팟캐스트 생성' },
+  { owner: 'Firebase', task: 'Hosting 서빙, Firestore 저장, Auth 인증' },
+];
+
+const geminiEcosystem = [
+  {
+    icon: Bot,
+    title: 'Gemini Pro',
+    description: '100만 토큰 컨텍스트 창, Deep Research 기능',
+    features: ['긴 논문 분석', '멀티모달 입력', 'JSON 출력'],
+    cost: '$20/월',
+    freeQuota: '15 req/min',
+    color: '#4285F4',
+  },
+  {
+    icon: BookOpen,
+    title: 'NotebookLM',
+    description: '개인 지식 베이스, 출처 기반 답변, 팟캐스트 생성',
+    features: ['할루시네이션 방지', 'PDF/웹/독스 지원', '오디오 팟캐스트'],
+    cost: '무료',
+    freeQuota: '무제한',
+    color: '#34A853',
+  },
+  {
+    icon: Code,
+    title: 'AI Studio',
+    description: 'API Key 발급, 프롬프트 테스트, 무료 할당량',
+    features: ['프롬프트 갤러리', '시스템 instruction', 'Function calling'],
+    cost: '무료',
+    freeQuota: '60 req/min',
+    color: '#FBBC04',
+  },
+  {
+    icon: Cloud,
+    title: 'Firebase',
+    description: 'Hosting + Firestore + Auth, Spark 플랜',
+    features: ['10GB Hosting', '1GB Firestore', '무제한 Auth'],
+    cost: '무료 → 종량제',
+    freeQuota: 'Spark 플랜',
+    color: '#EA4335',
+  },
+  {
+    icon: MessageCircle,
+    title: 'Telegram Bot',
+    description: 'Gemini API 연동 자동 알림',
+    features: ['실시간 푸시', '그룹 채팅', '파일 전송'],
+    cost: '무료',
+    freeQuota: '무제한',
+    color: '#0088CC',
+  },
+];
+
+const pricingComparison = [
+  {
+    model: 'Gemini Pro',
+    price: '$20/월',
+    context: '100만 토큰',
+    deepResearch: '✓ 완전 지원',
+    freeAPI: '✓ 15 req/min',
+    notebookLM: '✓ 완벽 연동',
+    firebase: '✓ 완벽 연동',
+    score: 95,
+  },
+  {
+    model: 'Claude Pro',
+    price: '$20/월',
+    context: '20만 토큰',
+    deepResearch: '✗ 미지원',
+    freeAPI: '✗ 없음',
+    notebookLM: '✗ 불가',
+    firebase: '✗ 불가',
+    score: 72,
+  },
+  {
+    model: 'GPT-4 Pro',
+    price: '$20/월',
+    context: '12.8만 토큰',
+    deepResearch: '△ 제한적',
+    freeAPI: '△ 제한적',
+    notebookLM: '✗ 불가',
+    firebase: '✗ 불가',
+    score: 68,
+  },
+];
+
+const apiKeySteps = [
+  {
+    step: '01',
+    title: 'Google AI Studio 접속',
+    body: 'aistudio.google.com에 접속하여 Google 계정으로 로그인합니다.',
+    action: '브라우저 열기 → URL 입력 → 로그인',
+    expected: 'AI Studio 홈 화면 (프롬프트 갤러리, Get API Key 버튼)',
+    icon: ExternalLink,
+    duration: '30초',
+  },
+  {
+    step: '02',
+    title: 'API Key 생성',
+    body: '왼쪽 메뉴 "Get API Key" → "Create API Key in new project" 클릭',
+    action: 'Get API Key 클릭 → Create API Key 선택',
+    expected: 'AIzaSy로 시작하는 39자리 키 (한 번만 표시)',
+    icon: Key,
+    duration: '10초',
+  },
+  {
+    step: '03',
+    title: '.env 파일 저장',
+    body: '생성된 키를 복사하여 프로젝트 폴더의 .env 파일에 저장합니다.',
+    action: '키 복사 → VSCode → .env 파일 생성 → 붙여넣기',
+    expected: 'GEMINI_API_KEY=AIzaSy...(복사한 키)',
+    icon: FileText,
+    duration: '20초',
+  },
+];
+
+const securityChecklist = [
+  '.env 파일은 로컬에만 보관 (절대 GitHub 커밋 금지)',
+  '.gitignore에 .env, *.key 추가',
+  'API Key 노출 시 즉시 재발급',
+  '팀원은 각자 API Key 발급 (공유 금지)',
+  'Google Cloud Console에서 사용량 모니터링',
+  '무료 할당량 초과 시 알림 설정',
+  '프로덕션 환경에서는 환경 변수로 주입',
+  'Firebase Functions로 API Key 숨기기',
+];
+
+const helloGeminiCode = `import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+# .env 파일에서 API Key 로드
+load_dotenv()
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+# Gemini 1.5 Pro 모델 초기화
+model = genai.GenerativeModel('gemini-1.5-pro')
+
+# 첫 API 호출
+response = model.generate_content('Hello, Gemini!')
+print(response.text)
+
+# 예상 출력:
+# Hello! How can I help you today?`;
+
+const targetFields = [
+  {
+    field: '반도체',
+    icon: Cpu,
+    examples: ['수율 분석', '웨이퍼 검사', '공정 최적화', 'SPC 관리도'],
+    color: '#4285F4',
+    prompts: [
+      {
+        title: '수율 하락 원인',
+        prompt: '반도체 공정에서 수율이 하락하는 주요 원인 3가지를 설명해주세요. 각 원인마다 대응 방법도 함께 알려주세요.',
+        response: `1. 파티클 오염
+   원인: 클린룸 환경 관리 부족, 장비 내부 파티클 발생
+   대응: 정기적 클린룸 모니터링, 장비 PM 주기 단축
+
+2. Recipe 변경 실패
+   원인: 공정 조건 변경 시 충분한 검증 부족
+   대응: DOE(Design of Experiments) 실시, 단계별 롤백 계획
+
+3. 장비 드리프트
+   원인: 시간 경과에 따른 장비 특성 변화
+   대응: SPC(Statistical Process Control) 모니터링, 캘리브레이션`,
+      },
+      {
+        title: 'CVD 공정 최적화',
+        prompt: 'CVD 공정에서 온도, 압력, 시간이 막 두께와 균일도에 미치는 영향을 설명하고 최적 조건을 제안해주세요.',
+        response: `온도 영향:
+- 380°C: 막 두께 250nm, 균일도 ±3%
+- 400°C: 막 두께 280nm, 균일도 ±5%
+- 420°C: 막 두께 310nm, 균일도 ±7%
+→ 온도 ↑ → 막 두께 ↑, 균일도 ↓
+
+압력 영향:
+- 2.3 bar: 수율 88%, 증착 속도 빠름
+- 2.4 bar: 수율 94%, 균일도 최적
+- 2.5 bar: 수율 91%, 증착 속도 느림
+→ 2.4 bar 최적
+
+최적 조건:
+온도 400°C, 압력 2.4 bar, 시간 40초 → 수율 94%, 막 두께 균일도 ±4%`,
+      },
+    ],
+  },
+  {
+    field: '디스플레이',
+    icon: Monitor,
+    examples: ['AOI 불량', '픽셀 구조', '수율 시뮬레이터', 'Mura 분석'],
+    color: '#34A853',
+    prompts: [
+      {
+        title: 'OLED vs LCD',
+        prompt: 'OLED와 LCD의 차이점을 구조, 동작 원리, 장단점 중심으로 설명해주세요.',
+        response: `구조:
+- OLED: 유기 발광층이 스스로 빛 발생 (자체 발광)
+- LCD: 백라이트 + 액정 + 컬러필터 (3층 구조)
+
+동작 원리:
+- OLED: 전류 인가 시 유기 물질이 발광
+- LCD: 백라이트를 액정으로 차단/통과 제어
+
+장단점:
+OLED: 명암비 우수, 시야각 넓음, 얇고 가벼움, 번인 현상 리스크
+LCD: 저렴, 수명 길음, 번인 없음, 명암비 제한적, 시야각 좁음`,
+      },
+      {
+        title: 'Mura 불량 원인',
+        prompt: 'OLED 디스플레이 Array 공정에서 Mura 불량이 증가했습니다. TFT 증착 온도 380°C (정상 375°C), 진공도 5.2e-6 Torr (정상 1e-6 Torr)일 때 원인을 추정해주세요.',
+        response: `Mura 불량 원인 추정:
+
+1. TFT 증착 온도 +5°C 초과
+   → 박막 두께 불균일 → 픽셀 휘도 편차 증가
+   대응: 온도를 375°C ±2°C 범위로 복귀
+
+2. 진공도 5배 초과 (5.2e-6 vs 1.0e-6)
+   → 불순물 흡착 → 증착 균일도 저하
+   대응: 진공 펌프 점검, 리크 테스트 실시
+
+3. 복합 효과
+   → 온도 상승 + 진공도 저하 → Mura 불량률 급증
+   확인 질문: Sputter Power, 기판 이송 속도는 정상 범위인가?`,
+      },
+    ],
+  },
+  {
+    field: '배터리',
+    icon: Battery,
+    examples: ['충방전 사이클', '용량 열화', '안전성 분석', '수명 예측'],
+    color: '#FBBC04',
+    prompts: [
+      {
+        title: '용량 열화 메커니즘',
+        prompt: '리튬이온 배터리 용량 열화의 주요 원인과 대책을 설명해주세요.',
+        response: `주요 원인:
+
+1. SEI(Solid Electrolyte Interface) 층 성장
+   원인: 전해질과 음극 반응으로 리튬 손실
+   대책: 전해질 첨가제 최적화, FEC 첨가
+
+2. 리튬 석출(Lithium Plating)
+   원인: 급속 충전 시 음극 표면에 리튬 금속 석출
+   대책: 충전 알고리즘 최적화, 온도 관리 (>10°C)
+
+3. 양극 재료 구조 붕괴
+   원인: 충방전 반복 시 결정 구조 변화
+   대책: 코팅 (Al2O3, ZrO2), 도핑, 신소재 개발`,
+      },
+      {
+        title: 'NCM811 코팅 최적화',
+        prompt: 'NCM811 양극 재료의 Al2O3 코팅 공정을 최적화하려고 합니다. 코팅 두께 5nm/10nm/15nm, 온도 450/500/550°C 조건에서 최적 조합을 추천해주세요.',
+        response: `실험 결과 분석:
+
+조건 1: Al2O3 5nm, 500°C → 용량 유지율 89%
+조건 2: Al2O3 10nm, 500°C → 용량 유지율 95%
+조건 3: Al2O3 15nm, 500°C → 용량 유지율 93%
+조건 4: Al2O3 10nm, 450°C → 용량 유지율 91%
+조건 5: Al2O3 10nm, 550°C → 용량 유지율 87% (과열로 구조 변화)
+
+최적 조건: Al2O3 10nm, 500°C
+- 용량 유지율 95% (500 사이클 후)
+- 비용 효율적 (15nm 대비 공정 시간 단축)
+- 열 안정성 우수 (550°C 과열 방지)`,
+      },
+    ],
+  },
+  {
+    field: '바이오',
+    icon: Dna,
+    examples: ['실험 데이터', '단백질 구조', '논문 요약', '결정화 조건'],
+    color: '#EA4335',
+    prompts: [
+      {
+        title: 'AlphaFold 원리',
+        prompt: 'AlphaFold가 단백질 접힘을 예측하는 원리를 간단히 설명해주세요.',
+        response: `AlphaFold 원리:
+
+1. 아미노산 서열 입력
+   예: MKTAYIAKQRQISFVKSHFSRQLE...
+
+2. MSA(Multiple Sequence Alignment) 생성
+   → 진화 정보 추출 (유사 서열 탐색)
+
+3. 주의 메커니즘(Attention) 적용
+   → 아미노산 간 상호작용 학습
+   → 공간적 거리 예측
+
+4. 3D 구조 좌표 예측
+   → End-to-End 학습
+   → 물리적 제약 조건 (결합 거리, 각도) 적용
+
+핵심 혁신:
+- 예측 정확도 90% 이상 (CASP14 대회)
+- 진화 정보 + 물리적 제약 동시 고려`,
+      },
+      {
+        title: '단백질 결정화 실패',
+        prompt: 'Lysozyme 단백질 결정화 실험에서 Precipitant PEG 8000 30%, pH 4.5, 20°C 조건에서 결정이 형성되지 않았습니다. 원인과 조건 변경 제안을 해주세요.',
+        response: `결정화 실패 원인:
+
+1. 단백질 순도 부족
+   → 순도 <95%면 결정화 실패 확률 높음
+   대응: SDS-PAGE로 순도 확인, 재정제
+
+2. Precipitant 농도 부족
+   → PEG 8000 30%는 경계선
+   대응: 32~35%로 증가 시도
+
+3. 온도 너무 높음
+   → 20°C보다 18°C가 결정 품질 향상
+   대응: 18°C로 하향
+
+4. pH 최적화 필요
+   → Lysozyme 등전점 11.35, pH 4.5는 약간 낮음
+   대응: pH 4.7~5.0 범위 스크리닝
+
+추천 조건:
+PEG 8000 32%, pH 4.7, 18°C, 48시간 대기`,
+      },
+    ],
+  },
+];
+
+const notebookLMFeatures = [
+  {
+    feature: '다양한 형식 지원',
+    description: 'PDF, 웹 링크, 구글 문서, YouTube 영상 등 50개 소스까지 업로드 가능',
+    icon: Upload,
+    examples: ['Nature 논문 PDF', 'arXiv 링크', '실험 보고서 구글독스', '기술 세미나 YouTube'],
+  },
+  {
+    feature: '출처 기반 답변',
+    description: '업로드한 자료만 참고, 외부 지식 사용 안 함, 할루시네이션 방지',
+    icon: Shield,
+    examples: ['논문 3페이지 Figure 2', 'Experimental Section 인용', '저자가 명시한 한계'],
+  },
+  {
+    feature: '오디오 팟캐스트',
+    description: '업로드 자료를 2인 대화 형식 팟캐스트로 자동 생성 (5~15분)',
+    icon: Headphones,
+    examples: ['출퇴근 청취', '팀 미팅 준비', '신입 교육 자료'],
+  },
+];
+
+const notebookLMUploadMethods = [
+  {
+    method: 'PDF 파일',
+    icon: FileText,
+    steps: ['"Add Source" → "Upload" → PDF 선택', '최대 50MB, 500페이지', '업로드 30초~1분'],
+    example: 'Li_Ion_Battery_Degradation_2025.pdf (10MB, 15페이지)',
+  },
+  {
+    method: '웹 링크',
+    icon: Link,
+    steps: ['"Add Source" → "Web Link" → URL 입력', 'arXiv, PubMed, Nature 자동 인식', '인덱싱 1~2분'],
+    example: 'https://arxiv.org/abs/2501.12345',
+  },
+  {
+    method: '구글 문서',
+    icon: FileText,
+    steps: ['"Add Source" → "Google Docs"', 'Drive 파일 선택', '실시간 동기화'],
+    example: 'NCM811_코팅_실험보고서.docx',
+  },
+  {
+    method: 'YouTube 영상',
+    icon: Play,
+    steps: ['"Add Source" → "Web Link" → YouTube URL', '자막 자동 추출 (영어/한글)', '음성 인식 (자막 없을 시)'],
+    example: 'https://youtube.com/watch?v=abc123 (배터리 세미나)',
+  },
+];
+
+const notebookLMQuestionsData = [
+  {
+    question: '이 논문의 핵심 기여는 무엇인가요?',
+    answer:
+      '이 논문은 리튬이온 배터리 용량 열화 메커니즘을 3가지로 분류하고, 각 메커니즘의 지배적 구간을 충방전 사이클 수로 정량화했습니다.\n\n1. 초기 100 사이클: SEI 층 성장 지배적\n2. 100~500 사이클: 리튬 석출 + SEI 복합\n3. 500 사이클 이상: 양극 구조 붕괴 가속',
+    source: '논문 3페이지, Figure 2',
+    confidence: 95,
+  },
+  {
+    question: '실험 방법론을 3줄로 요약해주세요.',
+    answer:
+      '1. LiNi0.8Co0.1Mn0.1O2 양극 / 흑연 음극 코인셀 제작\n2. 0.5C 충전, 1C 방전, 25°C에서 1,000 사이클 수행\n3. 100 사이클마다 EIS, XRD, SEM 분석 실시',
+    source: '논문 2페이지, Experimental Section',
+    confidence: 98,
+  },
+  {
+    question: '이 연구의 한계는 무엇인가요?',
+    answer:
+      '저자들이 명시한 한계:\n1. 실온(25°C) 조건만 테스트, 고온/저온 영향 미포함\n2. 단일 화학 조성(NCM811)만 연구\n3. 급속 충전(>2C) 조건 미검증',
+    source: '논문 8페이지, Discussion',
+    confidence: 92,
+  },
+];
+
+const notebookLMUseCases = [
+  {
+    scenario: '논문 요약',
+    before: 'Nature 논문 15페이지를 3시간 읽고 수작업 요약',
+    after: 'NotebookLM에 업로드 → "핵심 기여 3줄로 요약" → 1분 내 답변 + 출처',
+    timeReduction: '95% 단축',
+  },
+  {
+    scenario: '실험 프로토콜 표준화',
+    before: '실험 보고서 20개를 일일이 읽고 반복 절차를 Excel에 정리',
+    after: '20개 보고서 업로드 → "반복 절차 표준화해줘" → SOP 자동 생성',
+    timeReduction: '90% 단축',
+  },
+  {
+    scenario: '문헌 비교 분석',
+    before: '경쟁사 특허 5개와 우리 특허 3개를 비교하여 차별점 찾기',
+    after: '특허 8개 업로드 → "기술적 차별점과 회피 전략은?" → 비교표 생성',
+    timeReduction: '85% 단축',
+  },
+];
+
+const firebaseSetupSteps = [
+  {
+    step: '01',
+    title: 'Firebase Console 접속',
+    body: 'console.firebase.google.com',
+    action: '브라우저 → URL 입력 → Google 계정 로그인',
+    icon: ExternalLink,
+    duration: '20초',
+  },
+  {
+    step: '02',
+    title: 'Add Project',
+    body: '프로젝트 이름 입력 (예: display-ai-monitor)',
+    action: '"Add project" → 이름 입력 → Analytics 설정 (선택)',
+    icon: FolderPlus,
+    duration: '40초',
+  },
+  {
+    step: '03',
+    title: 'Firebase CLI 설치',
+    body: 'npm install -g firebase-tools',
+    action: '터미널 → 명령어 실행 → firebase --version 확인',
+    icon: Terminal,
+    duration: '1분',
+  },
+  {
+    step: '04',
+    title: 'Firebase Login',
+    body: 'firebase login',
+    action: '브라우저 열림 → Google 계정 선택 → "Allow" 클릭',
+    icon: Key,
+    duration: '30초',
+  },
+  {
+    step: '05',
+    title: 'Firebase Init',
+    body: 'firebase init hosting',
+    action: 'Hosting 선택 → 프로젝트 선택 → public 디렉토리 설정',
+    icon: Zap,
+    duration: '1분',
+  },
+];
+
+const firebaseCLICommands = [
+  {
+    command: 'firebase login',
+    description: 'Firebase에 로그인',
+    expectedOutput: '✔ Success! Logged in as your-email@gmail.com',
+  },
+  {
+    command: 'firebase init hosting',
+    description: 'Hosting 초기화',
+    expectedOutput: '✔ Firebase initialization complete!',
+  },
+  {
+    command: 'firebase deploy',
+    description: '배포 실행',
+    expectedOutput: '✔ Deploy complete!\nHosting URL: https://your-project.web.app',
+  },
+];
+
+const completionChecklist = [
+  { item: 'Google AI Studio에서 API Key 발급 완료', checked: false },
+  { item: '.env 파일에 GEMINI_API_KEY 저장', checked: false },
+  { item: '.gitignore에 .env 추가', checked: false },
+  { item: 'Gemini API로 "Hello, Gemini!" 호출 성공', checked: false },
+  { item: '4개 분야 중 1개 프롬프트 테스트', checked: false },
+  { item: 'NotebookLM에 논문 1개 업로드', checked: false },
+  { item: 'NotebookLM에서 질문하고 출처 기반 답변 받기', checked: false },
+  { item: '출처 패널에서 참조 페이지 확인', checked: false },
+  { item: 'Firebase 프로젝트 생성 완료', checked: false },
+  { item: 'Firebase CLI 설치 및 로그인 완료', checked: false },
+];
+
+const lecture12Preview = {
+  title: '12강: NotebookLM 연구 노트',
+  description: 'NotebookLM에 논문 10개를 업로드하고 전공 지식 챗봇을 만듭니다.',
+  topics: [
+    'RAG (Retrieval-Augmented Generation) 원리',
+    '논문 10개 업로드 및 인덱싱',
+    '출처 기반 질의응답 (할루시네이션 없음)',
+    '오디오 팟캐스트 생성 (2인 대화 형식)',
+    'Gemini API + NotebookLM 연동',
+  ],
+  deliverables: ['NotebookLM 노트북 (논문 10개)', '질의응답 기록', '오디오 팟캐스트 MP3'],
+};
+
+// ============================================================================
+// SUB COMPONENTS - Interactive & Visual
+// ============================================================================
+
+function PricingComparisonChart() {
+  const maxScore = Math.max(...pricingComparison.map((p) => p.score));
+
+  return (
+    <div className="pricing-comparison-chart">
+      <h3>월 $20 가성비 비교</h3>
+      <p className="chart-subtitle">같은 가격, 다른 가치 - Gemini 생태계의 강점</p>
+
+      <table className="comparison-table">
+        <thead>
+          <tr>
+            <th>모델</th>
+            <th>가격</th>
+            <th>컨텍스트</th>
+            <th>Deep Research</th>
+            <th>무료 API</th>
+            <th>NotebookLM</th>
+            <th>Firebase</th>
+            <th>종합</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pricingComparison.map((item, index) => (
+            <motion.tr
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className={item.model === 'Gemini Pro' ? 'highlight-row' : ''}
+            >
+              <td className="model-name">{item.model}</td>
+              <td>{item.price}</td>
+              <td>{item.context}</td>
+              <td className={item.deepResearch.includes('✓') ? 'check' : 'cross'}>{item.deepResearch}</td>
+              <td className={item.freeAPI.includes('✓') ? 'check' : 'cross'}>{item.freeAPI}</td>
+              <td className={item.notebookLM.includes('✓') ? 'check' : 'cross'}>{item.notebookLM}</td>
+              <td className={item.firebase.includes('✓') ? 'check' : 'cross'}>{item.firebase}</td>
+              <td>
+                <div className="score-bar-container">
+                  <motion.div
+                    className="score-bar"
+                    style={{
+                      width: `${(item.score / maxScore) * 100}%`,
+                      background: item.model === 'Gemini Pro' ? '#4285F4' : '#ccc',
+                    }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${(item.score / maxScore) * 100}%` }}
+                    transition={{ duration: 0.8, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  />
+                  <span className="score-text">{item.score}</span>
+                </div>
+              </td>
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="chart-insight">
+        <Sparkles size={20} color="#4285F4" />
+        <p>
+          <strong>핵심 인사이트:</strong> Gemini Pro는 같은 $20에 5배 긴 컨텍스트, 무료 API, NotebookLM, Firebase
+          연동까지 제공합니다. 엔지니어에게 최고의 가성비입니다.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function GeminiAPIPlayground() {
+  const [selectedField, setSelectedField] = useState(0);
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [response, setResponse] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const currentField = targetFields[selectedField];
+
+  const handleSimulate = () => {
+    setIsSimulating(true);
+    setResponse('');
+
+    setTimeout(() => {
+      const promptToUse = customPrompt || currentField.prompts[0].prompt;
+      const matchedPrompt = currentField.prompts.find((p) => p.prompt === promptToUse);
+      setResponse(matchedPrompt ? matchedPrompt.response : '입력한 프롬프트에 대한 응답을 시뮬레이션합니다...');
+      setIsSimulating(false);
+    }, 1500);
+  };
+
+  const handleCopyCode = () => {
+    const code = `import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+model = genai.GenerativeModel('gemini-1.5-pro')
+
+prompt = """
+${customPrompt || currentField.prompts[0].prompt}
+"""
+
+response = model.generate_content(prompt)
+print(response.text)`;
+
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="gemini-api-playground">
+      <div className="playground-header">
+        <Bot size={32} color="#4285F4" />
+        <h3>Gemini API 인터랙티브 플레이그라운드</h3>
+        <p>분야를 선택하고 프롬프트를 입력하여 Gemini API 응답을 확인하세요</p>
+      </div>
+
+      {/* 분야 선택 */}
+      <div className="field-selector">
+        {targetFields.map((field, index) => {
+          const Icon = field.icon;
+          return (
+            <motion.button
+              key={index}
+              className={`field-button ${selectedField === index ? 'active' : ''}`}
+              onClick={() => setSelectedField(index)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              style={{ borderColor: field.color }}
+            >
+              <Icon size={24} color={field.color} />
+              <span>{field.field}</span>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* 프롬프트 예제 */}
+      <div className="prompt-examples">
+        <h4>{currentField.field} 분야 프롬프트 예제</h4>
+        <div className="examples-grid">
+          {currentField.prompts.map((prompt, index) => (
+            <motion.div
+              key={index}
+              className="example-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              onClick={() => setCustomPrompt(prompt.prompt)}
+            >
+              <h5>{prompt.title}</h5>
+              <p>{prompt.prompt.substring(0, 100)}...</p>
+              <button className="use-prompt-btn">이 프롬프트 사용</button>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* 프롬프트 입력 */}
+      <div className="prompt-input-section">
+        <label>프롬프트 입력 (직접 작성 또는 예제 선택)</label>
+        <textarea
+          value={customPrompt}
+          onChange={(e) => setCustomPrompt(e.target.value)}
+          placeholder={currentField.prompts[0].prompt}
+          rows={6}
+        />
+        <div className="input-actions">
+          <motion.button className="simulate-btn" onClick={handleSimulate} disabled={isSimulating} whileTap={{ scale: 0.95 }}>
+            {isSimulating ? '응답 생성 중...' : 'Gemini API 호출 (시뮬레이션)'}
+          </motion.button>
+          <motion.button className="copy-code-btn" onClick={handleCopyCode} whileTap={{ scale: 0.95 }}>
+            <Copy size={16} />
+            {copied ? '복사됨!' : '코드 복사'}
+          </motion.button>
+        </div>
+      </div>
+
+      {/* 응답 출력 */}
+      <AnimatePresence>
+        {response && (
+          <motion.div
+            className="response-output"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="output-header">
+              <CheckCircle2 size={20} color="#34A853" />
+              <h4>Gemini API 응답</h4>
+            </div>
+            <pre className="response-text">{response}</pre>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function NotebookLMDeepDive() {
+  const [activeTab, setActiveTab] = useState<'before' | 'prompt' | 'after'>('before');
+
+  return (
+    <div className="notebooklm-deepdive">
+      <h3>NotebookLM 실습: Before → Prompt → After</h3>
+      <p className="deepdive-intro">
+        기존 수작업 방식과 NotebookLM을 비교합니다. 출처 기반 답변으로 할루시네이션을 방지합니다.
+      </p>
+
+      <div className="deepdive-tabs">
+        <button
+          className={`tab-button ${activeTab === 'before' ? 'active' : ''}`}
+          onClick={() => setActiveTab('before')}
+        >
+          Before: 수작업
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'prompt' ? 'active' : ''}`}
+          onClick={() => setActiveTab('prompt')}
+        >
+          Prompt: 질문
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'after' ? 'active' : ''}`}
+          onClick={() => setActiveTab('after')}
+        >
+          After: NotebookLM 답변
+        </button>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {activeTab === 'before' && (
+          <motion.div
+            key="before"
+            className="tab-content"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="before-content">
+              <AlertCircle size={24} color="#EA4335" />
+              <h4>기존 방식: 논문을 수작업으로 읽고 요약</h4>
+              <ul className="problem-list">
+                <li>Nature 논문 15페이지를 3시간 읽기</li>
+                <li>핵심 내용을 Word에 수작업 요약</li>
+                <li>실험 방법론을 Excel에 정리</li>
+                <li>참고 문헌을 일일이 찾아 기록</li>
+                <li>팀원과 공유 시 파일 전송</li>
+              </ul>
+              <div className="time-cost">
+                <Clock size={16} />
+                <span>소요 시간: 약 3~4시간</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'prompt' && (
+          <motion.div
+            key="prompt"
+            className="tab-content"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="prompt-content">
+              <Quote size={24} color="#4285F4" />
+              <h4>NotebookLM에 질문하기</h4>
+              <div className="questions-list">
+                {notebookLMQuestionsData.map((item, index) => (
+                  <div key={index} className="question-item">
+                    <div className="question-text">
+                      <strong>Q{index + 1}:</strong> {item.question}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="prompt-info">
+                <Sparkles size={16} />
+                <span>NotebookLM이 업로드한 논문에서 답을 찾습니다 (외부 지식 사용 안 함)</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'after' && (
+          <motion.div
+            key="after"
+            className="tab-content"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="after-content">
+              <CheckCircle2 size={24} color="#34A853" />
+              <h4>NotebookLM 답변: 출처 기반, 할루시네이션 없음</h4>
+              <div className="answers-list">
+                {notebookLMQuestionsData.map((item, index) => (
+                  <div key={index} className="answer-item">
+                    <div className="answer-header">
+                      <strong>Q{index + 1}:</strong> {item.question}
+                    </div>
+                    <div className="answer-text">
+                      <strong>A:</strong>
+                      <pre>{item.answer}</pre>
+                    </div>
+                    <div className="answer-source">
+                      <Shield size={14} color="#34A853" />
+                      <span>출처: {item.source}</span>
+                      <div className="confidence-badge">{item.confidence}% 신뢰도</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="time-saved">
+                <Zap size={16} color="#FBBC04" />
+                <span>소요 시간: 약 5분 (95% 단축)</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function FirebaseSetupInteractive() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
+  const handleStepComplete = (index: number) => {
+    if (!completedSteps.includes(index)) {
+      setCompletedSteps([...completedSteps, index]);
+    }
+    if (index < firebaseSetupSteps.length - 1) {
+      setCurrentStep(index + 1);
+    }
+  };
+
+  return (
+    <div className="firebase-setup-interactive">
+      <h3>Firebase 프로젝트 생성 5단계</h3>
+      <p className="setup-intro">단계별로 따라하며 Firebase 프로젝트를 생성하고 CLI를 설정합니다.</p>
+
+      <div className="steps-progress">
+        {firebaseSetupSteps.map((step, index) => (
+          <div key={index} className={`step-indicator ${index === currentStep ? 'current' : ''} ${completedSteps.includes(index) ? 'completed' : ''}`}>
+            <div className="step-number">
+              {completedSteps.includes(index) ? <Check size={16} /> : step.step}
+            </div>
+            <span className="step-title-mini">{step.title}</span>
+          </div>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep}
+          className="current-step-content"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {(() => {
+            const step = firebaseSetupSteps[currentStep];
+            const Icon = step.icon;
+            return (
+              <div className="step-detail">
+                <div className="step-header">
+                  <Icon size={32} color="#EA4335" />
+                  <h4>
+                    {step.step}. {step.title}
+                  </h4>
+                </div>
+                <p className="step-body">{step.body}</p>
+                <div className="step-action">
+                  <strong>액션:</strong> {step.action}
+                </div>
+                <div className="step-duration">
+                  <Clock size={16} />
+                  <span>예상 소요: {step.duration}</span>
+                </div>
+                <motion.button
+                  className="complete-step-btn"
+                  onClick={() => handleStepComplete(currentStep)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={completedSteps.includes(currentStep)}
+                >
+                  {completedSteps.includes(currentStep) ? '완료됨 ✓' : '이 단계 완료'}
+                </motion.button>
+              </div>
+            );
+          })()}
+        </motion.div>
+      </AnimatePresence>
+
+      {currentStep === firebaseSetupSteps.length - 1 && completedSteps.length === firebaseSetupSteps.length && (
+        <motion.div
+          className="setup-complete-message"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <CheckCircle2 size={32} color="#34A853" />
+          <h4>Firebase 설정 완료!</h4>
+          <p>이제 firebase deploy 명령어로 앱을 배포할 수 있습니다.</p>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function CompletionChecklistComponent() {
+  const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+
+  const toggleItem = (index: number) => {
+    setCheckedItems((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const completedCount = Object.values(checkedItems).filter(Boolean).length;
+  const totalCount = completionChecklist.length;
+  const progress = (completedCount / totalCount) * 100;
+
+  return (
+    <div className="completion-checklist-component">
+      <h3>완성 체크리스트</h3>
+      <div className="progress-bar-container">
+        <div className="progress-bar" style={{ width: `${progress}%` }} />
+        <span className="progress-text">
+          {completedCount} / {totalCount} 완료 ({progress.toFixed(0)}%)
+        </span>
+      </div>
+
+      <ul className="checklist-items">
+        {completionChecklist.map((item, index) => (
+          <motion.li
+            key={index}
+            className={checkedItems[index] ? 'checked' : ''}
+            onClick={() => toggleItem(index)}
+            whileHover={{ x: 4 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <div className="checkbox">{checkedItems[index] && <Check size={18} color="#34A853" />}</div>
+            <span>{item.item}</span>
+          </motion.li>
+        ))}
+      </ul>
+
+      {progress === 100 && (
+        <motion.div
+          className="completion-message"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Sparkles size={24} color="#4285F4" />
+          <p>
+            <strong>축하합니다!</strong> 11강 Gemini 생태계 마스터를 완료했습니다. 이제 12강에서 NotebookLM 연구
+            노트를 만들어봅니다.
+          </p>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function NextLecturePreview() {
+  return (
+    <motion.div
+      className="next-lecture-preview"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="preview-header">
+        <BookOpen size={32} color="#34A853" />
+        <h3>{lecture12Preview.title}</h3>
+        <p>{lecture12Preview.description}</p>
+      </div>
+
+      <div className="preview-topics">
+        <h4>핵심 주제</h4>
+        <ul>
+          {lecture12Preview.topics.map((topic, index) => (
+            <li key={index}>
+              <CheckCircle2 size={16} color="#34A853" />
+              {topic}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="preview-deliverables">
+        <h4>결과물</h4>
+        <ul>
+          {lecture12Preview.deliverables.map((item, index) => (
+            <li key={index}>
+              <FileText size={16} color="#4285F4" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <motion.button
+        className="preview-button"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        12강 바로가기 <ArrowRight size={20} />
+      </motion.button>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// MAIN APP COMPONENT
+// ============================================================================
+
+function App() {
+  const [copiedCode, setCopiedCode] = useState('');
+
+  const handleCopyCode = (code: string, id: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(''), 2000);
+  };
+
+  return (
+    <div className="app-container lecture-11">
+      {/* HEADER */}
+      <header className="main-header">
+        <div className="header-content">
+          <div className="logo-section">
+            <Bot size={32} color="#4285F4" />
+            <span className="logo-text">Letuin AI 강의</span>
+          </div>
+          <div className="header-tags">
+            <span className="tag tag-session">Session 3</span>
+            <span className="tag tag-lecture">11강</span>
+            <span className="tag tag-topic">Gemini 생태계</span>
+          </div>
+        </div>
+      </header>
+
+      <main className="main-content">
+        {/* SECTION 01: HERO */}
+        <section id="hero" className="hero-section">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Gemini 생태계 마스터
+          </motion.h1>
+
+          <motion.p
+            className="hero-subtitle"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            API로 AI 호출, NotebookLM으로 지식 베이스, Firebase로 배포까지. Google AI 도구를 완전히 마스터합니다.
+          </motion.p>
+
+          {/* Learning Goals */}
+          <div className="learning-goals-grid">
+            {learningGoals.map((goal, index) => {
+              const Icon = goal.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="goal-card"
+                  style={{ borderColor: goal.color }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + index * 0.15 }}
+                  whileHover={{ y: -8, boxShadow: '0 12px 24px rgba(0,0,0,0.15)' }}
+                >
+                  <div className="goal-icon" style={{ background: goal.color }}>
+                    <Icon size={32} color="white" />
+                  </div>
+                  <div className="goal-step">{goal.step}</div>
+                  <h3>{goal.title}</h3>
+                  <p>{goal.body}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Timeline */}
+          <div className="timeline-container">
+            <h3>40분 타임라인</h3>
+            <div className="timeline-flow">
+              {lessonFlow.map((step, index) => (
+                <motion.div
+                  key={index}
+                  className="timeline-step"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                >
+                  <div className="step-time">{step.time}</div>
+                  <div className="step-label">{step.label}</div>
+                  <div className="step-detail">{step.detail}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Role Flow */}
+          <div className="role-flow-container">
+            <h3>역할 분담: 엔지니어 + AI</h3>
+            <div className="role-cards">
+              {roleFlow.map((role, index) => (
+                <motion.div
+                  key={index}
+                  className="role-card"
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1.2 + index * 0.15 }}
+                >
+                  <h4>{role.owner}</h4>
+                  <p>{role.task}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 02: GEMINI ECOSYSTEM */}
+        <section id="ecosystem" className="content-section">
+          <h2>Gemini 생태계 5개 도구</h2>
+          <p className="section-intro">
+            Google이 제공하는 5개 도구가 유기적으로 연결되어 엔지니어링 AI 워크플로우를 완성합니다. 월 $20 투자로
+            전체 생태계를 활용할 수 있습니다.
+          </p>
+
+          <div className="ecosystem-grid">
+            {geminiEcosystem.map((tool, index) => {
+              const Icon = tool.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="ecosystem-card"
+                  style={{ borderColor: tool.color }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="ecosystem-icon" style={{ background: tool.color }}>
+                    <Icon size={28} color="white" />
+                  </div>
+                  <h4>{tool.title}</h4>
+                  <p className="ecosystem-description">{tool.description}</p>
+                  <ul className="ecosystem-features">
+                    {tool.features.map((feature, i) => (
+                      <li key={i}>
+                        <Check size={14} color={tool.color} />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="ecosystem-footer">
+                    <span className="cost-badge" style={{ background: tool.color }}>
+                      {tool.cost}
+                    </span>
+                    <span className="quota-badge">{tool.freeQuota}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* SECTION 03: PRICING COMPARISON */}
+        <section id="pricing" className="content-section">
+          <h2>월 $20 가성비 비교</h2>
+          <p className="section-intro">
+            Gemini Pro, Claude Pro, GPT-4 Pro 모두 월 $20입니다. 하지만 Gemini는 컨텍스트 창이 5배 길고, 무료 API,
+            NotebookLM, Firebase 연동까지 제공합니다.
+          </p>
+          <PricingComparisonChart />
+        </section>
+
+        {/* SECTION 04: API KEY SETUP */}
+        <section id="api-key-setup" className="content-section">
+          <h2>Google AI Studio API Key 발급</h2>
+          <p className="section-intro">3단계로 Gemini API Key를 발급받고 .env 파일에 안전하게 저장합니다.</p>
+
+          <div className="api-key-steps-grid">
+            {apiKeySteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="api-step-card"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.15 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="step-number">{step.step}</div>
+                  <Icon size={32} color="#4285F4" />
+                  <h4>{step.title}</h4>
+                  <p>{step.body}</p>
+                  <div className="step-action">
+                    <strong>액션:</strong> {step.action}
+                  </div>
+                  <div className="step-expected">
+                    <strong>예상 결과:</strong> {step.expected}
+                  </div>
+                  <div className="step-duration">
+                    <Clock size={14} />
+                    {step.duration}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Security Checklist */}
+          <div className="security-checklist-box">
+            <Lock size={24} color="#EA4335" />
+            <h4>API Key 보안 체크리스트 (필수)</h4>
+            <ul className="security-list">
+              {securityChecklist.map((item, index) => (
+                <li key={index}>
+                  <Shield size={14} color="#34A853" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* SECTION 05: HELLO GEMINI */}
+        <section id="hello-gemini" className="content-section">
+          <h2>Gemini API 첫 호출: Hello, Gemini!</h2>
+          <p className="section-intro">5줄 Python 코드로 첫 번째 Gemini API 호출을 실행합니다.</p>
+
+          <div className="code-demo-box">
+            <div className="code-header">
+              <Terminal size={20} color="#4285F4" />
+              <span>api_test.py</span>
+              <motion.button
+                className="copy-btn"
+                onClick={() => handleCopyCode(helloGeminiCode, 'hello')}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {copiedCode === 'hello' ? <Check size={16} /> : <Copy size={16} />}
+                {copiedCode === 'hello' ? '복사됨!' : '복사'}
+              </motion.button>
+            </div>
+            <pre className="code-content">{helloGeminiCode}</pre>
+          </div>
+
+          <div className="execution-result">
+            <h4>실행 결과</h4>
+            <div className="result-terminal">
+              <div className="terminal-line">$ python api_test.py</div>
+              <div className="terminal-output">Hello! How can I help you today?</div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 06: GEMINI API PLAYGROUND */}
+        <section id="api-playground" className="content-section">
+          <h2>Gemini API 인터랙티브 플레이그라운드</h2>
+          <p className="section-intro">
+            반도체, 디스플레이, 배터리, 바이오 4개 분야 프롬프트를 직접 테스트하고 Gemini API 응답을 확인합니다.
+          </p>
+          <GeminiAPIPlayground />
+        </section>
+
+        {/* SECTION 07: NOTEBOOKLM */}
+        <section id="notebooklm" className="content-section">
+          <h2>NotebookLM: 개인 지식 베이스 구축</h2>
+          <p className="section-intro">
+            논문을 업로드하여 개인화된 연구 노트를 만들고 출처 기반 답변을 받습니다. 할루시네이션이 없습니다.
+          </p>
+
+          <div className="notebooklm-features-grid">
+            {notebookLMFeatures.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="feature-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Icon size={28} color="#34A853" />
+                  <h4>{feature.feature}</h4>
+                  <p>{feature.description}</p>
+                  <ul className="feature-examples">
+                    {feature.examples.map((example, i) => (
+                      <li key={i}>{example}</li>
+                    ))}
+                  </ul>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <NotebookLMDeepDive />
+
+          <div className="notebooklm-usecases">
+            <h3>NotebookLM 활용 사례: 시간 단축 효과</h3>
+            <div className="usecases-grid">
+              {notebookLMUseCases.map((usecase, index) => (
+                <motion.div
+                  key={index}
+                  className="usecase-card"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <h4>{usecase.scenario}</h4>
+                  <div className="usecase-comparison">
+                    <div className="before-state">
+                      <AlertCircle size={16} color="#EA4335" />
+                      <strong>Before:</strong>
+                      <p>{usecase.before}</p>
+                    </div>
+                    <ArrowRight size={20} color="#4285F4" />
+                    <div className="after-state">
+                      <CheckCircle2 size={16} color="#34A853" />
+                      <strong>After:</strong>
+                      <p>{usecase.after}</p>
+                    </div>
+                  </div>
+                  <div className="time-reduction-badge">{usecase.timeReduction}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 08: FIREBASE */}
+        <section id="firebase" className="content-section">
+          <h2>Firebase 프로젝트 생성</h2>
+          <p className="section-intro">
+            Firebase Console에서 프로젝트를 생성하고 CLI를 설치하여 배포 환경을 준비합니다.
+          </p>
+          <FirebaseSetupInteractive />
+
+          <div className="firebase-cli-reference">
+            <h4>Firebase CLI 주요 명령어</h4>
+            <div className="cli-commands-grid">
+              {firebaseCLICommands.map((cmd, index) => (
+                <div key={index} className="cli-command-card">
+                  <div className="command-text">
+                    <Terminal size={16} />
+                    <code>{cmd.command}</code>
+                  </div>
+                  <p className="command-description">{cmd.description}</p>
+                  <div className="expected-output">
+                    <strong>예상 출력:</strong>
+                    <code>{cmd.expectedOutput}</code>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 09: CHECKLIST */}
+        <section id="checklist" className="content-section">
+          <h2>정리 및 검증</h2>
+          <p className="section-intro">
+            11강에서 배운 내용을 체크리스트로 확인하고 12강으로 넘어갈 준비를 합니다.
+          </p>
+          <CompletionChecklistComponent />
+        </section>
+
+        {/* SECTION 10: NEXT LECTURE */}
+        <section id="next-lecture" className="content-section">
+          <h2>다음 강의 예고</h2>
+          <NextLecturePreview />
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="main-footer">
+        <p>© 2026 Letuin KDC | AI 바이브 코딩 실전 강의</p>
+        <p className="footer-subtitle">Session 3: Gemini 생태계 마스터 (11~17강)</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
