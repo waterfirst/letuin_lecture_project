@@ -1152,7 +1152,7 @@ function NextSteps() {
           </h3>
           <p style={{ fontSize: '0.95rem', color: '#666', marginBottom: '1rem' }}>
             구축 과정 작성
-          </h3>
+          </p>
           <p style={{ fontSize: '0.9rem', lineHeight: '1.7' }}>
             각 프로젝트의 구축 과정과 문제 해결 경험을 블로그에 작성하여
             기술 역량을 증명하고 취업 시 차별화된 포트폴리오로 활용합니다.
