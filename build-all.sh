@@ -22,7 +22,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/$REPO_NAME/$app_name/',
+  base: '/${REPO_NAME}/${app_name}/',
 })
 EOF
 
