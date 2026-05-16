@@ -6,1193 +6,698 @@ import {
   ArrowRight,
   BarChart3,
   Battery,
-  Camera,
   Check,
   CheckCircle2,
   Code,
   Copy,
   Database,
   Dna,
-  Eye,
   ExternalLink,
-  FileImage,
   FileText,
-  Image as ImageIcon,
   Layers,
   LineChart,
-  Quote,
-  Scan,
   Sparkles,
   TrendingUp,
-  Upload,
-  Video,
   Wrench,
   Zap,
 } from 'lucide-react';
 
 // ============================================================================
-// DATA ARRAYS - Image Analysis & Vision AI
+// PROJECT 02: Streamlit Display Process Simulator
 // ============================================================================
 
-const projectLevels = [
-  {
-    level: 'Level 1',
-    title: '초급 (Beginner)',
-    subtitle: '단일 이미지 분류 & Gemini Vision API',
-    difficulty: 'beginner',
-    duration: '2-3시간',
-    techs: ['Gemini Vision API', 'PIL', 'Python'],
-    goal: '1장의 이미지를 Gemini Vision API로 분석하여 불량 여부 판정',
-  },
-  {
-    level: 'Level 2',
-    title: '중급 (Intermediate)',
-    subtitle: '배치 처리 & 불량 유형 분류 자동화',
-    difficulty: 'intermediate',
-    duration: '1주',
-    techs: ['asyncio', 'SQLite', 'pandas', 'CSV 리포트'],
-    goal: '수백 장 이미지를 자동 분류하고 불량 통계 리포트 생성',
-  },
-  {
-    level: 'Level 3',
-    title: '고급 (Advanced)',
-    subtitle: '실시간 영상 분석 & 커스텀 모델 파인튜닝',
-    difficulty: 'advanced',
-    duration: '2-3주',
-    techs: ['OpenCV', 'PyTorch', 'FastAPI', 'Docker'],
-    goal: '실시간 카메라 영상을 분석하고 커스텀 모델로 정밀 검사',
-  },
-];
-
-const domainExamples = [
-  {
-    icon: Activity,
-    domain: '반도체 (Semiconductor)',
-    use: 'Wafer 표면 결함 검사',
-    example: '스크래치, 파티클, Mura 자동 분류',
-    color: '#4285F4',
-  },
-  {
-    icon: BarChart3,
-    domain: '디스플레이 (Display)',
-    use: 'Panel 불량 자동 검출',
-    example: 'Pixel defect, Mura, Color shift 분석',
-    color: '#34A853',
-  },
-  {
-    icon: Battery,
-    domain: '배터리 (Battery)',
-    use: '전극 코팅 불량 검사',
-    example: 'Coating 두께, 기포, 크랙 자동 검출',
-    color: '#FBBC04',
-  },
-  {
-    icon: Dna,
-    domain: '바이오 (Bio)',
-    use: '세포 이미지 분석',
-    example: '세포 형태, 밀도, 생존율 자동 측정',
-    color: '#EA4335',
-  },
-];
-
-const progressionPath = [
-  { step: '1', title: '초급', focus: 'Gemini Vision API 단일 이미지 분류', time: '2-3시간' },
-  { step: '2', title: '중급', focus: '배치 처리 + SQLite 데이터베이스 저장', time: '1주' },
-  { step: '3', title: '고급', focus: '실시간 영상 + 커스텀 모델 파인튜닝', time: '2-3주' },
-];
-
-const beginnerTechs = [
-  { name: 'Gemini Vision API', purpose: '이미지 자동 분류 및 설명 생성' },
-  { name: 'PIL (Pillow)', purpose: '이미지 로드 및 전처리' },
-  { name: 'Python requests', purpose: 'API 호출 및 응답 처리' },
-];
-
-const intermediateTechs = [
-  { name: 'asyncio', purpose: '수백 장 이미지 병렬 처리' },
-  { name: 'SQLite', purpose: '분석 결과 데이터베이스 저장' },
-  { name: 'pandas', purpose: '통계 리포트 자동 생성' },
-  { name: 'plotly', purpose: '불량 유형별 파레토 차트' },
-];
-
-const advancedTechs = [
-  { name: 'OpenCV', purpose: '실시간 영상 처리 및 전처리' },
-  { name: 'PyTorch', purpose: '커스텀 CNN 모델 파인튜닝' },
-  { name: 'FastAPI', purpose: '실시간 추론 REST API' },
-  { name: 'Docker', purpose: '컨테이너 배포 및 스케일링' },
-];
-
-const beginnerChecklist = [
-  'Gemini Vision API Key가 설정되어 있는가?',
-  'PIL로 이미지를 정상 로드할 수 있는가?',
-  'API 응답에서 불량 여부를 추출할 수 있는가?',
-  '분석 결과를 텍스트로 저장할 수 있는가?',
-];
-
-const intermediateChecklist = [
-  'asyncio로 여러 이미지를 병렬 처리하는가?',
-  'SQLite에 분석 결과가 정상 저장되는가?',
-  'pandas로 통계 리포트가 생성되는가?',
-  'plotly 파레토 차트가 표시되는가?',
-];
-
-const advancedChecklist = [
-  'OpenCV로 실시간 카메라 영상을 캡처하는가?',
-  'PyTorch 모델이 정상 추론되는가?',
-  'FastAPI 엔드포인트가 작동하는가?',
-  'Docker 컨테이너가 정상 실행되는가?',
-];
-
-// ============================================================================
-// HELPER COMPONENTS
-// ============================================================================
-
-function LevelBadge({ difficulty }: { difficulty: string }) {
-  const config: { [key: string]: { bg: string; label: string } } = {
-    beginner: { bg: '#D1F2EB', label: '초급' },
-    intermediate: { bg: '#FFF3CD', label: '중급' },
-    advanced: { bg: '#F8D7DA', label: '고급' },
-  };
-  const c = config[difficulty] || config.beginner;
+const ProjectOverview = () => {
   return (
-    <span style={{
-      display: 'inline-block',
-      padding: '0.25rem 0.75rem',
-      background: c.bg,
-      borderRadius: '12px',
-      fontSize: '0.85rem',
-      fontWeight: 600,
-    }}>
-      {c.label}
-    </span>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        color: 'white',
+        boxShadow: '0 20px 60px rgba(102, 126, 234, 0.3)',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+        <Activity size={48} />
+        <div>
+          <h1 style={{ fontSize: '2.5rem', margin: 0 }}>프로젝트 2</h1>
+          <p style={{ fontSize: '1.3rem', margin: '0.5rem 0 0 0', opacity: 0.95 }}>
+            디스플레이 공정 시뮬레이터 or 데이터 분석 앱
+          </p>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+        <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
+          <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>제출 시기</div>
+          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>10강 후 1주일 이내</div>
+        </div>
+        <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
+          <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>주요 도구</div>
+          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Streamlit / R Shiny</div>
+        </div>
+        <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
+          <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>핵심 목표</div>
+          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>인터랙티브 앱 배포</div>
+        </div>
+      </div>
+    </motion.div>
   );
-}
-
-function TechStack({ techs }: { techs: string[] }) {
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1rem' }}>
-      {techs.map((tech) => (
-        <span
-          key={tech}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-            padding: '0.4rem 0.8rem',
-            background: '#f5f5f7',
-            borderRadius: '8px',
-            fontSize: '0.85rem',
-            fontWeight: 500,
-          }}
-        >
-          <Code size={14} />
-          {tech}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function VerifyChecklist({ points }: { points: string[] }) {
-  return (
-    <div className="verify-checklist">
-      <span>검증 포인트</span>
-      {points.map((point) => (
-        <div className="verify-item" key={point}>
-          <CheckCircle2 size={15} />
-          <p>{point}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ============================================================================
-// PROJECT OVERVIEW
-// ============================================================================
-
-function ProjectOverview() {
-  return (
-    <section className="overview-section">
-      <span className="section-label">프로젝트 개요</span>
-      <h2>이미지 분석 & 비전 AI - 3단계 프로그레시브 학습</h2>
-      <p className="section-intro">
-        단일 이미지 분류 → 배치 처리 자동화 → 실시간 영상 분석까지,
-        현장에서 바로 사용 가능한 비전 AI 시스템을 단계별로 구축합니다.
-      </p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
-        {projectLevels.map((level) => (
-          <motion.div
-            key={level.level}
-            className="learning-goal-card"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span>{level.level}</span>
-              <LevelBadge difficulty={level.difficulty} />
-            </div>
-            <h3>{level.title}</h3>
-            <p style={{ fontSize: '0.95rem', color: '#666', marginBottom: '1rem' }}>{level.subtitle}</p>
-            <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>
-              <strong>목표:</strong> {level.goal}
-            </div>
-            <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>
-              <strong>학습 기간:</strong> {level.duration}
-            </div>
-            <TechStack techs={level.techs} />
-          </motion.div>
-        ))}
-      </div>
-
-      <div style={{ marginTop: '3rem' }}>
-        <h3 style={{ fontSize: '1.3rem', marginBottom: '1.5rem' }}>도메인별 적용 사례</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-          {domainExamples.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.domain} style={{ padding: '1.5rem', background: '#f5f5f7', borderRadius: '12px', borderLeft: `4px solid ${item.color}` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                  <Icon size={20} color={item.color} />
-                  <strong style={{ color: item.color }}>{item.domain}</strong>
-                </div>
-                <p style={{ fontSize: '0.9rem', margin: '0.5rem 0', color: '#555' }}>
-                  <strong>적용:</strong> {item.use}
-                </p>
-                <p style={{ fontSize: '0.9rem', margin: '0.5rem 0', color: '#333' }}>
-                  <strong>예시:</strong> {item.example}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="lesson-timeline" aria-label="3단계 프로그레시브 경로" style={{ marginTop: '3rem' }}>
-        {progressionPath.map((item) => (
-          <div className="timeline-step" key={item.step}>
-            <strong>{item.step}</strong>
-            <span>{item.title}</span>
-            <p style={{ fontSize: '0.85rem', color: '#666' }}>{item.focus}</p>
-            <p style={{ fontSize: '0.8rem', color: '#999' }}>{item.time}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// LEVEL 1: BEGINNER
-// ============================================================================
-
-function BeginnerLevel() {
-  const sampleCode = `import google.generativeai as genai
-from PIL import Image
-import os
-from dotenv import load_dotenv
-
-# 환경 변수 로드
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# 이미지 로드
-image_path = "wafer_sample.jpg"
-img = Image.open(image_path)
-
-# Gemini Vision 모델 초기화
-model = genai.GenerativeModel('gemini-2.0-flash-exp')
-
-# 프롬프트 작성
-prompt = """
-이 반도체 Wafer 이미지를 분석해줘.
-
-다음 항목을 확인:
-1. 불량 여부 (정상/불량)
-2. 불량 유형 (스크래치, 파티클, Mura 등)
-3. 불량 위치 (중앙, 외곽, 전체)
-4. 심각도 (경미, 중간, 심각)
-5. 조치 방안
-
-결과를 JSON 형식으로 출력해줘.
-"""
-
-# API 호출
-response = model.generate_content([prompt, img])
-
-print("=== Gemini Vision 분석 결과 ===")
-print(response.text)
-
-# 결과 저장
-with open("analysis_result.txt", "w", encoding="utf-8") as f:
-    f.write(response.text)
-
-print("\\n✅ 분석 완료: analysis_result.txt 저장됨")`;
-
-  const sampleOutput = `{
-  "defect_status": "불량",
-  "defect_type": "파티클 (Particle)",
-  "defect_location": "중앙부 (Center region)",
-  "severity": "중간 (Medium)",
-  "recommended_action": [
-    "1. 파티클 소스 확인 (Chiller, 공조 시스템)",
-    "2. Cleaning 프로세스 강화",
-    "3. 동일 Lot 전수 검사 실시",
-    "4. 설비 PM 주기 재검토"
-  ],
-  "confidence": "87%"
-}`;
-
-  return (
-    <section>
-      <span className="section-label">Level 1 - 초급 (Beginner)</span>
-      <h2>단일 이미지 분류 & Gemini Vision API</h2>
-      <p className="section-intro">
-        1장의 이미지를 Gemini Vision API로 분석하여 불량 여부와 유형을 자동 판정합니다.
-        코딩 경험이 적어도 API 호출만으로 강력한 비전 AI를 사용할 수 있습니다.
-      </p>
-
-      <div className="one-line-definition inline-definition">
-        <span>학습 목표</span>
-        <strong>Gemini Vision API로 1장의 이미지를 분석하고 불량 여부를 자동 판정하는 Python 스크립트를 작성합니다.</strong>
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>사용 기술 스택</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          {beginnerTechs.map((tech) => (
-            <div key={tech.name} style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px' }}>
-              <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#0071e3' }}>{tech.name}</strong>
-              <p style={{ fontSize: '0.9rem', color: '#666' }}>{tech.purpose}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="deep-dive" style={{ marginTop: '2rem' }}>
-        <div className="deep-dive-heading">
-          <span>Before → Prompt → After</span>
-          <h3>수동 이미지 검사 → Gemini Vision API 자동 분류</h3>
-        </div>
-
-        <div className="yield-case-compare vertical-case-flow">
-          <article className="yield-case-panel manual-panel">
-            <span>Before: 수동 검사</span>
-            <h4>엔지니어가 이미지를 눈으로 확인하고 판정</h4>
-            <ul>
-              <li>AOI 이미지를 모니터로 확인</li>
-              <li>불량 여부를 눈으로 판단</li>
-              <li>불량 유형을 수동 분류 (스크래치, 파티클 등)</li>
-              <li>Excel에 결과 기록</li>
-              <li>하루 100장 처리 시 2-3시간 소요</li>
-            </ul>
-          </article>
-
-          <article className="yield-case-panel prompt-panel">
-            <span>Prompt: Gemini Vision 지시</span>
-            <h4>이미지를 Gemini에게 보내 자동 분석</h4>
-            <p>
-              "이 반도체 Wafer 이미지를 분석해서 불량 여부, 불량 유형, 위치, 심각도를 판정해줘.
-              결과는 JSON 형식으로 출력하고, 조치 방안도 함께 추천해줘."
-            </p>
-            <div className="aoi-rule-grid">
-              <div><strong>불량 여부</strong><span>정상/불량 자동 판정</span></div>
-              <div><strong>불량 유형</strong><span>스크래치, 파티클 등</span></div>
-              <div><strong>조치 방안</strong><span>구체적 액션 제시</span></div>
-            </div>
-          </article>
-
-          <article className="yield-case-panel result-panel">
-            <span>After: AI 산출물</span>
-            <h4>Python 스크립트 + 자동 분석 결과</h4>
-            <div className="code-preview-box">
-              <div className="visual-header">
-                <span>Python Script</span>
-                <strong>gemini_vision_classifier.py</strong>
-              </div>
-              <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem', overflow: 'auto' }}>{sampleCode}</pre>
-            </div>
-            <div className="code-preview-box" style={{ marginTop: '1rem' }}>
-              <div className="visual-header">
-                <span>JSON Output</span>
-                <strong>analysis_result.txt</strong>
-              </div>
-              <pre style={{ background: '#f0fdf4', color: '#166534', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem', overflow: 'auto' }}>{sampleOutput}</pre>
-            </div>
-            <div className="aoi-impact-strip">
-              <div><strong>2-3시간 → 10초</strong><span>분석 시간 단축</span></div>
-              <div><strong>87% 정확도</strong><span>엔지니어 최종 검증</span></div>
-              <div><strong>JSON 저장</strong><span>자동 리포트 생성</span></div>
-            </div>
-          </article>
-        </div>
-
-        <p className="case-takeaway">
-          핵심은 Gemini Vision API를 호출하여 이미지를 자동 분석하고,
-          결과를 JSON으로 받아 프로그램에서 후처리할 수 있다는 점입니다.
-        </p>
-        <VerifyChecklist points={beginnerChecklist} />
-      </div>
-
-      <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#0071e3', marginTop: '2rem' }}>
-        <p style={{ fontWeight: 700 }}>초급 완료 후 다음 단계:</p>
-        <p>1장 → 수백 장 배치 처리로 확장하여 실무 자동화 시스템을 구축합니다 (중급 단계).</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// LEVEL 2: INTERMEDIATE
-// ============================================================================
-
-function IntermediateLevel() {
-  const batchCode = `import asyncio
-import google.generativeai as genai
-from PIL import Image
-import sqlite3
-import pandas as pd
-import plotly.express as px
-from pathlib import Path
-import os
-from dotenv import load_dotenv
-from datetime import datetime
-
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# SQLite 데이터베이스 초기화
-conn = sqlite3.connect('vision_results.db')
-cursor = conn.cursor()
-
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS inspections (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    filename TEXT,
-    defect_status TEXT,
-    defect_type TEXT,
-    severity TEXT,
-    confidence REAL,
-    timestamp TEXT
-)
-''')
-conn.commit()
-
-# Gemini Vision 비동기 분석 함수
-async def analyze_image(image_path: str, model):
-    """단일 이미지 비동기 분석"""
-    img = Image.open(image_path)
-
-    prompt = """
-    이 이미지를 분석하여 다음 정보를 JSON으로 출력:
-    - defect_status: "정상" 또는 "불량"
-    - defect_type: 불량 유형 (정상이면 "N/A")
-    - severity: "경미", "중간", "심각" (정상이면 "N/A")
-    - confidence: 신뢰도 퍼센트 (숫자만)
-    """
-
-    response = await model.generate_content_async([prompt, img])
-    return {
-        'filename': Path(image_path).name,
-        'result': response.text,
-        'timestamp': datetime.now().isoformat()
-    }
-
-# 배치 처리 메인 함수
-async def batch_process(image_folder: str):
-    """여러 이미지를 병렬 처리"""
-    model = genai.GenerativeModel('gemini-2.0-flash-exp')
-    image_files = list(Path(image_folder).glob('*.jpg'))
-
-    print(f"📁 총 {len(image_files)}장 이미지 분석 시작...")
-
-    # 병렬 처리 (최대 5개씩)
-    tasks = []
-    for img_path in image_files:
-        task = analyze_image(str(img_path), model)
-        tasks.append(task)
-
-    results = await asyncio.gather(*tasks)
-
-    # SQLite에 결과 저장
-    for result in results:
-        # 간단한 파싱 (실제로는 JSON 파싱 필요)
-        cursor.execute('''
-            INSERT INTO inspections
-            (filename, defect_status, defect_type, severity, confidence, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (
-            result['filename'],
-            '불량',  # 파싱 로직 필요
-            'Particle',
-            '중간',
-            85.0,
-            result['timestamp']
-        ))
-
-    conn.commit()
-    print(f"✅ {len(results)}건 분석 완료 및 DB 저장")
-
-# 통계 리포트 생성
-def generate_report():
-    """pandas로 통계 리포트 생성"""
-    df = pd.read_sql_query("SELECT * FROM inspections", conn)
-
-    # 불량 유형별 파레토 차트
-    defect_counts = df['defect_type'].value_counts()
-    fig = px.bar(
-        x=defect_counts.index,
-        y=defect_counts.values,
-        title='불량 유형별 발생 빈도',
-        labels={'x': '불량 유형', 'y': '발생 건수'}
-    )
-    fig.write_html('defect_pareto.html')
-
-    # CSV 리포트
-    summary = df.groupby('defect_type').agg({
-        'confidence': 'mean',
-        'filename': 'count'
-    }).rename(columns={'filename': 'count'})
-
-    summary.to_csv('inspection_summary.csv')
-    print("📊 리포트 생성 완료: defect_pareto.html, inspection_summary.csv")
-
-# 실행
-if __name__ == "__main__":
-    asyncio.run(batch_process("./images"))
-    generate_report()
-    conn.close()`;
-
-  return (
-    <section style={{ marginTop: '4rem' }}>
-      <span className="section-label">Level 2 - 중급 (Intermediate)</span>
-      <h2>배치 처리 & 불량 유형 분류 자동화</h2>
-      <p className="section-intro">
-        수백 장의 이미지를 asyncio로 병렬 처리하고, SQLite에 결과를 저장하며,
-        pandas로 통계 리포트와 파레토 차트를 자동 생성합니다.
-      </p>
-
-      <div className="one-line-definition inline-definition">
-        <span>학습 목표</span>
-        <strong>asyncio로 이미지 배치 처리, SQLite DB 저장, pandas 통계 리포트를 통합한 자동화 시스템을 구축합니다.</strong>
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>새롭게 추가되는 기술</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          {intermediateTechs.map((tech) => (
-            <div key={tech.name} style={{ padding: '1rem', background: '#fff3cd', borderRadius: '8px' }}>
-              <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#856404' }}>{tech.name}</strong>
-              <p style={{ fontSize: '0.9rem', color: '#666' }}>{tech.purpose}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="deep-dive" style={{ marginTop: '2rem' }}>
-        <div className="deep-dive-heading">
-          <span>Before → Prompt → After</span>
-          <h3>순차 처리 → asyncio 병렬 처리 + DB 저장</h3>
-        </div>
-
-        <div className="yield-case-compare vertical-case-flow">
-          <article className="yield-case-panel manual-panel">
-            <span>Before: 순차 처리</span>
-            <h4>이미지를 하나씩 순차적으로 분석</h4>
-            <ul>
-              <li>100장 이미지를 for 루프로 순차 처리</li>
-              <li>각 이미지마다 API 응답 대기 (3초)</li>
-              <li>총 처리 시간: 100장 × 3초 = 5분</li>
-              <li>결과를 텍스트 파일로만 저장</li>
-              <li>통계 분석은 Excel에서 수동 작업</li>
-            </ul>
-          </article>
-
-          <article className="yield-case-panel prompt-panel">
-            <span>Prompt: 배치 처리 지시</span>
-            <h4>asyncio로 병렬 처리하고 DB에 저장</h4>
-            <p>
-              "이미지 폴더의 모든 파일을 asyncio로 병렬 분석해줘.
-              최대 5개씩 동시 처리하고, 결과는 SQLite 데이터베이스에 저장해줘.
-              pandas로 불량 유형별 통계를 계산하고, plotly로 파레토 차트를 그려줘."
-            </p>
-            <div className="aoi-rule-grid sensor-rule-grid">
-              <div><strong>병렬 처리</strong><span>5개씩 동시 분석</span></div>
-              <div><strong>DB 저장</strong><span>SQLite 자동 저장</span></div>
-              <div><strong>통계 리포트</strong><span>pandas + plotly</span></div>
-            </div>
-          </article>
-
-          <article className="yield-case-panel result-panel">
-            <span>After: AI 산출물</span>
-            <h4>배치 처리 시스템 + 자동 리포트</h4>
-            <div className="code-preview-box">
-              <div className="visual-header">
-                <span>Python Script</span>
-                <strong>batch_vision_processor.py</strong>
-              </div>
-              <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{batchCode}</pre>
-            </div>
-            <div className="aoi-impact-strip sensor-impact-strip">
-              <div><strong>5분 → 1분</strong><span>병렬 처리로 5배 빠름</span></div>
-              <div><strong>SQLite DB</strong><span>구조화된 데이터 저장</span></div>
-              <div><strong>자동 리포트</strong><span>CSV + HTML 차트</span></div>
-            </div>
-          </article>
-        </div>
-
-        <p className="case-takeaway">
-          핵심은 asyncio로 여러 이미지를 동시에 처리하여 시간을 단축하고,
-          SQLite에 저장하여 나중에 통계 분석과 리포트 생성을 자동화하는 것입니다.
-        </p>
-        <VerifyChecklist points={intermediateChecklist} />
-      </div>
-
-      <div className="highlight-box" style={{ background: '#fff3cd', borderLeftColor: '#856404', marginTop: '2rem' }}>
-        <p style={{ fontWeight: 700 }}>중급 완료 후 다음 단계:</p>
-        <p>실시간 카메라 영상 분석과 커스텀 모델 파인튜닝으로 정밀도를 높입니다 (고급 단계).</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// LEVEL 3: ADVANCED
-// ============================================================================
-
-function AdvancedLevel() {
-  const realtimeCode = `import cv2
-import torch
-import torch.nn as nn
-from torchvision import models, transforms
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
-import uvicorn
-from PIL import Image
-import io
-import numpy as np
-
-# ============= 1. 커스텀 모델 파인튜닝 =============
-
-class DefectClassifier(nn.Module):
-    """ResNet18 기반 커스텀 분류 모델"""
-    def __init__(self, num_classes=5):
-        super(DefectClassifier, self).__init__()
-        # 사전 학습된 ResNet18 로드
-        self.backbone = models.resnet18(pretrained=True)
-        # 마지막 레이어 교체 (5개 불량 유형 분류)
-        num_ftrs = self.backbone.fc.in_features
-        self.backbone.fc = nn.Linear(num_ftrs, num_classes)
-
-    def forward(self, x):
-        return self.backbone(x)
-
-# 모델 로드
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = DefectClassifier(num_classes=5)
-model.load_state_dict(torch.load("defect_model.pth", map_location=device))
-model.to(device)
-model.eval()
-
-# 이미지 전처리
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-])
-
-# 불량 유형 레이블
-DEFECT_LABELS = ['정상', '스크래치', '파티클', 'Mura', '크랙']
-
-# ============= 2. FastAPI REST API =============
-
-app = FastAPI(title="Real-time Defect Detection API")
-
-@app.post("/predict")
-async def predict_defect(file: UploadFile = File(...)):
-    """이미지를 받아 불량 유형을 예측"""
-    # 이미지 로드
-    image_bytes = await file.read()
-    image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
-
-    # 전처리 및 추론
-    input_tensor = transform(image).unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        outputs = model(input_tensor)
-        probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
-        confidence, predicted_idx = torch.max(probabilities, 0)
-
-    result = {
-        "defect_type": DEFECT_LABELS[predicted_idx.item()],
-        "confidence": float(confidence.item() * 100),
-        "all_probabilities": {
-            label: float(prob * 100)
-            for label, prob in zip(DEFECT_LABELS, probabilities)
-        }
-    }
-
-    return JSONResponse(content=result)
-
-# ============= 3. 실시간 영상 처리 =============
-
-def realtime_camera_inspection():
-    """OpenCV로 실시간 카메라 영상 처리"""
-    cap = cv2.VideoCapture(0)  # 웹캠 또는 산업용 카메라
-
-    print("🎥 실시간 검사 시작 (q 키로 종료)")
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # OpenCV 프레임 → PIL Image
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        pil_image = Image.fromarray(rgb_frame)
-
-        # 전처리 및 추론
-        input_tensor = transform(pil_image).unsqueeze(0).to(device)
-
-        with torch.no_grad():
-            outputs = model(input_tensor)
-            probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
-            confidence, predicted_idx = torch.max(probabilities, 0)
-
-        # 결과 오버레이
-        defect_type = DEFECT_LABELS[predicted_idx.item()]
-        conf = confidence.item() * 100
-
-        color = (0, 255, 0) if defect_type == '정상' else (0, 0, 255)
-        cv2.putText(frame, f"{defect_type} ({conf:.1f}%)",
-                    (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-
-        # 화면 표시
-        cv2.imshow('Real-time Defect Detection', frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-# ============= 4. Docker 배포 =============
-# Dockerfile 예시:
-"""
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-"""
-
-if __name__ == "__main__":
-    # REST API 서버 실행
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-    # 또는 실시간 카메라 검사 실행
-    # realtime_camera_inspection()`;
-
-  const dockerCompose = `version: '3.8'
-
-services:
-  defect-api:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./models:/app/models
-    environment:
-      - MODEL_PATH=/app/models/defect_model.pth
-    restart: unless-stopped
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - defect-api
-    restart: unless-stopped`;
-
-  return (
-    <section style={{ marginTop: '4rem' }}>
-      <span className="section-label">Level 3 - 고급 (Advanced)</span>
-      <h2>실시간 영상 분석 & 커스텀 모델 파인튜닝</h2>
-      <p className="section-intro">
-        OpenCV로 실시간 카메라 영상을 처리하고, PyTorch로 커스텀 CNN 모델을 파인튜닝하며,
-        FastAPI로 REST API를 구축하고, Docker로 배포하여 프로덕션 환경에서 운영합니다.
-      </p>
-
-      <div className="one-line-definition inline-definition">
-        <span>학습 목표</span>
-        <strong>실시간 영상 처리, 커스텀 모델 파인튜닝, REST API, Docker 배포까지 전체 MLOps 파이프라인을 구축합니다.</strong>
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>새롭게 추가되는 기술</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          {advancedTechs.map((tech) => (
-            <div key={tech.name} style={{ padding: '1rem', background: '#f8d7da', borderRadius: '8px' }}>
-              <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#721c24' }}>{tech.name}</strong>
-              <p style={{ fontSize: '0.9rem', color: '#666' }}>{tech.purpose}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="deep-dive" style={{ marginTop: '2rem' }}>
-        <div className="deep-dive-heading">
-          <span>Before → Prompt → After</span>
-          <h3>배치 처리 → 실시간 영상 + 커스텀 모델</h3>
-        </div>
-
-        <div className="yield-case-compare vertical-case-flow">
-          <article className="yield-case-panel manual-panel">
-            <span>Before: 배치 처리 한계</span>
-            <h4>저장된 이미지를 사후 분석</h4>
-            <ul>
-              <li>카메라로 촬영 후 이미지 저장</li>
-              <li>저장된 파일을 배치로 분석</li>
-              <li>Gemini API 정확도 한계 (87%)</li>
-              <li>실시간 피드백 불가</li>
-              <li>특정 도메인 최적화 어려움</li>
-            </ul>
-          </article>
-
-          <article className="yield-case-panel prompt-panel">
-            <span>Prompt: 실시간 + 커스텀 모델 지시</span>
-            <h4>OpenCV로 실시간 영상 처리 + PyTorch 파인튜닝</h4>
-            <p>
-              "OpenCV로 카메라 영상을 실시간으로 캡처하고,
-              ResNet18을 파인튜닝한 커스텀 모델로 불량을 검출해줘.
-              FastAPI로 REST API를 만들어서 다른 시스템과 연동하고,
-              Docker로 컨테이너화해서 쉽게 배포할 수 있게 해줘."
-            </p>
-            <div className="aoi-rule-grid sensor-rule-grid">
-              <div><strong>실시간 처리</strong><span>OpenCV 영상 분석</span></div>
-              <div><strong>커스텀 모델</strong><span>PyTorch 파인튜닝</span></div>
-              <div><strong>REST API</strong><span>FastAPI 통합</span></div>
-            </div>
-          </article>
-
-          <article className="yield-case-panel result-panel">
-            <span>After: AI 산출물</span>
-            <h4>실시간 비전 AI 시스템 + REST API</h4>
-            <div className="code-preview-box">
-              <div className="visual-header">
-                <span>Python Script</span>
-                <strong>realtime_vision_system.py</strong>
-              </div>
-              <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto' }}>{realtimeCode}</pre>
-            </div>
-            <div className="code-preview-box" style={{ marginTop: '1rem' }}>
-              <div className="visual-header">
-                <span>Docker Compose</span>
-                <strong>docker-compose.yml</strong>
-              </div>
-              <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem', overflow: 'auto' }}>{dockerCompose}</pre>
-            </div>
-            <div className="aoi-impact-strip sensor-impact-strip">
-              <div><strong>87% → 95%</strong><span>파인튜닝으로 정확도 향상</span></div>
-              <div><strong>실시간 처리</strong><span>30 FPS 영상 분석</span></div>
-              <div><strong>API 연동</strong><span>MES/ERP 통합 가능</span></div>
-            </div>
-          </article>
-        </div>
-
-        <p className="case-takeaway">
-          핵심은 OpenCV로 실시간 영상을 처리하고, 자체 데이터로 파인튜닝한 모델을 사용하여
-          정확도를 높이며, FastAPI로 다른 시스템과 연동 가능하게 만드는 것입니다.
-        </p>
-        <VerifyChecklist points={advancedChecklist} />
-      </div>
-
-      <div className="highlight-box" style={{ background: '#f8d7da', borderLeftColor: '#721c24', marginTop: '2rem' }}>
-        <p style={{ fontWeight: 700 }}>고급 완료 후:</p>
-        <p>실제 생산 라인에 배포하여 MES/ERP 시스템과 연동하고, 지속적인 모델 재학습으로 정확도를 유지합니다.</p>
-      </div>
-
-      <div style={{ marginTop: '2rem', padding: '2rem', background: '#f0f7ff', borderRadius: '12px', border: '1px solid #d1e7ff' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#0071e3' }}>🚀 프로덕션 배포 가이드</h3>
-        <ol style={{ lineHeight: '2', paddingLeft: '1.5rem' }}>
-          <li><strong>모델 파인튜닝</strong>: 자체 불량 이미지 100-200장으로 ResNet18 파인튜닝</li>
-          <li><strong>API 테스트</strong>: Postman으로 FastAPI 엔드포인트 검증</li>
-          <li><strong>Docker 빌드</strong>: <code>docker build -t defect-api .</code></li>
-          <li><strong>컨테이너 실행</strong>: <code>docker-compose up -d</code></li>
-          <li><strong>모니터링</strong>: Prometheus + Grafana로 추론 속도, 정확도 대시보드 구축</li>
-          <li><strong>재학습</strong>: 매주 신규 불량 데이터로 모델 업데이트</li>
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// INTERACTIVE WORKSHOP
-// ============================================================================
-
-function InteractiveWorkshop() {
-  const [fields, setFields] = useState({
-    level: '',
-    image: '',
-    status: '',
-  });
-  const [copied, setCopied] = useState(false);
-
-  const hasContent = Object.values(fields).some(Boolean);
-
-  const generated = hasContent
-    ? `레벨: ${fields.level || '[선택 안 함]'}
-테스트 이미지: ${fields.image || '[준비 중]'}
-진행 상태: ${fields.status || '[시작 전]'}
-
-다음 단계: ${fields.level === '초급' ? 'Gemini Vision API 호출 테스트' : fields.level === '중급' ? 'asyncio 배치 처리 구현' : fields.level === '고급' ? 'PyTorch 모델 파인튜닝' : 'Level 선택 필요'}`
-    : '';
-
-  const handleCopy = () => {
-    if (!generated) return;
-    navigator.clipboard.writeText(generated).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
-  };
-
-  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'level', label: 'Level 선택', placeholder: '초급 / 중급 / 고급' },
-    { key: 'image', label: '테스트 이미지', placeholder: 'wafer_sample.jpg' },
-    { key: 'status', label: '진행 상태', placeholder: 'API 호출 완료 / DB 저장 완료 등' },
+};
+
+const ProjectThemes = () => {
+  const themes = [
+    { icon: BarChart3, title: 'OLED/LCD 비교 분석 도구', color: '#4285F4' },
+    { icon: Layers, title: '포토공정 노광 조건 시뮬레이터', color: '#34A853' },
+    { icon: Activity, title: '잉크젯 도포 균일성 분석기', color: '#FBBC04' },
+    { icon: Sparkles, title: 'RGB 색공간 변환기', color: '#EA4335' },
+    { icon: TrendingUp, title: '수율 데이터 이상치 탐지기', color: '#9334E6' },
   ];
 
   return (
-    <div className="interactive-workshop">
-      <div className="iw-header">
-        <FileText size={22} color="var(--accent)" />
-        <strong>프로젝트 진행 현황 체크리스트</strong>
-        <p>현재 진행 중인 Level과 상태를 입력하세요.</p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      style={{
+        background: 'white',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+      }}
+    >
+      <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#1a1a1a' }}>주제 선택 예시</h2>
+      <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem' }}>
+        아래 주제 중 하나를 선택하거나, 자유롭게 디스플레이 산업 관련 주제를 정하세요.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+        {themes.map((theme, idx) => {
+          const Icon = theme.icon;
+          return (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.05, y: -5 }}
+              style={{
+                background: `linear-gradient(135deg, ${theme.color}15 0%, ${theme.color}05 100%)`,
+                padding: '1.5rem',
+                borderRadius: '20px',
+                border: `2px solid ${theme.color}30`,
+                cursor: 'pointer',
+              }}
+            >
+              <Icon size={32} color={theme.color} style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.1rem', color: '#1a1a1a', margin: 0 }}>{theme.title}</h3>
+            </motion.div>
+          );
+        })}
       </div>
-      <div className="iw-body">
-        <div className="iw-inputs">
-          {inputRows.map((row) => (
-            <div className="iw-field" key={row.key}>
-              <label htmlFor={`iw-${row.key}`}>{row.label}</label>
-              <input
-                id={`iw-${row.key}`}
-                type="text"
-                placeholder={row.placeholder}
-                value={fields[row.key]}
-                onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))}
-              />
-            </div>
-          ))}
+    </motion.div>
+  );
+};
+
+const LevelBeginner = () => {
+  const [copied, setCopied] = useState(false);
+
+  const promptText = `나는 [주제]에 대한 Streamlit 앱을 만들고 싶어.
+필요한 데이터 구조, 주요 기능, 코드 전체를 작성해줘.
+수준은 입문자가 이해할 수 있는 것으로.
+사용 라이브러리는 streamlit, pandas, plotly만 써줘.`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(promptText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      style={{
+        background: 'linear-gradient(135deg, #D1F2EB 0%, #A9DFBF 100%)',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{
+          background: '#16A085',
+          color: 'white',
+          padding: '0.8rem 1.5rem',
+          borderRadius: '15px',
+          fontWeight: 'bold',
+          fontSize: '1.1rem'
+        }}>
+          [하] 난이도
         </div>
-        <div className="iw-output">
-          <div className="iw-output-header">
-            <Database size={18} color="var(--accent)" />
-            <strong>진행 현황 요약</strong>
-          </div>
-          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
-            {generated || 'Level과 진행 상태를 입력하면\n현황이 표시됩니다.'}
-          </div>
+        <h2 style={{ fontSize: '2rem', margin: 0, color: '#1a1a1a' }}>단계별 가이드 제공</h2>
+      </div>
+
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
+          <Sparkles size={24} color="#16A085" />
+          Step 1: 아이디어 구체화 (Claude에게 물어보기)
+        </h3>
+        <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1.5rem' }}>
+          Claude Code를 열고 아래 프롬프트를 복사하여 실행하세요.
+        </p>
+        <div style={{ position: 'relative' }}>
+          <pre style={{
+            background: '#1a1a1a',
+            color: '#00ff00',
+            padding: '1.5rem',
+            borderRadius: '15px',
+            overflow: 'auto',
+            fontSize: '0.95rem',
+            lineHeight: '1.6',
+            fontFamily: '"Fira Code", "Consolas", monospace',
+          }}>
+            {promptText}
+          </pre>
           <button
-            className={`iw-copy-btn ${copied ? 'copied' : ''}`}
             onClick={handleCopy}
-            disabled={!hasContent}
+            style={{
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+              background: copied ? '#16A085' : '#667eea',
+              color: 'white',
+              border: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+            }}
           >
-            {copied
-              ? <><Check size={15} />복사됨!</>
-              : <><Copy size={15} />현황 복사</>}
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+            {copied ? '복사됨!' : '복사'}
           </button>
         </div>
       </div>
-    </div>
+
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
+          <Code size={24} color="#16A085" />
+          Step 2: 파일 저장 및 로컬 실행 확인
+        </h3>
+        <pre style={{
+          background: '#1a1a1a',
+          color: '#00ff00',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          overflow: 'auto',
+          fontSize: '0.95rem',
+          lineHeight: '1.6',
+          fontFamily: '"Fira Code", "Consolas", monospace',
+        }}>
+{`# requirements.txt 생성 (Claude에게 요청)
+pip install -r requirements.txt
+
+# 로컬 실행 확인
+streamlit run app.py`}
+        </pre>
+      </div>
+
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
+          <Zap size={24} color="#16A085" />
+          Step 3: Streamlit Community Cloud 배포
+        </h3>
+        <ol style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
+          <li>GitHub에 push</li>
+          <li><a href="https://share.streamlit.io" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea' }}>share.streamlit.io</a> 접속 → New app</li>
+          <li>GitHub Repository 연결 → app.py 선택 → Deploy</li>
+        </ol>
+        <div style={{
+          background: '#D1F2EB',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          marginTop: '1.5rem',
+          border: '2px solid #16A085'
+        }}>
+          <strong style={{ color: '#16A085', fontSize: '1.1rem' }}>제출 항목</strong>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '1rem' }}>배포 URL + GitHub Repository URL</p>
+        </div>
+      </div>
+    </motion.div>
   );
-}
+};
 
-// ============================================================================
-// NEXT STEPS
-// ============================================================================
+const PublicDatasets = () => {
+  const datasets = [
+    {
+      name: '공공데이터포털',
+      url: 'https://www.data.go.kr',
+      usage: '제조업 생산 통계, 불량률 데이터',
+      icon: Database,
+    },
+    {
+      name: 'IEEE DataPort',
+      url: 'https://ieee-dataport.org',
+      usage: '센서/제조 공정 실험 데이터',
+      icon: Activity,
+    },
+    {
+      name: 'Kaggle',
+      url: 'https://www.kaggle.com/datasets',
+      usage: '제조 이상 감지, 시계열 데이터',
+      icon: TrendingUp,
+    },
+    {
+      name: 'UCI ML Repository',
+      url: 'https://archive.ics.uci.edu',
+      usage: '공정 이상 감지 (SECOM 데이터셋 등)',
+      icon: BarChart3,
+    },
+  ];
 
-function NextSteps() {
   return (
-    <section style={{ marginTop: '4rem' }}>
-      <span className="section-label">Next Steps</span>
-      <h2>프로젝트 완료 후 다음 단계</h2>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
-        <div style={{ padding: '1.5rem', background: '#f5f5f7', borderRadius: '12px' }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ExternalLink size={20} color="#0071e3" />
-            프로젝트 3
-          </h3>
-          <p style={{ fontSize: '0.95rem', color: '#666', marginBottom: '1rem' }}>
-            실시간 대시보드 & 배포
-          </p>
-          <p style={{ fontSize: '0.9rem', lineHeight: '1.7' }}>
-            Streamlit으로 데이터 분석과 이미지 검사를 통합한 인터랙티브 대시보드를 만들고,
-            GitHub Pages 또는 Streamlit Cloud로 배포하여 포트폴리오를 완성합니다.
-          </p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+      style={{
+        background: 'white',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+      }}
+    >
+      <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#1a1a1a' }}>공개 데이터셋 모음</h2>
+      <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem' }}>
+        실제 데이터가 필요한 경우 아래 출처를 활용하세요.
+      </p>
+      <div style={{ display: 'grid', gap: '1.5rem' }}>
+        {datasets.map((dataset, idx) => {
+          const Icon = dataset.icon;
+          return (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.02, x: 10 }}
+              style={{
+                background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                padding: '1.5rem',
+                borderRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.5rem',
+                cursor: 'pointer',
+              }}
+            >
+              <Icon size={40} color="#667eea" />
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontSize: '1.3rem', margin: '0 0 0.5rem 0', color: '#1a1a1a' }}>{dataset.name}</h3>
+                <p style={{ fontSize: '0.95rem', margin: '0 0 0.5rem 0', color: '#666' }}>{dataset.usage}</p>
+                <a
+                  href={dataset.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#667eea', fontSize: '0.9rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                >
+                  {dataset.url} <ExternalLink size={14} />
+                </a>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+      <div style={{
+        background: 'linear-gradient(135deg, #FFF3CD 0%, #FFE69C 100%)',
+        padding: '1.5rem',
+        borderRadius: '20px',
+        marginTop: '2rem',
+        border: '2px solid #F39C12',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+          <Sparkles size={20} color="#F39C12" />
+          <strong style={{ color: '#F39C12', fontSize: '1.1rem' }}>추천 데이터셋</strong>
         </div>
+        <p style={{ margin: 0, fontSize: '1rem', color: '#333' }}>
+          <strong>SECOM 데이터셋 (UCI)</strong>: 반도체/디스플레이 공정 센서 데이터 + 수율 레이블 — 프로젝트 2에 최적
+        </p>
+      </div>
+    </motion.div>
+  );
+};
 
-        <div style={{ padding: '1.5rem', background: '#f5f5f7', borderRadius: '12px' }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <TrendingUp size={20} color="#34A853" />
-            실무 적용
-          </h3>
-          <p style={{ fontSize: '0.95rem', color: '#666', marginBottom: '1rem' }}>
-            현장 데이터로 모델 재학습
-          </p>
-          <p style={{ fontSize: '0.9rem', lineHeight: '1.7' }}>
-            자체 불량 이미지를 수집하여 PyTorch 모델을 파인튜닝하고,
-            MES/ERP 시스템과 연동하여 실제 생산 라인에 배포합니다.
-          </p>
+const LevelIntermediate = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      style={{
+        background: 'linear-gradient(135deg, #FFF3CD 0%, #FFEAA7 100%)',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{
+          background: '#F39C12',
+          color: 'white',
+          padding: '0.8rem 1.5rem',
+          borderRadius: '15px',
+          fontWeight: 'bold',
+          fontSize: '1.1rem'
+        }}>
+          [중] 난이도
         </div>
+        <h2 style={{ fontSize: '2rem', margin: 0, color: '#1a1a1a' }}>방향 제시</h2>
+      </div>
 
-        <div style={{ padding: '1.5rem', background: '#f5f5f7', borderRadius: '12px' }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Sparkles size={20} color="#FBBC04" />
-            포트폴리오
-          </h3>
-          <p style={{ fontSize: '0.95rem', color: '#666', marginBottom: '1rem' }}>
-            GitHub 공개 & 기술 블로그 작성
-          </p>
-          <p style={{ fontSize: '0.9rem', lineHeight: '1.7' }}>
-            프로젝트를 GitHub에 공개하고, 기술 블로그에 구현 과정과 인사이트를 작성하여
-            취업 시 차별화된 포트폴리오로 활용합니다.
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1a1a1a' }}>요구사항</h3>
+        <ul style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
+          <li><strong>AI API(Gemini 또는 Claude) 연동 필수</strong></li>
+          <li>사용자 입력에 따라 AI가 인사이트를 제공하는 기능 포함</li>
+          <li>위 공개 데이터셋 중 1개 이상 활용</li>
+          <li>README.md에 앱 사용 방법 + 스크린샷 설명</li>
+        </ul>
+      </div>
+
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
+          <Wrench size={24} color="#F39C12" />
+          힌트
+        </h3>
+        <pre style={{
+          background: '#1a1a1a',
+          color: '#00ff00',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          overflow: 'auto',
+          fontSize: '0.95rem',
+          lineHeight: '1.6',
+          fontFamily: '"Fira Code", "Consolas", monospace',
+          marginBottom: '1rem',
+        }}>
+{`# .env 파일로 API Key 관리
+GEMINI_API_KEY=your_key_here
+
+# python-dotenv 라이브러리로 로드
+from dotenv import load_dotenv
+load_dotenv()
+
+# .gitignore에 .env 반드시 추가!`}
+        </pre>
+        <div style={{
+          background: '#FFF3CD',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          marginTop: '1.5rem',
+          border: '2px solid #F39C12'
+        }}>
+          <strong style={{ color: '#F39C12', fontSize: '1.1rem' }}>제출 항목</strong>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '1rem' }}>배포 URL + GitHub Repository URL</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const LevelAdvanced = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 }}
+      style={{
+        background: 'linear-gradient(135deg, #F8D7DA 0%, #F5C6CB 100%)',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{
+          background: '#C0392B',
+          color: 'white',
+          padding: '0.8rem 1.5rem',
+          borderRadius: '15px',
+          fontWeight: 'bold',
+          fontSize: '1.1rem'
+        }}>
+          [상] 난이도
+        </div>
+        <h2 style={{ fontSize: '2rem', margin: 0, color: '#1a1a1a' }}>요구사항만 (힌트 없음)</h2>
+      </div>
+
+      <div style={{ background: 'white', borderRadius: '20px', padding: '2rem' }}>
+        <ol style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
+          <li>디스플레이 실제 공정 데이터 기반 (논문, 특허, 공개 데이터셋)</li>
+          <li>AI API 연동으로 데이터 자동 해석 기능</li>
+          <li>사용자 입력 → 공정 최적화 제안 기능</li>
+          <li>모바일 반응형 UI</li>
+          <li>GitHub Actions로 자동 테스트/배포 파이프라인</li>
+          <li>앱 내 한국어/영어 전환 기능</li>
+        </ol>
+        <div style={{
+          background: '#F8D7DA',
+          padding: '1.5rem',
+          borderRadius: '15px',
+          marginTop: '2rem',
+          border: '2px solid #C0392B'
+        }}>
+          <strong style={{ color: '#C0392B', fontSize: '1.1rem' }}>제출 항목</strong>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '1rem' }}>
+            배포 URL + GitHub Repository URL + 기능 설명 영상 (2분 이내)
           </p>
         </div>
       </div>
-    </section>
+    </motion.div>
   );
-}
+};
 
-// ============================================================================
-// MAIN APP COMPONENT
-// ============================================================================
-
-export default function App() {
+const EvaluationCriteria = () => {
   return (
-    <div className="app-container">
-      <header className="main-header">
-        <div className="header-top">
-          <motion.div
-            className="logo-group"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <img
-              src="/logo.png"
-              alt="LettUin Edu"
-              className="header-logo"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </motion.div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.7 }}
+      style={{
+        background: 'white',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+      }}
+    >
+      <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#1a1a1a' }}>평가 기준</h2>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1rem' }}>
+          <thead>
+            <tr style={{ background: '#667eea', color: 'white' }}>
+              <th style={{ padding: '1rem', textAlign: 'left', borderRadius: '10px 0 0 0' }}>항목</th>
+              <th style={{ padding: '1rem', textAlign: 'center' }}>하</th>
+              <th style={{ padding: '1rem', textAlign: 'center' }}>중</th>
+              <th style={{ padding: '1rem', textAlign: 'center', borderRadius: '0 10px 0 0' }}>상</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ background: '#f8f9fa' }}>
+              <td style={{ padding: '1rem', fontWeight: 'bold' }}>배포 완료</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>필수</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>필수</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>필수</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '1rem', fontWeight: 'bold' }}>인터랙티브 차트</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>1개 이상</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>2개 이상</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>3개 이상</td>
+            </tr>
+            <tr style={{ background: '#f8f9fa' }}>
+              <td style={{ padding: '1rem', fontWeight: 'bold' }}>AI API 연동</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>없어도 됨</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>필수</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>필수</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '1rem', fontWeight: 'bold' }}>실제 데이터</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>샘플 데이터 OK</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>공개 데이터</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>공정 데이터</td>
+            </tr>
+            <tr style={{ background: '#f8f9fa' }}>
+              <td style={{ padding: '1rem', fontWeight: 'bold' }}>코드 품질</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>동작만 하면 됨</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>구조화 권장</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>CI/CD 필수</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </motion.div>
+  );
+};
 
-          <motion.div
-            className="header-tag-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="header-tag">Image Analysis & Vision AI — 초급 → 중급 → 고급</span>
-          </motion.div>
-        </div>
+const InteractiveWorkshop = () => {
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
-        <motion.div
-          className="hero-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h1>프로젝트 02: 이미지 분석 & 비전 AI</h1>
-          <p className="subtitle">단일 이미지 분류 → 배치 처리 → 실시간 영상 분석 — 3단계 프로그레시브 학습</p>
-          <div className="lesson-meta" aria-label="project summary">
-            <span>3단계 구조</span>
-            <span>초급 2-3시간 | 중급 1주 | 고급 2-3주</span>
-            <span>4개 도메인 적용</span>
-            <span>결과물: 실시간 비전 AI 시스템</span>
+  const steps = [
+    '주제 선택 및 아이디어 구체화',
+    'Claude Code로 Streamlit app.py 생성',
+    'requirements.txt 생성',
+    '로컬에서 streamlit run app.py 테스트',
+    'GitHub에 push',
+    'Streamlit Community Cloud에서 배포',
+    '배포 URL 확인 및 제출',
+  ];
+
+  const toggleCheck = (index: number) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.8 }}
+      style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        color: 'white',
+      }}
+    >
+      <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>실습 체크리스트</h2>
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        {steps.map((step, index) => (
+          <motion.div
+            key={index}
+            whileHover={{ scale: 1.02 }}
+            onClick={() => toggleCheck(index)}
+            style={{
+              background: checkedItems[index] ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+              padding: '1.5rem',
+              borderRadius: '15px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              backdropFilter: 'blur(10px)',
+              border: checkedItems[index] ? '2px solid rgba(255, 255, 255, 0.5)' : '2px solid transparent',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              background: checkedItems[index] ? '#34A853' : 'rgba(255, 255, 255, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+            }}>
+              {checkedItems[index] && <Check size={20} />}
+            </div>
+            <div>
+              <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Step {index + 1}</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{step}</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+const Summary = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.9 }}
+      style={{
+        background: 'white',
+        borderRadius: '30px',
+        padding: '3rem',
+        marginBottom: '3rem',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+      }}
+    >
+      <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#1a1a1a' }}>프로젝트 완료 체크리스트</h2>
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        {[
+          'Streamlit 앱이 로컬에서 정상 작동',
+          'GitHub에 코드 push 완료',
+          'Streamlit Community Cloud에 배포 완료',
+          '배포 URL 접속 시 앱이 정상 작동',
+          'README.md에 사용 방법 작성 완료',
+        ].map((item, index) => (
+          <div
+            key={index}
+            style={{
+              background: '#f8f9fa',
+              padding: '1.5rem',
+              borderRadius: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+            }}
+          >
+            <CheckCircle2 size={24} color="#34A853" />
+            <span style={{ fontSize: '1.1rem', color: '#333' }}>{item}</span>
           </div>
-        </motion.div>
-      </header>
+        ))}
+      </div>
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        padding: '2rem',
+        borderRadius: '20px',
+        marginTop: '2rem',
+        textAlign: 'center',
+      }}>
+        <Sparkles size={32} style={{ marginBottom: '1rem' }} />
+        <h3 style={{ fontSize: '1.5rem', margin: '0 0 1rem 0' }}>축하합니다!</h3>
+        <p style={{ fontSize: '1.1rem', margin: 0, opacity: 0.95 }}>
+          디스플레이 산업 관련 인터랙티브 앱을 만들고 배포하는 데 성공했습니다!
+        </p>
+      </div>
+    </motion.div>
+  );
+};
 
-      <main>
+function App() {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(to bottom, #f8f9fa, #e9ecef)',
+      padding: '2rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
-        <BeginnerLevel />
-        <IntermediateLevel />
-        <AdvancedLevel />
-
-        <section className="workshop-section teaching-section" style={{ marginTop: '4rem' }}>
-          <span className="section-label">Interactive Workshop</span>
-          <h2>실습: 프로젝트 진행 현황 체크</h2>
-          <p className="section-intro">
-            현재 진행 중인 Level과 상태를 입력하여 프로젝트 진행도를 관리하세요.
-          </p>
-          <InteractiveWorkshop />
-        </section>
-
-        <NextSteps />
-
-        <section style={{ marginTop: '4rem' }}>
-          <span className="section-label">Summary</span>
-          <h2>프로젝트 완료 체크리스트</h2>
-          <div className="checklist">
-            <div className="check-item">
-              <CheckCircle2 size={20} />
-              <span>초급: Gemini Vision API로 단일 이미지 분류 완료</span>
-            </div>
-            <div className="check-item">
-              <CheckCircle2 size={20} />
-              <span>중급: asyncio 배치 처리 + SQLite 저장 + pandas 리포트 완료</span>
-            </div>
-            <div className="check-item">
-              <CheckCircle2 size={20} />
-              <span>고급: OpenCV 실시간 영상 + PyTorch 파인튜닝 + FastAPI 완료</span>
-            </div>
-            <div className="check-item">
-              <CheckCircle2 size={20} />
-              <span>Docker 컨테이너화 및 배포 준비 완료</span>
-            </div>
-            <div className="check-item">
-              <CheckCircle2 size={20} />
-              <span>GitHub에 프로젝트 공개 및 포트폴리오 작성</span>
-            </div>
-          </div>
-          <div className="wrap-message">
-            <Quote size={36} color="var(--accent)" />
-            <h3>"이미지 분석은 초급(Gemini API) → 중급(배치 처리) → 고급(실시간 + 커스텀 모델)로 발전합니다."</h3>
-            <p>다음 프로젝트: 실시간 대시보드 & 배포 (Streamlit + GitHub Pages)</p>
-          </div>
-        </section>
-
-        <section className="professional-point">
-          <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
-            <h3>Fine Tech Engineering Career Point</h3>
-            <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "비전 AI 프로젝트는 API 호출부터 시작하여 실시간 영상 처리와 커스텀 모델까지 확장합니다.
-              초급 → 중급 → 고급 순서로 학습하면 누구나 현장에 배포 가능한 시스템을 만들 수 있습니다."<br/>
-              포트폴리오에 GitHub 링크와 실행 영상을 포함하면 취업 시 강력한 무기가 됩니다.
-            </p>
-            <div className="point-strip">
-              <span><Camera size={16} /> Gemini Vision API</span>
-              <span><Layers size={16} /> PyTorch 파인튜닝</span>
-              <span><Video size={16} /> 실시간 영상 처리</span>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <p>© 2026 Image Analysis & Vision AI for Fine Tech Engineering | LettUin Edu</p>
-      </footer>
+        <ProjectThemes />
+        <LevelBeginner />
+        <PublicDatasets />
+        <LevelIntermediate />
+        <LevelAdvanced />
+        <EvaluationCriteria />
+        <InteractiveWorkshop />
+        <Summary />
+      </div>
     </div>
   );
 }
+
+export default App;
