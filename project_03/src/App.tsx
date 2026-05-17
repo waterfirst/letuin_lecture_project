@@ -146,12 +146,12 @@ const ProjectIdeas = () => {
 
 const TechStack = () => {
   const techs = [
-    { name: 'Claude Code', icon: Code, desc: '개발 도구' },
+    { name: 'Gemini', icon: Code, desc: '개발 도구' },
     { name: 'GitHub Actions', icon: Zap, desc: '코드 관리 & CI/CD' },
     { name: 'Python Streamlit', icon: Activity, desc: '웹 UI' },
     { name: 'R Shiny', icon: BarChart3, desc: '웹 UI' },
     { name: 'Gemini API', icon: Sparkles, desc: 'AI 기능' },
-    { name: 'Claude API', icon: Bot, desc: 'AI 기능' },
+    { name: 'Gemini API', icon: Bot, desc: 'AI 기능' },
     { name: 'Streamlit Cloud', icon: Globe, desc: '웹앱 플랫폼' },
     { name: 'Telegram Bot', icon: MessageSquare, desc: '알림/자동화' },
   ];
@@ -312,7 +312,7 @@ Streamlit + Gemini API + Telegram Bot 조합으로 만들어줘.`;
           Step 1: 아이디어 구체화
         </h3>
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1.5rem' }}>
-          Claude에게 다음을 질문하세요:
+          Gemini에게 다음을 질문하세요:
         </p>
         <div style={{ position: 'relative' }}>
           <pre style={{
@@ -356,7 +356,7 @@ Streamlit + Gemini API + Telegram Bot 조합으로 만들어줘.`;
       <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
           <Code size={24} color="#16A085" />
-          Step 2: Claude Code로 각 파트 순서대로 생성
+          Step 2: Gemini로 각 파트 순서대로 생성
         </h3>
         <pre style={{
           background: '#1a1a1a',
@@ -378,7 +378,7 @@ Streamlit + Gemini API + Telegram Bot 조합으로 만들어줘.`;
 └── requirements.txt`}
         </pre>
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}>
-          Claude Code에 순서대로 요청:
+          Gemini에게 순서대로 요청:
         </p>
         <ol style={{ fontSize: '1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
           <li>"app.py 파일 만들어줘 — Streamlit으로 [주제] UI"</li>
@@ -457,7 +457,7 @@ const LevelIntermediate = () => {
         <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1a1a1a' }}>요구사항</h3>
         <ul style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
           <li>3가지 이상 기술 스택 조합</li>
-          <li>AI API 연동 (Claude 또는 Gemini)</li>
+          <li>AI API 연동 (Gemini)</li>
           <li>실제 데이터 또는 현실적인 시뮬레이션 데이터 사용</li>
           <li>다른 사람이 실제로 사용할 수 있는 완성도</li>
           <li>README에 사용법 + 기술 스택 + 스크린샷 포함</li>
@@ -645,7 +645,7 @@ const InteractiveWorkshop = () => {
 
   const steps = [
     '주제 선택 및 기술 스택 조합 결정',
-    'Claude Code로 프로젝트 구조 생성',
+    'Gemini로 프로젝트 구조 생성',
     '각 파트별 기능 구현 (app.py, ai_utils.py 등)',
     'AI API 연동 테스트',
     '로컬에서 전체 기능 테스트',
@@ -787,7 +787,7 @@ function App() {
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
-      <ProjectImage filename="final-ai-tool-overview.png" caption="데이터 업로드, AI 분석, 비전 검사, 예측, 리포트, 알림, 포트폴리오까지 연결한 최종 통합 AI 툴입니다." />
+      <ProjectImage filename="final-ai-tool-overview.png" caption="Final integrated AI tool overview: upload, analysis, vision inspection, forecasting, report, alert, and portfolio output." />
         <ProjectIdeas />
         <TechStack />
         <PublicDatasets />

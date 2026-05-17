@@ -73,7 +73,7 @@ const ProjectOverview = () => {
         </div>
         <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
           <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>주요 도구</div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Claude Code</div>
+          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Gemini</div>
         </div>
         <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
           <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>배포 플랫폼</div>
@@ -102,11 +102,11 @@ const ProjectGoal = () => {
       <p style={{ fontSize: '1.1rem', color: '#666', marginBottom: '2rem', lineHeight: '1.8' }}>
         디스플레이 산업에 대한 관심 분야를 소개하는 <strong>단일 HTML 웹페이지</strong>를 만들고,
         GitHub Pages로 배포하여 포트폴리오로 활용합니다.
-        Claude Code를 활용하여 코딩 없이도 전문적인 웹페이지를 만들 수 있습니다.
+        Gemini를 활용하여 코딩 없이도 전문적인 웹페이지를 만들 수 있습니다.
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
         {[
-          { icon: Code, title: 'Claude Code 활용', desc: 'AI로 코드 자동 생성' },
+          { icon: Code, title: 'Gemini 활용', desc: 'AI로 코드 자동 생성' },
           { icon: Globe, title: 'GitHub Pages 배포', desc: '무료 웹 호스팅' },
           { icon: FileText, title: '포트폴리오 완성', desc: '취업용 자료로 활용' },
         ].map((item, idx) => {
@@ -182,10 +182,10 @@ const LevelBeginner = () => {
       <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
           <Sparkles size={24} color="#16A085" />
-          Step 1: Claude Code에게 프롬프트 전달
+          Step 1: Gemini에게 프롬프트 전달
         </h3>
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1.5rem' }}>
-          Claude Code를 열고 아래 프롬프트를 복사하여 실행하세요. [이름], [직무명]을 본인 정보로 수정하세요.
+          Gemini를 열고 아래 프롬프트를 복사하여 실행하세요. [이름], [직무명]을 본인 정보로 수정하세요.
         </p>
         <div style={{ position: 'relative' }}>
           <pre style={{
@@ -455,7 +455,7 @@ const InteractiveWorkshop = () => {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
   const steps = [
-    'Claude Code로 index.html 생성',
+    'Gemini로 index.html 생성',
     '로컬에서 브라우저로 확인',
     'GitHub Repository 생성',
     'index.html 파일 업로드',
@@ -596,7 +596,7 @@ function App() {
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
-      <ProjectImage filename="ai-rd-portfolio-overview.png" caption="제조업 R&D 취업 준비생의 문제 정의, 데이터 경험, 대시보드 결과, GitHub Pages 포트폴리오를 한 화면에 보여줍니다." />
+      <ProjectImage filename="ai-rd-portfolio-overview.png" caption="Manufacturing R&D portfolio overview: problem, data, dashboard result, GitHub Pages, and interview-ready case study." />
         <ProjectGoal />
         <LevelBeginner />
         <LevelIntermediate />

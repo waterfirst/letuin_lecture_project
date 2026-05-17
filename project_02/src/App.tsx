@@ -182,10 +182,10 @@ const LevelBeginner = () => {
       <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', marginBottom: '1rem' }}>
           <Sparkles size={24} color="#16A085" />
-          Step 1: 아이디어 구체화 (Claude에게 물어보기)
+          Step 1: 아이디어 구체화 (Gemini에게 물어보기)
         </h3>
         <p style={{ fontSize: '1rem', color: '#666', marginBottom: '1.5rem' }}>
-          Claude Code를 열고 아래 프롬프트를 복사하여 실행하세요.
+          Gemini를 열고 아래 프롬프트를 복사하여 실행하세요.
         </p>
         <div style={{ position: 'relative' }}>
           <pre style={{
@@ -241,7 +241,7 @@ const LevelBeginner = () => {
           lineHeight: '1.6',
           fontFamily: '"Fira Code", "Consolas", monospace',
         }}>
-{`# requirements.txt 생성 (Claude에게 요청)
+{`# requirements.txt 생성 (Gemini에게 요청)
 pip install -r requirements.txt
 
 # 로컬 실행 확인
@@ -402,7 +402,7 @@ const LevelIntermediate = () => {
       <div style={{ background: 'white', borderRadius: '20px', padding: '2rem', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1a1a1a' }}>요구사항</h3>
         <ul style={{ fontSize: '1.1rem', lineHeight: '2', color: '#333', paddingLeft: '1.5rem' }}>
-          <li><strong>AI API(Gemini 또는 Claude) 연동 필수</strong></li>
+          <li><strong>AI API(Gemini) 연동 필수</strong></li>
           <li>사용자 입력에 따라 AI가 인사이트를 제공하는 기능 포함</li>
           <li>위 공개 데이터셋 중 1개 이상 활용</li>
           <li>README.md에 앱 사용 방법 + 스크린샷 설명</li>
@@ -570,7 +570,7 @@ const InteractiveWorkshop = () => {
 
   const steps = [
     '주제 선택 및 아이디어 구체화',
-    'Claude Code로 Streamlit app.py 생성',
+    'Gemini로 Streamlit app.py 생성',
     'requirements.txt 생성',
     '로컬에서 streamlit run app.py 테스트',
     'GitHub에 push',
@@ -708,7 +708,7 @@ function App() {
     }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
-      <ProjectImage filename="process-simulator-overview.png" caption="공정 파라미터를 조절하며 수율, 색공간, 결함 위험을 비교하는 Streamlit형 시뮬레이터 결과물입니다." />
+      <ProjectImage filename="process-simulator-overview.png" caption="Manufacturing process simulator overview: parameter controls, yield prediction, color gamut, defect risk, and what-if analysis." />
         <ProjectThemes />
         <LevelBeginner />
         <PublicDatasets />
