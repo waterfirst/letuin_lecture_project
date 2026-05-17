@@ -1,645 +1,1007 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
-  Briefcase, Users, MessageSquare, CheckCircle2, XCircle, Code,
-  Target, Trophy, Lightbulb, FileText, Github, Linkedin,
-  Mail, Phone, Star, Award, TrendingUp, Zap, Rocket,
-  ChevronRight, Terminal, Eye, Brain, Activity, BarChart3
+  ArrowRight,
+  Award,
+  Briefcase,
+  Check,
+  CheckCircle2,
+  Code,
+  Copy,
+  FileText,
+  Github,
+  Lightbulb,
+  Linkedin,
+  Mail,
+  MessageSquare,
+  Quote,
+  Rocket,
+  Star,
+  Target,
+  Trophy,
+  Users,
+  Wrench,
 } from 'lucide-react';
 
 const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 
-function HeroImage({ filename, caption }: { filename: string; caption: string }) {
-  return (
-    <section className="max-w-7xl mx-auto px-6 pb-14">
-      <motion.figure
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-2xl backdrop-blur"
-      >
-        <img src={assetUrl(filename)} alt={caption} className="w-full aspect-video object-cover" loading="lazy" />
-        <figcaption className="px-6 py-4 text-sm md:text-base text-gray-200 leading-relaxed">
-          {caption}
-        </figcaption>
-      </motion.figure>
-    </section>
-  );
+// ============================================================================
+// DATA ARRAYS - Technical Interview & Pitching
+// ============================================================================
+
+const learningGoals = [
+  {
+    step: '학습목표 1',
+    title: '기술 면접 예상 질문 답변 설계',
+    body: '13~16강 프로젝트를 기반으로 10대 예상 질문에 대한 핵심 답변 스크립트를 설계합니다.',
+    type: 'api',
+  },
+  {
+    step: '학습목표 2',
+    title: '3분 프로젝트 피칭 스크립트',
+    body: '문제 → 솔루션 → 데모 → 차별화의 4단 구조로 면접관 머릿속에 박히는 피칭을 만듭니다.',
+    type: 'knowledge',
+  },
+  {
+    step: '학습목표 3',
+    title: 'STAR 기법으로 인성 면접 통과',
+    body: 'Situation·Task·Action·Result 4단 구조로 협업·실패·지원동기 답변을 정리합니다.',
+    type: 'deploy',
+  },
+];
+
+const lessonFlow = [
+  { time: '3분', label: '목표 확인' },
+  { time: '7분', label: '취업 프로세스' },
+  { time: '8분', label: '실무 사례' },
+  { time: '17분', label: '피칭·STAR 실습' },
+  { time: '5분', label: '체크리스트' },
+];
+
+const roleFlow = [
+  { owner: '지원자', task: 'GitHub 정비, 자기소개서 작성, 데모 시연' },
+  { owner: '포트폴리오', task: '13~16강 프로젝트 4종, README, 실행 영상' },
+  { owner: '면접관', task: '기술 깊이 검증, 협업 능력 평가, 컬처 핏 확인' },
+  { owner: '합격', task: '서류 → 기술 → 실무 → 최종 4단계 통과' },
+];
+
+const interviewStages = [
+  {
+    icon: FileText,
+    title: '서류 전형',
+    description: 'GitHub 포트폴리오, README 완성도, 실행 가능 코드가 핵심입니다.',
+    features: ['README 잘 정리', '실행 캡처/영상', '커밋 히스토리'],
+    cost: '통과율 80%',
+    freeQuota: '핵심: 정량적 성과',
+  },
+  {
+    icon: Code,
+    title: '기술 면접',
+    description: '프로젝트 설명과 코딩 테스트를 통해 기술적 깊이를 확인합니다.',
+    features: ['Gemini API 원리', '아키텍처 설명', '코딩 라이브'],
+    cost: '합격률 60%',
+    freeQuota: '핵심: Why에 집중',
+  },
+  {
+    icon: Users,
+    title: '실무 면접',
+    description: '문제 해결력과 협업 경험을 실제 사례로 증명하는 단계입니다.',
+    features: ['STAR 답변', '갈등 해결 사례', '실패와 배움'],
+    cost: '합격률 50%',
+    freeQuota: '핵심: 데이터 근거',
+  },
+  {
+    icon: Trophy,
+    title: '최종 합격',
+    description: '열정·성장 가능성·컬처 핏을 종합적으로 평가하는 임원 면접입니다.',
+    features: ['지원 동기', '5년 후 계획', '회사 이해도'],
+    cost: '최종 30%',
+    freeQuota: '핵심: 회사 맞춤화',
+  },
+];
+
+const fieldScenarios = [
+  {
+    icon: Briefcase,
+    title: '반도체: 공정 자동화 직무',
+    before: '"Gemini API로 수율 데이터 분석을 자동화한 경험이 있나요?"',
+    intent: '13강 데이터 분석 + 14강 Vision 검사 프로젝트를 묶어 "현장 8시간 → 5분"으로 정량 답변.',
+    output: '면접관이 곧바로 실무 적용 가능성을 인지 → 추가 질문이 깊어짐',
+  },
+  {
+    icon: Star,
+    title: '디스플레이: 품질 검사 직무',
+    before: '"육안 검사를 AI로 대체할 수 있다고 생각하나요?"',
+    intent: '14강 Vision 검사 99.5% 정확도 결과를 보여주고, 한계와 보완책을 함께 설명.',
+    output: '단순 도구 사용자가 아닌 "기술 한계를 이해하는 엔지니어"로 인식',
+  },
+  {
+    icon: Target,
+    title: '배터리: 모니터링 시스템 직무',
+    before: '"실시간 알림은 어떻게 구현했나요?"',
+    intent: '15강 시계열 예측 + 16강 멀티채널 알림을 한 화면 데모로 시연.',
+    output: '"바로 우리 팀에 투입해도 되겠다"는 인상 → 처우 협상 우위',
+  },
+];
+
+const pitchSteps = [
+  { step: '1', title: '문제 정의 (30초)', body: '숫자로 심각성 전달 — 8시간/85%/연 수억', duration: '30초' },
+  { step: '2', title: '솔루션 제시 (60초)', body: 'Gemini Vision + Prophet + 알림 통합', duration: '60초' },
+  { step: '3', title: '데모 시연 (60초)', body: '실제 동작 화면 — 이미지/예측/알림', duration: '60초' },
+  { step: '4', title: '차별화 (30초)', body: '단일 기능 아닌 통합, 오픈소스 공개', duration: '30초' },
+];
+
+const intentChecklist = [
+  '기술 면접 예상 질문 10개에 대한 답변이 준비되었는가?',
+  '3분 피칭 스크립트가 문제·솔루션·데모·차별화 4단 구조인가?',
+  'STAR 기법으로 협업·실패·지원동기 답변을 정리했는가?',
+  'GitHub README와 실행 영상이 누구든 따라할 수 있게 정리되었는가?',
+  '모의 면접을 3회 이상 연습하고 녹화·피드백을 받았는가?',
+];
+
+const technicalVerifyPoints = [
+  '예상 질문 10개에 대한 답변이 30초 이내로 압축되었는가?',
+  '"왜(Why)" 그 기술을 선택했는지 근거가 명확한가?',
+  '실패 경험과 개선 과정을 솔직하게 공유할 준비가 되었는가?',
+];
+
+const pitchVerifyPoints = [
+  '3분 안에 4단계가 모두 들어가는가?',
+  '각 단계마다 숫자/그래프 등 정량 증거가 붙어 있는가?',
+  '실제 동작하는 데모 화면이 준비되었는가?',
+];
+
+const behavioralVerifyPoints = [
+  '협업/실패/지원동기 답변이 STAR 구조로 정리되었는가?',
+  '회사별 맞춤 지원동기가 1문단 이상 작성되었는가?',
+  '예상 꼬리 질문에 대한 추가 근거 자료가 있는가?',
+];
+
+const careerComparison = [
+  { model: 'AI 포트폴리오 (13~17강)', price: '40시간 학습', context: '실행 가능 프로젝트 4종', free: 'GitHub 공개', score: 95 },
+  { model: '학과 수업 + 자격증', price: '학기 2개', context: '이론 중심', free: '수료증', score: 65 },
+  { model: '튜토리얼 따라하기', price: '주말 3회', context: '복붙 코드', free: 'README 없음', score: 40 },
+];
+
+// ============================================================================
+// HELPER COMPONENTS
+// ============================================================================
+
+function GoalVisual({ type }: { type: string }) {
+  if (type === 'api') {
+    return (
+      <div className="goal-visual definition">
+        <div className="visual-item person">
+          <MessageSquare size={18} />
+          <span>Q10</span>
+        </div>
+        <ArrowRight size={14} className="visual-arrow" />
+        <div className="visual-item ai">
+          <CheckCircle2 size={18} />
+          <span>Answer</span>
+        </div>
+      </div>
+    );
+  }
+  if (type === 'knowledge') {
+    return (
+      <div className="goal-visual elements">
+        <div className="element-tag">문제</div>
+        <div className="element-tag">솔루션</div>
+        <div className="element-tag">데모</div>
+      </div>
+    );
+  }
+  if (type === 'deploy') {
+    return (
+      <div className="goal-visual field">
+        <div className="field-icons">
+          <div className="f-icon"><Users size={18} /></div>
+          <div className="f-icon"><Award size={18} /></div>
+        </div>
+        <div className="success-indicator">
+          <CheckCircle2 size={12} />
+          <span>합격</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
 }
-function App() {
+
+function CareerChart() {
+  const max = Math.max(...careerComparison.map((item) => item.score));
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900">
-      <Header />
-      <Hero />
-      <HeroImage filename="interview-pitch-overview.png" caption="문제, 데이터, AI 워크플로우, 결과, 임팩트를 면접 피칭 구조로 정리합니다." />
-      <InterviewOverview />
-      <TechnicalInterviewDeepDive />
-      <ProjectPresentationDeepDive />
-      <BehavioralInterviewDeepDive />
-      <InteractiveWorkshop />
-      <VerificationChecklist />
-      <NextSteps />
-      <Footer />
+    <div className="visual-card">
+      <div className="visual-header">
+        <span>준비 경로 비교</span>
+        <strong>면접 합격 점수</strong>
+      </div>
+      <div className="bar-chart" role="img" aria-label="취업 준비 경로 비교 차트">
+        {careerComparison.map((item) => (
+          <div className="bar-row" key={item.model}>
+            <span>{item.model}</span>
+            <div>
+              <i style={{ width: `${(item.score / max) * 100}%` }} />
+            </div>
+            <strong>{item.score}</strong>
+          </div>
+        ))}
+      </div>
+      <p>실행 가능한 프로젝트 4종을 가진 지원자는 이론 중심·튜토리얼 따라하기와 명확히 구분됩니다.</p>
     </div>
   );
 }
 
-function Header() {
+function LectureImage({
+  src,
+  alt,
+  caption,
+  variant = 'wide',
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+  variant?: 'wide' | 'poster';
+}) {
   return (
-    <motion.header initial={{ y: -100 }} animate={{ y: 0 }}
-      className="bg-black/30 backdrop-blur-md border-b border-orange-500/30 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Briefcase className="w-8 h-8 text-orange-400" />
-          <div>
-            <h1 className="text-2xl font-bold text-white">Lecture 17</h1>
-            <p className="text-sm text-orange-300">기술 면접 & 실무 피칭 전략</p>
-          </div>
+    <figure className={`lecture-image ${variant}`}>
+      <img src={assetUrl(src)} alt={alt} loading="lazy" />
+      <figcaption>{caption}</figcaption>
+    </figure>
+  );
+}
+
+function VerifyChecklist({ points }: { points: string[] }) {
+  return (
+    <div className="verify-checklist">
+      <span>면접 검증 포인트</span>
+      {points.map((point) => (
+        <div className="verify-item" key={point}>
+          <CheckCircle2 size={15} />
+          <p>{point}</p>
         </div>
-        <span className="px-4 py-2 bg-orange-500/20 rounded-full text-orange-300 text-sm">
-          Career Ready
-        </span>
-      </div>
-    </motion.header>
+      ))}
+    </div>
   );
 }
 
-function Hero() {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-20">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}
-          className="inline-block mb-6 relative">
-          <Briefcase className="w-24 h-24 text-orange-400 mx-auto" />
-          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}
-            className="absolute -top-2 -right-2">
-            <Trophy className="w-12 h-12 text-yellow-400" />
-          </motion.div>
-        </motion.div>
-        <h1 className="text-6xl font-bold text-white mb-6">기술 면접 & 실무 피칭</h1>
-        <p className="text-3xl text-orange-300 mb-4">포트폴리오를 무기로 취업 성공하기</p>
-        <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-          13~16강에서 만든 AI 프로젝트를 면접관에게 효과적으로 전달하고<br/>
-          반도체/디스플레이/배터리/바이오 기업 취업을 성공시킵니다.
-        </p>
-      </motion.div>
-    </section>
-  );
-}
+// ============================================================================
+// DEEP DIVE SECTIONS
+// ============================================================================
 
-function InterviewOverview() {
-  const stages = [
-    {
-      icon: FileText,
-      title: '서류 전형',
-      key: 'GitHub 포트폴리오',
-      tip: 'README 잘 작성, 실행 가능한 코드',
-      success: '통과율 80%',
-      color: '#3498DB'
-    },
-    {
-      icon: Code,
-      title: '기술 면접',
-      key: '프로젝트 설명 + 코딩 테스트',
-      tip: 'Gemini API 동작 원리 설명',
-      success: '합격률 60%',
-      color: '#9B59B6'
-    },
-    {
-      icon: Users,
-      title: '실무 면접',
-      key: '문제 해결 능력 + 협업',
-      tip: '실제 사례로 증명',
-      success: '합격률 50%',
-      color: '#1ABC9C'
-    },
-    {
-      icon: Trophy,
-      title: '최종 합격',
-      key: '종합 평가',
-      tip: '열정 + 성장 가능성',
-      success: '최종 30%',
-      color: '#F39C12'
-    }
+function TechnicalInterviewDeepDive() {
+  const questions = [
+    { q: 'Gemini API를 선택한 이유는?', a: '멀티모달 지원(텍스트+이미지), 무료 티어, 최신 AI 모델' },
+    { q: 'Vision API 검사 정확도는?', a: '테스트 99.5% — 육안 85% 대비 +14%p, 표준편차 1.2%' },
+    { q: 'Prophet을 쓴 이유는?', a: '계절성 자동 감지, Facebook 제공, 적은 데이터에서도 안정적' },
+    { q: '실시간 알림 구현은?', a: 'SMTP + Slack API + Twilio SMS 멀티채널 통합' },
+    { q: '데이터 보안 처리는?', a: '.env 분리, GitHub Secrets, API 키 암호화 저장' },
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.h2 initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-        className="text-4xl font-bold text-white mb-12 text-center">
-        취업 프로세스 4단계
-      </motion.h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stages.map((stage, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-            className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
-            <div className="bg-orange-500/20 rounded-xl p-3 mb-4 w-fit">
-              <stage.icon className="w-10 h-10" style={{ color: stage.color }} />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">{stage.title}</h3>
-            <div className="space-y-3">
-              <div className="bg-black/30 rounded-lg p-3">
-                <p className="text-gray-400 text-xs mb-1">핵심</p>
-                <p className="text-white text-sm font-semibold">{stage.key}</p>
-              </div>
-              <div className="bg-blue-500/10 rounded-lg p-3">
-                <p className="text-gray-400 text-xs mb-1">팁</p>
-                <p className="text-blue-300 text-sm">{stage.tip}</p>
-              </div>
-              <div className="bg-green-500/10 rounded-lg p-3">
-                <p className="text-green-400 text-sm font-bold">{stage.success}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+    <div className="deep-dive">
+      <div className="deep-dive-heading">
+        <span>Case 01 Deep Dive</span>
+        <h3>기술 면접: 13~16강 프로젝트를 어떻게 30초 답변으로 압축할까</h3>
+        <p>
+          면접관은 30초 안에 "이 사람이 이해하고 만든 건지" 판단합니다. 예상 질문 10개를
+          뽑아 "결론 → 근거 숫자 → 한계" 3박자 구조로 답변을 미리 설계합니다.
+        </p>
+        <LectureImage
+          src="panel1.png"
+          alt="기술 면접 예상 질문 10개와 30초 답변 구조를 정리한 표"
+          caption="질문은 다양해 보이지만 결국 '왜 그 기술을 골랐는가'와 '얼마나 잘 동작하는가' 두 축으로 모입니다."
+        />
       </div>
-    </section>
-  );
-}
 
-function TechnicalInterviewDeepDive() {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 backdrop-blur-lg rounded-3xl p-12 border-2 border-indigo-500/30">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="bg-indigo-500/30 rounded-2xl p-4">
-            <Code className="w-12 h-12 text-indigo-300" />
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-white mb-2">Deep Dive 1</h2>
-            <p className="text-2xl text-indigo-300">기술 면접 준비 전략</p>
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          <div className="bg-black/40 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-6">예상 질문 TOP 10</h3>
-
-            <div className="space-y-6">
-              {[
-                {
-                  q: '1. Gemini API를 선택한 이유는?',
-                  a: '멀티모달 지원(텍스트+이미지), 무료 티어, 최신 AI 모델'
-                },
-                {
-                  q: '2. Vision API로 이미지 검사 시 정확도는?',
-                  a: '테스트 결과 99.5%, 육안 검사(85%) 대비 14% 향상'
-                },
-                {
-                  q: '3. Prophet을 사용한 이유는?',
-                  a: '시계열 예측에 특화, 자동 계절성 감지, Facebook 제공'
-                },
-                {
-                  q: '4. 실시간 알림은 어떻게 구현했나?',
-                  a: 'SMTP(이메일), Slack API, Twilio(SMS) 멀티채널 통합'
-                },
-                {
-                  q: '5. 데이터 보안은 어떻게 처리했나?',
-                  a: '.env 파일 사용, GitHub Secrets, API 키 암호화'
-                },
-                {
-                  q: '6. 배치 처리는 어떻게 최적화했나?',
-                  a: 'asyncio 비동기 처리, Semaphore로 동시 요청 제한'
-                },
-                {
-                  q: '7. 에러 핸들링은?',
-                  a: 'try-except, 로깅, 재시도 로직, 사용자 친화적 에러 메시지'
-                },
-                {
-                  q: '8. 이 프로젝트의 실무 적용 가능성은?',
-                  a: '제조 현장에 즉시 적용 가능, 비용 90% 절감 효과'
-                },
-                {
-                  q: '9. 가장 어려웠던 부분은?',
-                  a: '시계열 예측 정확도 향상, 프롬프트 엔지니어링 최적화'
-                },
-                {
-                  q: '10. 향후 개선 계획은?',
-                  a: '실시간 스트리밍 처리, 커스텀 모델 fine-tuning, 모바일 앱'
-                }
-              ].map((item, i) => (
-                <div key={i} className="bg-black/60 rounded-xl p-6">
-                  <h4 className="text-white font-bold mb-3 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-blue-400" />
-                    {item.q}
-                  </h4>
-                  <p className="text-green-300 pl-7 leading-relaxed">
-                    💡 <span className="font-semibold">답변:</span> {item.a}
-                  </p>
-                </div>
-              ))}
+      <div className="yield-case-compare vertical-case-flow" aria-label="기술 면접 Before Prompt After">
+        <article className="yield-case-panel manual-panel">
+          <span>Before: 떨면서 즉답</span>
+          <h4>면접장에서 처음 듣는 듯이 횡설수설</h4>
+          <ul>
+            <li>"그냥 튜토리얼 따라 했어요" — 즉시 감점</li>
+            <li>기술 용어만 나열, Why가 없음</li>
+            <li>숫자 없이 "잘 작동했어요" 수준 답변</li>
+            <li>실패 경험을 숨기다 꼬리 질문에서 무너짐</li>
+          </ul>
+          <div className="mini-excel dense-excel">
+            <strong>흔한 실수 패턴</strong>
+            <div style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px', marginTop: '0.5rem' }}>
+              <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
+                1. 결론 없이 배경부터 늘어놓기<br/>
+                2. 숫자/그래프 없는 정성적 답변<br/>
+                3. 한계를 모르는 듯한 자신감<br/>
+                4. README 없는 GitHub 링크<br/>
+                5. 실행 안 되는 코드 시연
+              </p>
             </div>
           </div>
+        </article>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-indigo-500/20 rounded-xl p-6">
-              <h4 className="text-white font-bold mb-4 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-400" />
-                면접 성공 팁
-              </h4>
-              <ul className="space-y-3 text-gray-300 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>프로젝트를 직접 실행해서 보여주기 (데모 필수)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>숫자로 성과 증명 (처리속도, 정확도, 비용 절감)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>코드 설명 시 왜(Why)에 집중</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>실패 경험도 솔직하게 공유</span>
-                </li>
-              </ul>
+        <article className="yield-case-panel prompt-panel">
+          <span>Prompt: 답변 설계 지시</span>
+          <h4>예상 질문 10개를 뽑고 30초 답변을 미리 설계합니다</h4>
+          <p>
+            "13~16강 프로젝트를 검토하고 면접관이 던질 만한 기술 질문 10개를 추출해줘.
+            각 질문에 대해 결론 1줄 → 핵심 근거 숫자 1개 → 한계와 보완책 1줄
+            3박자 구조의 30초 답변 스크립트를 만들어줘."
+          </p>
+          <div className="aoi-rule-grid sensor-rule-grid">
+            <div><strong>결론</strong><span>한 문장으로 단정</span></div>
+            <div><strong>근거</strong><span>정량 숫자 1개</span></div>
+            <div><strong>한계</strong><span>스스로 인지 표현</span></div>
+          </div>
+        </article>
+
+        <article className="yield-case-panel result-panel">
+          <span>After: 30초 답변 모음</span>
+          <h4>면접관 머리에 그대로 박히는 압축 답변 5선</h4>
+          <div className="code-preview-box">
+            <div className="visual-header">
+              <span>Top 5 Q&amp;A</span>
+              <strong>30초 답변</strong>
             </div>
-
-            <div className="bg-red-500/20 rounded-xl p-6">
-              <h4 className="text-white font-bold mb-4 flex items-center gap-2">
-                <XCircle className="w-5 h-5 text-red-400" />
-                주의사항
-              </h4>
-              <ul className="space-y-3 text-gray-300 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
-                  <span>"그냥 튜토리얼 따라했어요" (×)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
-                  <span>너무 기술 용어만 나열 (×)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
-                  <span>실행이 안 되는 코드 (×)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
-                  <span>README 없는 GitHub (×)</span>
-                </li>
-              </ul>
+            <div style={{ padding: '1rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
+              <ol style={{ paddingLeft: '1.25rem', lineHeight: '1.8' }}>
+                {questions.map((item) => (
+                  <li key={item.q}>
+                    <strong>{item.q}</strong>
+                    <p style={{ fontSize: '0.9rem', color: '#0071e3', marginTop: '0.25rem' }}>
+                      → {item.a}
+                    </p>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
-        </div>
-      </motion.div>
-    </section>
+          <div className="aoi-impact-strip sensor-impact-strip">
+            <div><strong>30초</strong><span>답변 길이 고정</span></div>
+            <div><strong>+숫자</strong><span>모든 답변 정량 근거</span></div>
+            <div><strong>한계 인지</strong><span>신뢰 가산점</span></div>
+          </div>
+        </article>
+      </div>
+
+      <p className="case-takeaway">
+        핵심은 "많이 아는 것"이 아니라 "30초 안에 결론·근거·한계를 정리할 수 있는가"입니다.
+        면접관은 깊이가 아니라 구조화 능력을 봅니다.
+      </p>
+      <VerifyChecklist points={technicalVerifyPoints} />
+    </div>
   );
 }
 
 function ProjectPresentationDeepDive() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-green-500/20 to-teal-500/20 backdrop-blur-lg rounded-3xl p-12 border-2 border-green-500/30">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="bg-green-500/30 rounded-2xl p-4">
-            <Target className="w-12 h-12 text-green-300" />
+    <div className="deep-dive">
+      <div className="deep-dive-heading">
+        <span>Case 02 Deep Dive</span>
+        <h3>프로젝트 피칭: 3분 안에 면접관 머리에 박는 4단 스크립트</h3>
+        <p>
+          15분 발표가 아니라 3분 엘리베이터 피칭입니다. 문제(30초) → 솔루션(60초) →
+          데모(60초) → 차별화(30초) 4단 구조로 모든 숫자가 정해진 위치에 들어갑니다.
+        </p>
+        <LectureImage
+          src="panel2.png"
+          alt="3분 피칭의 문제·솔루션·데모·차별화 4단 구조를 시간 라인으로 정리한 도식"
+          caption="시간 박스를 미리 정해두고 각 박스에 들어갈 숫자·문장을 채우면 떨림이 줄어듭니다."
+        />
+      </div>
+
+      <div className="yield-case-compare vertical-case-flow">
+        <article className="yield-case-panel manual-panel">
+          <span>Before: 15분 발표 그대로</span>
+          <h4>학교 PPT를 면접장에 그대로 들고 오는 실수</h4>
+          <ul>
+            <li>배경 설명에 1분 30초 — 결론이 늦음</li>
+            <li>모든 슬라이드를 읽음 — 면접관 흥미 이탈</li>
+            <li>데모 없이 스크린샷만 — 실제 동작 의심</li>
+            <li>차별화 포인트가 없어 "그래서 너 뭐가 다른데?" 질문</li>
+            <li>3분 초과로 면접관이 끊음</li>
+          </ul>
+        </article>
+
+        <article className="yield-case-panel prompt-panel">
+          <span>Prompt: 4단 스크립트 지시</span>
+          <h4>각 단계의 시간·문장·숫자를 미리 고정합니다</h4>
+          <p>
+            "13~16강 통합 프로젝트를 3분 안에 피칭하는 스크립트를 만들어줘.
+            문제(30초, 정량 숫자 2개 포함) → 솔루션(60초, 핵심 기술 3개) →
+            데모(60초, 화면 흐름 묘사) → 차별화(30초, 경쟁 대비 1문장)
+            구조로 각 문장을 그대로 외울 수 있는 형태로 써줘."
+          </p>
+          <div className="aoi-rule-grid">
+            <div><strong>30초</strong><span>문제 정의 + 정량 손실</span></div>
+            <div><strong>60+60초</strong><span>솔루션 + 데모 시연</span></div>
+            <div><strong>30초</strong><span>차별화 한 문장</span></div>
           </div>
-          <div>
-            <h2 className="text-4xl font-bold text-white mb-2">Deep Dive 2</h2>
-            <p className="text-2xl text-green-300">프로젝트 피칭 3분 전략</p>
-          </div>
-        </div>
+        </article>
 
-        <div className="bg-black/40 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-white mb-6">3분 피칭 템플릿</h3>
-
-          <div className="space-y-6">
-            <div className="bg-black/60 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                  1
-                </div>
-                <h4 className="text-xl font-bold text-white">문제 정의 (30초)</h4>
-              </div>
-              <div className="pl-13 space-y-3">
-                <p className="text-gray-300 leading-relaxed">
-                  "제조 현장에서 이미지 검사에 하루 8시간이 소요되고, 육안 검사 정확도가 85%에 불과합니다.
-                  이는 불량률 5-10% 누락으로 이어지며, 연간 수억 원의 손실을 발생시킵니다."
-                </p>
-                <div className="bg-red-500/20 rounded-lg p-4">
-                  <p className="text-red-300 font-semibold">💡 핵심: 숫자로 문제의 심각성 전달</p>
-                </div>
-              </div>
+        <article className="yield-case-panel result-panel">
+          <span>After: 외워서 쓰는 4단 스크립트</span>
+          <h4>3분 안에 60배 속도, 99.5% 정확도, 90% 비용 절감이 전달됩니다</h4>
+          <div className="notebooklm-result-box">
+            <div className="visual-header">
+              <span>Pitch Script</span>
+              <strong>3분 고정 분량</strong>
             </div>
-
-            <div className="bg-black/60 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-                  2
-                </div>
-                <h4 className="text-xl font-bold text-white">솔루션 제시 (60초)</h4>
-              </div>
-              <div className="pl-13 space-y-3">
-                <p className="text-gray-300 leading-relaxed">
-                  "Gemini Vision API를 활용한 AI 자동 검사 시스템을 개발했습니다.
-                  이미지 업로드 시 0.5초 만에 결함을 검출하며, 정확도는 99.5%입니다.
-                  Prophet 시계열 분석으로 이상을 15분 전에 예측하고, 멀티채널 알림으로 즉시 대응합니다."
-                </p>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="bg-green-500/20 rounded-lg p-3">
-                    <p className="text-green-400 text-lg font-bold">60배</p>
-                    <p className="text-gray-400 text-sm">검사 속도 향상</p>
-                  </div>
-                  <div className="bg-blue-500/20 rounded-lg p-3">
-                    <p className="text-blue-400 text-lg font-bold">99.5%</p>
-                    <p className="text-gray-400 text-sm">검사 정확도</p>
-                  </div>
-                  <div className="bg-purple-500/20 rounded-lg p-3">
-                    <p className="text-purple-400 text-lg font-bold">90%↓</p>
-                    <p className="text-gray-400 text-sm">비용 절감</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/60 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                  3
-                </div>
-                <h4 className="text-xl font-bold text-white">데모 시연 (60초)</h4>
-              </div>
-              <div className="pl-13 space-y-3">
-                <p className="text-gray-300 leading-relaxed">
-                  "실제 시스템을 보여드리겠습니다. (화면 공유)
-                  CSV 파일을 업로드하면 자동으로 그래프가 생성되고, Gemini가 인사이트를 제공합니다.
-                  이미지 검사는 실시간으로 결함을 표시하며, 센서 데이터는 미래 값을 예측합니다."
-                </p>
-                <div className="bg-orange-500/20 rounded-lg p-4">
-                  <p className="text-orange-300 font-semibold">💡 핵심: 실제 동작하는 시스템 보여주기</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/60 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-white font-bold">
-                  4
-                </div>
-                <h4 className="text-xl font-bold text-white">차별화 포인트 (30초)</h4>
-              </div>
-              <div className="pl-13 space-y-3">
-                <p className="text-gray-300 leading-relaxed">
-                  "기존 솔루션은 단일 기능만 제공하지만, 저희 시스템은 데이터 분석, 이미지 검사, 센서 예측을 하나로 통합했습니다.
-                  GitHub에 오픈소스로 공개하여 누구나 사용 가능하며, Streamlit으로 웹 배포까지 완료했습니다."
-                </p>
-                <div className="bg-blue-500/20 rounded-lg p-4">
-                  <p className="text-blue-300 font-semibold">💡 핵심: 경쟁사 대비 우위 강조</p>
-                </div>
-              </div>
+            <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+              <p style={{ fontSize: '0.92rem', marginBottom: '0.75rem' }}>
+                <strong>① 문제 (30초)</strong> — "제조 현장 이미지 검사 하루 8시간, 정확도 85%.
+                연간 수억 원 손실."
+              </p>
+              <p style={{ fontSize: '0.92rem', marginBottom: '0.75rem' }}>
+                <strong>② 솔루션 (60초)</strong> — "Gemini Vision API + Prophet + 멀티채널 알림.
+                0.5초 검사, 99.5% 정확도, 15분 전 이상 예측."
+              </p>
+              <p style={{ fontSize: '0.92rem', marginBottom: '0.75rem' }}>
+                <strong>③ 데모 (60초)</strong> — "CSV 업로드 → 그래프 자동 생성 → 이상 알림.
+                지금 화면 공유하겠습니다."
+              </p>
+              <p style={{ fontSize: '0.92rem' }}>
+                <strong>④ 차별화 (30초)</strong> — "단일 기능 솔루션과 달리 분석·검사·예측·알림을
+                하나로 통합하고 GitHub 오픈소스로 공개했습니다."
+              </p>
             </div>
           </div>
-        </div>
-      </motion.div>
-    </section>
+          <div className="aoi-impact-strip">
+            <div><strong>60배</strong><span>검사 속도</span></div>
+            <div><strong>99.5%</strong><span>정확도</span></div>
+            <div><strong>90% ↓</strong><span>비용 절감</span></div>
+          </div>
+        </article>
+      </div>
+
+      <p className="case-takeaway">
+        핵심은 "모든 걸 보여주기"가 아니라 "면접관이 기억할 3개 숫자"를 남기는 것입니다.
+        60배·99.5%·90%처럼 단순한 수치가 가장 오래 남습니다.
+      </p>
+      <VerifyChecklist points={pitchVerifyPoints} />
+    </div>
   );
 }
 
 function BehavioralInterviewDeepDive() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-lg rounded-3xl p-12 border-2 border-orange-500/30">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="bg-orange-500/30 rounded-2xl p-4">
-            <Users className="w-12 h-12 text-orange-300" />
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-white mb-2">Deep Dive 3</h2>
-            <p className="text-2xl text-orange-300">인성 면접 & STAR 기법</p>
-          </div>
-        </div>
+    <div className="deep-dive">
+      <div className="deep-dive-heading">
+        <span>Case 03 Deep Dive</span>
+        <h3>인성 면접: STAR 기법으로 협업·실패·지원동기 정리</h3>
+        <p>
+          Situation·Task·Action·Result 4단 구조로 답변을 미리 작성해두면, 어떤 인성 질문이
+          나와도 같은 골격에 살만 바꿔 끼우면 됩니다.
+        </p>
+        <LectureImage
+          src="panel3.png"
+          alt="STAR 기법의 4단 구조와 협업/실패/지원동기 답변 예시를 정리한 인포그래픽"
+          caption="질문은 다양해도 STAR 4박자 골격에 1~2문장씩만 채우면 끝납니다."
+          variant="poster"
+        />
+      </div>
 
-        <div className="space-y-8">
-          <div className="bg-black/40 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-6">STAR 기법으로 답변하기</h3>
+      <div className="yield-case-compare vertical-case-flow">
+        <article className="yield-case-panel manual-panel">
+          <span>Before: 즉흥 인성 답변</span>
+          <h4>"음... 그게..."로 시작하는 두서없는 이야기</h4>
+          <ul>
+            <li>상황 설명만 2분 — 결과를 못 들음</li>
+            <li>본인 행동이 모호 — "팀이 잘했어요"</li>
+            <li>결과의 정량 효과가 없음</li>
+            <li>지원동기가 "성장하고 싶어서" 수준</li>
+            <li>회사를 안 봤다는 게 티남</li>
+          </ul>
+        </article>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {[
-                {
-                  letter: 'S',
-                  title: 'Situation',
-                  desc: '상황 설명',
-                  example: '"제조 현장에서 불량률이 급증하는 문제가 있었습니다"'
-                },
-                {
-                  letter: 'T',
-                  title: 'Task',
-                  desc: '주어진 과제',
-                  example: '"AI로 실시간 검사 시스템을 만들어 불량률을 낮추는 임무를 맡았습니다"'
-                },
-                {
-                  letter: 'A',
-                  title: 'Action',
-                  desc: '취한 행동',
-                  example: '"Gemini API를 학습하고, 3주간 프로토타입을 개발했습니다"'
-                },
-                {
-                  letter: 'R',
-                  title: 'Result',
-                  desc: '결과/성과',
-                  example: '"불량률을 5%에서 0.5%로 낮추고, 검사 시간을 90% 단축했습니다"'
-                }
-              ].map((item, i) => (
-                <div key={i} className="bg-black/60 rounded-xl p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white font-bold text-xl">
-                      {item.letter}
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold">{item.title}</h4>
-                      <p className="text-gray-400 text-sm">{item.desc}</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-300 text-sm italic pl-15">
-                    {item.example}
-                  </p>
-                </div>
-              ))}
+        <article className="yield-case-panel prompt-panel">
+          <span>Prompt: STAR 답변 설계</span>
+          <h4>3개 시나리오 × STAR 4단 = 12개 문장만 외웁니다</h4>
+          <p>
+            "협업 갈등 / 실패 경험 / 지원 동기 3가지 인성 질문에 대해
+            STAR (Situation, Task, Action, Result) 4단 구조로 답변을 만들어줘.
+            각 단계는 한 문장씩이며, Result에는 정량 숫자가 반드시 포함되어야 해.
+            13~16강 프로젝트 경험을 근거로 사용해줘."
+          </p>
+          <div className="aoi-rule-grid sensor-rule-grid">
+            <div><strong>S</strong><span>상황 — 한 문장</span></div>
+            <div><strong>T·A</strong><span>임무·행동 — 두 문장</span></div>
+            <div><strong>R</strong><span>결과 — 정량 숫자</span></div>
+          </div>
+        </article>
+
+        <article className="yield-case-panel result-panel">
+          <span>After: STAR 답변 3종 세트</span>
+          <h4>협업·실패·지원동기 답변이 30초씩 정리됩니다</h4>
+          <div className="firebase-result-box">
+            <div className="visual-header">
+              <span>STAR Script</span>
+              <strong>3종 세트</strong>
             </div>
-
-            <div className="bg-orange-500/20 rounded-xl p-6">
-              <h4 className="text-white font-bold mb-4">💬 인성 면접 예상 질문 & 모범 답안</h4>
-              <div className="space-y-4">
-                <div className="bg-black/40 rounded-lg p-4">
-                  <p className="text-orange-300 font-semibold mb-2">Q: "팀 프로젝트에서 갈등이 생긴 경험은?"</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    A: (S) 프로젝트 방향성에 대한 의견 차이로 팀원 간 갈등이 있었습니다.
-                    (T) 기한 내 완성을 위해 중재자 역할을 맡았습니다.
-                    (A) 각자의 의견을 듣고, 데이터로 비교 분석하여 최선의 방안을 제시했습니다.
-                    (R) 합의를 이끌어내고, 예정보다 3일 빨리 프로젝트를 완료했습니다.
-                  </p>
-                </div>
-
-                <div className="bg-black/40 rounded-lg p-4">
-                  <p className="text-orange-300 font-semibold mb-2">Q: "실패한 경험과 배운 점은?"</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    A: (S) 처음 Vision API를 사용할 때 정확도가 60%에 불과했습니다.
-                    (T) 90% 이상으로 끌어올려야 했습니다.
-                    (A) 프롬프트 엔지니어링을 집중 학습하고, 100회 이상 테스트했습니다.
-                    (R) 최종적으로 99.5% 정확도를 달성했고, 프롬프트의 중요성을 깨달았습니다.
-                  </p>
-                </div>
-
-                <div className="bg-black/40 rounded-lg p-4">
-                  <p className="text-orange-300 font-semibold mb-2">Q: "우리 회사에 지원한 이유는?"</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    A: 귀사는 반도체 제조 공정 자동화에 선도적이며, AI 기술 도입에 적극적입니다.
-                    저는 13~16강에서 제조 현장에 바로 적용 가능한 AI 시스템을 개발했고,
-                    이 경험을 귀사의 스마트 팩토리 구축에 기여하고 싶습니다.
-                  </p>
-                </div>
-              </div>
+            <div style={{ padding: '1rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
+              <p style={{ fontSize: '0.9rem', marginBottom: '0.75rem' }}>
+                <strong>Q. 팀 갈등 경험?</strong><br/>
+                <span style={{ color: '#555' }}>
+                  (S) 프로젝트 방향 의견 차이 → (T) 중재자 역할 → (A) 데이터로 비교 분석 →
+                  <strong style={{ color: '#0071e3' }}> (R) 합의 도출, 3일 단축</strong>
+                </span>
+              </p>
+              <p style={{ fontSize: '0.9rem', marginBottom: '0.75rem' }}>
+                <strong>Q. 실패 경험?</strong><br/>
+                <span style={{ color: '#555' }}>
+                  (S) Vision 정확도 60% → (T) 90% 목표 → (A) 프롬프트 100회 튜닝 →
+                  <strong style={{ color: '#0071e3' }}> (R) 99.5% 달성</strong>
+                </span>
+              </p>
+              <p style={{ fontSize: '0.9rem' }}>
+                <strong>Q. 지원 동기?</strong><br/>
+                <span style={{ color: '#555' }}>
+                  반도체 스마트 팩토리 선도 기업 → 13~16강 현장 적용 가능 AI 시스템 보유 →
+                  귀사 공정 자동화에 즉시 기여 가능
+                </span>
+              </p>
             </div>
           </div>
-        </div>
-      </motion.div>
-    </section>
+          <div className="aoi-impact-strip sensor-impact-strip">
+            <div><strong>30초/답변</strong><span>3종 골격 외우기</span></div>
+            <div><strong>정량 결과</strong><span>모든 답변에 숫자</span></div>
+            <div><strong>회사 맞춤</strong><span>지원동기 1문단</span></div>
+          </div>
+        </article>
+      </div>
+
+      <p className="case-takeaway">
+        핵심은 "솔직함"과 "정량성"입니다. 실패를 숨기지 않되, 그 실패가 어떤 숫자로 회복되었는지
+        보여주는 사람을 면접관은 신뢰합니다.
+      </p>
+      <VerifyChecklist points={behavioralVerifyPoints} />
+    </div>
   );
 }
 
 function InteractiveWorkshop() {
-  const [completed, setCompleted] = useState<number[]>([]);
-  const steps = [
-    { title: '면접 예상 질문 10개 준비', desc: 'STAR 기법으로 답변 작성' },
-    { title: '3분 피칭 스크립트 작성', desc: '문제→솔루션→데모→차별화' },
-    { title: '포트폴리오 최종 점검', desc: 'GitHub, README, 실행 확인' },
-    { title: '모의 면접 연습', desc: '동료/가족 앞에서 3회 이상' }
+  const [fields, setFields] = useState({
+    problem: '',
+    solution: '',
+    differentiator: '',
+  });
+  const [copied, setCopied] = useState(false);
+
+  const hasContent = Object.values(fields).some(Boolean);
+
+  const generated = hasContent
+    ? `[3분 피칭 스크립트 초안]
+
+① 문제 (30초): ${fields.problem || '[정량 손실 숫자 2개]'}
+② 솔루션 (60초): ${fields.solution || '[핵심 기술 3개 + 정확도/속도]'}
+③ 데모 (60초): 실제 화면 공유 + 입력→처리→결과 흐름
+④ 차별화 (30초): ${fields.differentiator || '[경쟁 대비 1문장]'}
+
+→ 면접관에게 남길 3개 숫자를 마지막에 한 번 더 반복`
+    : '';
+
+  const handleCopy = () => {
+    if (!generated) return;
+    navigator.clipboard.writeText(generated).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
+  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
+    { key: 'problem', label: '문제 정의 (정량 숫자 2개)', placeholder: '예: 검사 하루 8시간, 정확도 85%, 연 수억 손실' },
+    { key: 'solution', label: '솔루션 (핵심 기술 + 성과 숫자)', placeholder: '예: Gemini Vision 0.5초 검사, 99.5% 정확도, 60배 향상' },
+    { key: 'differentiator', label: '차별화 (한 문장)', placeholder: '예: 분석·검사·예측·알림을 하나로 통합한 오픈소스' },
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.h2 className="text-4xl font-bold text-white mb-12 text-center">Interactive Workshop</motion.h2>
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          {steps.map((step, i) => (
-            <motion.div key={i}
-              className={`bg-white/5 rounded-2xl p-6 border-2 cursor-pointer ${completed.includes(i) ? 'border-green-500' : 'border-white/10'}`}
-              onClick={() => !completed.includes(i) && setCompleted([...completed, i])}>
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${completed.includes(i) ? 'bg-green-500' : 'bg-white/10'}`}>
-                  {completed.includes(i) ? <CheckCircle2 className="w-6 h-6 text-white" /> : <span className="text-white font-bold">{i + 1}</span>}
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">{step.title}</h3>
-                  <p className="text-gray-400 text-sm">{step.desc}</p>
-                </div>
-              </div>
-            </motion.div>
+    <div className="interactive-workshop">
+      <div className="iw-header">
+        <FileText size={22} color="var(--accent)" />
+        <strong>3분 피칭 스크립트 빌더</strong>
+        <p>문제·솔루션·차별화 3가지만 채우면 4단 스크립트 초안이 자동 완성됩니다.</p>
+      </div>
+      <div className="iw-body">
+        <div className="iw-inputs">
+          {inputRows.map((row) => (
+            <div className="iw-field" key={row.key}>
+              <label htmlFor={`iw-${row.key}`}>{row.label}</label>
+              <input
+                id={`iw-${row.key}`}
+                type="text"
+                placeholder={row.placeholder}
+                value={fields[row.key]}
+                onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))}
+              />
+            </div>
           ))}
         </div>
-        <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl p-8 border border-orange-500/30 sticky top-24 h-fit">
-          <h3 className="text-2xl font-bold text-white mb-6">준비도</h3>
-          <p className="text-gray-300 mb-6">{completed.length} / {steps.length} 완료</p>
-          <div className="h-4 bg-black/40 rounded-full overflow-hidden mb-6">
-            <motion.div initial={{ width: 0 }} animate={{ width: `${(completed.length / steps.length) * 100}%` }}
-              className="h-full bg-gradient-to-r from-green-500 to-blue-500" />
+        <div className="iw-output">
+          <div className="iw-output-header">
+            <Lightbulb size={18} color="var(--accent)" />
+            <strong>피칭 스크립트 초안</strong>
           </div>
-          {completed.length === steps.length && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-6 text-center">
-              <Trophy className="w-16 h-16 text-white mx-auto mb-3" />
-              <h4 className="text-2xl font-bold text-white">면접 준비 완료! 🎉</h4>
-              <p className="text-white/90 mt-2">자신감 있게 면접에 임하세요!</p>
-            </motion.div>
-          )}
+          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
+            {generated || '위 3가지를 입력하면\n3분 피칭 스크립트가 생성됩니다.'}
+          </div>
+          <button
+            className={`iw-copy-btn ${copied ? 'copied' : ''}`}
+            onClick={handleCopy}
+            disabled={!hasContent}
+          >
+            {copied
+              ? <><Check size={15} />복사됨!</>
+              : <><Copy size={15} />스크립트 복사</>}
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-function VerificationChecklist() {
-  const [checks, setChecks] = useState<boolean[]>(Array(8).fill(false));
-  const items = [
-    '기술 면접 예상 질문 10개 답변 준비',
-    '3분 피칭 스크립트 완성',
-    'STAR 기법 답변 3개 이상 작성',
-    'GitHub 포트폴리오 최종 점검',
-    'README.md 완성도 확인',
-    '프로젝트 실행 테스트 (3회)',
-    '모의 면접 연습 (3회 이상)',
-    '자기소개서 & 이력서 완성'
-  ];
-  const progress = (checks.filter(Boolean).length / items.length) * 100;
-
+function FirstRunGuide() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.h2 className="text-4xl font-bold text-white mb-12 text-center">Verification Checklist</motion.h2>
-      <div className="max-w-3xl mx-auto space-y-4">
-        {items.map((item, i) => (
-          <motion.div key={i}
-            onClick={() => { const n = [...checks]; n[i] = !n[i]; setChecks(n); }}
-            className={`bg-white/5 rounded-xl p-6 border-2 cursor-pointer ${checks[i] ? 'border-green-500' : 'border-white/10'}`}>
-            <div className="flex items-center gap-4">
-              <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center ${checks[i] ? 'bg-green-500 border-green-500' : 'border-white/30'}`}>
-                {checks[i] && <CheckCircle2 className="w-4 h-4 text-white" />}
-              </div>
-              <p className={`text-lg ${checks[i] ? 'text-green-300 line-through' : 'text-white'}`}>{item}</p>
+    <div className="first-run-guide">
+      <div className="frg-title">
+        <Rocket size={18} color="var(--accent)" />
+        <strong>지금 바로 해보기 — 3분 피칭 4단 타임박스</strong>
+      </div>
+      <div className="frg-steps">
+        {pitchSteps.map((item) => (
+          <div className="frg-step" key={item.step}>
+            <span className="frg-num">{item.step}</span>
+            <div>
+              <strong>{item.title}</strong>
+              <p>{item.body}</p>
             </div>
-          </motion.div>
+          </div>
         ))}
-        <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl p-8 border border-orange-500/30">
-          <div className="flex justify-between text-sm text-gray-300 mb-2">
-            <span>준비도</span><span>{checks.filter(Boolean).length} / {items.length}</span>
-          </div>
-          <div className="h-4 bg-black/40 rounded-full overflow-hidden">
-            <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
-              className="h-full bg-gradient-to-r from-green-500 to-blue-500" />
-          </div>
-          <p className="text-center text-3xl font-bold text-white mt-4">{Math.round(progress)}%</p>
-        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-function NextSteps() {
+function GraduationCard() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <motion.h2 className="text-4xl font-bold text-white mb-12 text-center">취업 성공의 마지막 단계</motion.h2>
-      <div className="grid md:grid-cols-3 gap-8 mb-12">
-        {[
-          { icon: Github, title: 'GitHub 포트폴리오', desc: '13~16강 프로젝트 Public 공개', color: '#333' },
-          { icon: Linkedin, title: 'LinkedIn 프로필', desc: '프로젝트 링크 & 성과 기재', color: '#0A66C2' },
-          { icon: Mail, title: '지원서 제출', desc: '맞춤형 자기소개서 작성', color: '#EA4335' }
-        ].map((step, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }} whileHover={{ scale: 1.05 }}
-            className="bg-white/5 rounded-2xl p-8 border border-white/10">
-            <step.icon className="w-16 h-16 mb-4" style={{ color: step.color }} />
-            <h3 className="text-2xl font-bold text-white mb-2">{step.title}</h3>
-            <p className="text-gray-300">{step.desc}</p>
-          </motion.div>
-        ))}
-      </div>
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
-        className="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-2xl p-8 border border-orange-500/30 text-center">
-        <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-4" />
-        <h3 className="text-3xl font-bold text-white mb-4">축하합니다! 🎉</h3>
-        <p className="text-xl text-gray-200 leading-relaxed max-w-3xl mx-auto">
-          13~17강 모든 과정을 완료했습니다.<br/>
-          이제 자신 있게 면접에 임하고, AI 엔지니어로서 취업 시장에 진출하세요!
+    <div className="next-lecture-card">
+      <div className="nlc-header">
+        <span>수료 안내</span>
+        <h3>13~17강 전 과정을 완료했습니다 — 이제 면접장으로</h3>
+        <p>
+          13강 데이터 분석부터 17강 면접 전략까지 — 4종의 실행 가능한 AI 프로젝트와
+          기술/피칭/인성 답변 시나리오를 갖췄습니다. GitHub Public 공개 → LinkedIn
+          업데이트 → 1주일 내 첫 지원서 제출을 권장합니다.
         </p>
-      </motion.div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-black/30 backdrop-blur-md border-t border-orange-500/30 py-8">
-      <div className="max-w-7xl mx-auto px-6 text-center">
-        <p className="text-gray-400">Letuin AI Lecture - Lecture 17</p>
-        <p className="text-gray-500 text-sm mt-2">© 2026 Letuin Education. 취업 성공을 기원합니다!</p>
       </div>
-    </footer>
+    </div>
   );
 }
 
-export default App;
+// ============================================================================
+// MAIN APP COMPONENT
+// ============================================================================
+
+export default function App() {
+  return (
+    <div className="app-container">
+      <header className="main-header">
+        <div className="header-top">
+          <motion.div
+            className="logo-group"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <img
+              src={assetUrl('logo.png')}
+              alt="LettUin Edu"
+              className="header-logo"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="header-tag-container"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <span className="header-tag">포트폴리오를 무기로 취업 성공</span>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="hero-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h1>Ch.17 기술 면접 &amp; 실무 피칭 전략</h1>
+          <p className="subtitle">13~16강 AI 프로젝트를 무기로 반도체·디스플레이·배터리·바이오 기업 면접을 통과합니다</p>
+          <div className="lesson-meta" aria-label="lesson summary">
+            <span>40분</span>
+            <span>실습 중심</span>
+            <span>면접 스크립트</span>
+            <span>결과물: 3분 피칭 + STAR 답변</span>
+          </div>
+        </motion.div>
+      </header>
+
+      <main>
+        <section className="overview-section">
+          <span className="section-label">01. 오프닝 및 학습목표</span>
+          <h2>오늘 여러분은 <mark>면접 답변 스크립트</mark>를 들고 면접장에 들어갈 준비를 마칩니다</h2>
+          <p className="section-intro">
+            기술 질문 10개, 3분 피칭 4단 스크립트, STAR 인성 답변 3종을 완성합니다.
+            "튜토리얼 따라 했어요" 지원자와 명확히 구분되는 무기를 확보합니다.
+          </p>
+          <div className="learning-goals-grid" aria-label="학습목표">
+            {learningGoals.map((item) => (
+              <div className="learning-goal-card" key={item.step}>
+                <span>{item.step}</span>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+                <div className="goal-visual-wrapper">
+                  <GoalVisual type={item.type} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="lesson-timeline" aria-label="40분 강의 진행표">
+            {lessonFlow.map((item) => (
+              <div className="timeline-step" key={item.label}>
+                <strong>{item.time}</strong>
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
+            <img
+              src={assetUrl('comic.png')}
+              alt="면접 피칭 코믹"
+              style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            />
+          </div>
+        </section>
+
+        <section className="definition-section">
+          <span className="section-label">02. 기술 면접 &amp; 피칭이란?</span>
+          <h2>면접은 "많이 아는 사람"이 아니라 <mark>구조화해서 30초에 전달하는 사람</mark>을 뽑습니다</h2>
+          <p className="section-intro">
+            서류 → 기술 → 실무 → 최종 4단계 모두에서 같은 원리가 작동합니다.
+            결론을 먼저, 정량 근거를 다음, 한계 인지를 마지막에 — 이 골격에 답변을 맞추면
+            튜토리얼 추종자가 아닌 엔지니어로 인식됩니다.
+          </p>
+          <div className="one-line-definition inline-definition">
+            <span>한 문장 정의</span>
+            <strong>기술 면접 &amp; 피칭은 13~16강 프로젝트를 정량 숫자 3개로 압축해 30초~3분 분량의 스크립트로 전달하는 기술입니다.</strong>
+          </div>
+          <LectureImage
+            src="interview-pitch-overview.png"
+            alt="문제, 데이터, AI 워크플로우, 결과, 임팩트를 면접 피칭 구조로 정리한 다이어그램"
+            caption="문제·데이터·워크플로우·결과·임팩트 5단 흐름 — 피칭과 면접 답변이 같은 골격을 공유합니다."
+          />
+          <div className="role-flow" aria-label="취업 프로세스 역할 분리">
+            {roleFlow.map((item, index) => (
+              <div className="role-step" key={`${item.owner}-${item.task}`}>
+                <span>{item.owner}</span>
+                <strong>{item.task}</strong>
+                {index < roleFlow.length - 1 && <ArrowRight size={22} />}
+              </div>
+            ))}
+          </div>
+          <div className="scenario-grid">
+            {interviewStages.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  className="scenario-card"
+                  key={item.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="scenario-icon">
+                    <Icon size={24} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p className="scenario-before">{item.description}</p>
+                  <div className="intent-box">
+                    <span>준비 포인트</span>
+                    <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0 0 0' }}>
+                      {item.features.map((f) => <li key={f}>{f}</li>)}
+                    </ul>
+                  </div>
+                  <p className="scenario-output">{item.cost} / {item.freeQuota}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+          <div className="coding-compare-grid" style={{ marginTop: '3rem' }}>
+            <motion.article
+              className="coding-compare-card traditional"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <img src={assetUrl('traditional-coding.png')} alt="전통적인 면접 준비" />
+              <div className="compare-content">
+                <span className="compare-kicker">Traditional (자기소개서 중심)</span>
+                <h3>이력서·자소서·자격증 위주의 막연한 준비</h3>
+                <p>
+                  학과 수업과 자격증, 인턴 경력만으로 자기소개서를 채우다 보면
+                  "실제로 뭘 만들 수 있는가" 질문에 흔들립니다.
+                </p>
+                <ul>
+                  <li>증명 가능한 산출물이 없음</li>
+                  <li>면접 질문에 이론만 답변</li>
+                  <li>GitHub 비어 있음 — 첫인상 감점</li>
+                </ul>
+              </div>
+            </motion.article>
+
+            <motion.article
+              className="coding-compare-card vibe"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 }}
+            >
+              <img src={assetUrl('vibe-coding.png')} alt="AI 포트폴리오 기반 면접" />
+              <div className="compare-content">
+                <span className="compare-kicker">AI Portfolio (13~17강)</span>
+                <h3>실행 가능한 AI 프로젝트 4종을 손에 든 지원</h3>
+                <p>
+                  데이터 분석·이미지 검사·시계열 예측·알림 통합 4종을 GitHub에 공개하고
+                  3분 피칭으로 정리하면, 면접관이 먼저 깊이 있는 질문을 던집니다.
+                </p>
+                <ul>
+                  <li>실행 가능한 코드 + README + 영상</li>
+                  <li>정량 숫자 3개로 성과 증명</li>
+                  <li>STAR 답변 3종으로 인성 면접 대응</li>
+                </ul>
+              </div>
+            </motion.article>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">03. 왜 면접 준비가 핵심인가?</span>
+          <h2>실력만큼 중요한 것은 "30초 안에 전달하는 구조화 능력"</h2>
+          <p className="section-intro">
+            같은 13~16강을 들은 두 사람이라도 면접 결과는 정반대일 수 있습니다.
+            답변 길이를 30초로 고정하고 숫자 3개를 박는 사람이 합격합니다.
+          </p>
+          <CareerChart />
+          <LectureImage
+            src="panel4.png"
+            alt="면접 준비 경로별 합격률 비교 인포그래픽"
+            caption="AI 포트폴리오 보유자는 학과+자격증 그룹 대비 합격 점수가 약 1.5배 높습니다."
+          />
+          <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#333' }}>
+            <p style={{ fontWeight: 700 }}>Target Point:</p>
+            <p>"면접관은 가장 똑똑한 사람을 뽑는 것이 아니라, 가장 명확하게 설명할 수 있는 사람을 뽑습니다."</p>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">04. 첨단 공정기술 면접 사례</span>
+          <h2>반도체·디스플레이·배터리 직무별 면접 질문과 답변 전략</h2>
+          <p className="section-intro">
+            같은 13~16강 프로젝트라도 직무에 따라 강조점이 달라집니다.
+            공정 자동화 직무에는 수율 분석을, 품질 검사 직무에는 Vision 정확도를,
+            모니터링 직무에는 실시간 알림을 전면에 배치합니다.
+          </p>
+          <div className="scenario-grid">
+            {fieldScenarios.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  className="scenario-card"
+                  key={item.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="scenario-icon">
+                    <Icon size={24} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p className="scenario-before">{item.before}</p>
+                  <div className="intent-box">
+                    <span>답변 전략</span>
+                    <p>{item.intent}</p>
+                  </div>
+                  <p className="scenario-output">{item.output}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+          <TechnicalInterviewDeepDive />
+          <ProjectPresentationDeepDive />
+          <BehavioralInterviewDeepDive />
+        </section>
+
+        <section className="workshop-section teaching-section">
+          <span className="section-label">05. 미니 워크숍</span>
+          <h2>실습: 나만의 <mark>3분 피칭 스크립트</mark> 작성</h2>
+          <p className="section-intro">
+            13~16강 통합 프로젝트의 문제·솔루션·차별화 3가지만 채우면 4단 스크립트 초안이
+            자동으로 만들어집니다. 그 자리에서 소리 내어 3회 읽어보세요.
+          </p>
+          <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <img
+              src={assetUrl('panel4.png')}
+              alt="3분 피칭 실습 가이드"
+              style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+            />
+          </div>
+          <InteractiveWorkshop />
+          <FirstRunGuide />
+        </section>
+
+        <section>
+          <span className="section-label">06. 검증 체크리스트 &amp; 수료</span>
+          <h2>면접장 들어가기 전, 이 5가지만 확인하세요</h2>
+          <div className="checklist">
+            {intentChecklist.map((item) => (
+              <div className="check-item" key={item}>
+                <CheckCircle2 size={20} />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+          <LectureImage
+            src="interview-pitch-overview.png"
+            alt="최종 면접 준비 체크리스트 인포그래픽"
+            caption="GitHub README, 데모 영상, 3분 피칭, STAR 답변, 회사 맞춤 지원동기 — 다섯 박스를 채우면 완료입니다."
+          />
+          <div className="wrap-message">
+            <Quote size={36} color="var(--accent)" />
+            <h3>"면접은 가장 많이 아는 사람이 아니라, 가장 명확하게 설명할 수 있는 사람을 뽑습니다."</h3>
+            <p>13~17강 전 과정을 완료한 여러분 — 이제 지원서를 제출할 시간입니다.</p>
+          </div>
+          <GraduationCard />
+          <div className="scenario-grid" style={{ marginTop: '2rem' }}>
+            {[
+              { icon: Github, title: 'GitHub Public 공개', desc: '13~16강 프로젝트 4종을 즉시 Public 전환, README + 실행 영상 첨부' },
+              { icon: Linkedin, title: 'LinkedIn 업데이트', desc: '프로젝트 링크와 정량 성과(60배·99.5%·90%↓)를 헤드라인에 반영' },
+              { icon: Mail, title: '1주일 내 첫 지원', desc: '회사별 맞춤 지원동기 1문단을 붙여 첫 5곳에 지원서 제출' },
+            ].map((step) => {
+              const Icon = step.icon;
+              return (
+                <div className="scenario-card" key={step.title}>
+                  <div className="scenario-icon">
+                    <Icon size={24} />
+                  </div>
+                  <h3>{step.title}</h3>
+                  <p className="scenario-before">{step.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="professional-point">
+          <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
+            <h3>Advanced Process Engineering Point</h3>
+            <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
+              "면접은 13~16강의 결과물을 '구조화해서 30초~3분에 전달하는 기술'입니다.
+              엔지니어로서의 진짜 실력은 기술 자체가 아니라, 그 기술이 만든 결과를 정량 숫자로
+              설명할 수 있느냐에서 갈립니다."<br/>
+              포트폴리오는 무기, 스크립트는 사용법 — 두 가지를 함께 갖춰야 합격합니다.
+            </p>
+            <div className="point-strip">
+              <span><Wrench size={16} /> 포트폴리오는 무기</span>
+              <span><FileText size={16} /> 스크립트는 사용법</span>
+              <span><Trophy size={16} /> 합격은 구조화 능력</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>© 2026 Career Pitching for Fine Tech Engineering | LettUin Edu</p>
+      </footer>
+    </div>
+  );
+}
