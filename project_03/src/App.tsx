@@ -149,9 +149,9 @@ const TechStack = () => {
     { name: 'Gemini', icon: Code, desc: '개발 도구' },
     { name: 'GitHub Actions', icon: Zap, desc: '코드 관리 & CI/CD' },
     { name: 'Python Streamlit', icon: Activity, desc: '웹 UI' },
-    { name: 'R Shiny', icon: BarChart3, desc: '웹 UI' },
+    { name: 'pandas/plotly', icon: BarChart3, desc: '데이터 분석' },
     { name: 'Gemini API', icon: Sparkles, desc: 'AI 기능' },
-    { name: 'Gemini API', icon: Bot, desc: 'AI 기능' },
+    { name: 'Gemini Vision', icon: Bot, desc: '이미지 분석' },
     { name: 'Streamlit Cloud', icon: Globe, desc: '웹앱 플랫폼' },
     { name: 'Telegram Bot', icon: MessageSquare, desc: '알림/자동화' },
   ];

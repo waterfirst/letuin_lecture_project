@@ -369,7 +369,7 @@ const LevelAdvanced = () => {
           <li>다크모드/라이트모드 토글 기능</li>
           <li>모바일 우선 반응형 디자인</li>
           <li>SEO 최적화 (meta 태그, Open Graph)</li>
-          <li>GitHub Pages 배포 + 커스텀 도메인 연결 (선택)</li>
+          <li>GitHub Pages 배포 + README/스크린샷 정리</li>
         </ol>
         <div style={{
           background: '#F8D7DA',
@@ -436,7 +436,7 @@ const EvaluationCriteria = () => {
               <td style={{ padding: '1rem', fontWeight: 'bold' }}>배포</td>
               <td style={{ padding: '1rem', textAlign: 'center' }}>GitHub Pages</td>
               <td style={{ padding: '1rem', textAlign: 'center' }}>GitHub Pages</td>
-              <td style={{ padding: '1rem', textAlign: 'center' }}>커스텀 도메인</td>
+              <td style={{ padding: '1rem', textAlign: 'center' }}>README/스크린샷</td>
             </tr>
             <tr style={{ background: '#f8f9fa' }}>
               <td style={{ padding: '1rem', fontWeight: 'bold' }}>내용</td>

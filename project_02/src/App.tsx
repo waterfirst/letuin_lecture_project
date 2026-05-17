@@ -482,7 +482,7 @@ const LevelAdvanced = () => {
           <li>AI API 연동으로 데이터 자동 해석 기능</li>
           <li>사용자 입력 → 공정 최적화 제안 기능</li>
           <li>모바일 반응형 UI</li>
-          <li>GitHub Actions로 자동 테스트/배포 파이프라인</li>
+          <li>Streamlit Cloud Secrets와 README 배포 가이드 정리</li>
           <li>앱 내 한국어/영어 전환 기능</li>
         </ol>
         <div style={{
