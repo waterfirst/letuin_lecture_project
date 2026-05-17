@@ -39,6 +39,37 @@ const ProjectImage = ({ filename, caption }: { filename: string; caption: string
     <figcaption style={{ padding: '1rem 1.25rem', color: '#555', lineHeight: 1.6, fontSize: '0.98rem' }}>{caption}</figcaption>
   </motion.figure>
 );
+
+const HintLink = () => (
+  <motion.a
+    href={assetUrl('hints.html')}
+    target="_blank"
+    rel="noreferrer"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.15 }}
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '1rem',
+      background: 'white',
+      borderRadius: '20px',
+      padding: '1.5rem 1.75rem',
+      marginBottom: '3rem',
+      color: '#1a1a1a',
+      textDecoration: 'none',
+      boxShadow: '0 10px 32px rgba(0, 0, 0, 0.08)',
+      border: '1px solid rgba(0,0,0,0.08)',
+    }}
+  >
+    <div>
+      <div style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.35rem' }}>상세 힌트 HTML 보기</div>
+      <div style={{ color: '#666', lineHeight: 1.6 }}>Gemini Chat, NotebookLM, GitHub Pages 사용 순서를 난이도별로 정리했습니다.</div>
+    </div>
+    <ExternalLink size={24} />
+  </motion.a>
+);
 // ============================================================================
 // PROJECT 01: Display Portfolio Webpage
 // ============================================================================
@@ -597,6 +628,7 @@ function App() {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
       <ProjectImage filename="ai-rd-portfolio-overview.png" caption="Manufacturing R&D portfolio overview: problem, data, dashboard result, GitHub Pages, and interview-ready case study." />
+        <HintLink />
         <ProjectGoal />
         <LevelBeginner />
         <LevelIntermediate />

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project 2 상세 힌트 - Streamlit 공정 시뮬레이터</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #172033; line-height: 1.7; }
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 20px 72px; }
+    h1 { font-size: 2.35rem; margin: 0 0 12px; }
+    h2 { margin-top: 36px; border-top: 1px solid #dfe6f0; padding-top: 28px; }
+    .hero, .card { background: #fff; border: 1px solid #dfe6f0; border-radius: 14px; padding: 24px; box-shadow: 0 10px 30px rgba(18, 38, 63, .08); margin: 18px 0; }
+    .hero { background: linear-gradient(135deg, #2454d6, #5f42b6); color: white; border: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+    code, pre { font-family: "Consolas", "D2Coding", monospace; }
+    pre { background: #101827; color: #e7f0ff; padding: 16px; border-radius: 10px; overflow: auto; }
+    .tag { display: inline-block; background: #eaf1ff; color: #2147a8; padding: 4px 10px; border-radius: 999px; font-size: .86rem; font-weight: 700; margin-right: 6px; }
+    .warn { background: #fff7e6; border-left: 5px solid #f59f00; padding: 14px 16px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>Project 2 상세 힌트</h1>
+    <p>5~10강 이후 과제입니다. 목표는 Streamlit으로 데이터 시각화/공정 시뮬레이터를 만들고 Streamlit Cloud에 배포하는 것입니다.</p>
+  </section>
+
+  <section class="card">
+    <h2>도구 선택 기준</h2>
+    <div class="grid">
+      <div>
+        <span class="tag">난이도 하</span>
+        <h3>Gemini Chat + Streamlit</h3>
+        <p>Gemini에게 <code>app.py</code> 전체를 만들게 하고, 로컬에서 <code>streamlit run app.py</code>로 실행합니다. API 연동 없이도 통과 가능한 기본 버전입니다.</p>
+      </div>
+      <div>
+        <span class="tag">난이도 중</span>
+        <h3>Google AI Studio + Gemini API</h3>
+        <p>AI 해석 기능을 넣으려면 Google AI Studio에서 API Key를 만들고, Streamlit Secrets에 저장합니다. 코드 안에 Key를 직접 쓰지 않습니다.</p>
+      </div>
+      <div>
+        <span class="tag">자료 정리</span>
+        <h3>NotebookLM</h3>
+        <p>공정 설명, OLED/LCD 차이, 데이터 컬럼 의미를 정리할 때 사용합니다. 앱 실행 자체에는 필수가 아닙니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>난이도 하: API 없이 만드는 기본 앱</h2>
+    <ol>
+      <li>Gemini Chat에 아래 프롬프트를 넣습니다.</li>
+      <li><code>app.py</code>와 <code>requirements.txt</code>를 만듭니다.</li>
+      <li>로컬에서 실행해 슬라이더와 그래프가 움직이는지 확인합니다.</li>
+      <li>GitHub에 올리고 Streamlit Cloud에서 배포합니다.</li>
+    </ol>
+    <pre>Streamlit으로 제조 공정 시뮬레이터 app.py를 만들어줘.
+
+조건:
+- 분야: 디스플레이 또는 반도체 공정
+- 라이브러리: streamlit, pandas, plotly, numpy만 사용
+- 사용자가 온도, 압력, 시간 같은 공정 조건을 슬라이더로 바꾸면 예상 수율이 바뀌게 만들기
+- plotly 그래프 2개 이상
+- 샘플 데이터는 코드 안에서 생성
+- requirements.txt 내용도 같이 알려줘</pre>
+  </section>
+
+  <section class="card">
+    <h2>난이도 중: Gemini API 해석 기능 붙이기</h2>
+    <ol>
+      <li>Google AI Studio에서 API Key를 발급합니다.</li>
+      <li>로컬 개발용으로 프로젝트 폴더에 <code>.streamlit/secrets.toml</code>을 만듭니다.</li>
+      <li>Streamlit Cloud 배포 후 App settings → Secrets에 같은 값을 넣습니다.</li>
+      <li>Gemini에게 현재 공정 조건과 그래프 요약을 넘겨 “면접 답변처럼 해석”하게 합니다.</li>
+    </ol>
+    <pre># .streamlit/secrets.toml
+GEMINI_API_KEY = "여기에_키를_넣기"
+
+# app.py 안에서는 이렇게 읽기
+import streamlit as st
+api_key = st.secrets["GEMINI_API_KEY"]</pre>
+    <pre>Gemini API를 Streamlit app.py에 붙여줘.
+입력값은 온도, 압력, 시간, 예상 수율이고,
+출력은 다음 3개로 해줘:
+1. 현재 조건 해석
+2. 수율 개선 제안
+3. 면접에서 설명할 수 있는 한 문장</pre>
+    <div class="warn">Project 2에서는 GitHub Actions까지 하지 않아도 됩니다. 12강 이후 내용이므로, 여기서는 Streamlit Cloud 배포와 Secrets 관리까지만 잘하면 충분합니다.</div>
+  </section>
+</main>
+</body>
+</html>

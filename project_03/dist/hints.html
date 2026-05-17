@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project 3 상세 힌트 - 최종 AI 도구</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f7f8fb; color: #172033; line-height: 1.7; }
+    main { max-width: 1040px; margin: 0 auto; padding: 40px 20px 72px; }
+    h1 { font-size: 2.35rem; margin: 0 0 12px; }
+    h2 { margin-top: 36px; border-top: 1px solid #dfe6f0; padding-top: 28px; }
+    .hero, .card { background: #fff; border: 1px solid #dfe6f0; border-radius: 14px; padding: 24px; box-shadow: 0 10px 30px rgba(18, 38, 63, .08); margin: 18px 0; }
+    .hero { background: linear-gradient(135deg, #f05a5a, #f08b43); color: white; border: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+    code, pre { font-family: "Consolas", "D2Coding", monospace; }
+    pre { background: #101827; color: #e7f0ff; padding: 16px; border-radius: 10px; overflow: auto; }
+    .tag { display: inline-block; background: #fff0e8; color: #b44419; padding: 4px 10px; border-radius: 999px; font-size: .86rem; font-weight: 700; margin-right: 6px; }
+    .warn { background: #fff7e6; border-left: 5px solid #f59f00; padding: 14px 16px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>Project 3 상세 힌트</h1>
+    <p>11~17강 이후 최종 과제입니다. 목표는 Streamlit 웹앱, Gemini 분석, 선택형 알림/자동화, 발표 자료를 하나의 취업 포트폴리오로 묶는 것입니다.</p>
+  </section>
+
+  <section class="card">
+    <h2>도구를 어떻게 나눠 써야 하나?</h2>
+    <div class="grid">
+      <div>
+        <span class="tag">설계</span>
+        <h3>Gemini Chat 또는 Antigravity</h3>
+        <p>초기 설계와 코드 생성은 Gemini Chat으로 충분합니다. 파일이 3개 이상으로 늘어나면 Antigravity나 VS Code에서 폴더 구조를 관리합니다.</p>
+      </div>
+      <div>
+        <span class="tag">API</span>
+        <h3>Google AI Studio</h3>
+        <p>Gemini API Key 발급, 간단한 프롬프트 테스트, 모델 응답 확인에 사용합니다. NotebookLM은 API Key 발급 도구가 아닙니다.</p>
+      </div>
+      <div>
+        <span class="tag">자료</span>
+        <h3>NotebookLM</h3>
+        <p>논문, 장비 매뉴얼, 채용공고를 넣고 “도메인 설명”과 “면접 답변 근거”를 뽑는 용도입니다. 앱에 직접 연결하지 않아도 됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>난이도 하: 알림 없이 최종 앱 만들기</h2>
+    <p>처음부터 Telegram Bot까지 붙이면 실패 확률이 올라갑니다. 하 난이도는 Streamlit + Gemini API + 데이터 시각화만으로 충분합니다.</p>
+    <pre>제조업 R&D 취업 포트폴리오용 Streamlit 앱을 만들어줘.
+
+주제: 반도체/디스플레이/배터리/바이오 중 하나
+기능:
+- CSV 업로드
+- pandas로 기본 통계 계산
+- plotly 그래프 2개
+- Gemini API로 데이터 해석 문장 생성
+- README에 쓸 프로젝트 설명 자동 생성
+
+파일 구조:
+- app.py
+- ai_utils.py
+- requirements.txt
+- README.md 초안</pre>
+  </section>
+
+  <section class="card">
+    <h2>난이도 중: Telegram Bot을 웹앱과 연결하기</h2>
+    <ol>
+      <li>Telegram에서 <code>@BotFather</code>를 검색합니다.</li>
+      <li><code>/newbot</code>을 입력하고 봇 이름과 username을 정합니다.</li>
+      <li>BotFather가 주는 <code>TELEGRAM_BOT_TOKEN</code>을 저장합니다.</li>
+      <li><code>@userinfobot</code> 또는 간단한 테스트 코드로 내 <code>CHAT_ID</code>를 확인합니다.</li>
+      <li>Streamlit 앱에서 “수율이 임계값 아래일 때 알림 보내기” 버튼을 만듭니다.</li>
+      <li>배포할 때 Token과 Chat ID는 Streamlit Secrets에 저장합니다.</li>
+    </ol>
+    <pre># .streamlit/secrets.toml
+GEMINI_API_KEY = "..."
+TELEGRAM_BOT_TOKEN = "..."
+TELEGRAM_CHAT_ID = "..."
+
+# telegram_bot.py
+import requests
+
+def send_telegram_alert(token, chat_id, message):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    response = requests.post(url, data={"chat_id": chat_id, "text": message}, timeout=10)
+    response.raise_for_status()
+    return response.json()</pre>
+    <pre>내 Streamlit 앱에 Telegram 알림 기능을 붙여줘.
+조건:
+- token과 chat_id는 st.secrets에서 읽기
+- 예상 수율이 85% 미만이면 알림 메시지 생성
+- 버튼을 눌렀을 때만 Telegram으로 전송
+- 실패하면 에러 메시지를 Streamlit 화면에 보여주기</pre>
+  </section>
+
+  <section class="card">
+    <h2>난이도 중에서 피해야 할 것</h2>
+    <ul>
+      <li>처음부터 webhook 서버를 만들지 않습니다. Streamlit에서는 버튼 클릭 방식의 <code>sendMessage</code>가 충분합니다.</li>
+      <li>Bot Token을 GitHub에 올리지 않습니다. 반드시 <code>.streamlit/secrets.toml</code>과 Streamlit Cloud Secrets를 사용합니다.</li>
+      <li>GitHub Actions는 선택입니다. 최종 프로젝트에서 시간이 남을 때만 README 자동 검사나 간단한 lint 정도로 붙입니다.</li>
+      <li>NotebookLM을 앱 안에 억지로 연결하지 않습니다. 자료 요약과 발표 스크립트 준비에 쓰면 충분합니다.</li>
+    </ul>
+    <div class="warn">최종 발표에서는 “어떤 문제를 풀었는가 → 어떤 데이터를 썼는가 → Gemini가 어디에 들어갔는가 → 알림/배포가 어떻게 동작하는가” 순서로 말하면 됩니다.</div>
+  </section>
+</main>
+</body>
+</html>
