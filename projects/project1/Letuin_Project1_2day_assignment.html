@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>프로젝트 1 보완안 - Gemini 공정 데이터 분석기</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2937;
+      --muted: #64748b;
+      --line: #d9e2ec;
+      --paper: #ffffff;
+      --soft: #f6f8fb;
+      --blue: #2563eb;
+      --green: #059669;
+      --amber: #d97706;
+      --red: #dc2626;
+      --violet: #7c3aed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+      color: var(--ink);
+      background: #eef3f8;
+      line-height: 1.6;
+    }
+    header {
+      background: #111827;
+      color: #fff;
+      padding: 42px 24px 34px;
+    }
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #93c5fd;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    header p {
+      max-width: 860px;
+      margin: 16px 0 0;
+      color: #d1d5db;
+      font-size: 17px;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 18px 0;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 16px;
+    }
+    p { margin: 8px 0; }
+    ul, ol { margin: 8px 0 8px 22px; padding: 0; }
+    li { margin: 4px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5f9;
+      text-align: left;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    code {
+      background: #eef2ff;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    pre {
+      margin: 10px 0;
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e5e7eb;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fbfdff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .low { background: var(--green); }
+    .mid { background: var(--amber); }
+    .high { background: var(--red); }
+    .note {
+      border-left: 4px solid var(--blue);
+      background: #eff6ff;
+      padding: 12px 14px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    .warn {
+      border-left: 4px solid var(--red);
+      background: #fff1f2;
+      padding: 12px 14px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    .deliverable {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .phase {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      border-top: 1px solid var(--line);
+      padding: 12px 0;
+    }
+    .phase:first-of-type { border-top: 0; }
+    .time {
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .rubric td:first-child { width: 22%; font-weight: 700; }
+    footer {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 24px;
+    }
+    @media (max-width: 820px) {
+      h1 { font-size: 28px; }
+      .grid { grid-template-columns: 1fr; }
+      .phase { grid-template-columns: 1fr; }
+      section { padding: 18px; }
+    }
+    @media print {
+      body { background: #fff; }
+      header { background: #fff; color: #111827; border-bottom: 2px solid #111827; }
+      header p, .eyebrow { color: #374151; }
+      section { break-inside: avoid; border-color: #cbd5e1; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">렛유인 AI + 바이브코딩 강의 · 프로젝트 1 보완안</p>
+      <h1>Gemini로 만드는 나만의 공정 데이터 분석기</h1>
+      <p>
+        초보자가 주말 2일 동안 완성할 수 있도록 재구성한 프로젝트 안내서입니다.
+        상·중·하 모두 같은 문제를 풀지만, 제공되는 힌트와 프롬프트의 구체성만 다르게 설계했습니다.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. 프로젝트 한 줄 정의</h2>
+      <p>
+        제조 공정 CSV 데이터를 업로드하면, AI가 만든 Streamlit 앱이 자동으로
+        <strong>기초 통계, 시각화, 이상치, 공정 해석</strong>을 보여주는 분석 도구를 만든다.
+      </p>
+      <div class="note">
+        기존 repo 기준 프로젝트 1은 <code>projects/project1</code>에 있으며,
+        예제는 <code>examples/하</code>, <code>examples/중</code>, <code>examples/상</code>으로 나뉘어 있습니다.
+        이 보완안은 기존 구조를 유지하면서 과제 설명, 2일 진행표, 난이도별 힌트 차이를 더 명확히 만든 버전입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 공통 문제</h2>
+      <p>상·중·하 모든 수강생은 아래 동일한 문제를 해결합니다.</p>
+      <div class="deliverable">
+        <strong>문제:</strong> 공정 데이터 CSV를 업로드하면, 주요 공정 변수의 분포와 시간 변화,
+        이상치, 수율과 변수의 관계를 한 화면에서 확인할 수 있는 웹 앱을 만든다.
+      </div>
+      <h3>공통 데이터 컬럼</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>컬럼</th>
+            <th>의미</th>
+            <th>분석 관점</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>timestamp</code></td>
+            <td>측정 시간</td>
+            <td>시간에 따른 공정 안정성 확인</td>
+          </tr>
+          <tr>
+            <td><code>line</code></td>
+            <td>생산 라인 A/B/C</td>
+            <td>라인별 편차 비교</td>
+          </tr>
+          <tr>
+            <td><code>temperature</code></td>
+            <td>공정 온도</td>
+            <td>온도 스파이크와 수율 저하 관계</td>
+          </tr>
+          <tr>
+            <td><code>pressure</code></td>
+            <td>공정 압력</td>
+            <td>압력 안정성, 이상치 탐지</td>
+          </tr>
+          <tr>
+            <td><code>thickness</code></td>
+            <td>막 두께 또는 제품 두께</td>
+            <td>목표값 대비 편차, SPC 관리도</td>
+          </tr>
+          <tr>
+            <td><code>yield_rate</code></td>
+            <td>수율</td>
+            <td>주요 변수와의 상관관계</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 2일 수행 계획</h2>
+      <div class="phase">
+        <div class="time">Day 1 오전</div>
+        <div>
+          <strong>문제 이해와 환경 준비</strong>
+          <ul>
+            <li>Streamlit, pandas, plotly 설치</li>
+            <li>샘플 CSV 열어보기</li>
+            <li>Gemini에게 첫 앱 코드 요청</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="time">Day 1 오후</div>
+        <div>
+          <strong>기본 앱 완성</strong>
+          <ul>
+            <li>CSV 업로드</li>
+            <li>기초 통계 표</li>
+            <li>히스토그램 또는 라인 차트</li>
+            <li>실행 오류 디버깅</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="time">Day 2 오전</div>
+        <div>
+          <strong>분석 기능 확장</strong>
+          <ul>
+            <li>라인별 필터</li>
+            <li>이상치 표시</li>
+            <li>수율과 공정 변수 관계 분석</li>
+            <li>SPC 또는 관리 한계선 추가</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="time">Day 2 오후</div>
+        <div>
+          <strong>정리와 제출</strong>
+          <ul>
+            <li>화면 캡처</li>
+            <li>Gemini 프롬프트 기록 정리</li>
+            <li>분석 해석 5줄 작성</li>
+            <li>상 난이도는 README와 배포까지 도전</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 난이도 선택 기준</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="badge low">하</span>
+          <h3>따라 만들기</h3>
+          <p>코딩 경험이 거의 없고, AI가 만든 코드를 실행하는 경험이 먼저 필요한 수강생.</p>
+          <p><strong>힌트 수준:</strong> 거의 정답에 가까운 프롬프트 제공</p>
+        </div>
+        <div class="card">
+          <span class="badge mid">중</span>
+          <h3>수정하며 만들기</h3>
+          <p>기본 실행은 가능하고, Gemini에게 기능 추가를 요청해보고 싶은 수강생.</p>
+          <p><strong>힌트 수준:</strong> 기능 단위 힌트 제공, 완성 프롬프트는 일부만 제공</p>
+        </div>
+        <div class="card">
+          <span class="badge high">상</span>
+          <h3>설계하며 만들기</h3>
+          <p>실무형 포트폴리오로 확장하고 싶은 수강생.</p>
+          <p><strong>힌트 수준:</strong> 요구사항과 평가 기준만 제공</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. 하 난이도: 거의 모든 힌트 제공</h2>
+      <p>
+        목표는 “AI에게 요청 → 코드 복사 → 실행 → 결과 확인” 흐름을 체험하는 것입니다.
+        기능을 많이 넣기보다 실행 성공을 우선합니다.
+      </p>
+      <h3>필수 결과물</h3>
+      <ul>
+        <li><code>app.py</code></li>
+        <li><code>requirements.txt</code></li>
+        <li>실행 스크린샷 1장</li>
+        <li>분석 결과 해석 3줄</li>
+      </ul>
+      <h3>Gemini 복붙 프롬프트</h3>
+      <pre>나는 제조 공정 데이터를 분석하는 Streamlit 웹 앱을 만들려고 해.
+코딩 초보자도 실행할 수 있도록 app.py 전체 코드를 만들어줘.
+
+데이터 컬럼은 다음과 같아:
+timestamp, line, temperature, pressure, thickness, yield_rate
+
+앱 요구사항:
+1. CSV 파일 업로드 기능을 넣어줘.
+2. 업로드된 데이터 미리보기 10행을 보여줘.
+3. 수치형 컬럼의 평균, 표준편차, 최소값, 최대값을 표로 보여줘.
+4. 사용자가 사이드바에서 수치형 컬럼 하나를 고르면 Plotly 히스토그램을 그려줘.
+5. timestamp가 있으면 선택한 컬럼의 시간순 라인 차트를 그려줘.
+6. yield_rate 평균을 metric 카드로 보여줘.
+7. 모든 화면 문구는 한국어로 써줘.
+8. 코드 안에 초보자가 이해할 수 있는 주석을 달아줘.
+
+requirements.txt 내용도 함께 알려줘.</pre>
+      <h3>실행 명령어</h3>
+      <pre>pip install streamlit pandas plotly numpy
+streamlit run app.py</pre>
+      <h3>에러 해결 프롬프트</h3>
+      <pre>이 코드를 실행했더니 아래 에러가 나왔어.
+나는 코딩 초보자라 어디를 고쳐야 할지 몰라.
+에러 원인을 쉽게 설명하고, 수정된 app.py 전체 코드를 다시 작성해줘.
+
+[여기에 에러 메시지 붙여넣기]</pre>
+      <h3>평가 기준</h3>
+      <table class="rubric">
+        <tbody>
+          <tr><td>실행</td><td>Streamlit 앱이 실행되고 CSV 업로드가 된다.</td></tr>
+          <tr><td>기본 분석</td><td>데이터 미리보기와 기초 통계가 표시된다.</td></tr>
+          <tr><td>시각화</td><td>히스토그램 또는 라인 차트가 1개 이상 표시된다.</td></tr>
+          <tr><td>해석</td><td>“어떤 변수가 흔들렸는지” 3줄로 설명한다.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 중 난이도: 기능 힌트만 제공</h2>
+      <p>
+        목표는 기본 앱을 만든 뒤, Gemini에게 여러 번 수정 요청하면서 분석 기능을 넓히는 것입니다.
+      </p>
+      <h3>필수 결과물</h3>
+      <ul>
+        <li>Plotly 차트 3종 이상</li>
+        <li>사이드바 필터 2개 이상</li>
+        <li>평균 ± 2σ 기준 이상치 표시</li>
+        <li>사용한 Gemini 프롬프트 기록</li>
+        <li>스크린샷 2장</li>
+      </ul>
+      <h3>기능 힌트</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>기능</th>
+            <th>Gemini에게 요청할 방향</th>
+            <th>구현 키워드</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>라인별 필터</td>
+            <td>line 컬럼이 있으면 A/B/C를 선택해서 데이터가 필터링되게 해줘.</td>
+            <td><code>st.sidebar.multiselect</code></td>
+          </tr>
+          <tr>
+            <td>날짜 범위 필터</td>
+            <td>timestamp를 날짜로 변환하고 기간을 선택하게 해줘.</td>
+            <td><code>pd.to_datetime</code>, <code>st.date_input</code></td>
+          </tr>
+          <tr>
+            <td>이상치 표시</td>
+            <td>선택 컬럼에서 평균 ± 2σ를 벗어난 점을 빨간색으로 표시해줘.</td>
+            <td><code>mean</code>, <code>std</code>, <code>px.scatter</code></td>
+          </tr>
+          <tr>
+            <td>상관관계</td>
+            <td>수율과 temperature, pressure, thickness의 상관관계를 보여줘.</td>
+            <td><code>corr</code>, <code>px.imshow</code></td>
+          </tr>
+          <tr>
+            <td>공정 해석</td>
+            <td>분석 결과를 엔지니어 관점으로 5줄 요약하게 해줘.</td>
+            <td><code>st.info</code>, <code>st.warning</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>중 난이도용 시작 프롬프트</h3>
+      <pre>제조 공정 데이터 분석 Streamlit 앱을 만들고 싶어.
+아래 컬럼을 가진 CSV를 업로드해서 분석할 거야:
+timestamp, line, temperature, pressure, thickness, yield_rate
+
+내가 원하는 기능은 다음과 같아:
+- CSV 업로드
+- line별 필터
+- 날짜 범위 필터
+- 히스토그램, 박스플롯, 산점도, 시간순 라인 차트 중 3개 이상
+- 선택한 컬럼의 평균 ± 2σ 이상치를 빨간색으로 표시
+- 수율과 공정 변수의 상관관계 히트맵
+
+초보자가 수정하기 쉽게 함수 단위로 app.py를 작성해줘.
+먼저 전체 구조를 설명한 뒤, app.py 전체 코드를 작성해줘.</pre>
+      <h3>평가 기준</h3>
+      <table class="rubric">
+        <tbody>
+          <tr><td>시각화</td><td>서로 다른 Plotly 차트 3종 이상이 있다.</td></tr>
+          <tr><td>상호작용</td><td>필터를 바꾸면 차트와 통계가 함께 바뀐다.</td></tr>
+          <tr><td>이상치</td><td>2σ 기준 이상치가 표 또는 차트에 표시된다.</td></tr>
+          <tr><td>프롬프트</td><td>Gemini에게 어떤 요청을 했는지 기록한다.</td></tr>
+          <tr><td>해석</td><td>공정 변수와 수율 관계를 5줄 이상 설명한다.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>7. 상 난이도: 요구사항만 제공</h2>
+      <p>
+        목표는 실무형 포트폴리오로 보여줄 수 있는 완성도입니다.
+        Gemini를 쓰되, 무엇을 만들지 스스로 설계해야 합니다.
+      </p>
+      <h3>필수 결과물</h3>
+      <ul>
+        <li>멀티 탭 Streamlit 앱</li>
+        <li>CSV 또는 Excel 업로드</li>
+        <li>Plotly 차트 5종 이상</li>
+        <li>IQR 또는 Z-score 이상치 탐지 선택 기능</li>
+        <li>SPC 관리도: CL, UCL, LCL 포함</li>
+        <li>공정 진단 요약 리포트 다운로드</li>
+        <li>GitHub README 작성</li>
+        <li>가능하면 Streamlit Cloud 배포</li>
+      </ul>
+      <h3>상 난이도 설계 미션</h3>
+      <div class="deliverable">
+        <strong>앱 이름 예시:</strong> Process Insight Dashboard<br>
+        <strong>핵심 질문:</strong> “어떤 공정 조건이 수율 저하와 가장 관련이 있는가?”
+      </div>
+      <h3>최소 요구 탭 구성</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>탭</th>
+            <th>내용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>데이터 개요</td>
+            <td>업로드, 결측치, 컬럼 타입, 기본 통계</td>
+          </tr>
+          <tr>
+            <td>공정 안정성</td>
+            <td>시간순 라인 차트, 라인별 비교, 관리 한계선</td>
+          </tr>
+          <tr>
+            <td>이상치 분석</td>
+            <td>IQR/Z-score 선택, 이상치 테이블, 이상치 다운로드</td>
+          </tr>
+          <tr>
+            <td>수율 영향 분석</td>
+            <td>상관관계, 산점도, 변수별 수율 영향 요약</td>
+          </tr>
+          <tr>
+            <td>리포트</td>
+            <td>분석 결과 Markdown 또는 HTML 다운로드</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>상 난이도 프롬프트 방향</h3>
+      <p>아래 문장을 그대로 쓰기보다, 본인이 선택한 산업과 데이터에 맞게 바꿔야 합니다.</p>
+      <pre>나는 [반도체/디스플레이/2차전지/범용 제조] 공정 데이터를 분석하는
+실무형 Streamlit 대시보드를 만들고 싶다.
+
+목표는 수율 저하 원인을 찾는 것이다.
+데이터 컬럼은 [내 데이터 컬럼 목록]이다.
+
+앱을 다음 구조로 설계해줘:
+1. 데이터 업로드와 전처리
+2. 공정 변수별 분포 분석
+3. 시간 흐름에 따른 안정성 분석
+4. 이상치 탐지
+5. SPC 관리도
+6. 수율 영향 분석
+7. 리포트 다운로드
+
+먼저 폴더 구조와 함수 설계를 제안하고,
+그 다음 app.py 전체 코드를 작성해줘.</pre>
+      <h3>평가 기준</h3>
+      <table class="rubric">
+        <tbody>
+          <tr><td>설계</td><td>앱 구조가 탭 또는 페이지 단위로 명확히 나뉜다.</td></tr>
+          <tr><td>분석</td><td>SPC, 이상치, 상관관계, 수율 분석이 모두 있다.</td></tr>
+          <tr><td>사용성</td><td>초기 화면, 안내 문구, 오류 처리, 다운로드가 자연스럽다.</td></tr>
+          <tr><td>포트폴리오</td><td>README에 문제 정의, 기능, 실행법, 스크린샷이 있다.</td></tr>
+          <tr><td>해석</td><td>단순 차트 나열이 아니라 엔지니어링 결론이 있다.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>8. 제출 형식</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>하</th>
+            <th>중</th>
+            <th>상</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>앱 실행 스크린샷</td>
+            <td>1장</td>
+            <td>2장 이상</td>
+            <td>3장 이상</td>
+          </tr>
+          <tr>
+            <td>프롬프트 기록</td>
+            <td>선택</td>
+            <td>필수</td>
+            <td>필수</td>
+          </tr>
+          <tr>
+            <td>분석 해석</td>
+            <td>3줄</td>
+            <td>5줄</td>
+            <td>10줄 또는 리포트</td>
+          </tr>
+          <tr>
+            <td>코드 파일</td>
+            <td><code>app.py</code></td>
+            <td><code>app.py</code></td>
+            <td><code>app.py</code>, <code>README.md</code></td>
+          </tr>
+          <tr>
+            <td>배포 URL</td>
+            <td>불필요</td>
+            <td>선택</td>
+            <td>권장</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>9. 수강생에게 강조할 규칙</h2>
+      <div class="warn">
+        회사 실제 공정 데이터, 고객사 데이터, 내부 설비명, API Key, Telegram Token, GitHub Token은 절대 업로드하거나 GitHub에 올리지 않습니다.
+      </div>
+      <ul>
+        <li>Gemini가 준 코드는 반드시 한 번 실행해보고 제출합니다.</li>
+        <li>에러가 나면 에러 메시지를 숨기지 말고 그대로 Gemini에게 전달합니다.</li>
+        <li>차트가 많다고 좋은 과제가 아닙니다. “그래서 공정상 무엇을 알 수 있는가?”를 써야 합니다.</li>
+        <li>상·중·하의 차이는 문제 난이도가 아니라 힌트의 양입니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>10. 강사용 운영 메모</h2>
+      <ul>
+        <li>Day 1에는 설치와 실행 성공 여부를 먼저 확인합니다.</li>
+        <li>Day 2에는 기능 추가보다 해석 품질을 확인합니다.</li>
+        <li>하 난이도 수강생은 코드보다 “AI와 디버깅 대화하는 경험”을 평가합니다.</li>
+        <li>중 난이도 수강생은 프롬프트 개선 과정을 평가합니다.</li>
+        <li>상 난이도 수강생은 README와 포트폴리오 완성도를 평가합니다.</li>
+      </ul>
+      <footer>
+        작성 기준: waterfirst-suji/Letuin_AI_Lecture 프로젝트 1 README 및 examples 구조 확인 후 보완.
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

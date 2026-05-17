@@ -19,9 +19,103 @@
             padding: 20px;
         }
 
+        body.splash-active {
+            overflow: hidden;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .page-shell {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .page-shell.ready {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top, rgba(125, 211, 252, 0.18), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.16), transparent 28%),
+                linear-gradient(145deg, #081120 0%, #16213d 48%, #2b1659 100%);
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.55s ease, visibility 0.55s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-panel {
+            width: min(760px, 100%);
+            padding: 26px;
+            border-radius: 28px;
+            background: rgba(7, 14, 29, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 24px 90px rgba(0, 0, 0, 0.38);
+            backdrop-filter: blur(18px);
+        }
+
+        .splash-art {
+            width: 100%;
+            border-radius: 22px;
+            display: block;
+            box-shadow: 0 16px 48px rgba(8, 15, 28, 0.38);
+        }
+
+        .splash-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+        }
+
+        .splash-label {
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #bfdbfe;
+        }
+
+        .status-track {
+            width: 100%;
+            height: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-fill {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #38bdf8 0%, #f59e0b 55%, #34d399 100%);
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+        }
+
+        body.splash-active .status-fill {
+            animation: loadBar 1.8s ease forwards;
         }
 
         header {
@@ -124,6 +218,42 @@
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }
 
+        .resource-box {
+            margin: 0 0 24px 0;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .resource-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        .resource-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .resource-link {
+            display: inline-block;
+            padding: 10px 18px;
+            background: rgba(0, 0, 0, 0.28);
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-weight: bold;
+        }
+
+        .resource-link:hover {
+            background: rgba(0, 0, 0, 0.42);
+        }
+
         footer {
             text-align: center;
             margin-top: 60px;
@@ -145,10 +275,55 @@
         .github-link:hover {
             background: rgba(0, 0, 0, 0.5);
         }
+
+        @keyframes loadBar {
+            0% {
+                width: 0;
+            }
+            65% {
+                width: 74%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 14px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .splash-panel {
+                padding: 18px;
+                border-radius: 22px;
+            }
+
+            .splash-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="splash-active">
+    <div class="splash-screen" id="splashScreen" aria-hidden="true">
+        <div class="splash-panel">
+            <img src="assets/splash-display-ai.svg" alt="디스플레이 AI 강의 스플래시 이미지" class="splash-art">
+            <div class="splash-meta">
+                <span class="splash-label">Loading GitHub Pages Experience</span>
+                <span id="splashStatus">강의 리소스를 준비하는 중</span>
+            </div>
+            <div class="status-track" aria-hidden="true">
+                <div class="status-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container page-shell" id="pageShell">
         <header>
             <h1>🖥️ 디스플레이 취업준비생을 위한<br>AI 바이브 코딩 실전 강의</h1>
             <p class="subtitle">"코드 한 줄 없이 AI로 실제 앱을 만든다"</p>
@@ -158,6 +333,16 @@
                 <span class="badge">Claude Pro 1개월 제공</span>
             </div>
         </header>
+
+        <section class="resource-box">
+            <div class="resource-title">바로가기 자료</div>
+            <div class="resource-links">
+                <a href="pre_test.md" class="resource-link">기존 사전 테스트</a>
+                <a href="pre_assessment_50.md" class="resource-link">사전평가 50문항</a>
+                <a href="kdc_preassessment_50.html" class="resource-link">AI 활용 역량 사전진단</a>
+                <a href="full_course_plan.md" class="resource-link">강사용 타임테이블</a>
+            </div>
+        </section>
 
         <div class="part-header">PART 1 — AI 바이브 코딩 입문 (1~4강)</div>
         <div class="lectures-grid">
@@ -327,5 +512,22 @@
             <p style="margin-top: 20px;">© 2026 렛유인 KDC | AI 바이브 코딩 실전 강의</p>
         </footer>
     </div>
+    <script>
+        window.addEventListener("load", function () {
+            const splash = document.getElementById("splashScreen");
+            const shell = document.getElementById("pageShell");
+            const status = document.getElementById("splashStatus");
+
+            window.setTimeout(function () {
+                status.textContent = "메인 페이지를 여는 중";
+            }, 950);
+
+            window.setTimeout(function () {
+                splash.classList.add("hidden");
+                shell.classList.add("ready");
+                document.body.classList.remove("splash-active");
+            }, 2100);
+        });
+    </script>
 </body>
 </html>

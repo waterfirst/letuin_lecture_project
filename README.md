@@ -25,6 +25,18 @@
 
 ## 📖 강의 시리즈 (Lecture 11-17)
 
+| 구분 | 내용 | 링크 |
+|------|------|------|
+| 📋 KDC 강의계획서 | 렛유인 제출용 공식 강의계획서 (xlsx) | [렛유인_KDC_강의계획서.xlsx](docs/렛유인_KDC_강의계획서.xlsx) |
+| 📝 사전 테스트 | 필수 26문항 + 보너스 9문항 | [pre_test.md](docs/pre_test.md) |
+| ✅ 사전평가 50문항 | 객관식/주관식 혼합 50문항 + 정답/해설 | [pre_assessment_50.md](docs/pre_assessment_50.md) |
+| 📚 강사용 타임테이블 | 강의별 시간 배분 & 체크리스트 | [full_course_plan.md](docs/full_course_plan.md) |
+| 🎯 프로젝트 1 | 소개 웹페이지 (상/중/하) | [project1/](projects/project1/README.md) |
+| 🎯 프로젝트 2 | 공정 시뮬레이터 (상/중/하) | [project2/](projects/project2/README.md) |
+| 🎯 프로젝트 3 | AI 디스플레이 도구 (상/중/하) | [project3/](projects/project3/README.md) |
+| 📦 강의 슬라이드 | Quarto RevealJS 강의록 (1~16강) | [lectures/](lectures/) |
+| 📎 참고 자료 | 치트시트, 링크 모음 | [resources/cheatsheets.md](resources/cheatsheets.md) |
+
 ### 📌 Lecture 11: AI란 무엇인가? (AI 프롬프트 기초)
 
 **핵심 개념**

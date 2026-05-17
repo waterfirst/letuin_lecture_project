@@ -1,0 +1,30 @@
+<svg width="960" height="540" viewBox="0 0 960 540" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="540" rx="32" fill="url(#bg)"/>
+  <rect x="104" y="92" width="752" height="356" rx="28" fill="#0E1726" fill-opacity="0.86" stroke="#7DD3FC" stroke-opacity="0.4" stroke-width="2"/>
+  <rect x="152" y="148" width="284" height="196" rx="20" fill="#111827"/>
+  <rect x="484" y="148" width="324" height="24" rx="12" fill="#38BDF8" fill-opacity="0.22"/>
+  <rect x="484" y="194" width="268" height="24" rx="12" fill="#F59E0B" fill-opacity="0.2"/>
+  <rect x="484" y="240" width="224" height="24" rx="12" fill="#34D399" fill-opacity="0.2"/>
+  <rect x="484" y="286" width="290" height="24" rx="12" fill="#F472B6" fill-opacity="0.2"/>
+  <circle cx="228" cy="246" r="54" fill="#38BDF8" fill-opacity="0.14" stroke="#7DD3FC" stroke-width="2"/>
+  <circle cx="300" cy="246" r="54" fill="#A78BFA" fill-opacity="0.12" stroke="#C4B5FD" stroke-width="2"/>
+  <circle cx="264" cy="208" r="18" fill="#F59E0B"/>
+  <circle cx="264" cy="284" r="18" fill="#34D399"/>
+  <path d="M186 356C212 324 244 308 282 308C320 308 352 324 378 356" stroke="#E5E7EB" stroke-width="8" stroke-linecap="round"/>
+  <rect x="152" y="372" width="656" height="24" rx="12" fill="#0F2741"/>
+  <rect x="152" y="372" width="402" height="24" rx="12" fill="url(#progress)"/>
+  <text x="152" y="118" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">AI Vibe Coding for Display Careers</text>
+  <text x="484" y="132" fill="#BFDBFE" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600">Curriculum boot sequence</text>
+  <text x="152" y="430" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Prompting · Visualization · Deployment · Automation</text>
+  <defs>
+    <linearGradient id="bg" x1="73" y1="42" x2="883" y2="504" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.5" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="progress" x1="152" y1="384" x2="554" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,104 +1,282 @@
-# 🎯 프로젝트 2 — 디스플레이 공정 시뮬레이터 or 데이터 분석 앱
+# 프로젝트 2 — 1분 컷 공정 시각화 & 자동 보고서 앱
 
-> **제출 시기**: 10강 후 1주일 이내
-> **주요 도구**: Streamlit / R Shiny / Firebase Studio 중 선택
-
-## 공통 주제
-
-Python Streamlit, R Shiny, 또는 Firebase Studio 중 하나를 선택하여 디스플레이 산업과 관련된 인터랙티브 앱을 제작하고 배포하시오.
-
-**주제 선택 예시** (자유 선택)
-- OLED/LCD 비교 분석 도구
-- 포토공정 노광 조건 시뮬레이터
-- 잉크젯 도포 균일성 분석기
-- RGB 색공간 변환기
-- 수율 데이터 이상치 탐지기
+> **렛유인 AI + 바이브코딩 강의** | CH.2 수료 후 두 번째 프로젝트 (2일)
 
 ---
 
-## [하] 난이도 — 단계별 가이드 제공
+## 개요
 
-### Step 1: 아이디어 구체화 (Claude에게 물어보기)
+매주 반복되는 공정 분석 → 시각화 → 보고서 작성을 **버튼 하나로 끝내는 웹 앱**을 만드는 프로젝트입니다.
+P1에서 만든 데이터 분석기에 **AI 인사이트**와 **자동 보고서 생성** 기능을 더합니다.
+
+Gemini AI가 데이터를 읽고 핵심 패턴을 한국어로 설명해주고,
+분석 결과를 Markdown/HTML 보고서로 자동 생성하여 다운로드할 수 있습니다.
+
+- **수행 기간**: CH.2 이후 주말 2일 (토~일)
+- **사용 도구**: Gemini AI + Streamlit + Plotly + Gemini API
+- **결과물**: 데이터 업로드 → 시각화 → AI 분석 → 보고서 다운로드까지 원스톱 앱
+
+---
+
+## P1에서 P2로의 성장
 
 ```
-나는 [주제]에 대한 Streamlit 앱을 만들고 싶어.
-필요한 데이터 구조, 주요 기능, 코드 전체를 작성해줘.
-수준은 입문자가 이해할 수 있는 것으로.
-사용 라이브러리는 streamlit, pandas, plotly만 써줘.
+P1: 데이터 업로드 → 차트 시각화 (수동 해석)
+                ↓
+P2: 데이터 업로드 → 차트 시각화 → AI가 해석 → 보고서 자동 생성
 ```
 
-### Step 2: 파일 저장 및 로컬 실행 확인
+| 구분 | P1 | P2 (이번 프로젝트) |
+|------|----|----|
+| 시각화 | Plotly 차트 | Plotly + Pareto + 히트맵 |
+| 데이터 해석 | 수강생이 직접 | **Gemini API가 자동 분석** |
+| 보고서 | 없음 | **Markdown/HTML 자동 생성** |
+| API 연동 | 없음 | **Gemini API 연동** |
 
-```bash
-# requirements.txt 생성 (Claude에게 요청)
-pip install -r requirements.txt
+---
 
-# 로컬 실행 확인
-streamlit run app.py
+## 학습 목표
+
+1. Gemini API를 연동하여 데이터 분석 인사이트를 자동 생성한다
+2. 분석 결과를 보고서 형식으로 자동 구성하고 다운로드 기능을 구현한다
+3. 불량 원인 분석(Pareto), 공정 간 상관관계 시각화를 추가한다
+4. 현업 엔지니어의 주간/일간 보고 업무를 자동화하는 감각을 기른다
+
+---
+
+## AI Tool 활용 비중
+
+```
+┌─────────────────────────────────────────┐
+│  🤖 AI Tool 활용 (70%)                  │
+│  • Gemini로 앱 코드 생성/수정            │
+│  • Gemini API로 데이터 인사이트 생성     │
+│  • 보고서 템플릿 자동 작성               │
+├─────────────────────────────────────────┤
+│  🏭 도메인 지식 (30%)                    │
+│  • 불량 유형/원인 이해                   │
+│  • 보고서 구성 항목 설계                 │
+│  • 공정 파라미터 해석                    │
+└─────────────────────────────────────────┘
 ```
 
-### Step 3: Streamlit Community Cloud 배포
+---
 
-1. GitHub에 push
-2. [share.streamlit.io](https://share.streamlit.io) 접속 → New app
-3. GitHub Repository 연결 → `app.py` 선택 → Deploy
+## 사용 기술
 
-**제출**: 배포 URL + GitHub Repository URL
+| 도구 | 역할 |
+|------|------|
+| **Gemini** (대화) | 코드 생성, 디버깅, 기능 추가 |
+| **Gemini API** | 데이터 분석 인사이트 자동 생성 |
+| **Streamlit** | 웹 앱 UI |
+| **Plotly** | 인터랙티브 차트 |
+| **Pandas / NumPy** | 데이터 처리 |
 
 ---
 
-## 📊 공개 데이터셋 모음
+## 난이도별 수행 가이드
 
-실제 데이터가 필요한 경우 아래 출처를 활용하세요.
+### 🟢 하 (기본) — 시각화 대시보드 + 보고서 다운로드
 
-| 데이터셋 | URL | 활용 예시 |
-|---------|-----|----------|
-| 공공데이터포털 | https://www.data.go.kr | 제조업 생산 통계, 불량률 데이터 |
-| IEEE DataPort | https://ieee-dataport.org | 센서/제조 공정 실험 데이터 |
-| Kaggle | https://www.kaggle.com/datasets | 제조 이상 감지, 시계열 데이터 |
-| UCI ML Repository | https://archive.ics.uci.edu | 공정 이상 감지 (SECOM 데이터셋 등) |
-| 한국 산업통상자원부 | https://www.motie.go.kr | 디스플레이 산업 통계 |
+> **목표**: P1 수준의 대시보드에 보고서 다운로드 기능을 추가합니다.
 
-> 💡 **SECOM 데이터셋** (UCI): 반도체/디스플레이 공정 센서 데이터 + 수율 레이블 — 프로젝트 2에 최적
+**소요 시간**: 3~4시간
 
----
+**제공되는 것**:
+- 합성 데이터 (P1과 동일 형식)
+- Gemini 프롬프트 전문
+- 실행 가이드
 
-## [중] 난이도 — 방향 제시
+**Step 1.** Gemini에 아래 프롬프트를 붙여넣으세요:
 
-### 요구사항
-- AI API(Gemini 또는 Claude) 연동 필수
-- 사용자 입력에 따라 AI가 인사이트를 제공하는 기능 포함
-- 위 공개 데이터셋 중 1개 이상 활용
-- README.md에 앱 사용 방법 + 스크린샷 설명
+```
+Streamlit으로 공정 데이터 대시보드를 만들어줘.
 
-### 힌트
-- `.env` 파일로 API Key 관리: `GEMINI_API_KEY=your_key_here`
-- `python-dotenv` 라이브러리로 로드: `from dotenv import load_dotenv`
-- `.gitignore`에 `.env` 반드시 추가!
+기능:
+1. CSV 파일 업로드
+2. 기초 통계 테이블 (평균, 표준편차, 최소, 최대)
+3. Plotly 라인 차트 (시간순 트렌드)
+4. Plotly 히스토그램 (분포)
+5. Plotly 박스플롯 (공정 라인별 비교)
+6. 사이드바: 컬럼 선택, 날짜 범위 필터
+7. "📋 보고서 다운로드" 버튼 → 통계 요약을 Markdown 텍스트로 생성
+   → st.download_button으로 .md 파일 다운로드
+8. 모든 텍스트는 한국어
 
-**제출**: 배포 URL + GitHub Repository URL
+CSV 컬럼: timestamp, line, temperature, pressure, thickness, yield_rate
+```
 
----
+**Step 2.** 코드 복사 → `app.py` 저장 → `streamlit run app.py`
 
-## [상] 난이도 — 요구사항만 (힌트 없음)
+**Step 3.** CSV 업로드 → 차트 확인 → 보고서 다운로드 클릭 → .md 파일 저장
 
-1. 디스플레이 실제 공정 데이터 기반 (논문, 특허, 공개 데이터셋)
-2. AI API 연동으로 데이터 자동 해석 기능
-3. 사용자 입력 → 공정 최적화 제안 기능
-4. 모바일 반응형 UI
-5. GitHub Actions로 자동 테스트/배포 파이프라인
-6. 앱 내 한국어/영어 전환 기능
-
-**제출**: 배포 URL + GitHub Repository URL + 기능 설명 영상 (2분 이내)
+**평가 기준**:
+- [ ] 앱 정상 실행
+- [ ] 시각화 3종 이상 (라인/히스토그램/박스플롯)
+- [ ] 보고서 다운로드 버튼 동작
+- [ ] 스크린샷 1장
 
 ---
 
-## 평가 기준
+### 🟡 중 (응용) — Gemini API 인사이트 + 상관관계 분석
+
+> **목표**: Gemini API를 연동하여 AI가 데이터를 읽고 인사이트를 생성합니다.
+
+**소요 시간**: 6~8시간
+
+**제공되는 것**:
+- 합성 데이터
+- 방향 힌트만 (프롬프트 직접 설계)
+
+**요구사항**:
+- Plotly 차트 **4종 이상** (라인, 히스토그램, 박스플롯, 상관관계 히트맵)
+- **Gemini API 연동**: "🤖 AI 분석" 버튼 클릭 → 데이터 통계를 Gemini에게 보내서 인사이트 받기
+- SPC 관리도 (X-bar, UCL/LCL) 1개 이상
+- 보고서 자동 생성 (통계 + 차트 설명 + AI 인사이트 포함) → Markdown 다운로드
+- 프롬프트 **직접 작성**
+
+**힌트**:
+- Gemini API Key는 [Google AI Studio](https://aistudio.google.com)에서 무료 발급
+- `google-generativeai` 패키지 사용: `pip install google-generativeai`
+- API 호출 시 데이터의 `describe()` 결과를 텍스트로 변환하여 프롬프트에 포함
+- `.env` 파일에 API Key 저장, `python-dotenv`로 로드
+
+**Gemini API 연동 구조 힌트**:
+```python
+# 이 코드를 참고만 하세요 — 전체 코드는 직접 작성!
+import google.generativeai as genai
+genai.configure(api_key="YOUR_KEY")
+model = genai.GenerativeModel("gemini-2.0-flash")
+
+stats_text = df.describe().to_string()
+prompt = f"아래 공정 데이터 통계를 분석해서 이상 패턴과 개선 포인트를 알려줘:\n{stats_text}"
+response = model.generate_content(prompt)
+```
+
+**평가 기준**:
+- [ ] Plotly 차트 4종 이상
+- [ ] Gemini API 연동 인사이트 생성
+- [ ] SPC 관리도 포함
+- [ ] 보고서 다운로드 (AI 인사이트 포함)
+- [ ] 프롬프트 기록 제출
+- [ ] 스크린샷 2장
+
+---
+
+### 🔴 상 (심화) — AI 자동 분석 보고서 시스템
+
+> **목표**: 데이터 업로드만 하면 시각화 → AI 분석 → 보고서까지 전자동으로 완성되는 시스템.
+
+**소요 시간**: 10~12시간 (2일)
+
+**제공되는 것**:
+- 추천 데이터셋 목록만 제공
+- 힌트 없음
+
+**요구사항**:
+- Plotly 시각화 **6종 이상** (히스토그램, 박스플롯, 산점도, 라인, 히트맵, Pareto 차트)
+- Gemini API 자동 분석 (업로드 즉시 실행, 버튼 불필요)
+- Pareto 차트: 불량 유형별 빈도 + 누적 비율
+- 최적 파라미터 조건 추천 (수율 상위 10% 데이터의 공정 조건 요약)
+- 멀티 탭 구성 (개요 / 시각화 / AI 분석 / 최적화 / 리포트)
+- 보고서 자동 생성: HTML 형식, 차트 이미지 포함, 다운로드
+- 코드 모듈 분리 (`app.py`, `ai_analyzer.py`, `utils.py`)
+- GitHub README.md + Streamlit Cloud 배포
+
+**평가 기준**:
+- [ ] Plotly 시각화 6종 이상
+- [ ] Gemini API 자동 분석
+- [ ] Pareto 차트 포함
+- [ ] 최적 조건 추천 기능
+- [ ] HTML 보고서 다운로드
+- [ ] 코드 모듈 분리
+- [ ] GitHub README + 배포 URL
+
+---
+
+## 모범 답안
+
+```
+examples/
+├── 하/
+│   ├── app.py              ← 기초 대시보드 + 보고서 다운로드
+│   └── requirements.txt
+├── 중/
+│   ├── app.py              ← Gemini API 인사이트 + SPC 관리도
+│   └── requirements.txt
+└── 상/
+    ├── app.py              ← 메인 앱
+    ├── ai_analyzer.py      ← Gemini API 분석 모듈
+    ├── utils.py            ← 데이터 처리 유틸리티
+    ├── requirements.txt
+    └── README.md
+```
+
+> ⚠️ 모범 답안을 먼저 보는 것보다 **스스로 시도한 후 비교**하는 것을 강력히 권장합니다.
+
+---
+
+## Gemini 바이브코딩 워크플로우
+
+```
+1. 💬 Gemini에게 앱 전체 구조 요청
+   "공정 보고서 자동화 Streamlit 앱 만들어줘"
+
+2. 📋 코드 복사 → app.py 저장 → 실행
+
+3. 🔑 Gemini API Key 발급 → .env 파일 설정
+
+4. 🤖 AI 분석 기능 추가 요청
+   "이 앱에 Gemini API를 연동해서 데이터 분석 인사이트를 생성하는 기능 추가해줘"
+
+5. 📊 차트 추가 요청
+   "Pareto 차트와 상관관계 히트맵도 추가해줘"
+
+6. 📋 보고서 기능 요청
+   "분석 결과를 Markdown 보고서로 만들어서 다운로드하는 버튼 추가해줘"
+
+7. 🔄 반복 개선
+```
+
+---
+
+## 자주 묻는 질문
+
+**Q. Gemini API Key는 유료인가요?**
+A. [Google AI Studio](https://aistudio.google.com)에서 무료로 발급 가능합니다. 무료 티어로 충분합니다.
+
+**Q. API Key를 코드에 직접 넣어도 되나요?**
+A. 절대 안 됩니다! `.env` 파일에 저장하고 `.gitignore`에 추가하세요. GitHub에 키가 올라가면 보안 사고입니다.
+
+**Q. P1에서 만든 코드를 그대로 써도 되나요?**
+A. 네! P1 결과물에 AI 분석과 보고서 기능을 추가하는 것이 P2의 핵심입니다.
+
+**Q. 보고서에 차트 이미지를 넣을 수 있나요?**
+A. '상' 레벨에서 도전해보세요. Plotly의 `write_image()` 또는 `to_html()`을 활용합니다.
+
+---
+
+## 평가 기준 요약
 
 | 항목 | 하 | 중 | 상 |
 |------|----|----|-----|
-| 배포 완료 | 필수 | 필수 | 필수 |
-| 인터랙티브 차트 | 1개 이상 | 2개 이상 | 3개 이상 |
-| AI API 연동 | 없어도 됨 | 필수 | 필수 |
-| 실제 데이터 | 샘플 데이터 OK | 공개 데이터 | 공정 데이터 |
-| 코드 품질 | 동작만 하면 됨 | 구조화 권장 | CI/CD 필수 |
+| 앱 실행 여부 | ✅ 필수 | ✅ 필수 | ✅ 필수 |
+| Plotly 시각화 | 3종 | 4종 이상 | 6종 이상 |
+| Gemini API 연동 | 불필요 | 버튼 클릭 | 자동 실행 |
+| SPC 관리도 | 불필요 | 1개 이상 | 포함 |
+| Pareto 차트 | 불필요 | 선택 | 필수 |
+| 보고서 다운로드 | Markdown | Markdown | HTML |
+| 코드 구조 | 단일 파일 | 단일 파일 | 모듈 분리 |
+| 배포 | 불필요 | 선택 | 필수 |
+
+---
+
+## 제출 방법
+
+1. 실행 스크린샷 (하: 1장, 중: 2장, 상: 3장 이상)
+2. (중/상) Gemini 프롬프트 기록 제출
+3. (상) GitHub 레포지토리 URL + 배포 URL
+
+---
+
+*렛유인 AI + 바이브코딩 강의 | Gemini AI로 만드는 실무 자동화 보고서*
