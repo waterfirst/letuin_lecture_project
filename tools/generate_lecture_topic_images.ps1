@@ -109,27 +109,86 @@ function Save-Panel($theme, $idx, $path) {
   DrawHeader $g $theme 1024 1024 $theme.Steps[$idx]
   $accent = $theme.Accent
   $dark = [System.Drawing.Color]::FromArgb(28,36,48)
-  $light = [System.Drawing.Color]::FromArgb(255,255,255)
 
-  FillRoundRect $g (Brush $light) 92 322 840 520 36
-  $p = Pen ([System.Drawing.Color]::FromArgb(215,223,232)) 4
-  $g.DrawRectangle($p, 93, 323, 838, 518); $p.Dispose()
-
-  for ($i=0; $i -lt 4; $i++) {
-    $x = 150 + ($i * 190)
-    $y = 430 + ([Math]::Abs($idx - $i) * 28)
-    FillRoundRect $g (Brush ([System.Drawing.Color]::FromArgb(238,242,247))) $x $y 128 128 26
-    FillRoundRect $g (Brush ($(if ($i -eq $idx) { $accent } else { [System.Drawing.Color]::FromArgb(148,161,179) }))) ($x+18) ($y+18) 92 92 22
-    DrawCentered $g $theme.Tokens[$i] (Font 18 'Bold') (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF ($x+18),($y+18),92,92)
-    if ($i -lt 3) {
-      $arrowPen = Pen $accent 8
-      $g.DrawLine($arrowPen, ($x+140), ($y+64), ($x+178), 494)
-      $arrowPen.Dispose()
+  if ($idx -eq 0) {
+    FillRoundRect $g (Brush ([System.Drawing.Color]::White)) 112 330 800 510 36
+    $centerX = 512; $centerY = 585
+    $nodeBrush = Brush $accent
+    $ringPen = Pen ([System.Drawing.Color]::FromArgb(206,216,228)) 6
+    $g.DrawEllipse($ringPen, 248, 350, 528, 420)
+    $ringPen.Dispose()
+    FillRoundRect $g $nodeBrush 390 495 244 132 34
+    DrawCentered $g $theme.Tokens[0] (Font 30 'Bold') (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF 390,495,244,132)
+    $angles = @(230,310,42,130)
+    for ($i=0; $i -lt 4; $i++) {
+      $rad = $angles[$i] * [Math]::PI / 180
+      $x = [int]($centerX + [Math]::Cos($rad) * 300) - 72
+      $y = [int]($centerY + [Math]::Sin($rad) * 210) - 54
+      FillRoundRect $g (Brush ([System.Drawing.Color]::FromArgb(235,241,247))) $x $y 144 108 24
+      DrawCentered $g $theme.Steps[$i] (Font 18 'Bold') (Brush $dark) (New-Object System.Drawing.RectangleF $x,$y,144,108)
+    }
+  } elseif ($idx -eq 1) {
+    $laneColors = @(
+      [System.Drawing.Color]::FromArgb(239,246,255),
+      [System.Drawing.Color]::FromArgb(240,253,244),
+      [System.Drawing.Color]::FromArgb(255,247,237),
+      [System.Drawing.Color]::FromArgb(245,243,255)
+    )
+    for ($i=0; $i -lt 4; $i++) {
+      $x = 96 + $i * 218
+      FillRoundRect $g (Brush $laneColors[$i]) $x 338 174 430 28
+      FillRoundRect $g (Brush ($(if ($i -eq $idx) { $accent } else { [System.Drawing.Color]::FromArgb(118,132,150) }))) ($x+24) 392 126 86 22
+      DrawCentered $g $theme.Tokens[$i] (Font 20 'Bold') (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF ($x+24),392,126,86)
+      DrawCentered $g $theme.Steps[$i] (Font 21 'Bold') (Brush $dark) (New-Object System.Drawing.RectangleF ($x+16),560,142,90)
+      if ($i -lt 3) {
+        $arrow = Pen $accent 7
+        $g.DrawLine($arrow, ($x+174), 552, ($x+213), 552)
+        $g.DrawLine($arrow, ($x+213), 552, ($x+198), 537)
+        $g.DrawLine($arrow, ($x+213), 552, ($x+198), 567)
+        $arrow.Dispose()
+      }
+    }
+  } elseif ($idx -eq 2) {
+    FillRoundRect $g (Brush ([System.Drawing.Color]::FromArgb(25,32,44))) 110 332 804 514 34
+    FillRoundRect $g (Brush ([System.Drawing.Color]::FromArgb(42,51,67))) 142 370 740 70 18
+    $g.DrawString("ANALYSIS BOARD", (Font 24 'Bold'), (Brush ([System.Drawing.Color]::White)), 170, 388)
+    for ($i=0; $i -lt 4; $i++) {
+      $x = 170 + $i * 174
+      $height = 110 + (($i + 1) * 42)
+      $barColor = if ($i -eq $idx) { $accent } else { [System.Drawing.Color]::FromArgb(112,126,148) }
+      FillRoundRect $g (Brush $barColor) $x (746-$height) 94 $height 18
+      DrawCentered $g $theme.Tokens[$i] (Font 17 'Bold') (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF ($x-20),770,134,42)
+    }
+    $linePen = Pen ([System.Drawing.Color]::FromArgb(130,220,255)) 5
+    $points = @(
+      (New-Object System.Drawing.Point 190,645),
+      (New-Object System.Drawing.Point 330,588),
+      (New-Object System.Drawing.Point 470,610),
+      (New-Object System.Drawing.Point 610,500),
+      (New-Object System.Drawing.Point 750,538)
+    )
+    $g.DrawLines($linePen, $points)
+    $linePen.Dispose()
+  } else {
+    FillRoundRect $g (Brush ([System.Drawing.Color]::White)) 125 326 774 516 36
+    for ($i=0; $i -lt 4; $i++) {
+      $y = 386 + $i * 96
+      $active = $i -eq $idx
+      $boxColor = if ($active) { $accent } else { [System.Drawing.Color]::FromArgb(230,236,244) }
+      FillRoundRect $g (Brush $boxColor) 182 $y 72 72 18
+      if ($active) {
+        $checkPen = Pen ([System.Drawing.Color]::White) 8
+        $g.DrawLines($checkPen, @((New-Object System.Drawing.Point 202,($y+38)),(New-Object System.Drawing.Point 222,($y+56)),(New-Object System.Drawing.Point 244,($y+20))))
+        $checkPen.Dispose()
+      } else {
+        DrawCentered $g ($i+1).ToString() (Font 25 'Bold') (Brush ([System.Drawing.Color]::FromArgb(106,119,137))) (New-Object System.Drawing.RectangleF 182,$y,72,72)
+      }
+      $g.DrawString($theme.Steps[$i], (Font 28 'Bold'), (Brush $dark), 292, ($y+12))
+      $g.DrawString($theme.Tokens[$i], (Font 18), (Brush ([System.Drawing.Color]::FromArgb(86,98,112))), 294, ($y+50))
     }
   }
 
-  DrawCentered $g "$($idx+1). $($theme.Steps[$idx])" (Font 34 'Bold') (Brush $dark) (New-Object System.Drawing.RectangleF 130,720,764,80)
-  $g.DrawString("강의 흐름에 맞춘 전용 이미지", (Font 22), (Brush ([System.Drawing.Color]::FromArgb(86,96,110))), 310, 832)
+  DrawCentered $g "$($idx+1). $($theme.Steps[$idx])" (Font 31 'Bold') (Brush $dark) (New-Object System.Drawing.RectangleF 130,858,764,62)
   $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
   $g.Dispose(); $bmp.Dispose()
 }
@@ -162,13 +221,32 @@ function Save-Compare($theme, $path, $isNew) {
   DrawCentered $g $title (Font 58 'Bold') (Brush ([System.Drawing.Color]::FromArgb(27,34,45))) (New-Object System.Drawing.RectangleF 90,72,1406,100)
   DrawCentered $g $sub (Font 27) (Brush ([System.Drawing.Color]::FromArgb(82,96,112))) (New-Object System.Drawing.RectangleF 90,166,1406,58)
   $accent = if ($isNew) { $theme.Accent } else { [System.Drawing.Color]::FromArgb(132,120,103) }
-  for ($i=0; $i -lt 4; $i++) {
-    $x = 150 + $i*330
-    $h = if ($isNew) { 360 - $i*20 } else { 170 + $i*44 }
-    FillRoundRect $g (Brush ([System.Drawing.Color]::White)) $x 302 250 500 28
-    FillRoundRect $g (Brush $accent) ($x+55) (760-$h) 140 $h 24
-    DrawCentered $g $theme.Steps[$i] (Font 24 'Bold') (Brush ([System.Drawing.Color]::FromArgb(32,40,52))) (New-Object System.Drawing.RectangleF $x,820,250,62)
-    DrawCentered $g $theme.Tokens[$i] (Font 22) (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF ($x+55),(760-$h),140,80)
+  if ($isNew) {
+    FillRoundRect $g (Brush ([System.Drawing.Color]::White)) 148 298 1290 520 36
+    $nodes = @(@(242,420),@(540,560),@(840,420),@(1138,560))
+    for ($i=0; $i -lt 4; $i++) {
+      $x=$nodes[$i][0]; $y=$nodes[$i][1]
+      FillRoundRect $g (Brush $accent) $x $y 190 128 28
+      DrawCentered $g $theme.Tokens[$i] (Font 28 'Bold') (Brush ([System.Drawing.Color]::White)) (New-Object System.Drawing.RectangleF $x,$y,190,128)
+      DrawCentered $g $theme.Steps[$i] (Font 22 'Bold') (Brush ([System.Drawing.Color]::FromArgb(32,40,52))) (New-Object System.Drawing.RectangleF ($x-40),($y+150),270,54)
+      if ($i -lt 3) {
+        $flowPen = Pen ([System.Drawing.Color]::FromArgb(52,72,92)) 8
+        $g.DrawLine($flowPen, ($x+190), ($y+64), ($nodes[$i+1][0]), ($nodes[$i+1][1]+64))
+        $flowPen.Dispose()
+      }
+    }
+  } else {
+    for ($i=0; $i -lt 5; $i++) {
+      $y = 320 + $i * 88
+      FillRoundRect $g (Brush ([System.Drawing.Color]::White)) 190 $y 1180 58 14
+      $g.DrawString(("작업 {0}" -f ($i+1)), (Font 20 'Bold'), (Brush $accent), 230, ($y+15))
+      $g.DrawString('수동 확인 / 복사 / 재입력', (Font 21), (Brush ([System.Drawing.Color]::FromArgb(78,82,90))), 410, ($y+14))
+      $noisePen = Pen ([System.Drawing.Color]::FromArgb(204,196,184)) 3
+      $g.DrawLine($noisePen, 1040, ($y+29), 1300, ($y+29))
+      $noisePen.Dispose()
+    }
+    FillRoundRect $g (Brush ([System.Drawing.Color]::FromArgb(255,238,226))) 210 780 1130 80 20
+    DrawCentered $g '누락과 재작업이 마지막에 몰립니다' (Font 28 'Bold') (Brush ([System.Drawing.Color]::FromArgb(120,65,42))) (New-Object System.Drawing.RectangleF 210,780,1130,80)
   }
   $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
   $g.Dispose(); $bmp.Dispose()
