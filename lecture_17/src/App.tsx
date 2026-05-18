@@ -290,7 +290,7 @@ function TechnicalInterviewDeepDive() {
           뽑아 "결론 → 근거 숫자 → 한계" 3박자 구조로 답변을 미리 설계합니다.
         </p>
         <LectureImage
-          src="lecture-17-interview-pitch.png"
+          src="panel1.png"
           alt="기술 면접 예상 질문 10개와 30초 답변 구조를 정리한 표"
           caption="질문은 다양해 보이지만 결국 '왜 그 기술을 골랐는가'와 '얼마나 잘 동작하는가' 두 축으로 모입니다."
         />
@@ -384,7 +384,7 @@ function ProjectPresentationDeepDive() {
           데모(60초) → 차별화(30초) 4단 구조로 모든 숫자가 정해진 위치에 들어갑니다.
         </p>
         <LectureImage
-          src="lecture-17-interview-pitch.png"
+          src="panel2.png"
           alt="3분 피칭의 문제·솔루션·데모·차별화 4단 구조를 시간 라인으로 정리한 도식"
           caption="시간 박스를 미리 정해두고 각 박스에 들어갈 숫자·문장을 채우면 떨림이 줄어듭니다."
         />
@@ -474,7 +474,7 @@ function BehavioralInterviewDeepDive() {
           나와도 같은 골격에 살만 바꿔 끼우면 됩니다.
         </p>
         <LectureImage
-          src="lecture-17-interview-pitch.png"
+          src="panel3.png"
           alt="STAR 기법의 4단 구조와 협업/실패/지원동기 답변 예시를 정리한 인포그래픽"
           caption="질문은 다양해도 STAR 4박자 골격에 1~2문장씩만 채우면 끝납니다."
           variant="poster"
@@ -823,7 +823,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('lecture-17-interview-pitch.png')} alt="전통적인 면접 준비" />
+              <img src={assetUrl('traditional-coding.png')} alt="전통적인 면접 준비" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (자기소개서 중심)</span>
                 <h3>이력서·자소서·자격증 위주의 막연한 준비</h3>
@@ -846,7 +846,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('lecture-17-interview-pitch.png')} alt="AI 포트폴리오 기반 면접" />
+              <img src={assetUrl('vibe-coding.png')} alt="AI 포트폴리오 기반 면접" />
               <div className="compare-content">
                 <span className="compare-kicker">AI Portfolio (13~17강)</span>
                 <h3>실행 가능한 AI 프로젝트 4종을 손에 든 지원</h3>
@@ -873,7 +873,7 @@ export default function App() {
           </p>
           <CareerChart />
           <LectureImage
-            src="lecture-17-interview-pitch.png"
+            src="final-interview-checklist.png"
             alt="면접 준비 경로별 합격률 비교 인포그래픽"
             caption="AI 포트폴리오 보유자는 학과+자격증 그룹 대비 합격 점수가 약 1.5배 높습니다."
           />
@@ -930,7 +930,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('lecture-17-interview-pitch.png')}
+              src={assetUrl('comic.png')}
               alt="3분 피칭 실습 가이드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />
@@ -951,7 +951,7 @@ export default function App() {
             ))}
           </div>
           <LectureImage
-            src="interview-pitch-overview.png"
+            src="panel4.png"
             alt="최종 면접 준비 체크리스트 인포그래픽"
             caption="GitHub README, 데모 영상, 3분 피칭, STAR 답변, 회사 맞춤 지원동기 — 다섯 박스를 채우면 완료입니다."
           />

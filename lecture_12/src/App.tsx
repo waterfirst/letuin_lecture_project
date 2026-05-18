@@ -287,7 +287,7 @@ function EnvFileDeepDive() {
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('lecture-12-security-cicd.png')}
+            src={assetUrl('panel1.png')}
             alt=".env 파일 관리"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -403,7 +403,7 @@ function GitHubSecretsDeepDive() {
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('lecture-12-security-cicd.png')}
+            src={assetUrl('panel2.png')}
             alt="GitHub Secrets 설정"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -521,7 +521,7 @@ function CICDDeepDive() {
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('lecture-12-security-cicd.png')}
+            src={assetUrl('panel3.png')}
             alt="GitHub Actions CI/CD"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -927,7 +927,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('lecture-12-security-cicd.png')}
+              src={assetUrl('panel4.png')}
               alt="보안 파이프라인 실습"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />
