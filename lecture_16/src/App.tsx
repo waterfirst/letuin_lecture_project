@@ -284,7 +284,7 @@ function StreamlitDeepDive() {
           공통 위젯으로 데이터·이미지·센서 페이지를 한 번에 운영할 수 있습니다.
         </p>
         <LectureImage
-          src="panel1.png"
+          src="lecture-16-dashboard.png"
           alt="Streamlit app.py와 pages/ 폴더 구조, 사이드바 자동 메뉴 다이어그램"
           caption="app.py는 메인 페이지, pages/ 폴더의 파일이 자동으로 사이드바 메뉴가 됩니다."
         />
@@ -408,7 +408,7 @@ function IntegrationDeepDive() {
           호출하면, 세 시스템의 최신 결과가 하나의 JSON으로 정리됩니다.
         </p>
         <LectureImage
-          src="panel2.png"
+          src="lecture-16-dashboard.png"
           alt="IntegratedAnalyzer가 데이터·이미지·센서 결과를 통합 리포트로 합치는 구조"
           caption="한 번의 호출로 3개 모듈 결과를 합치고, 통합 메트릭과 헬스 스코어까지 함께 반환합니다."
         />
@@ -508,7 +508,7 @@ function PortfolioDeepDive() {
           연결하면, 누구나 데모 URL 하나로 프로젝트를 체험할 수 있습니다.
         </p>
         <LectureImage
-          src="panel3.png"
+          src="lecture-16-dashboard.png"
           alt="GitHub Public 저장소와 Streamlit Cloud 배포 흐름"
           caption="git push가 일어나면 GitHub Actions가 검사하고 Streamlit Cloud가 자동으로 배포합니다."
           variant="poster"
@@ -787,7 +787,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('comic.png')}
+              src={assetUrl('lecture-16-dashboard.png')}
               alt="통합 대시보드 코믹"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
@@ -853,7 +853,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('traditional-coding.png')} alt="분산된 개별 스크립트" />
+              <img src={assetUrl('lecture-16-dashboard.png')} alt="분산된 개별 스크립트" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (Separate Scripts)</span>
                 <h3>기능마다 따로 실행하는 개별 스크립트</h3>
@@ -876,7 +876,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('vibe-coding.png')} alt="Streamlit 통합 대시보드" />
+              <img src={assetUrl('lecture-16-dashboard.png')} alt="Streamlit 통합 대시보드" />
               <div className="compare-content">
                 <span className="compare-kicker">Integrated Dashboard (Streamlit + GitHub)</span>
                 <h3>한 화면·한 URL로 운영되는 통합 대시보드</h3>
@@ -954,7 +954,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
+              src={assetUrl('lecture-16-dashboard.png')}
               alt="통합 대시보드 실습 가이드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />

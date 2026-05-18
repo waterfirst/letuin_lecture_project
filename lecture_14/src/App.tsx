@@ -397,7 +397,7 @@ function DefectPromptDeepDive() {
           명시하고 JSON 스키마를 분리하면 오탐과 누락이 모두 줄어듭니다.
         </p>
         <LectureImage
-          src="panel2.png"
+          src="lecture-14-vision-inspection.png"
           alt="결함 유형별로 분리된 프롬프트 템플릿 예시"
           caption="유형별로 프롬프트를 분리하면 기준이 명확해지고 JSON 스키마도 단순해집니다."
         />
@@ -475,7 +475,7 @@ function BatchDeepDive() {
           제어하면서 병렬 처리하면 8~10분 안에 마칠 수 있습니다.
         </p>
         <LectureImage
-          src="panel3.png"
+          src="lecture-14-vision-inspection.png"
           alt="이미지 캡처 → AI 분석 → DB 저장 → 알림으로 이어지는 자동화 아키텍처"
           caption="생산 라인 카메라부터 알림 발송까지를 하나의 비동기 파이프라인으로 묶습니다."
           variant="poster"
@@ -733,7 +733,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('comic.png')}
+              src={assetUrl('lecture-14-vision-inspection.png')}
               alt="이미지 검사 자동화 코믹"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
@@ -752,7 +752,7 @@ export default function App() {
             <strong>Gemini Vision API는 이미지와 텍스트 프롬프트를 함께 받아 객체·결함·맥락을 JSON으로 반환하는 멀티모달 추론 엔진입니다.</strong>
           </div>
           <LectureImage
-            src="panel1.png"
+            src="lecture-14-vision-inspection.png"
             alt="Vision API의 객체 인식·결함 분류·맥락 이해·멀티모달 4가지 능력을 정리한 다이어그램"
             caption="객체 인식, 결함 분류, 맥락 이해, 멀티모달 입력이 하나의 호출로 통합되어 있습니다."
           />
@@ -799,7 +799,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('traditional-coding.png')} alt="전통적인 수동 육안 검사" />
+              <img src={assetUrl('lecture-14-vision-inspection.png')} alt="전통적인 수동 육안 검사" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (Manual Inspection)</span>
                 <h3>현미경 앞에서 한 장씩 육안으로 판정</h3>
@@ -822,7 +822,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('vibe-coding.png')} alt="Gemini Vision 자동 검사" />
+              <img src={assetUrl('lecture-14-vision-inspection.png')} alt="Gemini Vision 자동 검사" />
               <div className="compare-content">
                 <span className="compare-kicker">Gemini Vision (Automated)</span>
                 <h3>이미지+프롬프트로 JSON 판정을 자동 생성</h3>
@@ -900,7 +900,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
+              src={assetUrl('lecture-14-vision-inspection.png')}
               alt="Vision 검사 실습 가이드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />

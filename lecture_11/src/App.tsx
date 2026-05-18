@@ -814,7 +814,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('comic.png')}
+              src={assetUrl('lecture-11-gemini-start.png')}
               alt="Gemini 생태계 코믹"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
@@ -917,7 +917,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('traditional-coding.png')} alt="전통적인 수동 방식" />
+              <img src={assetUrl('lecture-11-gemini-start.png')} alt="전통적인 수동 방식" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (Manual Process)</span>
                 <h3>웹 UI에서 매번 복사-붙여넣기</h3>
@@ -940,7 +940,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('vibe-coding.png')} alt="Gemini API 자동화" />
+              <img src={assetUrl('lecture-11-gemini-start.png')} alt="Gemini API 자동화" />
               <div className="compare-content">
                 <span className="compare-kicker">Gemini API (Automated)</span>
                 <h3>Python 스크립트로 자동 호출하고 결과 저장</h3>
@@ -1022,7 +1022,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
+              src={assetUrl('lecture-11-gemini-start.png')}
               alt="Gemini 생태계 실습 가이드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />

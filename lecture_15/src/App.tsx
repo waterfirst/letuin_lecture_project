@@ -402,7 +402,7 @@ function AnomalyDetectionDeepDive() {
           Rolling 추세 3가지를 결합하고 2개 이상 일치할 때만 이상으로 확정합니다.
         </p>
         <LectureImage
-          src="panel2.png"
+          src="lecture-15-sensor-alert.png"
           alt="3가지 이상 감지 방법(통계·ML·추세)을 결합해 이상을 확정하는 다층 구조"
           caption="통계 기반, ML 기반, 추세 기반 3가지를 결합하면 오탐과 누락이 동시에 줄어듭니다."
         />
@@ -505,7 +505,7 @@ function AlertSystemDeepDive() {
           Email, Slack, SMS를 분기해 골든타임을 지키면서도 채널 부담을 분산합니다.
         </p>
         <LectureImage
-          src="panel3.png"
+          src="lecture-15-sensor-alert.png"
           alt="센서 감지에서 심각도 분류, 멀티채널 알림 발송까지의 아키텍처 다이어그램"
           caption="감지·분류·발송을 분리한 알림 아키텍처입니다. 채널 추가는 어댑터만 늘리면 됩니다."
           variant="poster"
@@ -790,7 +790,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('comic.png')}
+              src={assetUrl('lecture-15-sensor-alert.png')}
               alt="센서 예측·알림 코믹"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
@@ -809,7 +809,7 @@ export default function App() {
             <strong>센서 예측 & 알림은 시계열 학습·다층 감지·멀티채널 발송을 묶어 사후 대응을 15분 전 사전 대응으로 바꾸는 운영 시스템입니다.</strong>
           </div>
           <LectureImage
-            src="panel1.png"
+            src="lecture-15-sensor-alert.png"
             alt="배터리·반도체·디스플레이·바이오 산업의 센서 데이터 예측 사례 요약"
             caption="산업마다 센서 종류는 다르지만 예측·감지·알림 3단계 구조는 동일합니다."
           />
@@ -856,7 +856,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('traditional-coding.png')} alt="전통적인 수동 모니터링" />
+              <img src={assetUrl('lecture-15-sensor-alert.png')} alt="전통적인 수동 모니터링" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (Manual Monitoring)</span>
                 <h3>사람이 화면을 보고 엑셀로 기록</h3>
@@ -879,7 +879,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('vibe-coding.png')} alt="AI 예측·자동 알림" />
+              <img src={assetUrl('lecture-15-sensor-alert.png')} alt="AI 예측·자동 알림" />
               <div className="compare-content">
                 <span className="compare-kicker">AI Forecast (Automated Alert)</span>
                 <h3>Prophet 예측 + 다층 감지 + 자동 알림</h3>
@@ -957,7 +957,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
+              src={assetUrl('lecture-15-sensor-alert.png')}
               alt="센서 예측·알림 실습 가이드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />

@@ -297,7 +297,7 @@ function CSVAutomationDeepDive() {
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('panel1.png')}
+            src={assetUrl('lecture-13-data-automation.png')}
             alt="CSV 자동화"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -424,7 +424,7 @@ print("✅ 인사이트 저장: insight_report.md")`;
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('panel2.png')}
+            src={assetUrl('lecture-13-data-automation.png')}
             alt="Gemini 인사이트"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -571,7 +571,7 @@ if uploaded_file:
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
-            src={assetUrl('panel3.png')}
+            src={assetUrl('lecture-13-data-automation.png')}
             alt="Streamlit 대시보드"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
@@ -837,7 +837,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('comic.png')}
+              src={assetUrl('lecture-13-data-automation.png')}
               alt="데이터 분석 자동화"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
             />
@@ -940,7 +940,7 @@ export default function App() {
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
+              src={assetUrl('lecture-13-data-automation.png')}
               alt="자동 분석 대시보드"
               style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />
