@@ -4358,3 +4358,53 @@ footer {
   white-space: normal;
   line-height: 1.15;
 }
+
+/* Responsive lecture image safety */
+.lecture-image,
+.coding-compare-card {
+  width: 100%;
+}
+
+.lecture-image img,
+.coding-compare-card img {
+  width: 100%;
+  height: auto;
+  max-height: min(72vh, 760px);
+  object-fit: contain;
+  background: #f8fafc;
+}
+
+.coding-compare-card img {
+  aspect-ratio: 16 / 10;
+}
+
+.lecture-image:not(.poster) img {
+  aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 900px) {
+  .coding-compare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lecture-image,
+  .coding-compare-card {
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .lecture-image {
+    margin: 1.25rem 0;
+  }
+
+  .lecture-image img,
+  .coding-compare-card img {
+    max-height: 58vh;
+  }
+
+  .lecture-image:not(.poster) img,
+  .coding-compare-card img {
+    aspect-ratio: 4 / 3;
+  }
+}
