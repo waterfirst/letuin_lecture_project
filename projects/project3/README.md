@@ -18,6 +18,22 @@ P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로,
 
 ---
 
+## P1+P2 통합 관점
+
+P3는 P1과 P2에서 쌓은 모든 역량을 통합하는 최종 프로젝트입니다. 시작 전에 아래를 점검하세요:
+
+| 역량 (출처) | 핵심 내용 | P3에서의 활용 |
+|------------|----------|-------------|
+| 프롬프트 엔지니어링 (P1) | Gemini에게 명확하고 구체적으로 요청 | 복합 시스템 설계 시 단계별 프롬프트 |
+| 데이터 시각화 (P1) | Plotly 인터랙티브 차트, SPC 관리도 | 모니터링 대시보드의 핵심 UI |
+| API 연동 (P2) | Gemini API로 자동 분석/인사이트 | AI 분석 모듈 구현 |
+| 보고서 자동화 (P2) | Markdown/HTML 보고서 생성 | 텔레그램으로 자동 전송 |
+| 에러 대응 (P1+P2) | 디버깅 워크플로우 | 복잡한 시스템 통합 시 문제 해결 |
+
+> P1의 `app.py` + P2의 `ai_analyzer.py`를 기반으로 P3를 시작하면 효율적입니다.
+
+---
+
 ## P1 → P2 → P3 성장 여정
 
 ```
@@ -298,6 +314,39 @@ def send_telegram(token, chat_id, message):
 
 ---
 
+## 선수 학습 확인
+
+- [ ] P1, P2 프로젝트를 모두 완료했다
+- [ ] Streamlit + Plotly + Gemini API 사용 경험이 있다
+- [ ] GitHub에 코드를 push해본 경험이 있다
+- [ ] Streamlit Cloud 배포를 해본 적이 있다 (P2에서)
+- [ ] (권장) 텔레그램 앱이 설치되어 있다
+
+---
+
+## 제출물 체크리스트
+
+### 하 난이도 제출물
+- [ ] GitHub Repository URL
+- [ ] 실행 스크린샷 1장 (대시보드)
+- [ ] 텔레그램 알림 수신 스크린샷 1장
+- [ ] (선택) 사용한 프롬프트 기록
+
+### 중 난이도 제출물
+- [ ] GitHub Repository URL + README.md
+- [ ] 실행 스크린샷 2장 (앱 화면 + 텔레그램 수신)
+- [ ] Gemini 프롬프트 기록
+- [ ] 보고서 다운로드 파일 샘플
+
+### 상 난이도 제출물
+- [ ] GitHub Repository URL + README.md (영문 권장)
+- [ ] Streamlit Cloud 배포 URL
+- [ ] 실행 스크린샷 3장 이상
+- [ ] 발표 자료 (PPT 또는 PDF)
+- [ ] (권장) 2분 데모 영상
+
+---
+
 ## 자주 묻는 질문
 
 **Q. 주제를 못 정하겠어요.**
@@ -311,6 +360,39 @@ A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를
 
 **Q. 발표가 부담스러워요.**
 A. 3분이면 충분합니다. 화면을 보여주면서 "이 버튼을 누르면 이렇게 됩니다"만 해도 됩니다.
+
+**Q. 기술 3가지 조합이 어려워요.**
+A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)입니다. P1, P2에서 이미 2가지를 해봤으니 텔레그램만 추가하면 됩니다.
+
+---
+
+## 트러블슈팅
+
+**증상: 텔레그램 봇에서 메시지가 안 옴**
+- @BotFather에서 봇을 만든 후, 봇에게 먼저 `/start` 또는 아무 메시지를 보내야 합니다
+- `https://api.telegram.org/bot{TOKEN}/getUpdates`에서 chat_id 재확인
+- TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인
+
+**증상: `requests.post` 호출 시 `ConnectionError`**
+- 인터넷 연결 확인
+- 회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)
+
+**증상: Streamlit Cloud에서 텔레그램이 안 됨**
+- Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID를 등록했는지 확인
+- 코드에서 `st.secrets["BOT_TOKEN"]`으로 접근
+
+**증상: Gemini API 호출 횟수 초과**
+- 무료 티어는 분당 15회 제한
+- `time.sleep(4)` 등으로 호출 간격 조절
+- 데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화
+
+**증상: GitHub Actions 워크플로우 실패 (상 난이도)**
+- `.github/workflows/` 폴더에 YAML 파일 확인
+- secrets 설정: Repository Settings > Secrets and variables > Actions
+
+**증상: 멀티 페이지 Streamlit이 안 됨**
+- `pages/` 폴더명은 정확히 `pages`여야 합니다 (대소문자 주의)
+- 파일명 앞에 숫자를 붙여 순서 지정: `01_모니터링.py`, `02_분석.py`
 
 ---
 
