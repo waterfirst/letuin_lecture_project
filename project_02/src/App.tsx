@@ -133,6 +133,63 @@ const HintLink = () => (
   </motion.a>
 );
 
+const ModelAnswerLink = () => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.18 }}
+    style={{
+      background: 'white',
+      borderRadius: '24px',
+      padding: '1.75rem',
+      marginBottom: '3rem',
+      boxShadow: '0 10px 32px rgba(0, 0, 0, 0.08)',
+      border: '1px solid rgba(0,0,0,0.08)',
+    }}
+  >
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+      <FileText size={28} color={palette.indigo} />
+      <div>
+        <div style={{ fontSize: '1.35rem', fontWeight: 900, color: palette.slate }}>채점용 모범답안</div>
+        <div style={{ color: palette.muted, lineHeight: 1.6 }}>
+          원본 CSV를 실제로 읽고 만든 초급/중급/고급 HTML 보고서와 Quarto 예시입니다.
+        </div>
+      </div>
+    </div>
+    <div style={gridAuto(210)}>
+      {[
+        ['초급 보고서', 'model_answers/beginner/report_beginner.html'],
+        ['중급 보고서', 'model_answers/intermediate/report_intermediate.html'],
+        ['고급 보고서', 'model_answers/advanced/report_advanced.html'],
+        ['모범답안 README', 'model_answers/README.md'],
+      ].map(([label, href]) => (
+        <a
+          key={label}
+          href={assetUrl(href)}
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.75rem',
+            textDecoration: 'none',
+            color: palette.slate,
+            background: '#f8fafc',
+            border: '1px solid rgba(15, 23, 42, 0.08)',
+            borderRadius: '16px',
+            padding: '1rem 1.1rem',
+            fontWeight: 900,
+          }}
+        >
+          <span>{label}</span>
+          <ExternalLink size={18} />
+        </a>
+      ))}
+    </div>
+  </motion.div>
+);
+
 const PromptBox = ({ text, accent = palette.teal }: { text: string; accent?: string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -633,6 +690,7 @@ function App() {
           caption="OLED deposition x/y map preview: thickness error heatmap, chamber comparison, defect Pareto, and yield relationship."
         />
         <HintLink />
+        <ModelAnswerLink />
         <ProjectGoal />
         <DatasetSection />
         <ChartGuide />

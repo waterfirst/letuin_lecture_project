@@ -1,0 +1,109 @@
+---
+title: "OLED Deposition 원인 분석 모범답안"
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## 분석 목적
+
+OLED deposition x/y map CSV를 읽고 두께 오차, 결함, 공정 조건이 수율 점수에 어떤 영향을 주는지 확인한다.
+목표는 단순한 그래프 작성이 아니라 공정 개선으로 이어질 수 있는 원인 후보를 찾는 것이다.
+
+```{python}
+from pathlib import Path
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+
+sns.set_theme(style="whitegrid", font="Malgun Gothic")
+DATA = Path("../../../../project_02/public/oled_deposition_xymap.csv").resolve()
+df = pd.read_csv(DATA)
+df.shape, df.columns.tolist()
+```
+
+## 컬럼 확인
+
+```{python}
+df.dtypes.to_frame("dtype")
+```
+
+```{python}
+df[["thickness_nm", "thickness_error_nm", "abs_error_nm", "particle_count", "dark_spot_count", "yield_score"]].describe()
+```
+
+## 기본 시각화
+
+```{python}
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=df, x="chamber", y="thickness_error_nm")
+plt.title("Chamber별 두께 오차")
+plt.show()
+```
+
+```{python}
+sample = df.sample(min(3000, len(df)), random_state=42)
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=sample, x="abs_error_nm", y="yield_score", hue="chamber", alpha=0.35, s=18)
+plt.title("두께 절대오차와 수율 점수")
+plt.show()
+```
+
+```{python}
+panel = df[df["panel_id"] == "PNL_A02"]
+heat = panel.pivot_table(index="y_index", columns="x_index", values="thickness_error_nm", aggfunc="mean")
+plt.figure(figsize=(11, 6))
+sns.heatmap(heat.sort_index(ascending=False), cmap="coolwarm", center=0)
+plt.title("PNL_A02 thickness_error_nm x/y map")
+plt.show()
+```
+
+## Pareto와 상관관계
+
+```{python}
+defects = df[df["defect_type"] != "none"]["defect_type"].value_counts()
+pareto = defects.to_frame("count")
+pareto["cum_pct"] = pareto["count"].cumsum() / pareto["count"].sum() * 100
+pareto
+```
+
+```{python}
+fig, ax1 = plt.subplots(figsize=(8, 5))
+sns.barplot(x=pareto.index, y=pareto["count"], ax=ax1, color="#2c69b0")
+ax2 = ax1.twinx()
+ax2.plot(range(len(pareto)), pareto["cum_pct"], color="#c43f38", marker="o")
+ax2.set_ylim(0, 105)
+ax1.set_title("Defect Pareto")
+plt.show()
+```
+
+```{python}
+numeric = ["abs_error_nm", "particle_count", "dark_spot_count", "pressure_mTorr", "oxygen_flow_sccm", "deposition_rate_a_s", "luminance_cd_m2", "voltage_v", "yield_score"]
+plt.figure(figsize=(9, 7))
+sns.heatmap(df[numeric].corr(), cmap="coolwarm", center=0, annot=True, fmt=".2f")
+plt.title("Correlation heatmap")
+plt.show()
+```
+
+## 회귀분석과 p-value
+
+```{python}
+model = smf.ols(
+    "yield_score ~ abs_error_nm + particle_count + dark_spot_count + pressure_mTorr + oxygen_flow_sccm + deposition_rate_a_s + C(chamber) + C(zone)",
+    data=df,
+).fit()
+model.summary()
+```
+
+## 원인 후보와 개선 제안
+
+1. `particle_count`, `dark_spot_count`, `abs_error_nm`가 수율을 강하게 낮춘다. particle 관리와 dark spot 검사 조건을 우선 점검한다.
+2. C2와 C4는 fail rate가 높고 두께 오차가 양의 방향으로 치우친다. chamber별 source 온도, 압력, 유량 보정 이력을 확인한다.
+3. PNL_A02 edge 영역의 hotspot은 위치 의존 패턴이므로 shadow mask 정렬, edge gas flow, edge temperature uniformity를 확인한다.

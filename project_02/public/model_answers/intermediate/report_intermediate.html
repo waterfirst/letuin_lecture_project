@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>중급 모범답안: 시각화와 통계분석</title>
+  <style>
+    :root {
+      --ink: #1c2026;
+      --muted: #65707d;
+      --line: #dde3ea;
+      --panel: #f7f9fb;
+      --blue: #2c69b0;
+      --red: #c43f38;
+      --green: #2f855a;
+    }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    header {
+      padding: 44px min(6vw, 72px) 32px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 64px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-top: 38px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin-top: 26px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0;
+    }
+    .note {
+      background: var(--panel);
+      border-left: 4px solid var(--blue);
+      padding: 14px 18px;
+      margin: 18px 0;
+    }
+    .warning {
+      border-left-color: var(--red);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+    .metric strong {
+      display: block;
+      font-size: 24px;
+    }
+    img.figure {
+      display: block;
+      width: 100%;
+      max-width: 1120px;
+      margin: 16px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    table.data-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 14px 0 22px;
+      font-size: 14px;
+    }
+    table.data-table th,
+    table.data-table td {
+      border: 1px solid var(--line);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.data-table th {
+      background: #f1f5f9;
+    }
+    code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>중급 모범답안: 시각화와 통계분석</h1>
+    <p class="subtitle">그래프 5종 이상과 통계분석으로 OLED deposition 수율 저하 원인 후보를 좁히는 보고서</p>
+  </header>
+  <main>
+
+<section class="grid">
+  <div class="metric"><span>pass</span><strong>21,763</strong></div>
+  <div class="metric"><span>fail</span><strong>2,813</strong></div>
+  <div class="metric"><span>OLS R-squared</span><strong>0.8376</strong></div>
+</section>
+<h2>1. 데이터와 컬럼 이해</h2>
+<p>분석 전 원본 CSV의 29개 컬럼을 확인했다. 핵심 목표 변수는 <code>yield_score</code>와 <code>pass_fail</code>이고, 원인 후보는 <code>thickness_error_nm</code>, <code>particle_count</code>, <code>dark_spot_count</code>, chamber/zone, 공정 조건 컬럼이다.</p>
+<h3>Chamber 요약</h3>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>yield_mean</th>
+      <th>thickness_error_mean</th>
+      <th>abs_error_mean</th>
+      <th>fail_rate</th>
+      <th>particles</th>
+      <th>darkspots</th>
+    </tr>
+    <tr>
+      <th>chamber</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C1</th>
+      <td>96.436</td>
+      <td>0.335</td>
+      <td>1.143</td>
+      <td>0.044</td>
+      <td>1317</td>
+      <td>373</td>
+    </tr>
+    <tr>
+      <th>C2</th>
+      <td>94.167</td>
+      <td>2.047</td>
+      <td>2.151</td>
+      <td>0.155</td>
+      <td>1925</td>
+      <td>435</td>
+    </tr>
+    <tr>
+      <th>C3</th>
+      <td>95.929</td>
+      <td>-0.424</td>
+      <td>1.234</td>
+      <td>0.071</td>
+      <td>1936</td>
+      <td>408</td>
+    </tr>
+    <tr>
+      <th>C4</th>
+      <td>93.885</td>
+      <td>1.780</td>
+      <td>2.124</td>
+      <td>0.188</td>
+      <td>2273</td>
+      <td>525</td>
+    </tr>
+  </tbody>
+</table>
+<h3>Zone 요약</h3>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>yield_mean</th>
+      <th>abs_error_mean</th>
+      <th>fail_rate</th>
+    </tr>
+    <tr>
+      <th>zone</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>center</th>
+      <td>96.082</td>
+      <td>1.335</td>
+      <td>0.055</td>
+    </tr>
+    <tr>
+      <th>edge</th>
+      <td>94.439</td>
+      <td>1.932</td>
+      <td>0.150</td>
+    </tr>
+    <tr>
+      <th>middle</th>
+      <td>96.132</td>
+      <td>1.222</td>
+      <td>0.062</td>
+    </tr>
+  </tbody>
+</table>
+<h2>2. 그래프 기반 인사이트</h2>
+<img class="figure" src="../assets/beginner_boxplot_chamber.png" alt="boxplot">
+<p>C2와 C4는 평균 수율이 낮고 fail rate가 높다. 두께 오차 평균도 양의 방향으로 커서 over-deposition 가능성을 의심할 수 있다.</p>
+<img class="figure" src="../assets/intermediate_chamber_yield_fail.png" alt="chamber yield fail">
+<p>평균 yield_score와 fail_rate를 함께 보면 C4가 가장 위험하고 C2가 다음 위험군이다.</p>
+<img class="figure" src="../assets/intermediate_pareto_defects.png" alt="defect pareto">
+<p>none을 제외한 결함 중 particle이 가장 많다. 결함 개선 우선순위는 particle, thick_spot, map_hotspot/dark_spot 순서가 적절하다.</p>
+<img class="figure" src="../assets/intermediate_correlation_heatmap.png" alt="correlation heatmap">
+<p>yield_score와 음의 상관이 큰 변수는 particle_count, abs_error_nm, voltage_v, dark_spot_count다. 반대로 luminance_cd_m2는 yield_score와 양의 상관이 강하다.</p>
+<h2>3. 결함 유형 빈도</h2>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+      <th>pct</th>
+    </tr>
+    <tr>
+      <th>defect_type</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>none</th>
+      <td>23017</td>
+      <td>93.656</td>
+    </tr>
+    <tr>
+      <th>particle</th>
+      <td>957</td>
+      <td>3.894</td>
+    </tr>
+    <tr>
+      <th>thick_spot</th>
+      <td>408</td>
+      <td>1.660</td>
+    </tr>
+    <tr>
+      <th>map_hotspot</th>
+      <td>97</td>
+      <td>0.395</td>
+    </tr>
+    <tr>
+      <th>dark_spot</th>
+      <td>95</td>
+      <td>0.387</td>
+    </tr>
+    <tr>
+      <th>thin_spot</th>
+      <td>2</td>
+      <td>0.008</td>
+    </tr>
+  </tbody>
+</table>
+<h2>4. 통계 분석</h2>
+<p>표준화한 수치 변수로 OLS를 수행했다. p-value는 표본 수가 충분히 큰 조건에서 정규근사로 계산했다.</p>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>term</th>
+      <th>coef</th>
+      <th>t_approx</th>
+      <th>p_norm_approx</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>intercept</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <td>abs_error_nm</td>
+      <td>-0.554</td>
+      <td>-198.930</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>particle_count</td>
+      <td>-0.553</td>
+      <td>-210.600</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>dark_spot_count</td>
+      <td>-0.311</td>
+      <td>-119.160</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>pressure_mTorr</td>
+      <td>0.006</td>
+      <td>0.860</td>
+      <td>0.387</td>
+    </tr>
+    <tr>
+      <td>substrate_temp_c</td>
+      <td>0.001</td>
+      <td>0.240</td>
+      <td>0.807</td>
+    </tr>
+    <tr>
+      <td>oxygen_flow_sccm</td>
+      <td>-0.017</td>
+      <td>-2.570</td>
+      <td>0.010</td>
+    </tr>
+    <tr>
+      <td>deposition_rate_a_s</td>
+      <td>-0.001</td>
+      <td>-0.230</td>
+      <td>0.816</td>
+    </tr>
+  </tbody>
+</table>
+<h2>중급 결론</h2>
+<p>수율 저하의 1차 원인 후보는 particle, dark spot, 두께 절대오차다. 공정 조건 중 pressure 자체는 다른 변수를 같이 넣으면 유의하지 않았고, oxygen flow는 약하지만 유의한 신호를 보였다. 따라서 chamber C2/C4의 particle 관리, 두께 보정, edge 균일도를 우선 점검하는 결론이 타당하다.</p>
+
+  </main>
+</body>
+</html>
