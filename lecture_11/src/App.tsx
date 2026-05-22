@@ -48,8 +48,8 @@ const learningGoals = [
   },
   {
     step: '학습목표 3',
-    title: 'Firebase 프로젝트 생성 및 배포 준비',
-    body: 'Firebase 프로젝트를 생성하고 Hosting 환경을 설정하여 웹앱 배포를 준비합니다.',
+    title: 'AI Studio 시뮬레이터 구축 및 문제 해결',
+    body: 'Google AI Studio를 활용하여 반도체/디스플레이/배터리 공정 시뮬레이터를 구축하고 주요 문제를 해결합니다.',
     type: 'deploy'
   },
 ];
@@ -63,10 +63,10 @@ const lessonFlow = [
 ];
 
 const roleFlow = [
-  { owner: '엔지니어', task: 'API Key 관리, NotebookLM 자료 업로드, Firebase 설정' },
-  { owner: 'Gemini', task: '데이터 분석, 논문 요약, 코드 생성' },
+  { owner: '엔지니어', task: 'API Key 관리, NotebookLM 자료 업로드, AI Studio 시뮬레이터 설계' },
+  { owner: 'Gemini', task: '데이터 분석, 논문 요약, 시뮬레이션 코드 생성' },
   { owner: 'NotebookLM', task: '논문 인덱싱, 출처 추적' },
-  { owner: 'Firebase', task: 'Hosting, Firestore, Auth' },
+  { owner: 'AI Studio', task: '프롬프트 테스트, 시스템 지시문(System Instruction) 설정' },
 ];
 
 const geminiEcosystem = [
@@ -89,18 +89,18 @@ const geminiEcosystem = [
   {
     icon: Code,
     title: 'AI Studio',
-    description: 'API Key 발급, 프롬프트 테스트',
+    description: 'API Key 발급, 프롬프트 테스트, 시뮬레이터 구축',
     features: ['프롬프트 갤러리', 'System instruction', 'Function calling'],
     cost: '무료',
     freeQuota: '60 req/min',
   },
   {
-    icon: Cloud,
-    title: 'Firebase',
-    description: 'Hosting + Firestore + Auth',
-    features: ['10GB Hosting', '1GB Firestore', '무제한 Auth'],
-    cost: '무료 → 종량제',
-    freeQuota: 'Spark 플랜',
+    icon: Zap,
+    title: 'Antigravity IDE',
+    description: 'API 기반 AI 개발 환경 및 에이전트 코딩',
+    features: ['API Key 직접 연동 (BYOK)', '요금제 크레딧 지원', '파일 구조 자동 생성'],
+    cost: '무료 / 구독제 선택',
+    freeQuota: 'AI Studio 한도 사용 가능',
   },
   {
     icon: MessageCircle,
@@ -128,11 +128,11 @@ const fieldScenarios = [
     output: 'NotebookLM이 출처 포함 요약 + 팟캐스트 생성',
   },
   {
-    icon: Database,
-    title: '배터리: 실시간 모니터링 대시보드',
-    before: 'Firebase Firestore에 센서 데이터 저장, Hosting으로 대시보드 배포',
-    intent: '배터리 온도/전압 실시간 차트를 웹으로 배포해줘.',
-    output: 'Firebase Hosting + Firestore 연동 대시보드',
+    icon: Activity,
+    title: '배터리: AI Studio 열폭주 시뮬레이터',
+    before: '배터리 화학조성 및 양극재/음극재 물성 데이터를 AI Studio에 설정',
+    intent: '배터리 팩 설계 사양을 입력하면 온도 상승 곡선과 열폭주 임계점 도달 시간을 예측해줘.',
+    output: 'AI Studio 시뮬레이터가 열역학 계산식 + 물성별 시뮬레이션 결과 리포트 출력',
   },
 ];
 
@@ -177,18 +177,18 @@ const notebookLMSteps = [
   { step: '4', title: '질문하기', body: '논문 기반 질문 입력', duration: '2분' },
 ];
 
-const firebaseSteps = [
-  { step: '1', title: 'Firebase 콘솔', body: 'console.firebase.google.com', duration: '30초' },
-  { step: '2', title: '프로젝트 생성', body: 'Add project', duration: '1분' },
-  { step: '3', title: 'Hosting 활성화', body: 'Build → Hosting → Get started', duration: '2분' },
-  { step: '4', title: 'Firebase CLI 설치', body: 'npm install -g firebase-tools', duration: '1분' },
+const aiStudioSimulatorSteps = [
+  { step: '1', title: 'AI Studio 접속', body: 'aistudio.google.com 접속', duration: '30초' },
+  { step: '2', title: 'System Instruction 설정', body: '반도체/디스플레이/배터리 물리 공식 및 역할 명시', duration: '1분' },
+  { step: '3', title: '변수 프롬프트 구성', body: '{{온도}}, {{압력}}, {{조성}} 등 실시간 입력값 템플릿화', duration: '2분' },
+  { step: '4', title: '시뮬레이션 및 검증', body: '프롬프트 테스트 후 API 코드로 저장', duration: '1분' },
 ];
 
 const intentChecklist = [
-  'Gemini API Key를 안전하게 관리했는가?',
+  'Gemini API Key를 안전하게 발급하고 Antigravity에 연동했는가?',
   'NotebookLM에 올바른 논문을 업로드했는가?',
-  'Firebase 프로젝트 설정이 완료되었는가?',
-  '첫 API 호출이 성공적으로 실행되었는가?',
+  'AI Studio에서 시뮬레이터 시스템 지시문을 올바르게 구성했는가?',
+  '첫 API 호출 및 시뮬레이션 결과 출력이 성공했는가?',
   '보안 체크리스트를 모두 확인했는가?',
 ];
 
@@ -210,10 +210,10 @@ const notebookVerifyPoints = [
   '할루시네이션 없이 답변하는가?',
 ];
 
-const firebaseVerifyPoints = [
-  'Firebase 프로젝트가 생성되었는가?',
-  'Hosting URL이 정상 작동하는가?',
-  'Firestore 읽기/쓰기가 가능한가?',
+const aiStudioSimulatorVerifyPoints = [
+  'AI Studio 시뮬레이터의 물리적 제약조건이 올바른가?',
+  '다양한 공정 변수 입력 시 물리 규칙에 맞춰 시뮬레이션 응답이 나오는가?',
+  '에러 패턴 및 최적화 추천안이 일관되게 반환되는가?',
 ];
 
 // ============================================================================
@@ -249,12 +249,12 @@ function GoalVisual({ type }: { type: string }) {
     return (
       <div className="goal-visual field">
         <div className="field-icons">
-          <div className="f-icon"><Cloud size={18} /></div>
-          <div className="f-icon"><Database size={18} /></div>
+          <div className="f-icon"><Wrench size={18} /></div>
+          <div className="f-icon"><Activity size={18} /></div>
         </div>
         <div className="success-indicator">
           <CheckCircle2 size={12} />
-          <span>배포 완료</span>
+          <span>시뮬레이터 구축</span>
         </div>
       </div>
     );
@@ -449,6 +449,68 @@ print("✅ 분석 완료: gemini_result.json")`}</pre>
   );
 }
 
+function AntigravityApiKeyIntegration() {
+  return (
+    <div className="deep-dive" style={{ borderLeftColor: 'var(--accent)', background: 'linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%)', marginTop: '3rem' }}>
+      <div className="deep-dive-heading">
+        <span>Antigravity Integration Guide</span>
+        <h3>Gemini API Key 연동: 나만의 무료 초고속 에이전트 개발 환경</h3>
+        <p>
+          Google AI Studio에서 발급받은 API Key를 Antigravity IDE에 직접 연동하여 
+          무료 한도 내에서 제한 없이 강력한 AI 에이전트 자동 코딩 환경을 구축합니다.
+        </p>
+        <LectureImage
+          src="antigravity-api-key.png"
+          alt="Antigravity 설정 창의 Model 섹션에 Gemini API Key를 입력하고 초록색 체크마크를 얻는 화면"
+          caption="Antigravity IDE의 설정 -> Model Configuration에서 발급받은 Gemini API Key를 입력하여 즉시 연동할 수 있습니다."
+          variant="wide"
+        />
+      </div>
+
+      <div className="comparison-panel" style={{ marginTop: '2.5rem', gap: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <article className="bad-prompt" style={{ background: '#ffffff', borderColor: '#d1d5db', padding: '1.8rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
+          <h4 style={{ color: '#1d1d1f', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '1.25rem', fontWeight: 900, marginBottom: '1rem' }}>
+            <Sparkles size={20} color="#0071e3" /> Antigravity 요금제 연결 (Subscription)
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#555', lineHeight: '1.6', fontFamily: 'var(--font-content)' }}>
+            따로 API Key를 발급받을 필요 없이, Antigravity 플랫폼에서 제공하는 통합 AI 크레딧을 소모하여 간편하게 사용하는 방식입니다.
+          </p>
+          <ul style={{ paddingLeft: '1.2rem', marginTop: '1rem', display: 'grid', gap: '0.6rem', fontSize: '0.88rem', color: 'var(--text-primary)', fontWeight: 800 }}>
+            <li><strong>초간단 시작</strong>: 복잡한 API 키 발급 과정 없이 원클릭으로 구동 가능</li>
+            <li><strong>인프라 관리 대행</strong>: Antigravity가 제공하는 초고속 전용 채널을 통해 안정적으로 응답 제공</li>
+            <li><strong>통합 과금</strong>: 개인 계정 크레딧 결제를 통해 편리하게 정산 및 관리</li>
+          </ul>
+        </article>
+
+        <article className="good-prompt" style={{ background: '#f0f7ff', borderColor: '#0071e359', padding: '1.8rem', borderRadius: '20px', border: '1px solid var(--accent)' }}>
+          <h4 style={{ color: '#0071e3', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '1.25rem', fontWeight: 900, marginBottom: '1rem' }}>
+            <Key size={20} color="#0071e3" /> Gemini API 직접 연결 (BYOK - Bring Your Own Key)
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#0071e3', lineHeight: '1.6', fontWeight: 700, fontFamily: 'var(--font-content)' }}>
+            Google AI Studio에서 직접 무료로 발급받은 나만의 API Key를 Antigravity 환경설정에 직접 입력하여 연동하는 방식입니다.
+          </p>
+          <ul style={{ paddingLeft: '1.2rem', marginTop: '1rem', display: 'grid', gap: '0.6rem', fontSize: '0.88rem', color: '#0071e3', fontWeight: 800 }}>
+            <li><strong>독립 쿼터 사용 (무료 혜택)</strong>: AI Studio가 무료 사용자에게 제공하는 15 req/min ~ 60 req/min의 대용량 한도를 직접 활용</li>
+            <li><strong>크레딧 차감 제로</strong>: Antigravity의 기본 구독 요금제 크레딧을 소모하지 않아 경제성 극대화</li>
+            <li><strong>헤비 유저 최적화</strong>: 대량의 파일 코딩, 무제한 에이전트 자동화 실행 시 요금 부담 제로</li>
+          </ul>
+        </article>
+      </div>
+
+      <div className="highlight-box" style={{ background: '#fffbeb', borderLeftColor: '#f59e0b', marginTop: '2rem' }}>
+        <p style={{ fontWeight: 800, color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+          💡 엔지니어 추천 실무 자동화 가이드:
+        </p>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.95rem', color: '#78350f', lineHeight: '1.6', margin: '0.5rem 0 0 0' }}>
+          처음 시작할 때는 **Antigravity 요금제/기본 제공 크레딧**을 사용하여 빠르게 시스템 성능을 체험해 보세요. 
+          이후 50편 이상의 연구 논문을 한번에 인덱싱하거나, 다수의 소스 코드를 반복해서 수정·개발하는 본격적인 
+          **에이전트 모드**에서는 **직접 API Key를 연동(BYOK)**하여 쾌속 무료 쿼터를 활용하는 것이 생산성 측면에서 훨씬 유리합니다!
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function NotebookLMDeepDive() {
   return (
     <div className="deep-dive">
@@ -534,92 +596,93 @@ function NotebookLMDeepDive() {
   );
 }
 
-function FirebaseDeepDive() {
+function AiStudioSimulatorDeepDive() {
   return (
     <div className="deep-dive">
       <div className="deep-dive-heading">
         <span>Case 03 Deep Dive</span>
-        <h3>Firebase 프로젝트 생성 및 배포: 실시간 대시보드를 웹으로</h3>
+        <h3>Google AI Studio 시뮬레이터 구축: 반도체·디스플레이·배터리 공정 문제 해결</h3>
         <p>
-          Firebase Hosting으로 웹앱을 배포하고, Firestore로 실시간 데이터를 저장합니다.
-          배터리 센서 데이터를 웹 대시보드로 모니터링합니다.
+          Google AI Studio의 강력한 System Instruction과 Prompt Engineering을 활용하여 
+          첨단 공정 변수를 입력하고 실시간 수율/열폭주 시뮬레이션을 수행합니다.
         </p>
         <LectureImage
-          src="firebase-setup.png"
-          alt="Firebase Console, 프로젝트 생성, CLI 설치, 로그인, Hosting 초기화로 이어지는 배포 준비 흐름"
-          caption="이 순서대로 따라가면 로컬 대시보드를 Firebase Hosting 배포 준비 상태로 만들 수 있습니다."
+          src="ai-studio-simulator.png"
+          alt="Google AI Studio에서 시스템 지시문과 템플릿 변수를 설정하여 반도체 수율 및 배터리 열폭주를 예측하는 시뮬레이터 UI 예시"
+          caption="시스템 지시문(System Instruction)에 물리 공식을 정의하여 AI Studio를 강력한 공정 시뮬레이터로 작동시킵니다."
           variant="poster"
         />
       </div>
 
       <div className="yield-case-compare vertical-case-flow">
         <article className="yield-case-panel manual-panel">
-          <span>Before: 로컬 HTML 파일</span>
-          <h4>로컬에서만 작동하는 대시보드</h4>
+          <span>Before: 수동 공정 계산 및 데이터 수집</span>
+          <h4>수동으로 물리 공식 계산 및 개별 엑셀 기입</h4>
           <ul>
-            <li>HTML/CSS/JS로 대시보드 개발</li>
-            <li>데이터는 로컬 CSV 파일로만 읽기</li>
-            <li>다른 팀원과 공유 불가</li>
-            <li>실시간 업데이트 불가</li>
-            <li>배포 방법을 몰라 방치</li>
+            <li>공정 조건 변경 시마다 수율/열역학 공식 수동 재계산</li>
+            <li>다중 변수(온도, 압력, 시간, 가스 조성) 상호작용 예측 불가</li>
+            <li>문제가 생겨도 원인 규명 및 대책 마련에 수 시간 소요</li>
+            <li>시각화 및 리포트 작성을 위한 별도 문서 작업 지연</li>
           </ul>
         </article>
 
         <article className="yield-case-panel prompt-panel">
-          <span>Prompt: Firebase 배포 지시</span>
-          <h4>Firebase로 배포하고 Firestore로 실시간 저장합니다</h4>
+          <span>Prompt: AI Studio 시뮬레이터 시스템 설정</span>
+          <h4>AI Studio의 System Instruction에 물리적 제약을 주입합니다</h4>
           <p>
-            "Firebase 프로젝트를 생성하고 Hosting을 활성화해줘.
-            배터리 센서 데이터(온도, 전압)를 Firestore에 실시간 저장하고,
-            웹 대시보드에서 차트로 표시하는 앱을 배포해줘.
-            Firebase CLI로 배포 명령어도 알려줘."
+            "너는 배터리 열폭주 예측 시뮬레이터이다. 양극재 조성(NCM811), 온도, 전압, 셀 사양을 입력하면 Arrenius 속도 식을 기반으로 내부 발열 속도와 열폭주 임계 시간을 예측하라.
+            특히 온도가 80도 이상인 위험 상황에서는 물리 법칙에 기초한 원인 분석과 냉각 제어 최적화 추천안을 JSON 구조로 반환하라."
           </p>
           <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>Hosting</strong><span>정적 파일 배포</span></div>
-            <div><strong>Firestore</strong><span>실시간 DB</span></div>
-            <div><strong>Auth</strong><span>로그인 인증</span></div>
+            <div><strong>System Instruction</strong><span>배터리 열화 물리식 정의</span></div>
+            <div><strong>온도/압력/전압</strong><span>실시간 변수 매핑</span></div>
+            <div><strong>JSON 출력</strong><span>결과의 대시보드 연동용</span></div>
           </div>
         </article>
 
         <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>Firebase Hosting URL과 실시간 대시보드가 생성됩니다</h4>
+          <span>After: AI 시뮬레이션 산출물</span>
+          <h4>물리 법칙에 근거한 임계점 예측 및 문제 해결 대책을 출력합니다</h4>
           <div className="firebase-result-box">
             <div className="visual-header">
-              <span>Firebase Output</span>
-              <strong>배포 완료</strong>
+              <span>AI Studio Output</span>
+              <strong>시뮬레이션 분석 완료</strong>
             </div>
             <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-              <p style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>
-                ✅ 배포 완료: <a href="https://your-project.web.app" target="_blank" rel="noopener noreferrer">https://your-project.web.app</a>
+              <p style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#166534', marginBottom: '0.5rem' }}>
+                ⚠️ WARNING: 열폭주 위험 임계점 도달 감지
               </p>
               <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'white', borderRadius: '6px' }}>
-                <strong>Firestore 실시간 데이터</strong>
-                <pre style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: '#333' }}>{`{
-  "battery_sensors": {
-    "sensor_01": {
-      "temperature": 45.2,
-      "voltage": 3.7,
-      "timestamp": "2026-05-16T14:30:00Z"
-    }
+                <strong>시뮬레이터 예측 분석 보고서 (JSON)</strong>
+                <pre style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: '#333', overflow: 'auto' }}>{`{
+  "simulation_result": {
+    "status": "CRITICAL_DANGER",
+    "thermal_runaway_time_sec": 142.5,
+    "internal_heat_slope": "+3.2°C/sec",
+    "defect_analysis": "SEI 피막 열적 파괴에 따른 음극 활물질과 전해액의 급격한 발열 반응 시작",
+    "process_optimization": [
+      "충전 전류 밀도를 2.0C에서 1.2C로 긴급 강하",
+      "냉각 채널의 열전달 냉각재 유속을 20% 증가",
+      "전력 모듈(BMS)의 최대 방전 컷오프 전압을 4.1V로 하향 설정"
+    ]
   }
 }`}</pre>
               </div>
             </div>
           </div>
           <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>로컬 → 웹</strong><span>팀원과 실시간 공유</span></div>
-            <div><strong>Firestore DB</strong><span>자동 동기화</span></div>
-            <div><strong>무료 플랜</strong><span>10GB Hosting</span></div>
+            <div><strong>3시간 → 1초</strong><span>공정 조건 즉시 예측</span></div>
+            <div><strong>최적 공정 설계</strong><span>물리 예측 기반 제안</span></div>
+            <div><strong>무료 60 RPM</strong><span>무제한 시나리오 테스트</span></div>
           </div>
         </article>
       </div>
 
       <p className="case-takeaway">
-        핵심은 Firebase가 서버를 대신하는 것이 아니라, 빠르게 프로토타입을 배포하고
-        실시간 데이터를 팀원과 공유할 수 있는 환경을 제공하는 것입니다.
+        핵심은 AI가 허구의 답변을 하는 것이 아니라, System Instruction에 입력된 명확한 
+        물리 법칙과 제약 조건을 바탕으로 빠르게 다변수 공정 시뮬레이션을 수행하고 최적 조건을 추천하는 것입니다.
       </p>
-      <VerifyChecklist points={firebaseVerifyPoints} />
+      <VerifyChecklist points={aiStudioSimulatorVerifyPoints} />
     </div>
   );
 }
@@ -628,7 +691,7 @@ function InteractiveWorkshop() {
   const [fields, setFields] = useState({
     apiKey: '',
     notebook: '',
-    firebase: '',
+    simulator: '',
   });
   const [copied, setCopied] = useState(false);
 
@@ -637,9 +700,9 @@ function InteractiveWorkshop() {
   const generated = hasContent
     ? `1. Gemini API Key: ${fields.apiKey || '[발급 예정]'}
 2. NotebookLM 논문: ${fields.notebook || '[업로드 예정]'}
-3. Firebase 프로젝트: ${fields.firebase || '[생성 예정]'}
+3. AI Studio 시뮬레이터: ${fields.simulator || '[구축 예정]'}
 
-다음 단계: API 호출 → 논문 요약 → 대시보드 배포`
+다음 단계: API 호출 → 논문 요약 → 시뮬레이터 테스트`
     : '';
 
   const handleCopy = () => {
@@ -651,9 +714,9 @@ function InteractiveWorkshop() {
   };
 
   const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'apiKey', label: 'API Key 상태', placeholder: '예: 발급 완료 (aistudio.google.com)' },
+    { key: 'apiKey', label: 'API Key 상태', placeholder: '예: 발급 완료 및 Antigravity 등록' },
     { key: 'notebook', label: 'NotebookLM 자료', placeholder: '예: OLED 논문 50편 업로드' },
-    { key: 'firebase', label: 'Firebase 프로젝트', placeholder: '예: battery-dashboard 프로젝트 생성' },
+    { key: 'simulator', label: 'AI Studio 시뮬레이터', placeholder: '예: 배터리 열폭주 예측 시뮬레이터 구축' },
   ];
 
   return (
@@ -661,7 +724,7 @@ function InteractiveWorkshop() {
       <div className="iw-header">
         <FileText size={22} color="var(--accent)" />
         <strong>3단계 체크리스트</strong>
-        <p>API Key, NotebookLM, Firebase 설정을 확인하세요.</p>
+        <p>API Key, NotebookLM, AI Studio 설정을 확인하세요.</p>
       </div>
       <div className="iw-body">
         <div className="iw-inputs">
@@ -774,7 +837,7 @@ export default function App() {
           transition={{ delay: 0.2 }}
         >
           <h1>Ch.11 Gemini 생태계 마스터</h1>
-          <p className="subtitle">API Key 발급부터 NotebookLM, Firebase 배포까지 Google AI 생태계 전체 구조 이해</p>
+          <p className="subtitle">API Key 발급부터 NotebookLM, Google AI Studio 시뮬레이터 구축까지 Google AI 생태계 전체 구조 이해</p>
           <div className="lesson-meta" aria-label="lesson summary">
             <span>40분</span>
             <span>실습 중심</span>
@@ -787,10 +850,10 @@ export default function App() {
       <main>
         <section className="overview-section">
           <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>오늘 여러분은 Gemini API, NotebookLM, Firebase를 하나의 생태계로 이해하고 첫 앱을 만듭니다</h2>
+          <h2>오늘 여러분은 Gemini API, NotebookLM, Google AI Studio를 하나의 생태계로 이해하고 공정 시뮬레이터를 만듭니다</h2>
           <p className="section-intro">
             이 강의는 단순히 Gemini 웹 채팅을 쓰는 것이 아니라, API로 자동화하고 NotebookLM으로 지식을 쌓고
-            Firebase로 배포하는 전체 흐름을 이해하는 시간입니다.
+            Google AI Studio에서 시뮬레이터를 만들어 실무 난제를 해결하는 전체 흐름을 이해하는 시간입니다.
           </p>
           <div className="learning-goals-grid" aria-label="학습목표">
             {learningGoals.map((item) => (
@@ -825,17 +888,17 @@ export default function App() {
           <span className="section-label">02. Gemini 생태계란?</span>
           <h2>Gemini는 단일 AI가 아니라 5개 도구가 연결된 생태계입니다</h2>
           <p className="section-intro">
-            Gemini Pro는 AI 모델, AI Studio는 API Key 발급처, NotebookLM은 개인 지식 베이스,
-            Firebase는 배포 환경, Telegram Bot은 알림 채널입니다. 이 5가지를 함께 쓰면 강력합니다.
+            Gemini Pro는 AI 모델, AI Studio는 API Key 발급처이자 시뮬레이터 환경, NotebookLM은 개인 지식 베이스,
+            Antigravity IDE는 AI 에이전트 개발 환경, Telegram Bot은 알림 채널입니다. 이 5가지를 함께 쓰면 강력합니다.
           </p>
           <div className="one-line-definition inline-definition">
             <span>한 문장 정의</span>
-            <strong>Gemini 생태계는 API, 지식, 배포, 알림을 하나로 묶어 엔지니어의 연구 자동화를 완성합니다.</strong>
+            <strong>Gemini 생태계는 API, 지식, 시뮬레이션, 에이전트 개발, 알림을 하나로 묶어 엔지니어의 연구 자동화를 완성합니다.</strong>
           </div>
           <LectureImage
             src="gemini-ecosystem.png"
-            alt="Gemini Pro를 중심으로 NotebookLM, AI Studio, Firebase, Telegram Bot이 연결된 Google AI 생태계 다이어그램"
-            caption="Gemini Pro, NotebookLM, AI Studio, Firebase, Telegram Bot이 하나의 자동화 워크플로우로 연결됩니다."
+            alt="Gemini Pro를 중심으로 NotebookLM, AI Studio, Antigravity IDE, Telegram Bot이 연결된 Google AI 생태계 다이어그램"
+            caption="Gemini Pro, NotebookLM, AI Studio, Antigravity IDE, Telegram Bot이 하나의 자동화 워크플로우로 연결됩니다."
           />
           <div className="role-flow" aria-label="Gemini 생태계 역할 분리">
             {roleFlow.map((item, index) => (
@@ -895,9 +958,9 @@ export default function App() {
               </div>
               <ArrowRight size={24} color="#999" />
               <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <Cloud size={32} color="#EA4335" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>Firebase</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>웹 배포</p>
+                <Zap size={32} color="#0071e3" style={{ margin: '0 auto 0.5rem' }} />
+                <strong>Antigravity</strong>
+                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>에이전트 코딩</p>
               </div>
               <ArrowRight size={24} color="#999" />
               <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
@@ -907,7 +970,7 @@ export default function App() {
               </div>
             </div>
             <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.95rem', color: '#555' }}>
-              5개 도구를 순차적으로 연결하면 API 자동화 → 논문 지식 → 웹 배포 → 알림까지 완성됩니다.
+              5개 도구를 순차적으로 연결하면 API 자동화 → 논문 지식 → 에이전트 코딩 → 알림까지 완성됩니다.
             </p>
           </div>
           <div className="coding-compare-grid" style={{ marginTop: '3rem' }}>
@@ -969,11 +1032,11 @@ export default function App() {
           <LectureImage
             src="pricing-comparison.png"
             alt="Gemini Pro, Claude Pro, ChatGPT Plus 비교표"
-            caption="Gemini를 먼저 실습하는 이유를 컨텍스트, 무료 API, NotebookLM, Firebase 연동 관점에서 보여줍니다."
+            caption="Gemini를 먼저 실습하는 이유를 컨텍스트, 무료 API, NotebookLM, Antigravity IDE 연동 관점에서 보여줍니다."
           />
           <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#333' }}>
             <p style={{ fontWeight: 700 }}>Target Point:</p>
-            <p>"Gemini는 유료 구독 없이 무료 API로 시작할 수 있고, NotebookLM과 Firebase가 완벽하게 연동되어 연구 자동화에 최적화되어 있습니다."</p>
+            <p>"Gemini는 유료 구독 없이 무료 API로 시작할 수 있고, NotebookLM과 Antigravity IDE가 완벽하게 연동되어 연구 자동화에 최적화되어 있습니다."</p>
           </div>
         </section>
 
@@ -982,7 +1045,7 @@ export default function App() {
           <h2>반도체·디스플레이·배터리 엔지니어가 Gemini 생태계를 쓰는 법</h2>
           <p className="section-intro">
             단순히 채팅하는 것이 아니라, API로 수율 분석 자동화, NotebookLM으로 논문 지식 베이스 구축,
-            Firebase로 실시간 대시보드 배포까지 전체 흐름을 연결합니다.
+            AI Studio 시뮬레이션 환경 구축까지 전체 흐름을 연결합니다.
           </p>
           <div className="scenario-grid">
             {fieldScenarios.map((item) => {
@@ -1010,15 +1073,16 @@ export default function App() {
             })}
           </div>
           <ApiKeyDeepDive />
+          <AntigravityApiKeyIntegration />
           <NotebookLMDeepDive />
-          <FirebaseDeepDive />
+          <AiStudioSimulatorDeepDive />
         </section>
 
         <section className="workshop-section teaching-section">
           <span className="section-label">05. 미니 워크숍</span>
           <h2>실습: 내 첫 <mark>Gemini 생태계 앱</mark> 만들기</h2>
           <p className="section-intro">
-            API Key 발급, NotebookLM 논문 업로드, Firebase 프로젝트 생성을 차례로 완료하세요.
+            API Key 발급, NotebookLM 논문 업로드, AI Studio 시뮬레이터 구축을 차례로 완료하세요.
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
@@ -1059,14 +1123,14 @@ export default function App() {
           <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
             <h3>Advanced Process Engineering Point</h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "Gemini 생태계는 단순히 AI 채팅이 아니라, API 자동화, 논문 지식 베이스, 실시간 대시보드 배포를 하나로 묶어
+              "Gemini 생태계는 단순히 AI 채팅이 아니라, API 자동화, 논문 지식 베이스, AI Studio 공정 시뮬레이터를 하나로 묶어
               엔지니어의 연구 워크플로우를 완성합니다."<br/>
               API Key 관리와 보안은 엔지니어가 책임지고, AI는 반복 작업을 자동화합니다.
             </p>
             <div className="point-strip">
               <span><Wrench size={16} /> API는 자동화 도구</span>
               <span><BookOpen size={16} /> NotebookLM은 지식 창고</span>
-              <span><Cloud size={16} /> Firebase는 배포 환경</span>
+              <span><Zap size={16} /> Antigravity는 개발 환경</span>
             </div>
           </div>
         </section>

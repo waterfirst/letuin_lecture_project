@@ -11,22 +11,22 @@
 ### [화면] 강의 타이틀 슬라이드
 
 **나레이션**:
-> "안녕하세요. Letuin AI 강의 11강, Gemini 생태계 마스터입니다. 이제 여러분은 Gemini 생태계 전체를 활용합니다. API로 AI 호출, NotebookLM으로 지식 베이스, Firebase로 배포까지. 11강은 Google AI 도구를 마스터하는 강의입니다."
+> "안녕하세요. Letuin AI 강의 11강, Gemini 생태계 마스터입니다. 이제 여러분은 Gemini 생태계 전체를 활용합니다. API로 AI 호출, NotebookLM으로 지식 베이스, Google AI Studio로 공정 시뮬레이터 구축 및 Antigravity IDE 연동까지. 11강은 Google AI 도구를 마스터하는 강의입니다."
 
 ### [화면] 학습목표 3개 카드로 전환
 
 **나레이션**:
-> "오늘 배울 내용은 세 가지입니다. 첫째, Gemini API Key를 발급받고 Python으로 첫 번째 AI 호출을 실행합니다. 둘째, NotebookLM에 논문을 업로드하여 개인화된 연구 노트를 만들고 출처 기반 답변을 받습니다. 셋째, Firebase 프로젝트를 생성하고 Hosting 환경을 설정합니다."
+> "오늘 배울 내용은 세 가지입니다. 첫째, Gemini API Key를 발급받고 Python으로 첫 번째 AI 호출을 실행합니다. 둘째, NotebookLM에 논문을 업로드하여 개인화된 연구 노트를 만들고 출처 기반 답변을 받습니다. 셋째, Google AI Studio를 통해 반도체/디스플레이/배터리 물리 공정 시뮬레이터를 직접 구축해봅니다."
 
 ### [화면] 40분 타임라인 표시
 
 **나레이션**:
-> "40분 동안 이렇게 진행됩니다. 처음 3분은 Gemini 생태계 소개, 3분부터 10분까지는 Google AI Studio에서 API Key를 발급받습니다. 10분부터 18분까지는 Gemini API로 첫 호출을 해보고, 반도체, 디스플레이, 배터리, 바이오 네 분야 예제를 실습합니다. 18분부터 30분까지는 NotebookLM에 논문을 업로드하고 질문을 해봅니다. 30분부터 35분까지는 Firebase 프로젝트를 생성하고, 마지막 5분은 정리 및 12강 예고입니다."
+> "40분 동안 이렇게 진행됩니다. 처음 3분은 Gemini 생태계 소개, 3분부터 10분까지는 Google AI Studio에서 API Key를 발급받습니다. 10분부터 18분까지는 Gemini API로 첫 호출을 해보고, 반도체, 디스플레이, 배터리, 바이오 네 분야 예제를 실습합니다. 18분부터 30분까지는 NotebookLM에 논문을 업로드하고 질문을 해봅니다. 30분부터 35분까지는 Google AI Studio에서 시뮬레이터 시스템 지시문을 작성하고 시뮬레이션을 수행하며, 마지막 5분은 정리 및 12강 예고입니다."
 
 ### [화면] 역할 분담 카드
 
 **나레이션**:
-> "역할 분담입니다. 엔지니어인 여러분은 API Key를 관리하고, NotebookLM에 자료를 업로드하며, Firebase를 설정합니다. AI는 데이터 분석, 논문 요약, 출처 기반 답변을 담당합니다."
+> "역할 분담입니다. 엔지니어인 여러분은 API Key를 관리하고, NotebookLM에 자료를 업로드하며, AI Studio 시뮬레이터를 구성하고 Antigravity IDE에 연동합니다. AI는 데이터 분석, 논문 요약, 시뮬레이션 예측 결과 생성을 담당합니다."
 
 ---
 
@@ -35,22 +35,22 @@
 ### [화면] Gemini 생태계 5개 도구 슬라이드
 
 **나레이션**:
-> "Gemini는 단순한 챗봇이 아닙니다. Google이 제공하는 5개 도구가 유기적으로 연결되어 있습니다. 월 20달러 투자로 반도체, 디스플레이, 배터리, 바이오 분야 엔지니어링 AI 워크플로우를 완성합니다."
+> "Gemini는 단순한 챗봇이 아닙니다. Google과 연동된 5개 도구가 유기적으로 연결되어 있습니다. 월 20달러 투자로 반도체, 디스플레이, 배터리, 바이오 분야 엔지니어링 AI 워크플로우를 완성합니다."
 
 > "첫 번째는 Gemini Pro입니다. 월 20달러에 100만 토큰 컨텍스트 창을 제공합니다. Deep Research 기능이 있어서 장문 논문과 보고서 분석에 최적화되어 있습니다."
 
 > "두 번째는 NotebookLM입니다. 무료입니다. 개인 지식 베이스를 구축하고, 출처 기반 답변으로 할루시네이션을 방지합니다. 오디오 팟캐스트도 생성할 수 있습니다."
 
-> "세 번째는 Google AI Studio입니다. 역시 무료입니다. API Key를 발급받고 프롬프트를 테스트할 수 있는 환경을 제공합니다. 무료 할당량도 있습니다."
+> "세 번째는 Google AI Studio입니다. 역시 무료입니다. API Key를 발급받고 프롬프트를 테스트하여 물리 공식 기반 공정 시뮬레이터를 쉽게 구축할 수 있습니다."
 
-> "네 번째는 Firebase입니다. Hosting과 Firestore, Auth를 무료 Spark 플랜으로 시작할 수 있습니다. 배포 자동화도 지원합니다."
+> "네 번째는 Antigravity IDE입니다. 발급받은 Gemini API Key를 직접 연동(BYOK)하여 크레딧 차감 없이 초고속 에이전트 기반 AI 개발을 수행할 수 있습니다."
 
 > "다섯 번째는 Telegram Bot입니다. 무료입니다. Gemini API를 연동해서 실시간 알림을 보낼 수 있고, 모바일 접근성이 뛰어납니다."
 
 ### [화면] 월 20달러 가성비 비교 테이블
 
 **나레이션**:
-> "같은 20달러지만 Gemini는 API, NotebookLM, Firebase까지 무료로 제공합니다. 컨텍스트 창을 보면 Gemini Pro는 100만 토큰, Claude Pro는 20만 토큰, GPT-4 Pro는 12만 8천 토큰입니다. Deep Research는 Gemini만 완전히 지원하고, 무료 API도 Gemini가 있습니다. NotebookLM과 Firebase 통합은 Gemini가 완벽합니다. 엔지니어에게는 최고의 가성비입니다."
+> "같은 20달러지만 Gemini는 API, NotebookLM, Antigravity IDE 연동 혜택까지 제공합니다. 컨텍스트 창을 보면 Gemini Pro는 100만 토큰, Claude Pro는 20만 토큰, GPT-4 Pro는 12만 8천 토큰입니다. Deep Research는 Gemini만 완전히 지원하고, 무료 API도 Gemini가 있습니다. NotebookLM과 Antigravity IDE 통합은 Gemini 생태계가 압도적입니다. 엔지니어에게는 최고의 가성비이자 강력한 개발 환경입니다."
 
 ### [화면] Google AI Studio 화면으로 전환
 
@@ -71,6 +71,12 @@
 
 **나레이션**:
 > "키를 복사했습니다. 이제 프로젝트 폴더에 dot env 파일을 만듭니다. GEMINI_API_KEY equals 복사한 키를 붙여넣습니다. 중요합니다. API Key는 재생성하지 않는 한 다시 볼 수 없습니다. 즉시 dot env 파일에 저장하고, dot gitignore에 dot env를 추가해야 합니다."
+
+### [화면] Antigravity IDE 설정 창 (Gemini API Key 입력)
+
+**나레이션**:
+> "여기서 아주 중요한 팁이 있습니다! 발급받은 API Key를 여러분이 코딩할 때 사용하는 Antigravity IDE에 직접 연동할 수 있습니다. Antigravity IDE에서는 두 가지 연동 방식을 제공합니다."
+> "첫째는 '요금제 연결' 방식입니다. 요금제를 결제해서 제공되는 통합 크레딧을 소모해 원클릭으로 가볍게 쓰는 방법입니다. 둘째는 'API 연결' 즉 BYOK 방식입니다. Google AI Studio에서 방금 발급한 무료 API Key를 Antigravity 설정 창에 직접 입력하는 것입니다. 이 경우 AI Studio가 제공하는 무료 할당량(분당 15회에서 60회 호출)을 그대로 가져다 쓰기 때문에, Antigravity 크레딧을 단 1원도 소모하지 않고 에이전트 자동화 코딩을 마음껏 무제한으로 누릴 수 있습니다! 대량의 코드 수정이나 논문 수십 편을 로딩할 때는 반드시 직접 API Key를 연결해서 사용하는 것을 강력하게 권장합니다."
 
 ---
 
@@ -205,49 +211,26 @@
 
 ---
 
-## 30:00 - 35:00 | Firebase 프로젝트 생성
+## 30:00 - 35:00 | Google AI Studio 시뮬레이터 구축
 
-### [화면] Firebase 소개
-
-**나레이션**:
-> "Firebase는 Google이 제공하는 백엔드 플랫폼입니다. Hosting으로 웹을 배포하고, Firestore로 데이터베이스를 만들며, Auth로 인증을 처리합니다. 무료로 사용할 수 있습니다."
-
-> "Spark 플랜은 무료입니다. Hosting은 10GB 저장공간과 월 10GB 전송, Firestore는 1GB 저장과 50K 읽기와 20K 쓰기를 일 단위로 제공하며, Auth는 무제한 사용자를 지원합니다."
-
-### [화면 조작] 브라우저 → console.firebase.google.com
+### [화면] Google AI Studio의 System Instruction 편집기 화면
 
 **나레이션**:
-> "Firebase Console에 접속합니다. console dot firebase dot google dot com입니다. Google 계정으로 로그인합니다."
+> "이제 오늘 학습의 하이라이트인 Google AI Studio를 활용한 첨단 공정 시뮬레이터 구축 실습을 진행하겠습니다. 과거에는 공정 조건을 바꿀 때마다 수작업으로 열역학 공식을 계산하고 데이터를 수집하느라 수 시간이 걸렸지만, AI Studio의 강력한 System Instruction을 활용하면 단 1초 만에 물리 법칙 기반의 다변수 시뮬레이션을 실행할 수 있습니다."
 
-### [화면 조작] Add project 클릭
+> "AI Studio 화면 왼쪽의 System Instruction 탭에 다음과 같은 프롬프트를 입력합니다. '너는 배터리 열폭주 예측 시뮬레이터이다. 양극재 조성(NCM811), 온도, 전압, 셀 사양을 입력받으면 Arrhenius 반응 속도 식을 기반으로 내부 발열 속도와 열폭주 임계 시간을 예측하라. 특히 80도 이상의 위험 상황에서는 물리 법칙에 기초한 결함 분석과 냉각 제어 최적화 대책을 JSON 형태로 반환하라.'"
 
-**나레이션**:
-> "Add project를 클릭합니다. 프로젝트 이름을 입력합니다. 예를 들어 display-ai-monitor입니다."
-
-### [화면 조작] Google Analytics 설정
+### [화면 조작] 변수 프롬프트 설정 ({{온도}}, {{압력}} 등 템플릿화)
 
 **나레이션**:
-> "Google Analytics 사용 여부를 선택합니다. 선택 사항이므로 나중에 추가할 수 있습니다. Create project를 클릭합니다. 30초 정도 기다립니다."
+> "중앙 창에서 템플릿 변수를 구성합니다. 이중 중괄호를 사용하여 템플릿 변수를 만들고, 실시간으로 다양한 온도를 입력해가며 결과를 확인해 보겠습니다. 예를 들어 배터리 팩 온도로 90도, 충전 속도 2.0C를 입력하고 시뮬레이션을 돌려보겠습니다."
 
-### [화면] 프로젝트 생성 완료
-
-**나레이션**:
-> "프로젝트가 생성되었습니다. 이제 Firebase CLI를 설치합니다."
-
-### [화면 조작] 터미널 열기
+### [화면] 시뮬레이션 JSON 결과 출력
 
 **나레이션**:
-> "터미널에서 npm install -g firebase-tools를 실행합니다. 설치가 완료되면 firebase --version으로 확인합니다."
+> "우측 결과 창을 보시죠! AI가 즉시 시뮬레이션 분석 보고서를 JSON 구조로 완벽히 반환했습니다. 'status: CRITICAL_DANGER', '열폭주 임계 도달 시간: 142.5초', 그리고 'SEI 피막 열적 파괴에 따른 음극 활물질과 전해액의 급격한 발열 반응이 원인'이라고 물리 법칙에 기반해 정확히 분석해 줍니다."
 
-### [화면 조작] firebase login
-
-**나레이션**:
-> "firebase login을 입력합니다. 브라우저가 열리면 Google 계정을 선택합니다. Firebase CLI Login Successful 메시지가 나타나면 성공입니다."
-
-### [화면 조작] firebase init
-
-**나레이션**:
-> "프로젝트 폴더에서 firebase init을 실행합니다. Hosting을 선택합니다. 방금 생성한 display-ai-monitor 프로젝트를 선택합니다. public 디렉토리를 입력하고, single-page app으로 설정합니다. 설정이 완료되면 firebase dot json과 dot firebaserc 파일이 생성됩니다."
+> "여기에 그치지 않고, 충전 전류 밀도를 1.2C로 긴급 강하하고 냉각 유속을 20% 늘리라는 BMS 최적 냉각 추천안까지 명확하게 도출해 주네요. AI Studio는 60 RPM, 즉 분당 60회의 엄청난 무료 호출 한도를 제공하므로, 수많은 공정 시나리오를 한 비용도 들지 않고 마음껏 테스트할 수 있어 실무 난제 해결에 매우 강력한 도구가 됩니다."
 
 ---
 
@@ -262,19 +245,19 @@
 
 > "NotebookLM은 notebooklm dot google dot com 접속, 논문 또는 보고서 1개 업로드, 질문하고 출처 기반 답변 받기, 출처 패널에서 참조 페이지 확인을 체크하세요."
 
-> "Firebase는 console dot firebase dot google dot com 접속, 프로젝트 생성 완료, Firebase CLI 설치, firebase login 로그인 성공을 확인하세요."
+> "Google AI Studio 시뮬레이터는 시스템 지시문에 물리 공식과 결함 감지 제약 조건을 바르게 주입했는지, 다양한 변수 입력에 대해 실시간 물리 예측 JSON 결과가 올바르게 나오는지 확인하세요."
 
 ### [화면] Gemini 생태계 워크플로우
 
 **나레이션**:
-> "완성된 워크플로우입니다. Google AI Studio에서 API Key를 발급받고 프롬프트를 테스트합니다. Gemini API로 Python 스크립트를 작성해 데이터를 분석하고 네 분야 프롬프트를 실행합니다. NotebookLM에 논문과 보고서를 업로드하고 출처 기반 답변을 받으며 팟캐스트를 생성합니다. Firebase로 Streamlit 앱을 배포하고 Firestore에 결과를 저장하며 Auth로 팀과 공유합니다. Telegram Bot으로 Gemini API를 연동하고 이상 발생 시 자동 알림을 보내며 모바일 대시보드를 구축합니다."
+> "완성된 워크플로우입니다. Google AI Studio에서 API Key를 발급받고 프롬프트를 테스트합니다. Gemini API로 Python 스크립트를 작성해 데이터를 분석하고 네 분야 프롬프트를 실행합니다. NotebookLM에 논문과 보고서를 업로드하고 출처 기반 답변을 받으며 팟캐스트를 생성합니다. Antigravity IDE에 직접 발급받은 API Key를 BYOK 연동하여 요금 차감 없이 무제한으로 고속 개발을 진행하고, AI Studio로 고도화된 공정 시뮬레이터를 완벽하게 구동합니다. Telegram Bot으로 Gemini API를 연동하고 이상 발생 시 자동 알림을 보내며 모바일 대시보드를 구축합니다."
 
 ### [화면] 보안 체크리스트
 
 **나레이션**:
 > "보안 체크리스트입니다. API Key 관리는 dot env 파일을 로컬에만 보관하고, dot gitignore에 dot env와 별표 dot key를 추가하며, GitHub에 절대 커밋하지 않고, 팀원은 각자 API Key를 발급받아야 합니다."
 
-> "배포 환경은 Streamlit Cloud에서는 secrets dot toml을 사용하고, Firebase에서는 환경 변수로 주입하며, GitHub Actions에서는 Secrets에 저장합니다."
+> "배포 및 개발 환경은 Streamlit Cloud의 secrets나 Antigravity Model의 API Key 보안 입력 기능을 사용하여 키가 외부 코드로 유출되지 않도록 안전하게 기밀로 격리합니다."
 
 > "모니터링은 Google Cloud Console에서 사용량을 확인하고, 무료 할당량 초과 시 알림을 설정하며, 비정상 호출을 감지하는 설정을 합니다."
 
@@ -283,14 +266,14 @@
 **나레이션**:
 > "다음 강의 예고입니다. 12강은 전공 지식 챗봇입니다. 11강에서 마스터한 Gemini 생태계를 이제 전공 지식 챗봇에 적용합니다. NotebookLM에 업로드한 전공 용어를 Gemini API로 불러와 면접 질문에 자동 답변하는 Streamlit 챗봇을 만듭니다."
 
-> "12강 핵심 기술은 RAG, Retrieval-Augmented Generation입니다. NotebookLM 자료를 Gemini에게 전달합니다. Streamlit 채팅 UI로 st dot chat_message와 st dot chat_input을 사용합니다. 전공 용어 파일 display_terms dot txt에 100개 용어를 저장하고, Gemini API로 20개 질문을 자동 생성하며, Firebase에 배포하여 포트폴리오 URL을 만듭니다."
+> "12강 핵심 기술은 RAG, Retrieval-Augmented Generation입니다. NotebookLM 자료를 Gemini에게 전달합니다. Streamlit 채팅 UI로 st dot chat_message와 st dot chat_input을 사용합니다. 전공 용어 파일 display_terms dot txt에 100개 용어를 저장하고, Gemini API로 20개 질문을 자동 생성하며, GitHub 리포지토리와 연동 대시보드를 구축합니다."
 
-> "12강 결과물은 전공 지식 챗봇 Streamlit, 면접 질문 20개 JSON, Firebase 배포 URL, GitHub 리포지토리입니다."
+> "12강 결과물은 전공 지식 챗봇 Streamlit, 면접 질문 20개 JSON, GitHub 리포지토리 및 실시간 모니터링 연동 환경입니다."
 
 ### [화면] 엔딩 슬라이드
 
 **나레이션**:
-> "11강 Gemini 생태계 마스터를 마칩니다. 핵심 메시지입니다. Gemini 생태계는 API, NotebookLM, Firebase가 유기적으로 연결된 통합 플랫폼입니다. 월 20달러 투자로 엔지니어링 AI 워크플로우 전체를 완성할 수 있습니다."
+> "11강 Gemini 생태계 마스터를 마칩니다. 핵심 메시지입니다. Gemini 생태계는 API, NotebookLM, AI Studio 시뮬레이터, Antigravity IDE가 유기적으로 연결된 통합 플랫폼입니다. 월 20달러 투자와 개인 무료 API Key 연동으로 엔지니어링 AI 워크플로우 전체를 완성할 수 있습니다."
 
 > "수고하셨습니다. 12강에서 만나요."
 

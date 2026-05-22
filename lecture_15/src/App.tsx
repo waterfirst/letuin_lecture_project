@@ -19,6 +19,7 @@ import {
   LineChart,
   Mail,
   Quote,
+  Send,
   Smartphone,
   Target,
   Thermometer,
@@ -48,8 +49,8 @@ const learningGoals = [
   },
   {
     step: '학습목표 3',
-    title: '멀티채널 알림 자동화',
-    body: 'Email, Slack, SMS를 심각도에 따라 분기 발송하고 골든타임 안에 담당자에게 도달시킵니다.',
+    title: '텔레그램 봇 연동 자동화',
+    body: 'BotFather로 생성한 텔레그램 봇 API를 연동하여 센서 이상 발생 시 심각도별 실시간 메시지 발송을 구현합니다.',
     type: 'deploy',
   },
 ];
@@ -66,7 +67,7 @@ const roleFlow = [
   { owner: '엔지니어', task: '임계값 정의, 알림 규칙 설계, 결과 검토' },
   { owner: 'Prophet', task: '추세·계절성 학습, 미래 60분 예측' },
   { owner: 'Detector', task: '3가지 방법으로 이상 탐지·확정' },
-  { owner: 'Alert', task: 'Email·Slack·SMS 분기 발송' },
+  { owner: 'Telegram Alert', task: 'BotFather 연동 텔레그램 메시지 발송' },
 ];
 
 const sensorCapabilities = [
@@ -123,15 +124,15 @@ const fieldScenarios = [
     icon: Gauge,
     title: '디스플레이: 휘도 저하 추세 분석',
     before: '주간 점검 때만 휘도를 측정해 저하 추세를 놓침',
-    intent: '시간당 휘도 로그에서 추세선을 추출해 90% 기준치 도달 시점을 예측하고 라인 매니저에게 Slack으로 알려줘.',
-    output: '휘도 90% 도달 예상일 + Slack 채널 자동 발송',
+    intent: '시간당 휘도 로그에서 추세선을 추출해 90% 기준치 도달 시점을 예측하고 라인 매니저에게 텔레그램 봇으로 알려줘.',
+    output: '휘도 90% 도달 예상일 + 텔레그램 메시지 자동 발송',
   },
   {
     icon: Activity,
     title: '바이오: pH 이탈 즉시 통보',
     before: 'pH 미터를 야간 교대 근무자가 1시간마다 수동 확인',
-    intent: '발효조 pH가 7.0±0.5 이탈하면 즉시 SMS와 Email로 통보하고 마지막 10분 추세 그래프를 첨부해줘.',
-    output: '심각도 HIGH → Email+Slack+SMS 동시 발송',
+    intent: '발효조 pH가 7.0±0.5 이탈하면 즉시 텔레그램 봇으로 통보하고 마지막 10분 추세 그래프를 첨부해줘.',
+    output: '심각도 HIGH → 텔레그램 봇 긴급 발송(소리 알림)',
   },
 ];
 
@@ -146,8 +147,8 @@ const intentChecklist = [
   '센서 CSV가 ds/y 컬럼으로 정리되었는가?',
   'Prophet 모델 학습과 60분 예측이 동작하는가?',
   '3-sigma·Isolation Forest·Rolling 3가지 감지가 결합되었는가?',
-  '심각도 HIGH/MEDIUM/LOW 별 알림 분기가 정의되었는가?',
-  'Email/Slack 토큰이 .env에 안전하게 저장되었는가?',
+  '심각도 HIGH/MEDIUM/LOW 별 텔레그램 알림 분기가 정의되었는가?',
+  'Telegram 봇 토큰과 CHAT ID가 .env에 안전하게 저장되었는가?',
 ];
 
 const forecastVerifyPoints = [
@@ -163,8 +164,8 @@ const anomalyVerifyPoints = [
 ];
 
 const alertVerifyPoints = [
-  '심각도별 채널 분기(HIGH/MEDIUM/LOW)가 명확한가?',
-  'SMTP·Slack·Twilio 자격증명이 환경변수로 분리되었는가?',
+  '심각도별 알림(소리/무음) 분기(HIGH/MEDIUM/LOW)가 명확한가?',
+  'Telegram Bot 토큰과 CHAT ID가 환경변수로 분리되었는가?',
   '실패 시 재시도와 로그가 남는가?',
 ];
 
@@ -207,7 +208,7 @@ function GoalVisual({ type }: { type: string }) {
     return (
       <div className="goal-visual field">
         <div className="field-icons">
-          <div className="f-icon"><Mail size={18} /></div>
+          <div className="f-icon"><Send size={18} /></div>
           <div className="f-icon"><Bell size={18} /></div>
         </div>
         <div className="success-indicator">
@@ -499,101 +500,99 @@ function AlertSystemDeepDive() {
     <div className="deep-dive">
       <div className="deep-dive-heading">
         <span>Case 03 Deep Dive</span>
-        <h3>멀티채널 알림: 심각도별로 Email·Slack·SMS 분기 발송</h3>
+        <h3>텔레그램 알림: BotFather 연동 및 심각도별(소리/무음) 분기 발송</h3>
         <p>
-          모든 이상을 같은 채널로 보내면 알림 피로가 쌓입니다. HIGH/MEDIUM/LOW 심각도에 따라
-          Email, Slack, SMS를 분기해 골든타임을 지키면서도 채널 부담을 분산합니다.
+          모든 이상을 같은 감도로 보내면 알림 피로가 쌓입니다. HIGH/MEDIUM/LOW 심각도에 따라
+          토큰 기반의 Telegram Bot API를 활용하여 소리/무음 알림을 분기하여 골든타임을 지킵니다.
         </p>
         <LectureImage
           src="panel2.png"
-          alt="센서 감지에서 심각도 분류, 멀티채널 알림 발송까지의 아키텍처 다이어그램"
-          caption="감지·분류·발송을 분리한 알림 아키텍처입니다. 채널 추가는 어댑터만 늘리면 됩니다."
+          alt="센서 감지에서 심각도 분류, 텔레그램 봇 알림 발송까지의 아키텍처 다이어그램"
+          caption="감지·분류·발송을 분리한 알림 아키텍처입니다. BotFather로 봇을 만들고 HTTP API로 초고속 연동합니다."
           variant="poster"
         />
       </div>
 
       <div className="yield-case-compare vertical-case-flow">
         <article className="yield-case-panel manual-panel">
-          <span>Before: 수동 전화·문자</span>
-          <h4>이상 발생 후 사람이 전화/문자를 돌리는 방식</h4>
+          <span>Before: 다중 SDK 혼재</span>
+          <h4>SMTP, Slack API, Twilio 등 복잡한 설정</h4>
           <ul>
-            <li>이상 발생 → 담당자에게 직접 전화/문자</li>
-            <li>야간엔 연락 누락, 휴일엔 도달까지 30분+</li>
-            <li>전달 메시지가 일관되지 않아 재확인 필요</li>
-            <li>로그가 없어 사후 분석에 어려움</li>
+            <li>각 채널마다 서로 다른 라이브러리와 SDK 설치 필요</li>
+            <li>자격증명 관리가 번거롭고 토큰 누출 위험 증가</li>
+            <li>Twilio SMS의 국내 발송 지연 및 해외 비용 부담</li>
+            <li>알림 형식이 각각 달라 유지보수 및 디버깅 난항</li>
           </ul>
         </article>
 
         <article className="yield-case-panel prompt-panel">
-          <span>Prompt: 멀티채널 알림 지시</span>
-          <h4>심각도에 따라 채널 조합을 자동 분기합니다</h4>
+          <span>Prompt: Telegram 봇 알림 지시</span>
+          <h4>심각도에 따라 소리 알림 여부와 대상을 분기합니다</h4>
           <p>
-            "AlertSystem 클래스를 만들어줘. send_alert(severity, sensor, value, threshold)를
-            받으면 HIGH는 Email+Slack+SMS, MEDIUM은 Email+Slack, LOW는 Slack만 보내고,
-            SMTP·Slack·Twilio 자격증명은 환경변수에서 읽도록 해줘."
+            "TelegramAlertSystem 클래스를 만들어줘. BotFather로 발급받은 API 토큰과 Chat ID를 환경변수에서 읽어서, send_alert(severity, sensor, value, threshold)를 호출하면 HIGH는 소리 알림과 함께 긴급 채널로, MEDIUM은 소리 알림과 함께 경보 채널로, LOW는 무음 알림(disable_notification=True)으로 로그 채널에 발송해줘."
           </p>
           <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>HIGH</strong><span>Email + Slack + SMS</span></div>
-            <div><strong>MEDIUM</strong><span>Email + Slack</span></div>
-            <div><strong>LOW</strong><span>Slack 채널 모니터링</span></div>
+            <div><strong>HIGH</strong><span>Emergency 채널 + 소리 알림</span></div>
+            <div><strong>MEDIUM</strong><span>Operations 채널 + 소리 알림</span></div>
+            <div><strong>LOW</strong><span>Logs 채널 + 무음(Silent) 알림</span></div>
           </div>
         </article>
 
         <article className="yield-case-panel result-panel">
           <span>After: AI 산출물</span>
-          <h4>심각도별 라우팅이 3초 안에 자동으로 끝납니다</h4>
+          <h4>표준 HTTP API로 심각도별 라우팅이 3초 안에 끝납니다</h4>
           <div className="firebase-result-box">
             <div className="visual-header">
               <span>Alert System</span>
-              <strong>alert_system.py</strong>
+              <strong>telegram_alert.py</strong>
             </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`import os, smtplib
-from slack_sdk import WebClient
-from twilio.rest import Client
+            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`import os, requests
 
-class AlertSystem:
+class TelegramAlertSystem:
     def __init__(self):
-        self.slack = WebClient(token=os.getenv('SLACK_TOKEN'))
-        self.twilio = Client(os.getenv('TWILIO_SID'),
-                             os.getenv('TWILIO_TOKEN'))
+        self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN') # BotFather 발급 토큰
+        self.chat_id_high = os.getenv('TELEGRAM_CHAT_ID_HIGH')
+        self.chat_id_medium = os.getenv('TELEGRAM_CHAT_ID_MEDIUM')
+        self.chat_id_low = os.getenv('TELEGRAM_CHAT_ID_LOW')
 
-    def send_email(self, to, subject, body):
-        # SMTP send 생략
-        ...
-
-    def send_slack(self, channel, message):
-        self.slack.chat_postMessage(channel=channel, text=message)
-
-    def send_sms(self, phone, message):
-        self.twilio.messages.create(
-            to=phone, from_='+1234567890', body=message
-        )
+    def send_message(self, chat_id, message, silent=False):
+        url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "HTML",
+            "disable_notification": silent # 무음 발송 플래그
+        }
+        response = requests.post(url, json=payload, timeout=5)
+        return response.json()
 
     def send_alert(self, severity, sensor, value, threshold):
-        msg = (f"센서 이상\\n- 센서: {sensor}\\n"
-               f"- 현재값: {value:.2f}\\n- 임계: {threshold:.2f}")
+        msg = (f"🚨 <b>[센서 이상 감지]</b>\\n"
+               f"• 등급: {severity}\\n"
+               f"• 센서: {sensor}\\n"
+               f"• 현재값: <b>{value:.2f}</b>\\n"
+               f"• 임계값: {threshold:.2f}")
 
         if severity == 'HIGH':
-            self.send_email('engineer@company.com', '긴급', msg)
-            self.send_slack('#alerts', msg)
-            self.send_sms('+821012345678', f"{sensor} 긴급")
+            # HIGH: 긴급 소리 알림 발송
+            self.send_message(self.chat_id_high, f"🔥 <b>[URGENT]</b>\\n{msg}", silent=False)
         elif severity == 'MEDIUM':
-            self.send_email('engineer@company.com', '주의', msg)
-            self.send_slack('#alerts', msg)
+            # MEDIUM: 일반 소리 알림 발송
+            self.send_message(self.chat_id_medium, f"⚠️ <b>[WARNING]</b>\\n{msg}", silent=False)
         else:
-            self.send_slack('#monitoring', msg)`}</pre>
+            # LOW: 로그 채널에 무음 알림 발송
+            self.send_message(self.chat_id_low, f"ℹ️ <b>[INFO]</b>\\n{msg}", silent=True)`}</pre>
           </div>
           <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>30분 → 3초</strong><span>감지에서 알림 도달까지</span></div>
-            <div><strong>채널 분기</strong><span>알림 피로 분산</span></div>
-            <div><strong>로그 보존</strong><span>사후 분석 가능</span></div>
+            <div><strong>3초 즉시 도달</strong><span>HTTP API 직접 호출로 초고속</span></div>
+            <div><strong>소리/무음 분기</strong><span>채널 알림 피로 극복</span></div>
+            <div><strong>토큰 기반 보안</strong><span>.env 환경변수 분리 보장</span></div>
           </div>
         </article>
       </div>
 
       <p className="case-takeaway">
-        핵심은 채널을 많이 쓰는 것이 아니라, 심각도와 채널을 명확히 묶어 담당자가 무시하지
-        않을 알림 규칙을 만드는 것입니다.
+        핵심은 여러 SDK를 복잡하게 다루는 것이 아니라, 텔레그램 Bot API라는 단일 인터페이스를 통해 소리/무음 여부와 대상 채널을 정교하게 제어하는 스마트한 알림 시스템을 구축하는 것입니다.
       </p>
       <VerifyChecklist points={alertVerifyPoints} />
     </div>
@@ -613,7 +612,7 @@ function InteractiveWorkshop() {
   const generated = hasContent
     ? `1. 예측 설정: ${fields.forecast || '[예: Prophet 60분 예측, 임계 60℃]'}
 2. 이상 감지: ${fields.detect || '[예: 3-sigma + IsolationForest + Rolling 결합]'}
-3. 알림 채널: ${fields.alert || '[예: HIGH=Email+Slack+SMS, MEDIUM=Email+Slack]'}
+3. 텔레그램 알림: ${fields.alert || '[예: HIGH=Telegram 소리 알림, LOW=Telegram 무음 알림]'}
 
 다음 단계: 1개 센서 검증 → 4개 센서 확장 → 라인 전체 적용`
     : '';
@@ -629,7 +628,7 @@ function InteractiveWorkshop() {
   const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
     { key: 'forecast', label: '시계열 예측 설정', placeholder: '예: Prophet 60분 예측, 임계 60℃ 초과' },
     { key: 'detect', label: '이상 감지 조합', placeholder: '예: 3-sigma + IsolationForest + Rolling 2개 이상 일치' },
-    { key: 'alert', label: '알림 채널 규칙', placeholder: '예: HIGH=Email+Slack+SMS, MEDIUM=Email+Slack' },
+    { key: 'alert', label: '텔레그램 알림 규칙', placeholder: '예: HIGH=Emergency(소리), LOW=Logs(무음)' },
   ];
 
   return (
@@ -750,12 +749,12 @@ export default function App() {
           transition={{ delay: 0.2 }}
         >
           <h1>Ch.15 센서 데이터 예측 & 알림 시스템</h1>
-          <p className="subtitle">Prophet 시계열 예측, 다층 이상 감지, 멀티채널 알림으로 24/7 자동 모니터링 구축</p>
+          <p className="subtitle">Prophet 시계열 예측, 다층 이상 감지, 텔레그램 봇 연동으로 24/7 자동 모니터링 구축</p>
           <div className="lesson-meta" aria-label="lesson summary">
             <span>40분</span>
             <span>실습 중심</span>
-            <span>Prophet + Alert</span>
-            <span>결과물: 예측·알림 파이프라인</span>
+            <span>Prophet + Telegram</span>
+            <span>결과물: 예측·텔레그램 파이프라인</span>
           </div>
         </motion.div>
       </header>
@@ -882,15 +881,15 @@ export default function App() {
               <img src={assetUrl('vibe-coding.png')} alt="AI 예측·자동 알림" />
               <div className="compare-content">
                 <span className="compare-kicker">AI Forecast (Automated Alert)</span>
-                <h3>Prophet 예측 + 다층 감지 + 자동 알림</h3>
+                <h3>Prophet 예측 + 다층 감지 + 텔레그램 알림</h3>
                 <p>
                   Prophet으로 추세를 학습해 15분 전 사전 경보를 만들고, 3가지 이상 감지로
-                  오탐을 줄이며, Email·Slack·SMS로 즉시 알림이 도달합니다.
+                  오탐을 줄이며, BotFather로 연동한 텔레그램 봇으로 즉시 알림이 도달합니다.
                 </p>
                 <ul>
                   <li>15분 전 사전 예측, 3초 자동 알림</li>
                   <li>3가지 디텍터 결합으로 오탐 60%↓</li>
-                  <li>심각도별 채널 분기 + 로그 보존</li>
+                  <li>텔레그램 BotFather 연동 + 로그 보존</li>
                 </ul>
               </div>
             </motion.article>
@@ -990,13 +989,13 @@ export default function App() {
             <h3>Advanced Process Engineering Point</h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
               "센서 예측·알림은 사람의 야간·휴일 감시를 대체하는 것이 아니라, 시계열 추세를 미리
-              읽고 멀티채널 알림으로 골든타임을 만들어 엔지니어가 진짜 조치에 집중하도록 만듭니다."<br/>
+              읽고 텔레그램 알림으로 골든타임을 만들어 엔지니어가 진짜 조치에 집중하도록 만듭니다."<br/>
               임계·심각도·채널 규칙은 엔지니어가 정의하고, 반복 감지와 발송은 시스템이 맡습니다.
             </p>
             <div className="point-strip">
               <span><TrendingUp size={16} /> Prophet은 골든타임 엔진</span>
               <span><Target size={16} /> 다층 감지는 오탐 방지</span>
-              <span><Bell size={16} /> 멀티채널은 도달성 보장</span>
+              <span><Bell size={16} /> 텔레그램은 도달성 보장</span>
             </div>
           </div>
         </section>
