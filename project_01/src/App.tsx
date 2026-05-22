@@ -531,6 +531,205 @@ function App() {
         )}
 
         {/* ============================================================================
+            SHARED DATASET DOWNLOAD SECTION (ALWAYS VISIBLE & HIGHLY ACCESSIBLE)
+           ============================================================================ */}
+        {!loading && !error && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 27, 75, 0.6) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '24px',
+            padding: '2rem',
+            marginBottom: '2.5rem',
+            backdropFilter: 'blur(12px)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
+              <Download size={28} color="#38bdf8" />
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                실습용 반도체 CVD 박막 두께 데이터셋 다운로드 (총 3개)
+              </h2>
+            </div>
+            <p style={{ fontSize: '0.92rem', color: '#94a3b8', margin: '0 0 1.5rem 0', lineHeight: 1.6 }}>
+              반도체 공정 AI 실습에 사용되는 표준/이상 데이터셋입니다. 각 난이도 가이드라인(초급/중급/고급)에 맞추어 아래의 CSV 파일을 로컬에 다운로드하여 분석을 수행하세요.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              {/* Dataset 1 Card - Default */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderRadius: '16px',
+                padding: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '1rem'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', background: 'rgba(255,255,255,0.06)', padding: '0.15rem 0.5rem', borderRadius: '999px' }}>
+                      Standard Default
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>CSV (105 KB)</span>
+                  </div>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                    siox_thickness_data.csv
+                  </h4>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, lineHeight: 1.45 }}>
+                    실습 포털 대시보드 시각화 및 기본 분석에 사용되는 표준 반도체 CVD 계측 데이터셋입니다.
+                  </p>
+                </div>
+                <a 
+                  href={assetUrl('data/siox_thickness_data.csv')} 
+                  download="siox_thickness_data.csv"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    padding: '0.6rem 1rem',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                >
+                  <Download size={14} />
+                  기본 데이터셋 다운로드
+                </a>
+              </div>
+
+              {/* Dataset 2 Card - CVD_M02 Anomaly */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(56, 189, 248, 0.2)',
+                borderRadius: '16px',
+                padding: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '1rem'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', background: 'rgba(56, 189, 248, 0.1)', padding: '0.15rem 0.5rem', borderRadius: '999px' }}>
+                      Dataset 1 (M02 Anomaly)
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>CSV (105 KB)</span>
+                  </div>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                    siox_thickness_data_1.csv
+                  </h4>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, lineHeight: 1.45 }}>
+                    CVD_M02 설비에서 특정 시간대에 발생하는 <strong>Concave(오목형) 두께 불균일 이상 거동</strong> 분석용 데이터셋입니다. (초급/중급/고급 필수)
+                  </p>
+                </div>
+                <a 
+                  href={assetUrl('data/siox_thickness_data_1.csv')} 
+                  download="siox_thickness_data_1.csv"
+                  style={{
+                    background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    padding: '0.6rem 1rem',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 10px rgba(2, 132, 199, 0.15)',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Download size={14} />
+                  데이터셋 1 다운로드
+                </a>
+              </div>
+
+              {/* Dataset 3 Card - CVD_M03 Anomaly */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(139, 92, 246, 0.2)',
+                borderRadius: '16px',
+                padding: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '1rem'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', background: 'rgba(139, 92, 246, 0.1)', padding: '0.15rem 0.5rem', borderRadius: '999px' }}>
+                      Dataset 2 (M03 Anomaly)
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>CSV (105 KB)</span>
+                  </div>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                    siox_thickness_data_2.csv
+                  </h4>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: 0, lineHeight: 1.45 }}>
+                    CVD_M03 설비에서 특정 시간대에 발생하는 <strong>Convex(볼록형) 두께 불균일 이상 거동</strong> 분석용 데이터셋입니다. (고급 재현 실습 전용)
+                  </p>
+                </div>
+                <a 
+                  href={assetUrl('data/siox_thickness_data_2.csv')} 
+                  download="siox_thickness_data_2.csv"
+                  style={{
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    padding: '0.6rem 1rem',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 10px rgba(124, 58, 237, 0.15)',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Download size={14} />
+                  데이터셋 2 다운로드
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ============================================================================
             TAB 1: DYNAMIC REF DASHBOARD (실시간 반도체 Wafer Map 실습 대시보드)
            ============================================================================ */}
         {!loading && !error && activeTab === 'dashboard' && (
