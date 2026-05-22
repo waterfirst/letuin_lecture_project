@@ -1492,6 +1492,127 @@ function App() {
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#8b5cf6' }}>1주일 이내 제출</div>
                 </div>
               </div>
+
+              {/* Data Download Section */}
+              <div style={{ 
+                marginTop: '2.5rem', 
+                paddingTop: '2rem', 
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              }}>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <Download size={24} color="#06b6d4" />
+                  실습용 반도체 CVD 박막 두께 데이터셋 다운로드
+                </h3>
+                <p style={{ fontSize: '0.95rem', color: '#94a3b8', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+                  각 과제 난이도에 맞추어 아래의 이상 유형 데이터셋을 다운로드받아 과제를 진행해 주시기 바랍니다.
+                  (초급/중급 과정은 <strong>데이터셋 1</strong>을 주로 사용하며, 고급 과정은 <strong>데이터셋 1과 2</strong>를 모두 연계하여 재현 가능한 분석을 구현해야 합니다.)
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                  {/* Dataset 1 Card */}
+                  <div style={{ 
+                    background: 'rgba(255, 255, 255, 0.03)', 
+                    border: '1px solid rgba(56, 189, 248, 0.2)', 
+                    borderRadius: '20px', 
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '1rem'
+                  }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', background: 'rgba(56, 189, 248, 0.1)', padding: '0.2rem 0.6rem', borderRadius: '999px' }}>
+                          Dataset 1 (CVD_M02)
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>CSV (105 KB)</span>
+                      </div>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                        siox_thickness_data_1.csv
+                      </h4>
+                      <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0', lineHeight: 1.5 }}>
+                        CVD_M02 설비에서 특정 시간대(May 21st 오후)에 Wafer Edge와 Center 간 박막 두께 편차가 극대화되는 <strong>Concave(오목형) 이상 거동</strong> 데이터셋입니다. (초급/중급/고급 공통 필수)
+                      </p>
+                    </div>
+                    <a 
+                      href={assetUrl('data/siox_thickness_data_1.csv')} 
+                      download="siox_thickness_data_1.csv"
+                      style={{
+                        background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '0.75rem 1.25rem',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(2, 132, 199, 0.2)',
+                        transition: 'transform 0.2s, box-shadow 0.2s'
+                      }}
+                    >
+                      <Download size={16} />
+                      데이터셋 1 다운로드
+                    </a>
+                  </div>
+
+                  {/* Dataset 2 Card */}
+                  <div style={{ 
+                    background: 'rgba(255, 255, 255, 0.03)', 
+                    border: '1px solid rgba(139, 92, 246, 0.2)', 
+                    borderRadius: '20px', 
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '1rem'
+                  }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', background: 'rgba(139, 92, 246, 0.1)', padding: '0.2rem 0.6rem', borderRadius: '999px' }}>
+                          Dataset 2 (CVD_M03)
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>CSV (105 KB)</span>
+                      </div>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                        siox_thickness_data_2.csv
+                      </h4>
+                      <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0', lineHeight: 1.5 }}>
+                        CVD_M03 설비에서 특정 시간대(May 22nd 오전)에 Wafer Center 부위만 지나치게 두껍게 증착되는 <strong>Convex(볼록형) 이상 거동</strong> 데이터셋입니다. (고급형 멀티 데이터 재현 실습용)
+                      </p>
+                    </div>
+                    <a 
+                      href={assetUrl('data/siox_thickness_data_2.csv')} 
+                      download="siox_thickness_data_2.csv"
+                      style={{
+                        background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '0.75rem 1.25rem',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(124, 58, 237, 0.2)',
+                        transition: 'transform 0.2s, box-shadow 0.2s'
+                      }}
+                    >
+                      <Download size={16} />
+                      데이터셋 2 다운로드
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* LEVEL BEGINNER CARD */}
