@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>초급 모범답안: OLED Deposition 기본 시각화</title>
+  <style>
+    :root {
+      --ink: #1c2026;
+      --muted: #65707d;
+      --line: #dde3ea;
+      --panel: #f7f9fb;
+      --blue: #2c69b0;
+      --red: #c43f38;
+      --green: #2f855a;
+    }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    header {
+      padding: 44px min(6vw, 72px) 32px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 64px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-top: 38px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin-top: 26px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0;
+    }
+    .note {
+      background: var(--panel);
+      border-left: 4px solid var(--blue);
+      padding: 14px 18px;
+      margin: 18px 0;
+    }
+    .warning {
+      border-left-color: var(--red);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+    .metric strong {
+      display: block;
+      font-size: 24px;
+    }
+    img.figure {
+      display: block;
+      width: 100%;
+      max-width: 1120px;
+      margin: 16px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    table.data-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 14px 0 22px;
+      font-size: 14px;
+    }
+    table.data-table th,
+    table.data-table td {
+      border: 1px solid var(--line);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.data-table th {
+      background: #f1f5f9;
+    }
+    code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>초급 모범답안: OLED Deposition 기본 시각화</h1>
+    <p class="subtitle">CSV를 읽고 boxplot, scatter, heatmap으로 1차 인사이트를 얻는 보고서</p>
+  </header>
+  <main>
+
+<section class="grid">
+  <div class="metric"><span>행/열</span><strong>24,576 x 29</strong></div>
+  <div class="metric"><span>fail rate</span><strong>11.45%</strong></div>
+  <div class="metric"><span>주요 결함 1순위</span><strong>particle</strong></div>
+</section>
+<h2>1. 원본 CSV 확인</h2>
+<p>원본 CSV를 읽은 뒤 컬럼명을 먼저 확인했다. 이 데이터는 panel x/y 위치, chamber, zone, 공정 조건, 두께 오차, particle, dark spot, pass/fail, yield_score를 함께 담고 있다.</p>
+<div class="note">초급 답안의 핵심은 그래프를 예쁘게 만드는 것보다, 어떤 컬럼이 어떤 측정값인지 확인한 뒤 적절한 그래프를 선택하는 것이다.</div>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>column</th>
+      <th>dtype</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>lot_id</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>run_id</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>panel_id</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>tool_id</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>chamber</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>sample_id</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>x_index</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>y_index</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>x_mm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>y_mm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>zone</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>source_temp_c</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>substrate_temp_c</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>pressure_mTorr</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>oxygen_flow_sccm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>nitrogen_flow_sccm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>deposition_rate_a_s</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>target_thickness_nm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>thickness_nm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>thickness_error_nm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>abs_error_nm</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>sheet_resistance_ohm_sq</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>luminance_cd_m2</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>voltage_v</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <td>particle_count</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>dark_spot_count</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>defect_type</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>pass_fail</td>
+      <td>str</td>
+    </tr>
+    <tr>
+      <td>yield_score</td>
+      <td>float64</td>
+    </tr>
+  </tbody>
+</table>
+<h2>2. Boxplot</h2>
+<img class="figure" src="../assets/beginner_boxplot_chamber.png" alt="chamber별 thickness_error_nm boxplot">
+<p>C2와 C4의 두께 오차가 양의 방향으로 치우쳐 있다. 즉 두 chamber는 목표보다 두껍게 증착되는 경향이 있고, 수율 저하 후보로 볼 수 있다.</p>
+<h2>3. Scatter Plot</h2>
+<img class="figure" src="../assets/beginner_scatter_pressure_yield.png" alt="pressure와 yield scatter">
+<p>압력과 yield_score 사이에는 약한 음의 경향이 보인다. 압력만으로 원인을 단정할 수는 없지만, C2와 C4의 조건 점검이 필요하다는 힌트를 준다.</p>
+<h2>4. Heatmap</h2>
+<img class="figure" src="../assets/beginner_heatmap_pnl_a02_error.png" alt="PNL_A02 x/y heatmap">
+<p>PNL_A02의 edge 영역에 두께 오차 hotspot이 확인된다. x/y 좌표가 있는 데이터는 평균 표뿐 아니라 map으로 봐야 위치성 결함을 발견할 수 있다.</p>
+<h2>초급 결론</h2>
+<p>기본 시각화만으로도 C2/C4 chamber와 PNL_A02 edge 위치가 원인 후보로 좁혀진다. 다음 단계에서는 defect Pareto와 통계분석으로 이 후보가 수율에 실제로 연결되는지 확인한다.</p>
+
+  </main>
+</body>
+</html>

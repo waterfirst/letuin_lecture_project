@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>고급 모범답안: Quarto 기반 원인 분석</title>
+  <style>
+    :root {
+      --ink: #1c2026;
+      --muted: #65707d;
+      --line: #dde3ea;
+      --panel: #f7f9fb;
+      --blue: #2c69b0;
+      --red: #c43f38;
+      --green: #2f855a;
+    }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    header {
+      padding: 44px min(6vw, 72px) 32px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 64px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-top: 38px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin-top: 26px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0;
+    }
+    .note {
+      background: var(--panel);
+      border-left: 4px solid var(--blue);
+      padding: 14px 18px;
+      margin: 18px 0;
+    }
+    .warning {
+      border-left-color: var(--red);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+    .metric strong {
+      display: block;
+      font-size: 24px;
+    }
+    img.figure {
+      display: block;
+      width: 100%;
+      max-width: 1120px;
+      margin: 16px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    table.data-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 14px 0 22px;
+      font-size: 14px;
+    }
+    table.data-table th,
+    table.data-table td {
+      border: 1px solid var(--line);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.data-table th {
+      background: #f1f5f9;
+    }
+    code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>고급 모범답안: Quarto 기반 원인 분석</h1>
+    <p class="subtitle">x/y map, Pareto, 회귀분석, p-value 해석을 결합한 재현 가능한 HTML 보고서</p>
+  </header>
+  <main>
+
+<section class="grid">
+  <div class="metric"><span>분석 대상</span><strong>24,576 points</strong></div>
+  <div class="metric"><span>Worst panel</span><strong>PNL_B02</strong></div>
+  <div class="metric"><span>모델 설명력</span><strong>R2 0.8376</strong></div>
+</section>
+<h2>1. 분석 목적</h2>
+<p>고급 모범답안은 Antigravity IDE에서 raw CSV를 직접 읽고, 그래프를 확인하면서 원인 후보를 점차 좁히는 흐름을 문서화한다. Quarto 제출의 기준 파일은 <code>oled_deposition_report.qmd</code>이다.</p>
+<h2>2. 데이터 구조 확인</h2>
+<p>좌표형 데이터이므로 panel, x/y 위치, chamber, zone을 먼저 확인해야 한다. 수율 저하를 설명할 수 있는 측정 컬럼은 두께 오차, particle, dark spot, 전기/광학 특성, 공정 조건이다.</p>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>std</th>
+      <th>min</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>panel_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PNL_A01</th>
+      <td>96.436</td>
+      <td>2.791</td>
+      <td>78.008</td>
+      <td>100.000</td>
+    </tr>
+    <tr>
+      <th>PNL_A02</th>
+      <td>94.167</td>
+      <td>4.321</td>
+      <td>66.952</td>
+      <td>100.000</td>
+    </tr>
+    <tr>
+      <th>PNL_B01</th>
+      <td>95.929</td>
+      <td>3.218</td>
+      <td>71.738</td>
+      <td>100.000</td>
+    </tr>
+    <tr>
+      <th>PNL_B02</th>
+      <td>93.885</td>
+      <td>4.371</td>
+      <td>73.823</td>
+      <td>100.000</td>
+    </tr>
+  </tbody>
+</table>
+<h2>3. 위치 패턴 분석</h2>
+<img class="figure" src="../assets/advanced_hotspot_pnl_a02_yield.png" alt="PNL_A02 yield heatmap">
+<p>PNL_A02는 평균 수율이 낮고 edge 영역에 저수율 hotspot이 관찰된다. 이 패턴은 단순 랜덤 결함보다 위치 의존 원인, 예를 들어 edge gas flow, shadow mask 정렬, edge 온도 균일도 문제와 더 잘 맞는다.</p>
+<img class="figure" src="../assets/beginner_heatmap_pnl_a02_error.png" alt="PNL_A02 thickness error">
+<p>같은 panel에서 두께 오차도 hotspot과 맞물린다. 저수율 영역이 두께 오차와 결함 count 모두에 반응하는지 추가 확인해야 한다.</p>
+<h2>4. Pareto와 회귀분석</h2>
+<img class="figure" src="../assets/intermediate_pareto_defects.png" alt="pareto">
+<p>결함 개선은 particle부터 시작하는 것이 합리적이다. 단, thick_spot과 map_hotspot은 두께 오차와 위치 패턴에 연결될 수 있어 chamber 보정과 함께 본다.</p>
+<img class="figure" src="../assets/advanced_regression_coefficients.png" alt="regression coefficients">
+<p>표준화 회귀계수 기준으로 yield_score를 가장 크게 낮추는 변수는 abs_error_nm, particle_count, dark_spot_count다. pressure와 substrate 온도는 이 모델에서 유의하지 않아 직접 원인이라기보다 chamber/두께/결함과 동반되는 조건일 가능성이 높다.</p>
+<h3>OLS 결과</h3>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>term</th>
+      <th>coef</th>
+      <th>t_approx</th>
+      <th>p_norm_approx</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>intercept</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <td>abs_error_nm</td>
+      <td>-0.554</td>
+      <td>-198.930</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>particle_count</td>
+      <td>-0.553</td>
+      <td>-210.600</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>dark_spot_count</td>
+      <td>-0.311</td>
+      <td>-119.160</td>
+      <td><0.001</td>
+    </tr>
+    <tr>
+      <td>pressure_mTorr</td>
+      <td>0.006</td>
+      <td>0.860</td>
+      <td>0.387</td>
+    </tr>
+    <tr>
+      <td>substrate_temp_c</td>
+      <td>0.001</td>
+      <td>0.240</td>
+      <td>0.807</td>
+    </tr>
+    <tr>
+      <td>oxygen_flow_sccm</td>
+      <td>-0.017</td>
+      <td>-2.570</td>
+      <td>0.010</td>
+    </tr>
+    <tr>
+      <td>deposition_rate_a_s</td>
+      <td>-0.001</td>
+      <td>-0.230</td>
+      <td>0.816</td>
+    </tr>
+  </tbody>
+</table>
+<h2>5. 저수율 좌표 Top 10</h2>
+<table class="dataframe data-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>panel_id</th>
+      <th>chamber</th>
+      <th>x_index</th>
+      <th>y_index</th>
+      <th>zone</th>
+      <th>thickness_error_nm</th>
+      <th>particle_count</th>
+      <th>dark_spot_count</th>
+      <th>defect_type</th>
+      <th>yield_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>14</td>
+      <td>48</td>
+      <td>edge</td>
+      <td>4.138</td>
+      <td>3</td>
+      <td>3</td>
+      <td>dark_spot</td>
+      <td>66.952</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>19</td>
+      <td>49</td>
+      <td>edge</td>
+      <td>4.527</td>
+      <td>6</td>
+      <td>1</td>
+      <td>particle</td>
+      <td>67.587</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>24</td>
+      <td>58</td>
+      <td>edge</td>
+      <td>4.242</td>
+      <td>4</td>
+      <td>2</td>
+      <td>dark_spot</td>
+      <td>68.455</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>20</td>
+      <td>53</td>
+      <td>edge</td>
+      <td>3.726</td>
+      <td>4</td>
+      <td>2</td>
+      <td>dark_spot</td>
+      <td>68.769</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>22</td>
+      <td>52</td>
+      <td>edge</td>
+      <td>2.697</td>
+      <td>6</td>
+      <td>1</td>
+      <td>particle</td>
+      <td>70.321</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>16</td>
+      <td>49</td>
+      <td>edge</td>
+      <td>3.943</td>
+      <td>4</td>
+      <td>1</td>
+      <td>particle</td>
+      <td>71.008</td>
+    </tr>
+    <tr>
+      <td>PNL_B01</td>
+      <td>C3</td>
+      <td>54</td>
+      <td>21</td>
+      <td>center</td>
+      <td>-2.386</td>
+      <td>2</td>
+      <td>3</td>
+      <td>dark_spot</td>
+      <td>71.738</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>26</td>
+      <td>24</td>
+      <td>middle</td>
+      <td>2.366</td>
+      <td>1</td>
+      <td>3</td>
+      <td>dark_spot</td>
+      <td>72.473</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>15</td>
+      <td>51</td>
+      <td>edge</td>
+      <td>3.806</td>
+      <td>4</td>
+      <td>1</td>
+      <td>particle</td>
+      <td>73.246</td>
+    </tr>
+    <tr>
+      <td>PNL_A02</td>
+      <td>C2</td>
+      <td>22</td>
+      <td>50</td>
+      <td>edge</td>
+      <td>3.672</td>
+      <td>5</td>
+      <td>0</td>
+      <td>particle</td>
+      <td>73.530</td>
+    </tr>
+  </tbody>
+</table>
+<h2>6. 최종 원인 후보</h2>
+<ol>
+  <li>C2/C4 chamber의 over-deposition 경향과 edge 영역 두께 균일도 저하</li>
+  <li>particle 결함의 우선순위가 높고 수율과 강한 음의 관계를 보임</li>
+  <li>PNL_A02 edge hotspot은 위치 의존성이 있으므로 mask 정렬, edge flow, substrate support 상태 점검 필요</li>
+</ol>
+<div class="note warning">보고서 작성 시 p-value가 작다는 사실만 쓰지 말고, 그래프에서 보이는 위치 패턴과 공정 의미를 함께 연결해야 좋은 고급 답안이 된다.</div>
+
+  </main>
+</body>
+</html>
