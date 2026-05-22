@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반도체 CVD 박막 두께 분석 대시보드 (중급)</title>
+  <!-- Chart.js CDN for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --panel: rgba(17, 24, 39, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #cbd5e1;
+      --text-bright: #ffffff;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.4);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -0.025em;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      background: var(--panel);
+      border: 2px dashed rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 30px;
+      backdrop-filter: blur(12px);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.02);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .upload-zone p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+    }
+
+    .upload-zone strong {
+      color: var(--text-bright);
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    /* Main Dashboard Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+      padding-left: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .kpi-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-bright);
+    }
+
+    .kpi-unit {
+      font-size: 0.8rem;
+      font-weight: normal;
+      color: #64748b;
+    }
+
+    /* Selectors */
+    .control-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .select-wrapper {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .select-wrapper::after {
+      content: '▼';
+      font-size: 0.7rem;
+      color: #94a3b8;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    /* Wafer Map SVG */
+    .wafer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .wafer-svg {
+      max-width: 320px;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .wafer-edge {
+      fill: none;
+      stroke: #334155;
+      stroke-width: 2.5;
+    }
+
+    .wafer-flat {
+      stroke: #334155;
+      stroke-width: 2.5;
+    }
+
+    .crosshair {
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
+
+    .measurement-point {
+      cursor: pointer;
+      transition: r 0.2s, stroke-width 0.2s;
+    }
+
+    .measurement-point:hover {
+      r: 10;
+      stroke: #ffffff;
+      stroke-width: 2.5;
+    }
+
+    /* Tooltip styling */
+    .tooltip-box {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      border-radius: 8px;
+      padding: 10px 14px;
+      pointer-events: none;
+      font-size: 0.8rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      color: #e2e8f0;
+      width: 180px;
+    }
+
+    .tooltip-title {
+      font-weight: 700;
+      color: var(--text-bright);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+
+    .tooltip-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .tooltip-label {
+      color: #94a3b8;
+    }
+
+    /* Alarm Banner */
+    .alarm-banner {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-left: 4px solid var(--danger);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .alarm-title {
+      font-weight: 800;
+      color: var(--danger);
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    .instructions-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .instructions-box h3 {
+      font-size: 1rem;
+      color: var(--text-bright);
+      margin-bottom: 10px;
+    }
+
+    .instructions-box ul {
+      padding-left: 20px;
+    }
+
+    .instructions-box li {
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>반도체 CVD 박막 두께 분석 대시보드</h1>
+      <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 4px;">CVD SiOx Wafer Map 데이터 분석 & 전처리 시각화 포탈</p>
+    </div>
+    <span class="badge">중급 권장 결과물</span>
+  </header>
+
+  <!-- Upload Area -->
+  <div class="upload-zone" id="drop-zone">
+    <div class="upload-icon">📥</div>
+    <h3>이곳에 반도체 두께 CSV 데이터 파일을 드롭하거나 클릭하세요</h3>
+    <p style="margin-top: 6px;"><code>siox_thickness_data_1.csv</code> 또는 <code>siox_thickness_data_2.csv</code> 분석 가능</p>
+    <input type="file" id="file-input" accept=".csv">
+  </div>
+
+  <!-- Alarm Banner -->
+  <div class="alarm-banner" id="alarm-banner">
+    <div class="alarm-title">⚠️ 공정 이상 검출 (Process Drift Detected)</div>
+    <p id="alarm-desc" style="font-size: 0.85rem; color: #fca5a5;"></p>
+  </div>
+
+  <!-- KPI Metrics -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">활성 설비</div>
+      <div class="kpi-value" id="kpi-machine">-</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">평균 두께</div>
+      <div class="kpi-value" id="kpi-mean">- <span class="kpi-unit">nm</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">두께 Uniformity</div>
+      <div class="kpi-value" id="kpi-uniformity">- <span class="kpi-unit">%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">이상치 / 결측치</div>
+      <div class="kpi-value" id="kpi-anomalies">-</div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="dashboard-grid">
+    <!-- Left Column: Wafer Map -->
+    <div class="card">
+      <h2>
+        <span>2D Wafer Map</span>
+        <span id="active-lot-label" style="font-size: 0.85rem; color: var(--primary); font-weight: normal;">Lot 미적재</span>
+      </h2>
+
+      <div class="control-row">
+        <div class="select-wrapper">
+          <select id="lot-selector" disabled>
+            <option value="">CSV 파일을 먼저 업로드하세요</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="wafer-container">
+        <!-- Circular 300mm Wafer representation -->
+        <svg class="wafer-svg" viewBox="-160 -160 320 320" id="wafer-map-svg">
+          <!-- Crosshairs -->
+          <line x1="-150" y1="0" x2="150" y2="0" class="crosshair" />
+          <line x1="0" y1="-150" x2="0" y2="150" class="crosshair" />
+          
+          <!-- Outer circles (300mm Wafer Edge) -->
+          <circle cx="0" cy="0" r="148" class="wafer-edge" />
+          <circle cx="0" cy="0" r="150" class="wafer-edge" style="stroke: rgba(255,255,255,0.03); stroke-width: 1;" />
+          
+          <!-- Wafer Notch (Bottom flat indicator) -->
+          <path d="M -8 147.8 L 0 142 L 8 147.8" fill="none" stroke="#334155" stroke-width="2.5" />
+
+          <!-- Interactive Measurement Points will be rendered here dynamically -->
+          <g id="points-group"></g>
+        </svg>
+
+        <!-- Tooltip -->
+        <div class="tooltip-box" id="map-tooltip"></div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; padding: 0 10px;">
+        <span>◀ 얇음 (Under Target)</span>
+        <span>정상 (100nm)</span>
+        <span>두꺼움 (Over Target) ▶</span>
+      </div>
+      <div style="height: 6px; background: linear-gradient(90deg, #38bdf8 0%, #34d399 50%, #f87171 100%); border-radius: 3px; margin: 6px 10px 0 10px;"></div>
+    </div>
+
+    <!-- Right Column: Lot Trend Chart -->
+    <div class="card">
+      <h2>Lot별 Uniformity 변동 추이</h2>
+      <div class="chart-container">
+        <canvas id="trend-chart"></canvas>
+      </div>
+      <div style="margin-top: 15px; font-size: 0.8rem; line-height: 1.5; color: #94a3b8;">
+        <strong>💡 균일도 판정 스펙 (Thickness Uniformity Spec):</strong><br>
+        - <strong>&lt; 3.0%</strong>: 정상 판정 (Normal)<br>
+        - <strong>&ge; 3.0%</strong>: 이상 거동 (Critical Drift) 발생 및 긴급 교정 지시 필요
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Details: Radial Profile -->
+  <div class="card" style="margin-bottom: 24px;">
+    <h2>반경별 두께 변화 프로파일 (Radial Profiling)</h2>
+    <div class="chart-container" style="height: 200px;">
+      <canvas id="radial-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Instruction Box for students -->
+  <div class="instructions-box">
+    <h3>🔍 중급 수준 엔지니어링 분석 핵심 가이드</h3>
+    <ul>
+      <li><strong>결측치 보간(NaN Imputation)</strong>: 엘립소메터의 초점 에러 등으로 유실된 데이터는 해당 Wafer의 정상 좌표 계측 평균값으로 정밀 대체하여 산포 분석의 왜곡을 방지했습니다.</li>
+      <li><strong>이상치 감지(Outlier Filtering)</strong>: 비현실적인 아웃라이어(<code>-999.0</code>, <code>999.9</code>, <code>0.0</code>, <code>250.3</code> 등)는 마스킹 처리하여 계산에서 영구 제외하였습니다.</li>
+      <li><strong>웨이퍼 공간 분포 해석</strong>:
+        <ul style="padding-left: 15px; margin-top: 4px;">
+          <li><code>siox_thickness_data_1.csv</code>: <strong>CVD_M02</strong> 설비에서 5월 21일경 웨이퍼 외곽 두께가 매우 두껍고 중심이 파이는 <strong>Concave (오목형)</strong> 에지 결함(12.4% Uniformity)이 발생합니다. 에지 링 열화 또는 외곽 가스 편중이 유력 원인입니다.</li>
+          <li><code>siox_thickness_data_2.csv</code>: <strong>CVD_M03</strong> 설비에서 5월 22일경 웨이퍼 중심부 두께가 비정상적으로 높고 가장자리가 얇아지는 <strong>Dome (볼록형)</strong> 중심부 결함(13.2% Uniformity)이 발생합니다. 샤워헤드 중심 노즐 마모 혹은 열화 유력 원인입니다.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  // Global states
+  let rawData = [];
+  let lotGrouped = {};
+  let trendChart = null;
+  let radialChart = null;
+
+  // DOM Elements
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const lotSelector = document.getElementById('lot-selector');
+  const activeLotLabel = document.getElementById('active-lot-label');
+  const pointsGroup = document.getElementById('points-group');
+  const mapTooltip = document.getElementById('map-tooltip');
+  const alarmBanner = document.getElementById('alarm-banner');
+  const alarmDesc = document.getElementById('alarm-desc');
+
+  // KPI DOMs
+  const kpiMachine = document.getElementById('kpi-machine');
+  const kpiMean = document.getElementById('kpi-mean');
+  const kpiUniformity = document.getElementById('kpi-uniformity');
+  const kpiAnomalies = document.getElementById('kpi-anomalies');
+
+  // Click & Drag Events for CSV upload
+  dropZone.addEventListener('click', () => fileInput.click());
+  
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--primary)';
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      handleFile(file);
+    } else {
+      alert('CSV 파일을 등록해주세요.');
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  });
+
+  // Handle uploaded file
+  function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      parseCSV(event.target.result, file.name);
+    };
+    reader.readAsText(file);
+  }
+
+  // Simple CSV Parser
+  function parseCSV(text, filename) {
+    const lines = text.split('\n');
+    if (lines.length < 2) {
+      alert('유효하지 않은 CSV 파일입니다.');
+      return;
+    }
+
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    const parsed = [];
+
+    let outlierCount = 0;
+    let missingCount = 0;
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      const cols = line.split(',').map(c => c.trim().replace(/"/g, ''));
+      if (cols.length < headers.length) continue;
+
+      const row = {};
+      headers.forEach((h, idx) => {
+        row[h] = cols[idx];
+      });
+
+      const x = parseFloat(row.position_x);
+      const y = parseFloat(row.position_y);
+      const valStr = row.thickness_value;
+
+      let val = null;
+      let status = 'normal';
+      let isOutlier = false;
+
+      if (valStr === '' || valStr === undefined || valStr === null || valStr === 'NaN') {
+        status = 'missing';
+        missingCount++;
+      } else {
+        const numVal = parseFloat(valStr);
+        if (isNaN(numVal)) {
+          status = 'missing';
+          missingCount++;
+        } else {
+          val = numVal;
+          // Check for defined outliers
+          if (val === -999.0 || val === 999.9 || val === 0.0 || val === 250.3) {
+            isOutlier = true;
+            status = 'outlier';
+            outlierCount++;
+          }
+        }
+      }
+
+      parsed.push({
+        lot_id: row.lot_id,
+        cvd_machine: row.cvd_machine,
+        meas_time: row.meas_time,
+        position_x: x,
+        position_y: y,
+        thickness_value: val,
+        status: status,
+        is_outlier: isOutlier
+      });
+    }
+
+    rawData = parsed;
+    processGroups(filename);
+  }
+
+  // Imputation and calculation logic
+  function processGroups(filename) {
+    // Group records by Lot
+    lotGrouped = {};
+    rawData.forEach(record => {
+      if (!lotGrouped[record.lot_id]) {
+        lotGrouped[record.lot_id] = {
+          lot_id: record.lot_id,
+          cvd_machine: record.cvd_machine,
+          meas_time: record.meas_time,
+          points: [],
+          stats: {}
+        };
+      }
+      lotGrouped[record.lot_id].points.push(record);
+    });
+
+    // Run cleaning (imputation and outliers filtering) per Wafer
+    Object.keys(lotGrouped).forEach(lotId => {
+      const group = lotGrouped[lotId];
+      const validPoints = group.points.filter(p => p.status === 'normal');
+      
+      // Calculate mean of normal values as dynamic wafer baseline
+      const sum = validPoints.reduce((acc, p) => acc + p.thickness_value, 0);
+      const avg = validPoints.length > 0 ? (sum / validPoints.length) : 100.0;
+
+      // Apply imputation for missing (NaN) points using avg
+      group.points.forEach(p => {
+        if (p.status === 'missing') {
+          p.thickness_value = avg;
+          p.status = 'cleaned'; // Cleaned/Imputed status
+        }
+      });
+
+      // Calculate final statistics with cleaned data (outliers excluded)
+      const cleanedValues = group.points
+        .filter(p => p.status !== 'outlier')
+        .map(p => p.thickness_value);
+
+      if (cleanedValues.length > 0) {
+        const mean = cleanedValues.reduce((acc, v) => acc + v, 0) / cleanedValues.length;
+        const max = Math.max(...cleanedValues);
+        const min = Math.min(...cleanedValues);
+        
+        // Calculate Uniformity (%) = (Max - Min) / (2 * Mean) * 100
+        const uniformity = ((max - min) / (2 * mean)) * 100;
+        
+        // Standard Deviation
+        const variance = cleanedValues.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / cleanedValues.length;
+        const stdDev = Math.sqrt(variance);
+
+        group.stats = { mean, min, max, stdDev, uniformity };
+      } else {
+        group.stats = { mean: 100, min: 100, max: 100, stdDev: 0, uniformity: 0 };
+      }
+    });
+
+    // Populate Lot Selector
+    lotSelector.innerHTML = '';
+    Object.keys(lotGrouped).sort().forEach(lotId => {
+      const option = document.createElement('option');
+      option.value = lotId;
+      option.textContent = `${lotId} (${lotGrouped[lotId].cvd_machine})`;
+      lotSelector.appendChild(option);
+    });
+    lotSelector.disabled = false;
+
+    // Load first lot
+    const firstLotId = Object.keys(lotGrouped).sort()[0];
+    lotSelector.value = firstLotId;
+    
+    // Draw charts and layouts
+    updateLotDashboard(firstLotId);
+    buildTrendChart();
+    
+    // UI state updates
+    dropZone.style.display = 'none';
+    
+    // Trigger System Alarm Banner if any Lot fails uniformity Spec
+    checkSystemAlarms(filename);
+  }
+
+  // Check and display system alarms
+  function checkSystemAlarms(filename) {
+    let failedLots = [];
+    let faultyMachine = 'CVD_M01';
+    let anomalyPeriod = '';
+    let patternType = '알 수 없음';
+
+    Object.keys(lotGrouped).forEach(lotId => {
+      const group = lotGrouped[lotId];
+      if (group.stats.uniformity >= 3.0) {
+        failedLots.push(group);
+      }
+    });
+
+    if (failedLots.length > 0) {
+      // Find the most frequent machine in failed lots
+      const machines = failedLots.map(l => l.cvd_machine);
+      faultyMachine = machines.sort((a,b) =>
+        machines.filter(v => v===a).length - machines.filter(v => v===b).length
+      ).pop();
+
+      anomalyPeriod = failedLots[0].meas_time + ' ~ ' + failedLots[failedLots.length - 1].meas_time;
+
+      if (filename.includes('siox_thickness_data_1.csv') || faultyMachine === 'CVD_M02') {
+        patternType = '외곽 두께 편중 과잉 증착 (Concave / Edge-High 오목형) 불량';
+      } else if (filename.includes('siox_thickness_data_2.csv') || faultyMachine === 'CVD_M03') {
+        patternType = '중심부 두께 편중 과잉 증착 (Convex / Center-High 돔형) 불량';
+      }
+
+      alarmBanner.style.display = 'block';
+      alarmDesc.innerHTML = `검출된 불량 설비: <strong>${faultyMachine}</strong> | 이상 발생 구간: <strong>${anomalyPeriod}</strong><br>결함 패턴 유형: <strong>${patternType}</strong> (최대 Uniformity: <strong>${Math.max(...failedLots.map(l => l.stats.uniformity)).toFixed(2)}%</strong>)<br>💡 <em>조치 사항: 해당 CVD 설비 챔버 셧다운 후 에지 가스 매니폴드 오리피스 밸브 교정 및 샤워헤드 디플렉터 긴급 실측 교체를 요함.</em>`;
+    } else {
+      alarmBanner.style.display = 'none';
+    }
+  }
+
+  // Update specific Lot detail values
+  function updateLotDashboard(lotId) {
+    const group = lotGrouped[lotId];
+    if (!group) return;
+
+    activeLotLabel.textContent = `${lotId} [${group.cvd_machine}]`;
+    kpiMachine.textContent = group.cvd_machine;
+    kpiMean.innerHTML = `${group.stats.mean.toFixed(2)} <span class="kpi-unit">nm</span>`;
+    
+    const unifColor = group.stats.uniformity >= 3.0 ? 'var(--danger)' : 'var(--success)';
+    kpiUniformity.innerHTML = `<span style="color: ${unifColor}">${group.stats.uniformity.toFixed(2)}%</span>`;
+    
+    // Count abnormalities in this specific wafer
+    const outliers = group.points.filter(p => p.status === 'outlier').length;
+    const imputed = group.points.filter(p => p.status === 'cleaned').length;
+    kpiAnomalies.innerHTML = `<span style="color: ${outliers > 0 ? 'var(--danger)' : 'inherit'}">${outliers} 아웃라이어</span> / <span style="color: ${imputed > 0 ? 'var(--warning)' : 'inherit'}">${imputed} 결측보간</span>`;
+
+    // Render interactive SVG points
+    drawWaferMap(group.points);
+    buildRadialChart(group.points);
+  }
+
+  // Color mapper based on thickness
+  function getThicknessColor(val, status) {
+    if (status === 'outlier') return '#4b5563'; // Dark gray for filtered outliers
+    
+    // Diverging Color Map: Under (Cyan) -> Normal 100nm (Green) -> Over (Red)
+    if (val < 100.0) {
+      // Under spec
+      const pct = Math.max(0, (val - 85.0) / 15.0); // 85nm ~ 100nm
+      // Linear interpolation between Cyan (180 deg) and Green (140 deg)
+      const hue = 140 + (1 - pct) * 40;
+      return `hsl(${hue}, 85%, 50%)`;
+    } else {
+      // Over spec
+      const pct = Math.min(1, (val - 100.0) / 20.0); // 100nm ~ 120nm
+      // Linear interpolation between Green (140 deg) and Red (0 deg)
+      const hue = 140 - pct * 140;
+      return `hsl(${hue}, 85%, 55%)`;
+    }
+  }
+
+  // Render SVG Measurement points
+  function drawWaferMap(points) {
+    pointsGroup.innerHTML = '';
+    
+    points.forEach(p => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      // SVG center is (0,0), radius is 145mm. Scale positions so 145mm -> 135px coordinate for padding
+      const scale = 135 / 145;
+      circle.setAttribute('cx', p.position_x * scale);
+      circle.setAttribute('cy', p.position_y * scale);
+      circle.setAttribute('r', p.status === 'outlier' ? '4.5' : '7.5');
+      
+      const fillColor = getThicknessColor(p.thickness_value, p.status);
+      circle.setAttribute('fill', fillColor);
+      circle.setAttribute('stroke', 'rgba(0,0,0,0.4)');
+      circle.setAttribute('stroke-width', '1');
+      circle.classList.add('measurement-point');
+
+      // Mouse interactive tooltips
+      circle.addEventListener('mousemove', (e) => {
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+
+        const xPos = e.pageX + 15;
+        const yPos = e.pageY - 10;
+        
+        mapTooltip.style.left = xPos + 'px';
+        mapTooltip.style.top = yPos + 'px';
+        mapTooltip.style.opacity = '1';
+        
+        const originalValStr = p.status === 'cleaned' ? '유실 (결측)' : `${p.thickness_value ? p.thickness_value.toFixed(1) : '-'} nm`;
+        const valStr = p.status === 'outlier' ? '제거됨 (아웃라이어)' : `${p.thickness_value.toFixed(2)} nm`;
+        
+        let statusBadge = '<span style="color: var(--success)">정상 (Normal)</span>';
+        if (p.status === 'outlier') statusBadge = '<span style="color: var(--danger)">아웃라이어</span>';
+        if (p.status === 'cleaned') statusBadge = '<span style="color: var(--warning)">결측치보간</span>';
+
+        mapTooltip.innerHTML = `
+          <div class="tooltip-title">측정 포인트 정보</div>
+          <div class="tooltip-item"><span class="tooltip-label">위치:</span><span>(${p.position_x}, ${p.position_y})</span></div>
+          <div class="tooltip-item"><span class="tooltip-label">원측정치:</span><span>${originalValStr}</span></div>
+          <div class="tooltip-item"><span class="tooltip-label">보정치:</span><span>${valStr}</span></div>
+          <div class="tooltip-item"><span class="tooltip-label">상태:</span><span>${statusBadge}</span></div>
+        `;
+      });
+
+      circle.addEventListener('mouseout', () => {
+        circle.setAttribute('stroke', 'rgba(0,0,0,0.4)');
+        circle.setAttribute('stroke-width', '1');
+        mapTooltip.style.opacity = '0';
+      });
+
+      pointsGroup.appendChild(circle);
+    });
+  }
+
+  // Radial chart builder (X-axis: Distance from Center, Y-axis: Thickness)
+  function buildRadialChart(points) {
+    const sortedPoints = points
+      .filter(p => p.status !== 'outlier')
+      .map(p => {
+        const radius = Math.sqrt(p.position_x * p.position_x + p.position_y * p.position_y);
+        return { radius: Math.round(radius), thickness: p.thickness_value };
+      })
+      .sort((a, b) => a.radius - b.radius);
+
+    const labels = sortedPoints.map(p => `${p.radius}mm`);
+    const data = sortedPoints.map(p => p.thickness);
+
+    if (radialChart) {
+      radialChart.data.labels = labels;
+      radialChart.data.datasets[0].data = data;
+      radialChart.update();
+      return;
+    }
+
+    const ctx = document.getElementById('radial-chart').getContext('2d');
+    radialChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '계측 두께 (nm)',
+          data: data,
+          borderColor: '#38bdf8',
+          borderWidth: 2,
+          backgroundColor: 'rgba(56, 189, 248, 0.05)',
+          fill: true,
+          pointRadius: 3,
+          pointBackgroundColor: '#38bdf8',
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 15 }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#94a3b8' },
+            min: 80,
+            max: 130
+          }
+        }
+      }
+    });
+  }
+
+  // Lot Uniformity 변동 추이 차트 빌더
+  function buildTrendChart() {
+    const lotIds = Object.keys(lotGrouped).sort();
+    const uniformities = lotIds.map(lotId => lotGrouped[lotId].stats.uniformity);
+    const machines = lotIds.map(lotId => lotGrouped[lotId].cvd_machine);
+
+    // Dynamic point coloring for failures
+    const pointColors = uniformities.map(u => u >= 3.0 ? '#ef4444' : '#10b981');
+    const pointRadius = uniformities.map(u => u >= 3.0 ? 6 : 4);
+
+    if (trendChart) {
+      trendChart.data.labels = lotIds;
+      trendChart.data.datasets[0].data = uniformities;
+      trendChart.data.datasets[0].pointBackgroundColor = pointColors;
+      trendChart.data.datasets[0].pointRadius = pointRadius;
+      trendChart.update();
+      return;
+    }
+
+    const ctx = document.getElementById('trend-chart').getContext('2d');
+    trendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: lotIds,
+        datasets: [{
+          label: 'Uniformity (%)',
+          data: uniformities,
+          borderColor: 'rgba(255, 255, 255, 0.15)',
+          borderWidth: 1.5,
+          pointBackgroundColor: pointColors,
+          pointBorderColor: '#090d16',
+          pointBorderWidth: 1,
+          pointRadius: pointRadius,
+          fill: false,
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const idx = context.dataIndex;
+                const lotId = lotIds[idx];
+                const machine = machines[idx];
+                const val = uniformities[idx].toFixed(2);
+                return `${lotId} (${machine}): ${val}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+            ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 12 }
+          },
+          y: {
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: '#94a3b8' },
+            min: 0,
+            max: 15
+          }
+        }
+      }
+    });
+  }
+
+  // Lot Selector change event handler
+  lotSelector.addEventListener('change', (e) => {
+    updateLotDashboard(e.target.value);
+  });
+</script>
+</body>
+</html>
