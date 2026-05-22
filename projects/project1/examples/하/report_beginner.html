@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반도체 CVD 박막 두께 분석 엔지니어 리포트 (초급)</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f172a; color: #cbd5e1; line-height: 1.7; padding: 40px 20px; }
+    main { max-width: 850px; margin: 0 auto; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); padding: 36px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    h1 { font-size: 2.2rem; font-weight: 800; color: #ffffff; margin-top: 0; border-bottom: 2px solid #38bdf8; padding-bottom: 12px; }
+    h2 { font-size: 1.4rem; color: #f8fafc; margin-top: 32px; border-left: 4px solid #38bdf8; padding-left: 12px; }
+    .badge { display: inline-block; background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); padding: 4px 12px; border-radius: 999px; font-size: .8rem; font-weight: 800; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+    th, td { border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; text-align: left; }
+    th { background: rgba(255, 255, 255, 0.03); color: #ffffff; font-weight: 700; }
+    .highlight { background: rgba(239, 68, 68, 0.15); color: #fca5a5; font-weight: 700; }
+    .normal { color: #34d399; font-weight: 700; }
+    .alert-box { background: rgba(239, 68, 68, 0.08); border-left: 4px solid #ef4444; padding: 16px; border-radius: 8px; color: #fca5a5; margin: 20px 0; }
+    .info-box { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; padding: 16px; border-radius: 8px; color: #bae6fd; margin: 20px 0; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<main>
+  <span class="badge">초급 권장 결과물 (Gemini 빌드)</span>
+  <h1>반도체 CVD 박막 두께 분석 리포트</h1>
+  <p style="color: #94a3b8; font-size: 14px;"><strong>분석 대상 파일:</strong> siox_thickness_data_1.csv | <strong>작성자:</strong> R&D 공정개발 취업준비생</p>
+
+  <h2>1. 데이터 개요 및 결함 탐지</h2>
+  <p>제공된 1,960행의 PECVD 실리콘 산화막(SiOx) 계측 데이터를 분석한 결과, 엘립소메터 장비 및 센서 반사 오류로 의심되는 극단치 이상값과 계측 실패로 누락된 결측값이 다음과 같이 다량 검출되었습니다.</p>
+  <ul>
+    <li><strong>총 데이터 개수:</strong> 1,960 rows (40 Lots, 49 points per Wafer)</li>
+    <li><strong>결측치 (NaN) 수량:</strong> 78개 (전체 데이터의 3.98%)</li>
+    <li><strong>아웃라이어 수량:</strong> 39개 (2.00% - -999, 999.9, 0, 250.3 등 비정상 측정값)</li>
+    <li><strong>전처리 조치 방안:</strong> 아웃라이어 데이터는 산포 계산 왜곡을 방지하기 위해 마스킹 제거 처리하였으며, NaN 결측치의 경우 Lot 내 정상 계측 포인트들의 평균값으로 대체(보간)하여 데이터 신뢰성을 보존하였습니다.</li>
+  </ul>
+
+  <h2>2. 데이터 정제 전후의 Wafer Uniformity (%) 비교</h2>
+  <p>이상치를 포함한 상태에서 박막 균일도를 계산할 경우 범위(Range)의 극단적 확대로 인해 가상 수율 지표가 왜곡됩니다. 정제 과정을 통해 실제 공정 산포를 복구하였습니다.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Lot 번호</th>
+        <th>설비 ID</th>
+        <th>정제 전 Uniformity</th>
+        <th>정제 후 Uniformity</th>
+        <th>품질 합격 여부 (스펙 &lt; 3.0%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>LOT-001</td>
+        <td>CVD_M01</td>
+        <td>502.13% (이상치 포함)</td>
+        <td class="normal">1.12%</td>
+        <td class="normal">합격 (Normal)</td>
+      </tr>
+      <tr class="highlight">
+        <td>LOT-020</td>
+        <td>CVD_M02</td>
+        <td>511.45% (이상치 포함)</td>
+        <td class="highlight">12.44%</td>
+        <td class="highlight">불합격 (Critical)</td>
+      </tr>
+      <tr class="highlight">
+        <td>LOT-023</td>
+        <td>CVD_M02</td>
+        <td>509.80% (이상치 포함)</td>
+        <td class="highlight">11.83%</td>
+        <td class="highlight">불합격 (Critical)</td>
+      </tr>
+      <tr>
+        <td>LOT-040</td>
+        <td>CVD_M01</td>
+        <td>1.43%</td>
+        <td class="normal">1.43%</td>
+        <td class="normal">합격 (Normal)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert-box">
+    <strong>[설비 이상 알람]</strong> 5월 21일 12:00:00 ~ 23:59:59 타임윈도우 구간에 <strong>CVD_M02</strong> 설비에서 증착된 모든 웨이퍼(LOT-020, LOT-023 등)에서 두께 Uniformity가 규격 한계(3.0%)를 극도로 벗어나 최대 <strong>12.44%</strong>까지 폭증한 공정 드리프트(Drift) 현상이 확정 감지되었습니다.
+  </div>
+
+  <h2>3. 웨이퍼 공간적 두께 분포 (Wafer Map) 해석</h2>
+  <p>불합격 판정을 받은 LOT-020 웨이퍼의 반경(Radius) 그리드별 평균 두께를 동심원 구조로 분석한 프로파일은 다음과 같습니다.</p>
+  <ul>
+    <li><strong>웨이퍼 중심부 (Radius ~0mm):</strong> 평균 두께 <strong>91.11 nm</strong> (목표 두께 100nm 대비 얇음)</li>
+    <li><strong>웨이퍼 미드링 (Radius ~60mm):</strong> 평균 두께 <strong>96.35 nm</strong> (완만한 오름세)</li>
+    <li><strong>웨이퍼 가장자리 (Radius ~145mm):</strong> 평균 두께 <strong>116.54 nm</strong> (매우 두꺼움)</li>
+  </ul>
+  <div class="info-box">
+    <strong>💡 물리적 이상 메커니즘 분석 (Edge-High / Center-Thin)</strong><br>
+    CVD_M02 설비의 웨이퍼 두께 형상은 극단적으로 가장자리가 두껍고 중심이 파인 <strong>오목형(Concave) 불량</strong>을 보입니다. 이는 설비 내 샤워헤드 가스 유량의 최외각 집중 분사 현상 또는 웨이퍼 가장자리 영역을 클램핑하는 에지 링(Edge Ring) 부근의 기류 불균형 및 웨이퍼 중심부를 가열하는 서셉터 히터(Heater core) 영역의 순간적 온도 강하로 인해 증착 속도가 중심부에서 지연되었을 물리적 개연성이 매우 높습니다.
+  </div>
+
+  <h2>4. 공정 엔지니어 제안 조치 사항</h2>
+  <ol>
+    <li><strong>설비 인터록 작동 및 챔버 셧다운:</strong> 문제가 입증된 CVD_M02 설비에 대해 즉시 가동 정지 명령을 하달하고 후속 Lot의 투입을 중단해야 합니다.</li>
+    <li><strong>샤워헤드 및 기화 가스 분사 밸브 교정:</strong> 가스 노즐 분사 오리피스의 대칭성을 점검하고, 에지 유량 밸브의 제어 편차를 초기화 교정해야 합니다.</li>
+    <li><strong>서셉터 히터 열화 실측:</strong> 적외선 온도계를 사용하여 웨이퍼 중심부 서셉터 실측 온도가 공정 온도 타겟 대비 강하했는지 실시간 서멀 이미징 조사를 실시해야 합니다.</li>
+  </ol>
+</main>
+</body>
+</html>
