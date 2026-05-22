@@ -17,7 +17,7 @@
 
 - **AI 도구 활용**: Gemini API, ChatGPT, Claude를 업무에 즉시 적용
 - **데이터 자동화**: pandas, plotly, Streamlit으로 반복 업무 제거
-- **이미지 분석**: Gemini Vision API와 OpenCV로 비전 AI 구축
+- **시각화 보고서**: seaborn, 통계 분석, Quarto로 공정 인사이트 문서화
 - **실시간 대시보드**: Streamlit으로 웹 대시보드 개발 및 클라우드 배포
 - **포트폴리오 구축**: GitHub 공개 프로젝트로 취업 경쟁력 강화
 
@@ -32,7 +32,7 @@
 | ✅ 사전평가 50문항 | 객관식/주관식 혼합 50문항 + 정답/해설 | [pre_assessment_50.md](docs/pre_assessment_50.md) |
 | 📚 강사용 타임테이블 | 강의별 시간 배분 & 체크리스트 | [full_course_plan.md](docs/full_course_plan.md) |
 | 🎯 프로젝트 1 | 소개 웹페이지 (상/중/하) | [project1/](projects/project1/README.md) |
-| 🎯 프로젝트 2 | 공정 시뮬레이터 (상/중/하) | [project2/](projects/project2/README.md) |
+| 🎯 프로젝트 2 | OLED 시각화 보고서 (상/중/하) | [project2/](projects/project2/README.md) |
 | 🎯 프로젝트 3 | AI 디스플레이 도구 (상/중/하) | [project3/](projects/project3/README.md) |
 | 📦 강의 슬라이드 | Quarto RevealJS 강의록 (1~16강) | [lectures/](lectures/) |
 | 📎 참고 자료 | 치트시트, 링크 모음 | [resources/cheatsheets.md](resources/cheatsheets.md) |
@@ -255,44 +255,42 @@ fig.show()
 
 ---
 
-### 📦 Project 02: 이미지 분석 & 비전 AI
+### 📦 Project 02: OLED Deposition 시각화 & 보고서
 
 **3단계 프로그레시브 학습**
 
 #### Level 1 (초급) - 2-3시간
-- 단일 이미지 분류
-- Gemini Vision API 호출
-- 불량 여부 자동 판정
+- OLED deposition CSV 읽기
+- Seaborn boxplot, 산점도, heatmap 생성
+- 기본 HTML 보고서 작성
 
-**기술 스택**: Gemini Vision API, PIL, Python
+**기술 스택**: pandas, seaborn, matplotlib, HTML
 
-**결과물**: 이미지 자동 분류 스크립트
+**결과물**: CSV → 그래프 3종 → HTML 보고서
 
 #### Level 2 (중급) - 1주
-- 수백 장 배치 처리
-- asyncio 병렬 처리
-- SQLite 결과 저장
-- 불량 통계 리포트
+- Pareto chart와 correlation heatmap 추가
+- chamber/zone별 분포 비교
+- 회귀분석 또는 그룹 비교로 인사이트 도출
 
-**기술 스택**: asyncio, SQLite, pandas, plotly
+**기술 스택**: pandas, seaborn, statsmodels
 
-**결과물**: 배치 이미지 분석 시스템
+**결과물**: 통계 분석이 포함된 HTML 보고서
 
 #### Level 3 (고급) - 2-3주
-- 실시간 영상 분석
-- PyTorch 커스텀 모델 파인튜닝
-- FastAPI REST API
-- Docker 배포
+- Quarto 문서로 재현 가능한 분석 보고서 작성
+- x/y map과 p-value 분석으로 원인 후보 도출
+- GitHub README와 HTML 보고서 정리
 
-**기술 스택**: OpenCV, PyTorch, FastAPI, Docker
+**기술 스택**: Quarto, Python, seaborn, statsmodels
 
-**결과물**: 실시간 비전 AI 시스템
+**결과물**: Quarto 기반 HTML 원인 분석 보고서
 
 **적용 사례**
-- Wafer 결함 검사 (반도체)
-- Panel 불량 검출 (디스플레이)
-- 코팅 불량 검사 (배터리)
-- 세포 이미지 분석 (바이오)
+- OLED deposition 두께 균일도 분석 (디스플레이)
+- Wafer/panel x-y map hotspot 분석 (반도체/디스플레이)
+- 결함 유형 Pareto 분석 (제조 품질)
+- 공정 조건과 yield_score 회귀분석 (범용 제조)
 
 ---
 
@@ -369,7 +367,7 @@ Letuin_AI_Lecture/
 ├── lecture_16/          # 통합 대시보드
 ├── lecture_17/          # 기술 면접 & 피칭
 ├── project_01/          # 데이터 분석 (초급→중급→고급)
-├── project_02/          # 이미지 분석 (초급→중급→고급)
+├── project_02/          # OLED 시각화 보고서 (초급→중급→고급)
 ├── project_03/          # 대시보드 배포 (초급→중급→고급)
 └── README.md            # 이 문서
 ```
@@ -385,19 +383,19 @@ Letuin_AI_Lecture/
 2. Lecture 12: Python 기초 문법 학습
 3. Lecture 13: 데이터 분석 자동화
 4. **Project 01 Level 1**: CSV 자동 분석 실습
-5. Lecture 14: 이미지 분석 입문
-6. **Project 02 Level 1**: 이미지 분류 실습
+5. Lecture 14: 데이터 시각화 응용
+6. **Project 02 Level 1**: Seaborn 그래프 3종 + HTML 보고서
 
 ### 중급자 (Python 기초 보유)
-1. Lecture 13-15: 데이터/이미지/센서 자동화
+1. Lecture 13-15: 데이터/시각화/보고서 자동화
 2. **Project 01 Level 2**: 배치 처리 시스템
-3. **Project 02 Level 2**: 배치 이미지 분석
+3. **Project 02 Level 2**: Pareto + 통계 분석 보고서
 4. Lecture 16: 통합 대시보드
 5. **Project 03 Level 2**: DB 연동 웹 앱
 
 ### 고급자 (실무 적용 목표)
 1. **Project 01 Level 3**: FastAPI + Prophet ML
-2. **Project 02 Level 3**: PyTorch 파인튜닝 + 실시간 영상
+2. **Project 02 Level 3**: Quarto 기반 원인 분석 보고서
 3. **Project 03 Level 3**: Docker + CI/CD + Cloud 배포
 4. Lecture 17: 기술 면접 & 포트폴리오 완성
 5. GitHub 공개 + 기술 블로그 작성

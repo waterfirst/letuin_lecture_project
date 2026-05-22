@@ -3,89 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project 2 상세 힌트 - Streamlit 공정 시뮬레이터</title>
+  <title>Project 2 상세 힌트 - OLED Deposition 시각화 보고서</title>
   <style>
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fb; color: #172033; line-height: 1.7; }
     main { max-width: 1000px; margin: 0 auto; padding: 40px 20px 72px; }
     h1 { font-size: 2.35rem; margin: 0 0 12px; }
     h2 { margin-top: 36px; border-top: 1px solid #dfe6f0; padding-top: 28px; }
+    h3 { margin-top: 24px; }
     .hero, .card { background: #fff; border: 1px solid #dfe6f0; border-radius: 14px; padding: 24px; box-shadow: 0 10px 30px rgba(18, 38, 63, .08); margin: 18px 0; }
-    .hero { background: linear-gradient(135deg, #2454d6, #5f42b6); color: white; border: 0; }
+    .hero { background: linear-gradient(135deg, #155e75, #2563eb, #7c3aed); color: white; border: 0; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
     code, pre { font-family: "Consolas", "D2Coding", monospace; }
-    pre { background: #101827; color: #e7f0ff; padding: 16px; border-radius: 10px; overflow: auto; }
+    pre { background: #101827; color: #e7f0ff; padding: 16px; border-radius: 10px; overflow: auto; white-space: pre-wrap; }
     .tag { display: inline-block; background: #eaf1ff; color: #2147a8; padding: 4px 10px; border-radius: 999px; font-size: .86rem; font-weight: 700; margin-right: 6px; }
     .warn { background: #fff7e6; border-left: 5px solid #f59f00; padding: 14px 16px; border-radius: 8px; }
+    .ok { background: #ecfdf5; border-left: 5px solid #10b981; padding: 14px 16px; border-radius: 8px; }
+    a { color: #2454d6; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #e5eaf2; text-align: left; }
+    th { background: #2454d6; color: white; }
+    .table-wrap { overflow-x: auto; }
   </style>
 </head>
 <body>
 <main>
   <section class="hero">
     <h1>Project 2 상세 힌트</h1>
-    <p>5~10강 이후 과제입니다. 목표는 Streamlit으로 데이터 시각화/공정 시뮬레이터를 만들고 Streamlit Cloud에 배포하는 것입니다.</p>
+    <p>OLED deposition CSV를 읽고 Seaborn 그래프와 통계 분석으로 원인 후보를 찾은 뒤 HTML 또는 Quarto HTML 보고서로 제출하는 프로젝트입니다.</p>
   </section>
 
   <section class="card">
-    <h2>도구 선택 기준</h2>
+    <h2>어떤 도구를 쓰면 되나?</h2>
     <div class="grid">
       <div>
-        <span class="tag">난이도 하</span>
-        <h3>Gemini Chat + Streamlit</h3>
-        <p>Gemini에게 <code>app.py</code> 전체를 만들게 하고, 로컬에서 <code>streamlit run app.py</code>로 실행합니다. API 연동 없이도 통과 가능한 기본 버전입니다.</p>
+        <span class="tag">초급</span>
+        <h3>Gemini Chat + Python</h3>
+        <p>Gemini에게 CSV 읽기, Seaborn 그래프 생성, HTML 보고서 저장 코드를 요청합니다. 제공 CSV와 프롬프트만으로 시작할 수 있습니다.</p>
       </div>
       <div>
-        <span class="tag">난이도 중</span>
-        <h3>Google AI Studio + Gemini API</h3>
-        <p>AI 해석 기능을 넣으려면 Google AI Studio에서 API Key를 만들고, Streamlit Secrets에 저장합니다. 코드 안에 Key를 직접 쓰지 않습니다.</p>
+        <span class="tag">중급</span>
+        <h3>Seaborn + statsmodels</h3>
+        <p>그래프를 늘리는 데서 끝내지 말고 상관계수, 회귀분석, p-value를 확인해 어떤 변수가 실제로 유의한지 판단합니다.</p>
       </div>
       <div>
-        <span class="tag">자료 정리</span>
-        <h3>NotebookLM</h3>
-        <p>공정 설명, OLED/LCD 차이, 데이터 컬럼 의미를 정리할 때 사용합니다. 앱 실행 자체에는 필수가 아닙니다.</p>
+        <span class="tag">고급</span>
+        <h3>Quarto</h3>
+        <p><code>.qmd</code> 파일 안에 설명, 코드, 그래프, 통계표, 결론을 함께 넣고 <code>quarto render</code>로 HTML 보고서를 만듭니다.</p>
       </div>
     </div>
   </section>
 
   <section class="card">
-    <h2>난이도 하: API 없이 만드는 기본 앱</h2>
-    <ol>
-      <li>Gemini Chat에 아래 프롬프트를 넣습니다.</li>
-      <li><code>app.py</code>와 <code>requirements.txt</code>를 만듭니다.</li>
-      <li>로컬에서 실행해 슬라이더와 그래프가 움직이는지 확인합니다.</li>
-      <li>GitHub에 올리고 Streamlit Cloud에서 배포합니다.</li>
-    </ol>
-    <pre>Streamlit으로 제조 공정 시뮬레이터 app.py를 만들어줘.
-
-조건:
-- 분야: 디스플레이 또는 반도체 공정
-- 라이브러리: streamlit, pandas, plotly, numpy만 사용
-- 사용자가 온도, 압력, 시간 같은 공정 조건을 슬라이더로 바꾸면 예상 수율이 바뀌게 만들기
-- plotly 그래프 2개 이상
-- 샘플 데이터는 코드 안에서 생성
-- requirements.txt 내용도 같이 알려줘</pre>
+    <h2>제공 CSV</h2>
+    <p><a href="oled_deposition_xymap.csv" download>oled_deposition_xymap.csv 다운로드</a></p>
+    <div class="ok">
+      데이터는 4개 panel, 96 x 64 좌표, 총 24,576행으로 구성되어 있습니다.
+      x/y map, chamber 비교, defect Pareto, yield 회귀분석까지 실습할 수 있도록 공정 조건과 품질 지표를 함께 넣었습니다.
+    </div>
+    <h3>주요 컬럼</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>컬럼</th><th>의미</th><th>추천 그래프</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>x_index, y_index</td><td>panel 내 측정 좌표</td><td>heatmap, x/y map</td></tr>
+          <tr><td>chamber, zone</td><td>증착 chamber와 panel 영역</td><td>boxplot, barplot</td></tr>
+          <tr><td>substrate_temp_c, pressure_mTorr</td><td>공정 조건</td><td>scatter, regression plot</td></tr>
+          <tr><td>thickness_nm, thickness_error_nm</td><td>측정 두께와 목표 대비 편차</td><td>boxplot, heatmap</td></tr>
+          <tr><td>defect_type, particle_count</td><td>결함 유형과 particle 수</td><td>Pareto chart</td></tr>
+          <tr><td>yield_score</td><td>좌표 단위 품질 점수</td><td>scatter, regression</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="card">
-    <h2>난이도 중: Gemini API 해석 기능 붙이기</h2>
+    <h2>초급: CSV를 읽고 그래프 3종 만들기</h2>
     <ol>
-      <li>Google AI Studio에서 API Key를 발급합니다.</li>
-      <li>로컬 개발용으로 프로젝트 폴더에 <code>.streamlit/secrets.toml</code>을 만듭니다.</li>
-      <li>Streamlit Cloud 배포 후 App settings → Secrets에 같은 값을 넣습니다.</li>
-      <li>Gemini에게 현재 공정 조건과 그래프 요약을 넘겨 “면접 답변처럼 해석”하게 합니다.</li>
+      <li>CSV를 프로젝트 폴더에 내려받습니다.</li>
+      <li>Gemini에 아래 프롬프트를 붙여넣습니다.</li>
+      <li>생성된 코드를 <code>analysis.py</code>로 저장하고 실행합니다.</li>
+      <li>boxplot, scatter plot, heatmap 이미지와 <code>report.html</code>을 확인합니다.</li>
     </ol>
-    <pre># .streamlit/secrets.toml
-GEMINI_API_KEY = "여기에_키를_넣기"
+    <pre>OLED deposition CSV를 분석하는 Python 예제를 만들어줘.
 
-# app.py 안에서는 이렇게 읽기
-import streamlit as st
-api_key = st.secrets["GEMINI_API_KEY"]</pre>
-    <pre>Gemini API를 Streamlit app.py에 붙여줘.
-입력값은 온도, 압력, 시간, 예상 수율이고,
-출력은 다음 3개로 해줘:
-1. 현재 조건 해석
-2. 수율 개선 제안
-3. 면접에서 설명할 수 있는 한 문장</pre>
-    <div class="warn">Project 2에서는 GitHub Actions까지 하지 않아도 됩니다. 12강 이후 내용이므로, 여기서는 Streamlit Cloud 배포와 Secrets 관리까지만 잘하면 충분합니다.</div>
+조건:
+1. pandas로 oled_deposition_xymap.csv를 읽기
+2. seaborn으로 boxplot, scatter plot, heatmap을 각각 그리기
+3. heatmap은 x_index, y_index 좌표별 thickness_error_nm 평균으로 만들기
+4. 그래프는 PNG로 저장하고, 결과 해석을 HTML 보고서(report.html)에 넣기
+5. 초보자도 실행할 수 있도록 requirements.txt와 실행 명령어도 함께 설명하기
+
+사용 컬럼:
+panel_id, x_index, y_index, chamber, zone, substrate_temp_c, pressure_mTorr,
+thickness_nm, thickness_error_nm, particle_count, defect_type, yield_score</pre>
+    <p>Seaborn 그래프 스타일은 <a href="https://seaborn.pydata.org/examples/index.html" target="_blank" rel="noopener noreferrer">Seaborn Gallery</a>에서 골라서 Gemini에게 “이 예제 스타일로 바꿔줘”라고 요청하면 됩니다.</p>
+  </section>
+
+  <section class="card">
+    <h2>중급: 그래프 안에서 인사이트 얻기</h2>
+    <p>중급부터는 그래프를 만드는 것보다 “왜 이런 패턴이 보이는지”를 설명하는 것이 중요합니다.</p>
+    <ul>
+      <li>결함 유형별 빈도를 세고 Pareto chart로 상위 20% 원인이 전체 결함의 몇 %를 차지하는지 확인합니다.</li>
+      <li>chamber별 thickness_error_nm 분포가 다른지 boxplot으로 비교합니다.</li>
+      <li>yield_score와 substrate_temp_c, pressure_mTorr, particle_count의 관계를 산점도와 상관계수로 확인합니다.</li>
+      <li>가능하면 <code>statsmodels</code>로 OLS 회귀분석을 수행하고 p-value가 0.05보다 작은 변수를 표시합니다.</li>
+    </ul>
+    <pre>이 분석 코드에 통계 분석을 추가해줘.
+
+추가 요구사항:
+- defect_type Pareto chart 생성
+- 수치 컬럼 correlation heatmap 생성
+- statsmodels OLS로 yield_score 회귀분석
+- p-value가 0.05보다 작은 변수를 "유의한 인자"로 표시
+- HTML 보고서에 그래프별 해석과 개선 제안 3개 포함</pre>
+  </section>
+
+  <section class="card">
+    <h2>고급: Quarto 문서로 재현 가능한 보고서 만들기</h2>
+    <p>고급은 <code>.qmd</code> 문서 하나에 분석 목적, 코드, 그래프, 통계표, 결론을 모두 넣습니다. 최종 제출물은 HTML입니다.</p>
+    <pre>Quarto 문서 oled_deposition_report.qmd를 만들어줘.
+
+목표:
+- oled_deposition_xymap.csv를 읽고 OLED deposition 공정 문제 원인을 찾는 HTML 보고서 작성
+- 코드, 그래프, 통계 분석, p-value 해석, 개선 제안을 한 문서에 포함
+
+포함할 섹션:
+1. 분석 목적과 데이터 설명
+2. 품질 지표 요약: thickness_nm, thickness_error_nm, yield_score
+3. Seaborn boxplot, scatter plot, heatmap, Pareto chart
+4. statsmodels OLS 회귀분석: yield_score를 종속변수로 두고 공정 조건의 p-value 해석
+5. x/y map hotspot과 defect_type Pareto를 연결한 원인 가설
+6. 최종 권고안 3개
+
+렌더링:
+quarto render oled_deposition_report.qmd --to html</pre>
+    <div class="warn">회사 내부 데이터, 장비명, lot 정보는 공개 저장소에 올리지 않습니다. 이 프로젝트에는 제공된 합성 CSV 또는 공개 데이터만 사용하세요.</div>
+  </section>
+
+  <section class="card">
+    <h2>제출 전 체크</h2>
+    <ul>
+      <li>그래프 제목과 축 단위가 빠지지 않았는가?</li>
+      <li>heatmap/x-y map에서 위치 패턴을 설명했는가?</li>
+      <li>Pareto chart로 우선 조치 대상을 정했는가?</li>
+      <li>p-value 해석을 “유의하다/유의하지 않다” 수준에서 끝내지 않고 공정 의미로 연결했는가?</li>
+      <li>HTML 보고서를 다른 PC에서 열어도 그래프가 보이는가?</li>
+    </ul>
   </section>
 </main>
 </body>
