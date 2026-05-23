@@ -13,15 +13,19 @@ import {
   Database,
   Dna,
   ExternalLink,
+  Eye,
   FileText,
   Github,
   Globe,
   Info,
+  Layers,
   LineChart,
+  PieChart,
   Quote,
   Rocket,
   Search,
   Sparkles,
+  Target,
   TrendingUp,
   Upload,
   Zap,
@@ -210,6 +214,53 @@ const procedureSteps = [
     ],
     icon: Cloud,
     color: '#FF4B4B',
+  },
+];
+
+const analysisScenarios = [
+  {
+    number: 1,
+    title: '전체 현황 확인',
+    icon: Eye,
+    color: '#34A853',
+    finding: 'KPI 카드: 수율 88.6%, 불량 2,813건, 평균 yield_score 95.10',
+    explanation:
+      'Excel로 이 네 숫자를 계산하려면 COUNTIF 함수 쓰고 나누고... 5분은 걸렸을 겁니다. CSV 올리는 데 5초 걸렸죠.',
+  },
+  {
+    number: 2,
+    title: '챔버 이상 발견',
+    icon: BarChart3,
+    color: '#EA4335',
+    finding:
+      '챔버별 수율 바 차트: C4 81.2% (빨강), C2 84.5% (빨강), C1 95.6%와 14포인트 차이',
+    explanation:
+      '사이드바에서 C4만 선택 → XY 맵에서 불량 분포 패턴 확인. 특정 위치에 몰려 있으면 장비 내 특정 부위 문제, 전체적으로 퍼져 있으면 공정 조건 문제.',
+  },
+  {
+    number: 3,
+    title: '불량 원인 파악',
+    icon: PieChart,
+    color: '#9C27B0',
+    finding: '파레토: particle 957건(34%), thick_spot 408건(15%)',
+    explanation: '이 두 가지만 잡아도 불량의 절반이 사라집니다.',
+  },
+  {
+    number: 4,
+    title: 'yield_score 분포로 공정 안정성',
+    icon: Layers,
+    color: '#1a73e8',
+    finding: '히스토그램: 91.5점 기준선 왼쪽=fail, 오른쪽=pass',
+    explanation:
+      'C1은 좁게 뭉쳐 있고, C4는 더 넓게 퍼져 있어요. 폭이 넓을수록 공정이 불안정.',
+  },
+  {
+    number: 5,
+    title: 'Edge zone 수율 저하',
+    icon: Target,
+    color: '#FF9800',
+    finding: 'Zone 필터: edge 85%, center 94.5%, middle 93.8%',
+    explanation: 'edge 쪽 증착 균일도 문제를 먼저 확인해야 합니다.',
   },
 ];
 
@@ -650,6 +701,100 @@ function FirstRunGuide() {
   );
 }
 
+function AnalysisScenarioCard({ scenario }: { scenario: typeof analysisScenarios[0] }) {
+  const Icon = scenario.icon;
+  return (
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: '16px',
+        border: `2px solid ${scenario.color}20`,
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${scenario.color}, ${scenario.color}CC)`,
+          padding: '1rem 1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+        }}
+      >
+        <div
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.25)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <Icon size={20} color="#fff" />
+        </div>
+        <div>
+          <p
+            style={{
+              fontSize: '0.75rem',
+              color: 'rgba(255,255,255,0.8)',
+              margin: 0,
+              fontWeight: 600,
+            }}
+          >
+            시나리오 {scenario.number}
+          </p>
+          <p
+            style={{
+              fontSize: '1.05rem',
+              color: '#fff',
+              margin: 0,
+              fontWeight: 700,
+            }}
+          >
+            {scenario.title}
+          </p>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: '1.25rem', flex: 1 }}>
+        <p
+          style={{
+            fontSize: '0.9rem',
+            fontWeight: 700,
+            color: scenario.color,
+            margin: '0 0 0.75rem 0',
+            lineHeight: '1.6',
+            padding: '0.5rem 0.75rem',
+            background: `${scenario.color}10`,
+            borderRadius: '8px',
+            borderLeft: `3px solid ${scenario.color}`,
+          }}
+        >
+          {scenario.finding}
+        </p>
+        <p
+          style={{
+            fontSize: '0.9rem',
+            color: '#555',
+            margin: 0,
+            lineHeight: '1.7',
+          }}
+        >
+          {scenario.explanation}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function NextLecturePreview() {
   return (
     <div className="next-lecture-card">
@@ -836,7 +981,53 @@ export default function App() {
         </section>
 
         <section>
-          <span className="section-label">06. 품질 점검 및 정리</span>
+          <span className="section-label">06. 실제 분석 시연 -- 5가지 시나리오</span>
+          <h2>배포 완료 후, 이렇게 분석합니다</h2>
+          <p className="section-intro">
+            앱이 배포되면 CSV를 올리고 필터 몇 번 클릭하는 것만으로 현장의 핵심 인사이트를 즉시 확인할 수 있습니다.
+            아래 5가지 시나리오는 실제 oled_deposition_xymap.csv 데이터로 시연한 결과입니다.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '1.5rem',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+            }}
+          >
+            {analysisScenarios.map((scenario) => (
+              <AnalysisScenarioCard key={scenario.number} scenario={scenario} />
+            ))}
+          </div>
+          <div
+            style={{
+              background: '#E8F5E9',
+              borderRadius: '12px',
+              padding: '1.25rem 1.5rem',
+              borderLeft: '4px solid #2E7D32',
+              marginTop: '1.5rem',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '0.95rem',
+                color: '#1B5E20',
+                fontWeight: 700,
+                margin: '0 0 0.5rem 0',
+              }}
+            >
+              5가지 시나리오 공통점
+            </p>
+            <p style={{ fontSize: '0.9rem', color: '#333', margin: 0, lineHeight: '1.7' }}>
+              코드를 한 줄도 안 짰습니다. 사이드바 필터 클릭 몇 번이 전부입니다.
+              Excel에서 각각 5~10분 걸릴 분석을 CSV 업로드 한 번으로 끝냈습니다.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">07. 품질 점검 및 정리</span>
           <h2>배포 전, 이 5가지만 확인하세요</h2>
           <div className="checklist">
             {qualityChecklist.map((item) => (
@@ -848,9 +1039,105 @@ export default function App() {
           </div>
           <div className="wrap-message">
             <Quote size={36} color="var(--accent)" />
-            <h3>"Antigravity에서 프롬프트 하나로 OLED 증착 분석 앱을 만들고, GitHub + Streamlit Cloud로 팀원 누구나 접속할 수 있는 URL을 배포합니다."</h3>
-            <p>다음 강의: 이미지 분석 자동화 (Gemini Vision API) -- 14강</p>
+            <h3>"오늘 한 분석, 코드 한 줄 안 짰습니다. 필터 클릭 몇 번이에요."</h3>
+            <p style={{ fontSize: '1rem', color: '#555', marginTop: '0.75rem', lineHeight: '1.8' }}>
+              이 URL 팀원한테 보내면 팀원도 똑같이 할 수 있어요.
+            </p>
           </div>
+
+          <div
+            style={{
+              marginTop: '2rem',
+              marginBottom: '2rem',
+              background: '#f5f5f7',
+              borderRadius: '16px',
+              padding: '2rem',
+            }}
+          >
+            <h3 style={{ fontSize: '1.15rem', color: '#333', marginBottom: '1.25rem' }}>
+              Key Takeaways
+            </h3>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '1rem',
+              }}
+            >
+              {[
+                {
+                  num: '1',
+                  text: '프롬프트에 데이터 구조 넣기',
+                  sub: 'CSV 컬럼명, 행 수, 데이터 타입을 AI에게 알려줘야 정확한 코드가 나옵니다.',
+                  color: '#4285F4',
+                },
+                {
+                  num: '2',
+                  text: '수율 정의 명확히 알려주기',
+                  sub: 'yield_score와 pass_fail 중 어떤 것이 수율인지 프롬프트에 명시하세요.',
+                  color: '#EA4335',
+                },
+                {
+                  num: '3',
+                  text: 'AI 코드 검증 습관',
+                  sub: '핵심 계산 로직(수율, 불량률)은 반드시 눈으로 한 번 확인하세요.',
+                  color: '#34A853',
+                },
+                {
+                  num: '4',
+                  text: '같은 앱, 다른 데이터',
+                  sub: '한 번 만든 앱에 다른 CSV를 올리면 다른 LOT, 다른 라인도 분석됩니다.',
+                  color: '#FF9800',
+                },
+              ].map((item) => (
+                <div
+                  key={item.num}
+                  style={{
+                    background: '#fff',
+                    borderRadius: '12px',
+                    padding: '1.25rem',
+                    borderLeft: `4px solid ${item.color}`,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: item.color,
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {item.num}
+                    </span>
+                    <strong style={{ fontSize: '0.95rem', color: '#333' }}>{item.text}</strong>
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: '#666', margin: 0, lineHeight: '1.6' }}>
+                    {item.sub}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ textAlign: 'center', fontSize: '0.95rem', color: '#888', marginBottom: '1rem' }}>
+            다음 강의: 이미지 분석 자동화 (Gemini Vision API) -- 14강
+          </p>
           <NextLecturePreview />
         </section>
 
