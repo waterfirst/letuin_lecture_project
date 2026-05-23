@@ -1,28 +1,35 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Activity,
-  AlertCircle,
   ArrowRight,
   BarChart3,
   BookOpen,
   Bot,
   Check,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   Cloud,
   Code,
-  Copy,
   Database,
-  ExternalLink,
   FileText,
-  Key,
-  Lock,
-  MessageCircle,
-  Quote,
-  Shield,
+  GitBranch,
+  Globe,
+  Layers,
+  Link,
+  Map,
+  Monitor,
+  Package,
+  Rocket,
+  Settings,
+  Share2,
+  Sliders,
   Sparkles,
   Terminal,
+  TrendingUp,
   Upload,
+  Users,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -30,781 +37,370 @@ import {
 const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 
 // ============================================================================
-// DATA ARRAYS - Gemini Ecosystem
+// DATA
 // ============================================================================
 
 const learningGoals = [
   {
     step: '학습목표 1',
-    title: 'Gemini API Key 발급 및 첫 호출',
-    body: 'Google AI Studio에서 API Key를 발급하고 Python으로 첫 번째 AI 호출을 실행합니다.',
-    type: 'api'
+    title: 'AI로 제조업 문서 작성 → GitHub Pages 배포',
+    body: 'SOP, 불량 보고서, 체크리스트 등을 AI가 HTML로 만들어 URL 하나로 팀 전체가 공유합니다.',
+    icon: Globe,
+    color: '#0071e3',
+    bg: '#f0f7ff',
   },
   {
     step: '학습목표 2',
-    title: 'NotebookLM 지식 베이스 구축',
-    body: '연구 논문을 업로드하여 개인화된 AI 연구 노트를 만들고 출처 기반 답변을 받습니다.',
-    type: 'knowledge'
+    title: 'AI로 데이터 분석 앱 → Streamlit Cloud 배포',
+    body: 'CSV를 올리면 자동으로 차트와 이상치를 찾아주는 앱을 AI가 만들고, 팀원이 URL로 씁니다.',
+    icon: BarChart3,
+    color: '#34A853',
+    bg: '#f0fdf4',
   },
   {
     step: '학습목표 3',
-    title: 'AI Studio 시뮬레이터 구축 및 문제 해결',
-    body: 'Google AI Studio를 활용하여 반도체/디스플레이/배터리 공정 시뮬레이터를 구축하고 주요 문제를 해결합니다.',
-    type: 'deploy'
+    title: 'AI로 공정 시뮬레이터 → AI Studio 공유 링크',
+    body: '공정 조건을 입력하면 결과를 예측하고 설명해주는 대화형 시뮬레이터를 링크 하나로 배포합니다.',
+    icon: Sliders,
+    color: '#EA4335',
+    bg: '#fff0f0',
   },
 ];
 
-const lessonFlow = [
-  { time: '3분', label: '목표 확인' },
-  { time: '7분', label: '개념·비유' },
-  { time: '8분', label: '실무 사례' },
-  { time: '17분', label: '지시문·실습' },
-  { time: '5분', label: '검증·정리' },
-];
-
-const roleFlow = [
-  { owner: '엔지니어', task: 'API Key 관리, NotebookLM 자료 업로드, AI Studio 시뮬레이터 설계' },
-  { owner: 'Gemini', task: '데이터 분석, 논문 요약, 시뮬레이션 코드 생성' },
-  { owner: 'NotebookLM', task: '논문 인덱싱, 출처 추적' },
-  { owner: 'AI Studio', task: '프롬프트 테스트, 시스템 지시문(System Instruction) 설정' },
-];
-
-const geminiEcosystem = [
-  {
-    icon: Bot,
-    title: 'Gemini Pro',
-    description: '100만 토큰 컨텍스트, Deep Research',
-    features: ['긴 논문 분석', '멀티모달', 'JSON 출력'],
-    cost: '$20/월',
-    freeQuota: '15 req/min',
-  },
-  {
-    icon: BookOpen,
-    title: 'NotebookLM',
-    description: '개인 지식 베이스, 출처 기반 답변',
-    features: ['할루시네이션 방지', 'PDF/웹 지원', '팟캐스트'],
-    cost: '무료',
-    freeQuota: '무제한',
-  },
-  {
-    icon: Code,
-    title: 'AI Studio',
-    description: 'API Key 발급, 프롬프트 테스트, 시뮬레이터 구축',
-    features: ['프롬프트 갤러리', 'System instruction', 'Function calling'],
-    cost: '무료',
-    freeQuota: '60 req/min',
-  },
-  {
-    icon: Zap,
-    title: 'Antigravity IDE',
-    description: 'API 기반 AI 개발 환경 및 에이전트 코딩',
-    features: ['API Key 직접 연동 (BYOK)', '요금제 크레딧 지원', '파일 구조 자동 생성'],
-    cost: '무료 / 구독제 선택',
-    freeQuota: 'AI Studio 한도 사용 가능',
-  },
-  {
-    icon: MessageCircle,
-    title: 'Telegram Bot',
-    description: 'Gemini API 연동 자동 알림',
-    features: ['실시간 푸시', '그룹 채팅', '파일 전송'],
-    cost: '무료',
-    freeQuota: '무제한',
-  },
-];
-
-const fieldScenarios = [
-  {
-    icon: BarChart3,
-    title: '반도체: 수율 분석 자동화',
-    before: 'Excel 수율 데이터를 Gemini에 업로드하여 이상 패턴 감지',
-    intent: '최근 7일 라인별 수율을 분석하고 전일 대비 3% 이상 하락한 항목을 리포트로 만들어줘.',
-    output: 'Gemini가 Python 코드 + 시각화 차트 + 원인 후보 생성',
-  },
+const docExamples = [
   {
     icon: FileText,
-    title: '디스플레이: 논문 요약',
-    before: 'OLED 관련 논문 50편을 NotebookLM에 업로드',
-    intent: 'OLED 수명 개선 연구 동향을 요약하고 핵심 기술 3가지를 정리해줘.',
-    output: 'NotebookLM이 출처 포함 요약 + 팟캐스트 생성',
+    title: 'CVD / 에칭 공정 SOP',
+    desc: '단계별 작업 순서, 안전 주의사항, 체크박스 형태 점검 항목까지. 현장에서 스마트폰으로 QR 찍어 바로 열 수 있습니다.',
   },
   {
     icon: Activity,
-    title: '배터리: AI Studio 열폭주 시뮬레이터',
-    before: '배터리 화학조성 및 양극재/음극재 물성 데이터를 AI Studio에 설정',
-    intent: '배터리 팩 설계 사양을 입력하면 온도 상승 곡선과 열폭주 임계점 도달 시간을 예측해줘.',
-    output: 'AI Studio 시뮬레이터가 열역학 계산식 + 물성별 시뮬레이션 결과 리포트 출력',
-  },
-];
-
-const apiKeySteps = [
-  {
-    step: '1',
-    title: 'Google AI Studio 접속',
-    body: 'aistudio.google.com 방문',
-    duration: '30초',
+    title: '불량 분석 보고서',
+    desc: '파티클 불량 현상·원인·조치·재발 방지까지 표 형태로. AI가 구조를 잡아주면 내용만 채우면 됩니다.',
   },
   {
-    step: '2',
-    title: 'Get API Key 클릭',
-    body: 'Create API key in new project 선택',
-    duration: '20초',
+    icon: Wrench,
+    title: '설비 예방 보전 체크리스트',
+    desc: '일별·주별·월별 점검 항목, 정상 기준값, 이상 시 조치 방법이 들어간 웹 체크리스트.',
   },
   {
-    step: '3',
-    title: 'API Key 복사',
-    body: '생성된 키를 안전하게 복사',
-    duration: '10초',
+    icon: BookOpen,
+    title: '신입 엔지니어 온보딩 가이드',
+    desc: '공정 개요, 주의사항, 자주 묻는 질문 정리. 선배가 말로 설명하던 걸 AI가 초안으로 잡아줍니다.',
   },
   {
-    step: '4',
-    title: 'Python 코드 실행',
-    body: 'google-generativeai 설치 후 첫 호출',
-    duration: '2분',
+    icon: Package,
+    title: '협력사 품질 기준서',
+    desc: '측정 항목, 허용 범위, 샘플링 방법까지. 협력사마다 포맷이 달라도 AI가 맞춰줍니다.',
+  },
+  {
+    icon: Globe,
+    title: '다국어 작업 지침서',
+    desc: '한국어 지침서를 영어·베트남어·인도네시아어로 번역한 버전을 같이 만들 수 있습니다.',
   },
 ];
 
-const securityChecklist = [
-  'API Key를 절대 GitHub에 커밋하지 않기',
-  '.env 파일 또는 환경변수로 관리',
-  '.gitignore에 .env 추가',
-  'API Key 유출 시 즉시 재발급',
+const appExamples = [
+  {
+    icon: TrendingUp,
+    title: '공정 관리도 자동 생성 앱',
+    desc: 'CSV를 올리면 X-bar, R 관리도가 자동으로 그려지고, 3시그마 벗어난 포인트는 빨간색으로 표시됩니다.',
+  },
+  {
+    icon: Map,
+    title: '두께 균일도 분포 시각화 앱',
+    desc: '웨이퍼 두께 측정 데이터를 올리면 웨이퍼 맵 컬러맵으로 어느 위치가 얇은지 한눈에 보입니다.',
+  },
+  {
+    icon: BarChart3,
+    title: '불량 원인 분석 대시보드',
+    desc: '날짜별·설비별·공정별 불량 데이터를 올리면 집중 패턴을 자동 분석. 월간 품질 회의에 바로 씁니다.',
+  },
+  {
+    icon: Activity,
+    title: '수율 트렌드 추적 앱',
+    desc: '매일 수율 데이터를 올리면 주간 트렌드, 이동 평균, 예상 수율이 그래프로 나옵니다.',
+  },
+  {
+    icon: Zap,
+    title: '설비 진동 이상 감지 앱',
+    desc: '설비 진동 센서 로그를 올리면 정상·이상 구간을 자동 구분. 예방 보전 타이밍을 잡는 데 씁니다.',
+  },
+  {
+    icon: Database,
+    title: '원자재 로트 추적 앱',
+    desc: '로트 번호·입고일·사용 공정·수율을 올리면 어떤 로트에서 이상이 있었는지 추적. 공급사 피드백 근거.',
+  },
+  {
+    icon: Layers,
+    title: '공정 파라미터 상관관계 분석 앱',
+    desc: '온도·압력·가스 유량과 수율·두께·균일도를 올리면 어떤 파라미터가 결과에 얼마나 영향 주는지 시각화.',
+  },
 ];
 
-const notebookLMSteps = [
-  { step: '1', title: 'NotebookLM 접속', body: 'notebooklm.google.com', duration: '30초' },
-  { step: '2', title: '새 노트 생성', body: 'Create 클릭', duration: '10초' },
-  { step: '3', title: 'PDF 논문 업로드', body: 'Add source → Upload', duration: '1분' },
-  { step: '4', title: '질문하기', body: '논문 기반 질문 입력', duration: '2분' },
+const simulatorExamples = [
+  {
+    icon: Monitor,
+    title: '포토공정 CD 시뮬레이터',
+    desc: '노광량·포커스 오프셋·마스크 CD를 입력하면 웨이퍼 CD를 예측하고 컬러맵으로 보여줍니다. 왜 이 결과가 나왔는지 설명도 해줍니다.',
+  },
+  {
+    icon: Sliders,
+    title: '에칭 공정 선택비 시뮬레이터',
+    desc: '식각 가스·유량·챔버 압력·바이어스 파워를 입력하면 식각 속도와 선택비를 예측. 새 레시피 개발 방향을 잡는 데 씁니다.',
+  },
+  {
+    icon: Layers,
+    title: 'CVD 막 두께 균일도 시뮬레이터',
+    desc: '온도·압력·가스 유량·웨이퍼 위치를 입력하면 막 두께 분포를 웨이퍼 맵으로 보여줍니다.',
+  },
+  {
+    icon: Settings,
+    title: 'CMP 연마 속도 시뮬레이터',
+    desc: '패드 압력·슬러리 유량·테이블 회전수를 입력하면 제거 속도와 평탄도를 예측. 조건 최적화에 씁니다.',
+  },
+  {
+    icon: Zap,
+    title: '이온 주입 농도 프로파일 시뮬레이터',
+    desc: '도핑 원소·에너지·도즈량을 입력하면 깊이별 농도 분포 그래프. 소자 특성 예측에 씁니다.',
+  },
+  {
+    icon: Activity,
+    title: '열처리 공정 확산 길이 시뮬레이터',
+    desc: '온도·시간·분위기 가스를 입력하면 불순물 확산 길이 계산. 애닐 조건 설계에 씁니다.',
+  },
+  {
+    icon: TrendingUp,
+    title: '수율 예측 시뮬레이터',
+    desc: '공정 단계별 불량률을 입력하면 최종 수율을 계산하고 어느 공정 개선이 수율에 가장 효과적인지 알려줍니다.',
+  },
+  {
+    icon: Database,
+    title: '원가 영향 시뮬레이터',
+    desc: '공정 조건을 바꾸면 사이클 타임·가스 소모량·원가에 어떤 영향을 주는지 계산해줍니다.',
+  },
 ];
 
-const aiStudioSimulatorSteps = [
-  { step: '1', title: 'AI Studio 접속', body: 'aistudio.google.com 접속', duration: '30초' },
-  { step: '2', title: 'System Instruction 설정', body: '반도체/디스플레이/배터리 물리 공식 및 역할 명시', duration: '1분' },
-  { step: '3', title: '변수 프롬프트 구성', body: '{{온도}}, {{압력}}, {{조성}} 등 실시간 입력값 템플릿화', duration: '2분' },
-  { step: '4', title: '시뮬레이션 및 검증', body: '프롬프트 테스트 후 API 코드로 저장', duration: '1분' },
+const roadmap = [
+  {
+    num: '12강',
+    title: 'Gemini로 제조업 문서 4종 → GitHub Pages 배포',
+    desc: '이 강의가 끝나면 여러분 이름의 URL이 생깁니다.',
+    color: '#0071e3',
+  },
+  {
+    num: '13강',
+    title: 'Antigravity로 데이터 분석 앱 → Streamlit Cloud 배포',
+    desc: 'CSV 올리면 자동으로 분석되는 앱 URL이 생깁니다.',
+    color: '#34A853',
+  },
+  {
+    num: '14강',
+    title: 'Gemini API Key 발급 → AI Studio 공정 시뮬레이터 → 공유 링크',
+    desc: 'API Key 발급도 이 강의에서 같이 합니다.',
+    color: '#EA4335',
+  },
+  {
+    num: '15강',
+    title: '센서 이상 감지 → Telegram 자동 알림',
+    desc: '사람이 보지 않아도 AI가 먼저 이상 징후를 알려줍니다.',
+    color: '#FBBC04',
+  },
+  {
+    num: '16강',
+    title: '통합 포트폴리오 구축',
+    desc: 'URL 3개 + 자동화 시스템이 여러분의 포트폴리오가 됩니다.',
+    color: '#FF6D00',
+  },
+  {
+    num: '17강',
+    title: '기술 면접 & 피칭 전략',
+    desc: '"AI로 무엇을 만들었나요?" 에 구체적인 예시로 답하는 연습.',
+    color: '#9C27B0',
+  },
 ];
 
-const intentChecklist = [
-  'Gemini API Key를 안전하게 발급하고 Antigravity에 연동했는가?',
-  'NotebookLM에 올바른 논문을 업로드했는가?',
-  'AI Studio에서 시뮬레이터 시스템 지시문을 올바르게 구성했는가?',
-  '첫 API 호출 및 시뮬레이션 결과 출력이 성공했는가?',
-  '보안 체크리스트를 모두 확인했는가?',
-];
-
-const pricingComparison = [
-  { model: 'Gemini Pro', price: '$20/월', context: '100만 토큰', free: '15 req/min', score: 95 },
-  { model: 'Claude Pro', price: '$20/월', context: '20만 토큰', free: '없음', score: 75 },
-  { model: 'ChatGPT Plus', price: '$20/월', context: '12.8만 토큰', free: '없음', score: 70 },
-];
-
-const apiVerifyPoints = [
-  'API Key가 정상적으로 발급되었는가?',
-  '첫 호출 응답이 성공했는가?',
-  '.env 파일에 KEY가 저장되었는가?',
-];
-
-const notebookVerifyPoints = [
-  'NotebookLM이 논문을 정확히 인덱싱했는가?',
-  '출처 링크가 올바르게 표시되는가?',
-  '할루시네이션 없이 답변하는가?',
-];
-
-const aiStudioSimulatorVerifyPoints = [
-  'AI Studio 시뮬레이터의 물리적 제약조건이 올바른가?',
-  '다양한 공정 변수 입력 시 물리 규칙에 맞춰 시뮬레이션 응답이 나오는가?',
-  '에러 패턴 및 최적화 추천안이 일관되게 반환되는가?',
+const qualityGate = [
+  '3가지 배포 방법 이름을 말할 수 있나요? GitHub Pages, Streamlit Cloud, AI Studio 공유 링크.',
+  '각 방법의 용도가 연결되나요? 문서 → GitHub Pages / 반복 데이터 분석 → Streamlit / 조건 탐색 → AI Studio.',
+  '오늘 들은 예시 중 "나도 이거 써볼 수 있겠다" 싶은 게 하나 이상 있나요?',
 ];
 
 // ============================================================================
-// HELPER COMPONENTS
+// COMPONENTS
 // ============================================================================
 
-function GoalVisual({ type }: { type: string }) {
-  if (type === 'api') {
-    return (
-      <div className="goal-visual definition">
-        <div className="visual-item person">
-          <Key size={18} />
-          <span>API Key</span>
-        </div>
-        <ArrowRight size={14} className="visual-arrow" />
-        <div className="visual-item ai">
-          <Bot size={18} />
-          <span>Gemini</span>
-        </div>
-      </div>
-    );
-  }
-  if (type === 'knowledge') {
-    return (
-      <div className="goal-visual elements">
-        <div className="element-tag">논문</div>
-        <div className="element-tag">출처</div>
-        <div className="element-tag">요약</div>
-      </div>
-    );
-  }
-  if (type === 'deploy') {
-    return (
-      <div className="goal-visual field">
-        <div className="field-icons">
-          <div className="f-icon"><Wrench size={18} /></div>
-          <div className="f-icon"><Activity size={18} /></div>
-        </div>
-        <div className="success-indicator">
-          <CheckCircle2 size={12} />
-          <span>시뮬레이터 구축</span>
-        </div>
-      </div>
-    );
-  }
-  return null;
+function SectionBadge({ label }: { label: string }) {
+  return <span className="section-label">{label}</span>;
 }
 
-function PricingChart() {
-  const max = Math.max(...pricingComparison.map((item) => item.score));
-
+function ExampleCard({
+  icon: Icon,
+  title,
+  desc,
+  color = '#0071e3',
+  bg = '#f0f7ff',
+}: {
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+  color?: string;
+  bg?: string;
+}) {
   return (
-    <div className="visual-card">
-      <div className="visual-header">
-        <span>Pricing Comparison</span>
-        <strong>종합 점수</strong>
+    <motion.div
+      className="example-card"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      style={{ borderTop: `3px solid ${color}` }}
+    >
+      <div className="example-icon" style={{ background: bg, color }}>
+        <Icon size={22} />
       </div>
-      <div className="bar-chart" role="img" aria-label="가격 비교 차트">
-        {pricingComparison.map((item) => (
-          <div className="bar-row" key={item.model}>
-            <span>{item.model}</span>
-            <div>
-              <i style={{ width: `${(item.score / max) * 100}%` }} />
-            </div>
-            <strong>{item.score}</strong>
-          </div>
-        ))}
+      <h3>{title}</h3>
+      <p>{desc}</p>
+    </motion.div>
+  );
+}
+
+function MethodHeader({
+  num,
+  badge,
+  title,
+  subtitle,
+  color,
+  bg,
+  icon: Icon,
+}: {
+  num: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  color: string;
+  bg: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="method-header" style={{ borderLeft: `4px solid ${color}`, background: bg }}>
+      <div className="method-num" style={{ color }}>{num}</div>
+      <div className="method-badge" style={{ background: color }}>{badge}</div>
+      <h2>{title}</h2>
+      <p className="method-subtitle">{subtitle}</p>
+      <div className="method-icon-bg" style={{ color }}>
+        <Icon size={48} />
       </div>
-      <p>Gemini는 무료 할당량과 긴 컨텍스트 창으로 연구 업무에 최적화되어 있습니다.</p>
     </div>
   );
 }
 
-function LectureImage({
-  src,
-  alt,
-  caption,
-  variant = 'wide',
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-  variant?: 'wide' | 'poster';
-}) {
+function DecisionBox() {
   return (
-    <figure className={`lecture-image ${variant}`}>
-      <img src={assetUrl(src)} alt={alt} loading="lazy" />
-      <figcaption>{caption}</figcaption>
-    </figure>
+    <div className="decision-box">
+      <h3>언제 어떤 걸 쓰나요?</h3>
+      <div className="decision-rows">
+        <div className="decision-row">
+          <div className="decision-q">"한 번 만들어서 여러 사람이 읽는 거야"</div>
+          <ArrowRight size={20} className="decision-arrow" />
+          <div className="decision-a" style={{ background: '#f0f7ff', color: '#0071e3' }}>
+            <Globe size={16} /> GitHub Pages
+          </div>
+        </div>
+        <div className="decision-row">
+          <div className="decision-q">"매번 새 데이터를 넣고 분석하는 거야"</div>
+          <ArrowRight size={20} className="decision-arrow" />
+          <div className="decision-a" style={{ background: '#f0fdf4', color: '#34A853' }}>
+            <BarChart3 size={16} /> Streamlit Cloud
+          </div>
+        </div>
+        <div className="decision-row">
+          <div className="decision-q">"조건을 바꿔가면서 결과를 탐색하는 거야"</div>
+          <ArrowRight size={20} className="decision-arrow" />
+          <div className="decision-a" style={{ background: '#fff0f0', color: '#EA4335' }}>
+            <Sliders size={16} /> AI Studio
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
-function VerifyChecklist({ points }: { points: string[] }) {
+function RoadmapSection() {
   return (
-    <div className="verify-checklist">
-      <span>엔지니어 검증 포인트</span>
-      {points.map((point) => (
-        <div className="verify-item" key={point}>
-          <CheckCircle2 size={15} />
-          <p>{point}</p>
-        </div>
+    <div className="roadmap-grid">
+      {roadmap.map((item, i) => (
+        <motion.div
+          className="roadmap-card"
+          key={item.num}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.07 }}
+          style={{ borderLeft: `4px solid ${item.color}` }}
+        >
+          <div className="roadmap-num" style={{ background: item.color }}>{item.num}</div>
+          <div>
+            <strong>{item.title}</strong>
+            <p>{item.desc}</p>
+          </div>
+        </motion.div>
       ))}
     </div>
   );
 }
 
-// ============================================================================
-// DEEP DIVE SECTIONS
-// ============================================================================
-
-function ApiKeyDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 01 Deep Dive</span>
-        <h3>Gemini API Key 발급 및 첫 호출: AI Studio에서 Python까지</h3>
-        <p>
-          수동으로 프롬프트를 입력하는 대신, API Key를 발급받아 Python 코드로 자동화합니다.
-          반도체, 디스플레이, 배터리, 바이오 4개 분야 프롬프트를 테스트합니다.
-        </p>
-        <LectureImage
-          src="api-key-workflow.png"
-          alt="Google AI Studio에서 API Key를 발급하고 .env에 저장한 뒤 Python으로 Gemini API를 호출하는 3단계 흐름"
-          caption="AI Studio에서 API Key를 발급하고 .env에 저장한 뒤 Python 호출까지 이어지는 실습 흐름입니다."
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow" aria-label="API Key 발급 Before Prompt After">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 수동 프롬프트 입력</span>
-          <h4>Gemini 웹에서 매번 복사-붙여넣기로 프롬프트 실행</h4>
-          <ul>
-            <li>Gemini.google.com 접속</li>
-            <li>프롬프트를 매번 복사하여 입력</li>
-            <li>결과를 수동으로 복사하여 Excel/Word에 붙여넣기</li>
-            <li>여러 데이터셋을 반복 분석할 때 비효율</li>
-          </ul>
-          <div className="mini-excel dense-excel">
-            <strong>수동 작업 흐름</strong>
-            <div style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px', marginTop: '0.5rem' }}>
-              <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
-                1. 웹 브라우저에서 Gemini 열기<br/>
-                2. 프롬프트 수동 입력<br/>
-                3. 응답 대기 (10-30초)<br/>
-                4. 결과 복사 → Excel 붙여넣기<br/>
-                5. 다음 데이터셋으로 1번부터 반복
-              </p>
-            </div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: API 자동화 지시</span>
-          <h4>Python으로 Gemini API를 호출하여 자동화합니다</h4>
-          <p>
-            "Google AI Studio에서 API Key를 발급받고, Python google-generativeai 라이브러리를 설치해줘.
-            반도체 수율 데이터를 CSV로 읽어서 Gemini에게 이상 패턴 분석을 요청하고,
-            응답을 JSON 형태로 저장하는 자동화 스크립트를 만들어줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>API Key</strong><span>aistudio.google.com에서 발급</span></div>
-            <div><strong>라이브러리</strong><span>pip install google-generativeai</span></div>
-            <div><strong>자동화</strong><span>CSV → Gemini → JSON 출력</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>Python 스크립트가 자동으로 Gemini를 호출하고 결과를 저장합니다</h4>
-          <div className="code-preview-box">
-            <div className="visual-header">
-              <span>Python Script</span>
-              <strong>gemini_auto.py</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem', overflow: 'auto' }}>{`import google.generativeai as genai
-import pandas as pd
-import json
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-
-model = genai.GenerativeModel('gemini-pro')
-
-# CSV 읽기
-df = pd.read_csv('yield_data.csv')
-
-# Gemini에게 분석 요청
-prompt = f"""
-다음 수율 데이터를 분석해줘:
-{df.to_string()}
-
-전일 대비 3% 이상 하락한 항목을 찾아
-JSON 형태로 반환해줘.
-"""
-
-response = model.generate_content(prompt)
-result = json.loads(response.text)
-
-# 결과 저장
-with open('gemini_result.json', 'w') as f:
-    json.dump(result, f, indent=2)
-
-print("✅ 분석 완료: gemini_result.json")`}</pre>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>5분 → 10초</strong><span>반복 작업 자동화</span></div>
-            <div><strong>JSON 출력</strong><span>구조화된 데이터</span></div>
-            <div><strong>무료 할당량</strong><span>15 req/min</span></div>
-          </div>
-          <div className="security-checklist-box">
-            <Lock size={24} color="#EA4335" />
-            <h4>API Key 보안 체크리스트 (필수)</h4>
-            <ul className="security-list">
-              {securityChecklist.map((item, index) => (
-                <li key={index}>
-                  <Shield size={14} color="#34A853" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 Gemini가 분석 결과를 확정하는 것이 아니라, 반복 작업을 자동화하고
-        엔지니어가 결과를 빠르게 검토할 수 있는 구조를 만드는 것입니다.
-      </p>
-      <VerifyChecklist points={apiVerifyPoints} />
-    </div>
-  );
-}
-
-function AntigravityApiKeyIntegration() {
-  return (
-    <div className="deep-dive" style={{ borderLeftColor: 'var(--accent)', background: 'linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%)', marginTop: '3rem' }}>
-      <div className="deep-dive-heading">
-        <span>Antigravity Integration Guide</span>
-        <h3>Gemini API Key 연동: 나만의 무료 초고속 에이전트 개발 환경</h3>
-        <p>
-          Google AI Studio에서 발급받은 API Key를 Antigravity IDE에 직접 연동하여 
-          무료 한도 내에서 제한 없이 강력한 AI 에이전트 자동 코딩 환경을 구축합니다.
-        </p>
-        <LectureImage
-          src="antigravity-api-key.png"
-          alt="Antigravity 설정 창의 Model 섹션에 Gemini API Key를 입력하고 초록색 체크마크를 얻는 화면"
-          caption="Antigravity IDE의 설정 -> Model Configuration에서 발급받은 Gemini API Key를 입력하여 즉시 연동할 수 있습니다."
-          variant="wide"
-        />
-      </div>
-
-      <div className="comparison-panel" style={{ marginTop: '2.5rem', gap: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-        <article className="bad-prompt" style={{ background: '#ffffff', borderColor: '#d1d5db', padding: '1.8rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
-          <h4 style={{ color: '#1d1d1f', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '1.25rem', fontWeight: 900, marginBottom: '1rem' }}>
-            <Sparkles size={20} color="#0071e3" /> Antigravity 요금제 연결 (Subscription)
-          </h4>
-          <p style={{ fontSize: '0.95rem', color: '#555', lineHeight: '1.6', fontFamily: 'var(--font-content)' }}>
-            따로 API Key를 발급받을 필요 없이, Antigravity 플랫폼에서 제공하는 통합 AI 크레딧을 소모하여 간편하게 사용하는 방식입니다.
-          </p>
-          <ul style={{ paddingLeft: '1.2rem', marginTop: '1rem', display: 'grid', gap: '0.6rem', fontSize: '0.88rem', color: 'var(--text-primary)', fontWeight: 800 }}>
-            <li><strong>초간단 시작</strong>: 복잡한 API 키 발급 과정 없이 원클릭으로 구동 가능</li>
-            <li><strong>인프라 관리 대행</strong>: Antigravity가 제공하는 초고속 전용 채널을 통해 안정적으로 응답 제공</li>
-            <li><strong>통합 과금</strong>: 개인 계정 크레딧 결제를 통해 편리하게 정산 및 관리</li>
-          </ul>
-        </article>
-
-        <article className="good-prompt" style={{ background: '#f0f7ff', borderColor: '#0071e359', padding: '1.8rem', borderRadius: '20px', border: '1px solid var(--accent)' }}>
-          <h4 style={{ color: '#0071e3', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '1.25rem', fontWeight: 900, marginBottom: '1rem' }}>
-            <Key size={20} color="#0071e3" /> Gemini API 직접 연결 (BYOK - Bring Your Own Key)
-          </h4>
-          <p style={{ fontSize: '0.95rem', color: '#0071e3', lineHeight: '1.6', fontWeight: 700, fontFamily: 'var(--font-content)' }}>
-            Google AI Studio에서 직접 무료로 발급받은 나만의 API Key를 Antigravity 환경설정에 직접 입력하여 연동하는 방식입니다.
-          </p>
-          <ul style={{ paddingLeft: '1.2rem', marginTop: '1rem', display: 'grid', gap: '0.6rem', fontSize: '0.88rem', color: '#0071e3', fontWeight: 800 }}>
-            <li><strong>독립 쿼터 사용 (무료 혜택)</strong>: AI Studio가 무료 사용자에게 제공하는 15 req/min ~ 60 req/min의 대용량 한도를 직접 활용</li>
-            <li><strong>크레딧 차감 제로</strong>: Antigravity의 기본 구독 요금제 크레딧을 소모하지 않아 경제성 극대화</li>
-            <li><strong>헤비 유저 최적화</strong>: 대량의 파일 코딩, 무제한 에이전트 자동화 실행 시 요금 부담 제로</li>
-          </ul>
-        </article>
-      </div>
-
-      <div className="highlight-box" style={{ background: '#fffbeb', borderLeftColor: '#f59e0b', marginTop: '2rem' }}>
-        <p style={{ fontWeight: 800, color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
-          💡 엔지니어 추천 실무 자동화 가이드:
-        </p>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.95rem', color: '#78350f', lineHeight: '1.6', margin: '0.5rem 0 0 0' }}>
-          처음 시작할 때는 **Antigravity 요금제/기본 제공 크레딧**을 사용하여 빠르게 시스템 성능을 체험해 보세요. 
-          이후 50편 이상의 연구 논문을 한번에 인덱싱하거나, 다수의 소스 코드를 반복해서 수정·개발하는 본격적인 
-          **에이전트 모드**에서는 **직접 API Key를 연동(BYOK)**하여 쾌속 무료 쿼터를 활용하는 것이 생산성 측면에서 훨씬 유리합니다!
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function NotebookLMDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 02 Deep Dive</span>
-        <h3>NotebookLM 지식 베이스 구축: 논문 50편을 개인 AI 연구 노트로</h3>
-        <p>
-          PDF 논문을 업로드하면 NotebookLM이 자동으로 인덱싱하고, 출처 기반 답변을 제공합니다.
-          할루시네이션 없이 정확한 정보만 추출합니다.
-        </p>
-        <LectureImage
-          src="notebooklm-demo.png"
-          alt="NotebookLM에서 논문 PDF를 소스로 추가하고 출처가 달린 답변을 받는 UI 예시"
-          caption="PDF 자료가 왼쪽 소스가 되고, 오른쪽 답변에는 페이지와 그림 출처가 함께 붙습니다."
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 논문 수동 검색</span>
-          <h4>Ctrl+F로 키워드를 찾고 직접 정리</h4>
-          <ul>
-            <li>PDF 파일 50개를 폴더에 저장</li>
-            <li>각 논문을 열어 Ctrl+F로 키워드 검색</li>
-            <li>관련 문단을 복사하여 Word/Notion에 정리</li>
-            <li>출처 페이지 번호를 수동으로 기록</li>
-            <li>연구 동향 요약을 직접 작성</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: NotebookLM 지시</span>
-          <h4>논문을 업로드하고 AI에게 질문합니다</h4>
-          <p>
-            "업로드한 OLED 논문 50편에서 '수명 개선' 관련 연구 동향을 요약해줘.
-            핵심 기술 3가지를 정리하고, 각 기술의 출처 논문과 페이지 번호를 함께 표시해줘.
-            마지막에 2분짜리 팟캐스트로 요약본도 만들어줘."
-          </p>
-          <div className="aoi-rule-grid">
-            <div><strong>업로드</strong><span>PDF 50편 드래그 앤 드롭</span></div>
-            <div><strong>인덱싱</strong><span>자동으로 내용 파싱</span></div>
-            <div><strong>질문</strong><span>자연어로 묻기</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>NotebookLM이 출처 포함 요약과 팟캐스트를 생성합니다</h4>
-          <div className="notebooklm-result-box">
-            <div className="visual-header">
-              <span>NotebookLM Output</span>
-              <strong>요약 + 출처</strong>
-            </div>
-            <div style={{ padding: '1rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
-              <h4 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>OLED 수명 개선 핵심 기술 3가지</h4>
-              <ol style={{ lineHeight: '1.8', paddingLeft: '1.5rem' }}>
-                <li><strong>Host-Dopant 최적화</strong> - 출처: [논문 #12, p.47]</li>
-                <li><strong>Encapsulation 기술</strong> - 출처: [논문 #23, p.102]</li>
-                <li><strong>Charge Balance 개선</strong> - 출처: [논문 #38, p.215]</li>
-              </ol>
-              <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'white', borderRadius: '6px' }}>
-                <strong>🎧 팟캐스트 요약본 (2분)</strong>
-                <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: '#555' }}>
-                  AI 음성으로 핵심 내용을 2분 팟캐스트로 생성
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="aoi-impact-strip">
-            <div><strong>3시간 → 5분</strong><span>논문 요약 시간 단축</span></div>
-            <div><strong>출처 자동 추적</strong><span>페이지 번호 포함</span></div>
-            <div><strong>팟캐스트 생성</strong><span>이동 중 청취 가능</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 NotebookLM이 논문 내용을 암기하는 것이 아니라, 업로드한 자료에서만
-        정보를 추출하여 할루시네이션 없이 정확한 답변을 제공하는 것입니다.
-      </p>
-      <VerifyChecklist points={notebookVerifyPoints} />
-    </div>
-  );
-}
-
-function AiStudioSimulatorDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 03 Deep Dive</span>
-        <h3>Google AI Studio 시뮬레이터 구축: 반도체·디스플레이·배터리 공정 문제 해결</h3>
-        <p>
-          Google AI Studio의 강력한 System Instruction과 Prompt Engineering을 활용하여 
-          첨단 공정 변수를 입력하고 실시간 수율/열폭주 시뮬레이션을 수행합니다.
-        </p>
-        <LectureImage
-          src="ai-studio-simulator.png"
-          alt="Google AI Studio에서 시스템 지시문과 템플릿 변수를 설정하여 반도체 수율 및 배터리 열폭주를 예측하는 시뮬레이터 UI 예시"
-          caption="시스템 지시문(System Instruction)에 물리 공식을 정의하여 AI Studio를 강력한 공정 시뮬레이터로 작동시킵니다."
-          variant="poster"
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 수동 공정 계산 및 데이터 수집</span>
-          <h4>수동으로 물리 공식 계산 및 개별 엑셀 기입</h4>
-          <ul>
-            <li>공정 조건 변경 시마다 수율/열역학 공식 수동 재계산</li>
-            <li>다중 변수(온도, 압력, 시간, 가스 조성) 상호작용 예측 불가</li>
-            <li>문제가 생겨도 원인 규명 및 대책 마련에 수 시간 소요</li>
-            <li>시각화 및 리포트 작성을 위한 별도 문서 작업 지연</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: AI Studio 시뮬레이터 시스템 설정</span>
-          <h4>AI Studio의 System Instruction에 물리적 제약을 주입합니다</h4>
-          <p>
-            "너는 배터리 열폭주 예측 시뮬레이터이다. 양극재 조성(NCM811), 온도, 전압, 셀 사양을 입력하면 Arrenius 속도 식을 기반으로 내부 발열 속도와 열폭주 임계 시간을 예측하라.
-            특히 온도가 80도 이상인 위험 상황에서는 물리 법칙에 기초한 원인 분석과 냉각 제어 최적화 추천안을 JSON 구조로 반환하라."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>System Instruction</strong><span>배터리 열화 물리식 정의</span></div>
-            <div><strong>온도/압력/전압</strong><span>실시간 변수 매핑</span></div>
-            <div><strong>JSON 출력</strong><span>결과의 대시보드 연동용</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 시뮬레이션 산출물</span>
-          <h4>물리 법칙에 근거한 임계점 예측 및 문제 해결 대책을 출력합니다</h4>
-          <div className="firebase-result-box">
-            <div className="visual-header">
-              <span>AI Studio Output</span>
-              <strong>시뮬레이션 분석 완료</strong>
-            </div>
-            <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-              <p style={{ fontSize: '1.05rem', fontWeight: 'bold', color: '#166534', marginBottom: '0.5rem' }}>
-                ⚠️ WARNING: 열폭주 위험 임계점 도달 감지
-              </p>
-              <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'white', borderRadius: '6px' }}>
-                <strong>시뮬레이터 예측 분석 보고서 (JSON)</strong>
-                <pre style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: '#333', overflow: 'auto' }}>{`{
-  "simulation_result": {
-    "status": "CRITICAL_DANGER",
-    "thermal_runaway_time_sec": 142.5,
-    "internal_heat_slope": "+3.2°C/sec",
-    "defect_analysis": "SEI 피막 열적 파괴에 따른 음극 활물질과 전해액의 급격한 발열 반응 시작",
-    "process_optimization": [
-      "충전 전류 밀도를 2.0C에서 1.2C로 긴급 강하",
-      "냉각 채널의 열전달 냉각재 유속을 20% 증가",
-      "전력 모듈(BMS)의 최대 방전 컷오프 전압을 4.1V로 하향 설정"
-    ]
-  }
-}`}</pre>
-              </div>
-            </div>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>3시간 → 1초</strong><span>공정 조건 즉시 예측</span></div>
-            <div><strong>최적 공정 설계</strong><span>물리 예측 기반 제안</span></div>
-            <div><strong>무료 60 RPM</strong><span>무제한 시나리오 테스트</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 AI가 허구의 답변을 하는 것이 아니라, System Instruction에 입력된 명확한 
-        물리 법칙과 제약 조건을 바탕으로 빠르게 다변수 공정 시뮬레이션을 수행하고 최적 조건을 추천하는 것입니다.
-      </p>
-      <VerifyChecklist points={aiStudioSimulatorVerifyPoints} />
-    </div>
-  );
-}
-
-function InteractiveWorkshop() {
-  const [fields, setFields] = useState({
-    apiKey: '',
-    notebook: '',
-    simulator: '',
-  });
-  const [copied, setCopied] = useState(false);
-
-  const hasContent = Object.values(fields).some(Boolean);
-
-  const generated = hasContent
-    ? `1. Gemini API Key: ${fields.apiKey || '[발급 예정]'}
-2. NotebookLM 논문: ${fields.notebook || '[업로드 예정]'}
-3. AI Studio 시뮬레이터: ${fields.simulator || '[구축 예정]'}
-
-다음 단계: API 호출 → 논문 요약 → 시뮬레이터 테스트`
-    : '';
-
-  const handleCopy = () => {
-    if (!generated) return;
-    navigator.clipboard.writeText(generated).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
-  };
-
-  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'apiKey', label: 'API Key 상태', placeholder: '예: 발급 완료 및 Antigravity 등록' },
-    { key: 'notebook', label: 'NotebookLM 자료', placeholder: '예: OLED 논문 50편 업로드' },
-    { key: 'simulator', label: 'AI Studio 시뮬레이터', placeholder: '예: 배터리 열폭주 예측 시뮬레이터 구축' },
-  ];
+function QualityGate() {
+  const [checked, setChecked] = useState<boolean[]>([false, false, false]);
+  const allDone = checked.every(Boolean);
 
   return (
-    <div className="interactive-workshop">
-      <div className="iw-header">
-        <FileText size={22} color="var(--accent)" />
-        <strong>3단계 체크리스트</strong>
-        <p>API Key, NotebookLM, AI Studio 설정을 확인하세요.</p>
+    <div className="quality-gate">
+      <div className="qg-header">
+        <CheckCircle2 size={24} color={allDone ? '#34A853' : '#999'} />
+        <h3>Quality Gate — 3가지 확인</h3>
       </div>
-      <div className="iw-body">
-        <div className="iw-inputs">
-          {inputRows.map((row) => (
-            <div className="iw-field" key={row.key}>
-              <label htmlFor={`iw-${row.key}`}>{row.label}</label>
-              <input
-                id={`iw-${row.key}`}
-                type="text"
-                placeholder={row.placeholder}
-                value={fields[row.key]}
-                onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="iw-output">
-          <div className="iw-output-header">
-            <Bot size={18} color="var(--accent)" />
-            <strong>진행 상황</strong>
-          </div>
-          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
-            {generated || '위 3단계를 입력하면\n진행 상황이 표시됩니다.'}
-          </div>
+      <div className="qg-items">
+        {qualityGate.map((item, i) => (
           <button
-            className={`iw-copy-btn ${copied ? 'copied' : ''}`}
-            onClick={handleCopy}
-            disabled={!hasContent}
+            key={i}
+            className={`qg-item ${checked[i] ? 'checked' : ''}`}
+            onClick={() => {
+              const next = [...checked];
+              next[i] = !next[i];
+              setChecked(next);
+            }}
           >
-            {copied
-              ? <><Check size={15} />복사됨!</>
-              : <><Copy size={15} />체크리스트 복사</>}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FirstRunGuide() {
-  return (
-    <div className="first-run-guide">
-      <div className="frg-title">
-        <ExternalLink size={18} color="var(--accent)" />
-        <strong>지금 바로 해보기 — Gemini API 첫 호출</strong>
-      </div>
-      <div className="frg-steps">
-        {apiKeySteps.map((item) => (
-          <div className="frg-step" key={item.step}>
-            <span className="frg-num">{item.step}</span>
-            <div>
-              <strong>{item.title}</strong>
-              <p>{item.body}</p>
+            <div className="qg-check">
+              {checked[i] ? <Check size={16} /> : <span>{i + 1}</span>}
             </div>
-          </div>
+            <p>{item}</p>
+          </button>
         ))}
       </div>
-    </div>
-  );
-}
-
-function NextLecturePreview() {
-  return (
-    <div className="next-lecture-card">
-      <div className="nlc-header">
-        <span>12강 미리보기</span>
-        <h3>Telegram Bot으로 Gemini 알림 자동화</h3>
-        <p>Gemini API를 Telegram Bot과 연동하여 실시간 알림을 받습니다. 배터리 온도 이상 시 자동 메시지 전송.</p>
-      </div>
+      <AnimatePresence>
+        {allDone && (
+          <motion.div
+            className="qg-success"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <Sparkles size={20} /> 11강 완료! 12강에서 첫 번째 방법을 직접 실습합니다.
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 // ============================================================================
-// MAIN APP COMPONENT
+// MAIN
 // ============================================================================
 
 export default function App() {
   return (
     <div className="app-container">
+      {/* ── HEADER ── */}
       <header className="main-header">
         <div className="header-top">
           <motion.div
@@ -819,14 +415,13 @@ export default function App() {
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
           </motion.div>
-
           <motion.div
             className="header-tag-container"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="header-tag">Gemini 생태계로 연구 자동화하기</span>
+            <span className="header-tag">AI로 제조업 업무 효율화</span>
           </motion.div>
         </div>
 
@@ -836,308 +431,333 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h1>Ch.11 Gemini 생태계 마스터</h1>
-          <p className="subtitle">API Key 발급부터 NotebookLM, Google AI Studio 시뮬레이터 구축까지 Google AI 생태계 전체 구조 이해</p>
+          <h1>Ch.11 3가지 배포 방법</h1>
+          <p className="subtitle">
+            AI로 만든 것을 어떻게 배포하느냐가 핵심입니다 —
+            GitHub Pages · Streamlit Cloud · AI Studio 공유 링크
+          </p>
           <div className="lesson-meta" aria-label="lesson summary">
-            <span>40분</span>
-            <span>실습 중심</span>
-            <span>API 호출</span>
-            <span>결과물: 첫 Gemini 앱</span>
+            <span>약 70분</span>
+            <span>개요 강의</span>
+            <span>코드 없음</span>
+            <span>결과물: 큰 그림</span>
           </div>
         </motion.div>
       </header>
 
       <main>
+        {/* ── 01. 오프닝 & 학습목표 ── */}
         <section className="overview-section">
-          <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>오늘 여러분은 Gemini API, NotebookLM, Google AI Studio를 하나의 생태계로 이해하고 공정 시뮬레이터를 만듭니다</h2>
+          <SectionBadge label="01. 오프닝 및 학습목표" />
+          <h2>오늘 여러분은 3가지 배포 방법과 그 무한한 가능성을 봅니다</h2>
           <p className="section-intro">
-            이 강의는 단순히 Gemini 웹 채팅을 쓰는 것이 아니라, API로 자동화하고 NotebookLM으로 지식을 쌓고
-            Google AI Studio에서 시뮬레이터를 만들어 실무 난제를 해결하는 전체 흐름을 이해하는 시간입니다.
+            AI는 이제 만드는 수준이 됐습니다. 문서도 만들고, 앱도 만들고, 시뮬레이터도 만듭니다.
+            그런데 만드는 것만큼 중요한 게 <strong>배포</strong>입니다. 내 컴퓨터에만 있으면 의미가 없습니다.
+            오늘은 "이런 게 있구나", "나도 이거 써볼 수 있겠다"를 느끼는 데 집중합니다.
+            실습은 12강부터입니다.
           </p>
+
           <div className="learning-goals-grid" aria-label="학습목표">
-            {learningGoals.map((item) => (
-              <div className="learning-goal-card" key={item.step}>
-                <span>{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <div className="goal-visual-wrapper">
-                  <GoalVisual type={item.type} />
+            {learningGoals.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  className="learning-goal-card"
+                  key={item.step}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  style={{ borderTop: `3px solid ${item.color}` }}
+                >
+                  <div className="goal-icon" style={{ background: item.bg, color: item.color }}>
+                    <Icon size={28} />
+                  </div>
+                  <span>{item.step}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="highlight-box" style={{ marginTop: '2.5rem', background: '#fffbeb', borderLeftColor: '#f59e0b' }}>
+            <p style={{ fontWeight: 800, color: '#b45309', margin: 0 }}>
+              💡 오늘 강의의 핵심 메시지
+            </p>
+            <p style={{ marginTop: '0.5rem', color: '#78350f', fontSize: '1rem', margin: '0.5rem 0 0 0' }}>
+              "AI가 만든 것을 배포해야 가치가 생깁니다. 내 컴퓨터에만 있는 AI 결과물은 존재하지 않는 것과 같습니다."
+            </p>
+          </div>
+        </section>
+
+        {/* ── 02. 방법 1: GitHub Pages ── */}
+        <section>
+          <MethodHeader
+            num="방법 1"
+            badge="GitHub Pages"
+            title="AI로 제조업 문서를 만들고 URL 하나로 배포합니다"
+            subtitle="Word 파일 이메일 전송 → URL 하나로 팀 전체 공유. 파일 버전 혼란 종료."
+            color="#0071e3"
+            bg="#f0f7ff"
+            icon={Globe}
+          />
+
+          <SectionBadge label="02. 방법 1 — 이런 문서들을 만들 수 있습니다" />
+          <h2>AI에게 공정 정보를 주면 5분 안에 전문 HTML 문서가 나옵니다</h2>
+          <p className="section-intro">
+            체크리스트 형태로, 모바일에서도 보이고, 인쇄도 되고, QR코드로 현장에서 바로 열 수 있습니다.
+            GitHub Pages에 올리면 URL이 생기고, 업데이트하면 모든 사람이 바로 최신 버전을 봅니다.
+          </p>
+
+          <div className="examples-grid">
+            {docExamples.map((item) => (
+              <ExampleCard
+                key={item.title}
+                icon={item.icon}
+                title={item.title}
+                desc={item.desc}
+                color="#0071e3"
+                bg="#f0f7ff"
+              />
+            ))}
+          </div>
+
+          <div className="compare-strip">
+            <div className="compare-col before-col">
+              <strong>기존 방법</strong>
+              <div className="compare-item">📝 작성 시간: 3시간</div>
+              <div className="compare-item">📧 배포: 이메일 첨부</div>
+              <div className="compare-item">🗂️ 버전 관리: 파일명</div>
+              <div className="compare-item">📱 현장 접근: 출력물</div>
+              <div className="compare-item">🔄 업데이트: 재배포 필요</div>
+            </div>
+            <div className="compare-arrow"><ArrowRight size={32} /></div>
+            <div className="compare-col after-col">
+              <strong>GitHub Pages</strong>
+              <div className="compare-item">⚡ 작성 시간: 5분</div>
+              <div className="compare-item">🔗 배포: URL 하나</div>
+              <div className="compare-item">✅ 버전 관리: 자동</div>
+              <div className="compare-item">📲 현장 접근: QR 스캔</div>
+              <div className="compare-item">🚀 업데이트: 파일 교체만</div>
+            </div>
+          </div>
+
+          <div className="lecture-preview-box" style={{ borderColor: '#0071e3' }}>
+            <Rocket size={20} color="#0071e3" />
+            <p><strong>12강에서 직접 실습합니다.</strong> SOP, 불량 보고서, 설비 점검 체크리스트, 공정 파라미터 가이드 4종을 AI로 만들고 GitHub Pages로 배포합니다.</p>
+          </div>
+        </section>
+
+        {/* ── 03. 방법 2: Streamlit Cloud ── */}
+        <section>
+          <MethodHeader
+            num="방법 2"
+            badge="Streamlit Cloud"
+            title="AI로 데이터 분석 앱을 만들고 팀원이 URL로 씁니다"
+            subtitle="Excel 반복 분석 → 앱 하나로 자동화. 분석 잘하는 사람이 퇴사해도 앱은 남습니다."
+            color="#34A853"
+            bg="#f0fdf4"
+            icon={BarChart3}
+          />
+
+          <SectionBadge label="03. 방법 2 — 이런 앱들을 만들 수 있습니다" />
+          <h2>CSV를 올리면 자동으로 분석해주는 앱이 브라우저에 뜹니다</h2>
+          <p className="section-intro">
+            AI에게 "이런 앱 만들어줘"라고 하면 Python Streamlit 앱을 만들어줍니다.
+            Streamlit Cloud에 올리면 URL이 생깁니다. 팀원이 URL에 접속해서 자기 CSV를 올리면 바로 분석됩니다.
+            설치 없이, 브라우저만 있으면 됩니다.
+          </p>
+
+          <div className="examples-grid examples-grid-wider">
+            {appExamples.map((item) => (
+              <ExampleCard
+                key={item.title}
+                icon={item.icon}
+                title={item.title}
+                desc={item.desc}
+                color="#34A853"
+                bg="#f0fdf4"
+              />
+            ))}
+          </div>
+
+          <div className="compare-strip">
+            <div className="compare-col before-col">
+              <strong>Excel 방식</strong>
+              <div className="compare-item">⏱️ 분석 시간: 30분</div>
+              <div className="compare-item">📧 공유: 파일 이메일</div>
+              <div className="compare-item">👥 동시 사용: 불가</div>
+              <div className="compare-item">🔍 이상치: 수동 탐색</div>
+              <div className="compare-item">⚠️ 의존성: 담당자 1인</div>
+            </div>
+            <div className="compare-arrow"><ArrowRight size={32} /></div>
+            <div className="compare-col after-col">
+              <strong>Streamlit 앱</strong>
+              <div className="compare-item">⚡ 분석 시간: 3분</div>
+              <div className="compare-item">🔗 공유: URL 하나</div>
+              <div className="compare-item">👥 동시 사용: 가능</div>
+              <div className="compare-item">🤖 이상치: 자동 표시</div>
+              <div className="compare-item">✅ 의존성: 팀 전체가 씀</div>
+            </div>
+          </div>
+
+          <div className="lecture-preview-box" style={{ borderColor: '#34A853' }}>
+            <Rocket size={20} color="#34A853" />
+            <p><strong>13강에서 직접 실습합니다.</strong> Antigravity로 데이터 분석 앱을 만들고 Streamlit Cloud에 배포합니다.</p>
+          </div>
+        </section>
+
+        {/* ── 04. 방법 3: AI Studio ── */}
+        <section>
+          <MethodHeader
+            num="방법 3"
+            badge="AI Studio 공유 링크"
+            title="AI로 공정 시뮬레이터를 만들고 링크 하나로 팀과 공유합니다"
+            subtitle="라이선스 수천만원짜리 시뮬레이터 → 무료. 결과만 보여주던 시뮬레이터 → 설명까지 해줌."
+            color="#EA4335"
+            bg="#fff0f0"
+            icon={Sliders}
+          />
+
+          <SectionBadge label="04. 방법 3 — 이런 시뮬레이터들을 만들 수 있습니다" />
+          <h2>AI에게 역할을 주면 그 순간부터 시뮬레이터가 됩니다</h2>
+          <p className="section-intro">
+            Google AI Studio에 "너는 포토공정 CD 시뮬레이터야"라고 한 줄 쓰면 끝입니다.
+            공정 조건을 입력하면 결과를 예측하고, "왜 이 결과가 나왔어?"라고 물어볼 수 있습니다.
+            AI가 설명해줍니다. 공유 링크를 팀원에게 보내면 누구나 씁니다. 무료입니다.
+          </p>
+
+          <div className="examples-grid examples-grid-wider">
+            {simulatorExamples.map((item) => (
+              <ExampleCard
+                key={item.title}
+                icon={item.icon}
+                title={item.title}
+                desc={item.desc}
+                color="#EA4335"
+                bg="#fff0f0"
+              />
+            ))}
+          </div>
+
+          <div className="compare-strip">
+            <div className="compare-col before-col">
+              <strong>전통 시뮬레이터</strong>
+              <div className="compare-item">💰 라이선스: 연 수천만 원</div>
+              <div className="compare-item">🖥️ 설치: 전문가 필요</div>
+              <div className="compare-item">👥 팀 공유: 추가 라이선스</div>
+              <div className="compare-item">📚 학습 시간: 수십 시간</div>
+              <div className="compare-item">❓ 결과 설명: 없음</div>
+            </div>
+            <div className="compare-arrow"><ArrowRight size={32} /></div>
+            <div className="compare-col after-col">
+              <strong>AI Studio</strong>
+              <div className="compare-item">🆓 라이선스: 무료</div>
+              <div className="compare-item">🌐 설치: 없음</div>
+              <div className="compare-item">🔗 팀 공유: 링크 하나</div>
+              <div className="compare-item">⚡ 학습 시간: 이 강의 1개</div>
+              <div className="compare-item">💬 결과 설명: AI가 해줌</div>
+            </div>
+          </div>
+
+          <div className="lecture-preview-box" style={{ borderColor: '#EA4335' }}>
+            <Rocket size={20} color="#EA4335" />
+            <p><strong>14강에서 직접 실습합니다.</strong> Gemini API Key를 발급하고 AI Studio에서 공정 시뮬레이터를 만들어 공유 링크로 배포합니다.</p>
+          </div>
+        </section>
+
+        {/* ── 05. 판단 기준 ── */}
+        <section>
+          <SectionBadge label="05. 3가지 방법 정리" />
+          <h2>언제 어떤 걸 쓸지 — 3문장으로 판단합니다</h2>
+          <p className="section-intro">
+            세 가지 질문으로 바로 답할 수 있습니다.
+          </p>
+          <DecisionBox />
+
+          <div className="scenario-example-box">
+            <h3>실제 상황에 적용해보면</h3>
+            <p className="scenario-intro">공정에 이상이 생겼습니다. 어떻게 세 가지를 조합할까요?</p>
+            <div className="scenario-steps">
+              <div className="scenario-step">
+                <div className="ss-num" style={{ background: '#0071e3' }}>1</div>
+                <div>
+                  <strong>불량 보고서 → GitHub Pages</strong>
+                  <p>팀원이 URL 열면 최신 보고서를 바로 봅니다.</p>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="lesson-timeline" aria-label="40분 강의 진행표">
-            {lessonFlow.map((item) => (
-              <div className="timeline-step" key={item.label}>
-                <strong>{item.time}</strong>
-                <span>{item.label}</span>
+              <div className="scenario-step">
+                <div className="ss-num" style={{ background: '#34A853' }}>2</div>
+                <div>
+                  <strong>불량 데이터 CSV → Streamlit 앱</strong>
+                  <p>어떤 패턴이 있는지 자동 분석합니다.</p>
+                </div>
               </div>
-            ))}
-          </div>
-          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('lecture-11-gemini-start.png')}
-              alt="Gemini 생태계 코믹"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-        </section>
-
-        <section className="definition-section">
-          <span className="section-label">02. Gemini 생태계란?</span>
-          <h2>Gemini는 단일 AI가 아니라 5개 도구가 연결된 생태계입니다</h2>
-          <p className="section-intro">
-            Gemini Pro는 AI 모델, AI Studio는 API Key 발급처이자 시뮬레이터 환경, NotebookLM은 개인 지식 베이스,
-            Antigravity IDE는 AI 에이전트 개발 환경, Telegram Bot은 알림 채널입니다. 이 5가지를 함께 쓰면 강력합니다.
-          </p>
-          <div className="one-line-definition inline-definition">
-            <span>한 문장 정의</span>
-            <strong>Gemini 생태계는 API, 지식, 시뮬레이션, 에이전트 개발, 알림을 하나로 묶어 엔지니어의 연구 자동화를 완성합니다.</strong>
-          </div>
-          <LectureImage
-            src="gemini-ecosystem.png"
-            alt="Gemini Pro를 중심으로 NotebookLM, AI Studio, Antigravity IDE, Telegram Bot이 연결된 Google AI 생태계 다이어그램"
-            caption="Gemini Pro, NotebookLM, AI Studio, Antigravity IDE, Telegram Bot이 하나의 자동화 워크플로우로 연결됩니다."
-          />
-          <div className="role-flow" aria-label="Gemini 생태계 역할 분리">
-            {roleFlow.map((item, index) => (
-              <div className="role-step" key={`${item.owner}-${item.task}`}>
-                <span>{item.owner}</span>
-                <strong>{item.task}</strong>
-                {index < roleFlow.length - 1 && <ArrowRight size={22} />}
-              </div>
-            ))}
-          </div>
-          <div className="scenario-grid">
-            {geminiEcosystem.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.description}</p>
-                  <div className="intent-box">
-                    <span>주요 기능</span>
-                    <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0 0 0' }}>
-                      {item.features.map((f) => <li key={f}>{f}</li>)}
-                    </ul>
-                  </div>
-                  <p className="scenario-output">{item.cost} / {item.freeQuota}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: '3rem', padding: '2rem', background: 'linear-gradient(135deg, #f0f7ff 0%, #f0fdf4 100%)', borderRadius: '16px', border: '1px solid rgba(0,113,227,0.1)' }}>
-            <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: '#0071e3' }}>Gemini 생태계 5개 도구 연결 흐름</h3>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <Code size={32} color="#4285F4" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>AI Studio</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>API Key 발급</p>
-              </div>
-              <ArrowRight size={24} color="#999" />
-              <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <Bot size={32} color="#4285F4" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>Gemini Pro</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>AI 모델 호출</p>
-              </div>
-              <ArrowRight size={24} color="#999" />
-              <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <BookOpen size={32} color="#34A853" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>NotebookLM</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>지식 베이스</p>
-              </div>
-              <ArrowRight size={24} color="#999" />
-              <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <Zap size={32} color="#0071e3" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>Antigravity</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>에이전트 코딩</p>
-              </div>
-              <ArrowRight size={24} color="#999" />
-              <div style={{ padding: '1rem', background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', minWidth: '140px' }}>
-                <MessageCircle size={32} color="#0088CC" style={{ margin: '0 auto 0.5rem' }} />
-                <strong>Telegram Bot</strong>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>실시간 알림</p>
+              <div className="scenario-step">
+                <div className="ss-num" style={{ background: '#EA4335' }}>3</div>
+                <div>
+                  <strong>원인 탐색 → AI Studio 시뮬레이터</strong>
+                  <p>"이 조건 바꾸면 이 현상이 개선돼?"를 대화형으로 탐색합니다.</p>
+                </div>
               </div>
             </div>
-            <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.95rem', color: '#555' }}>
-              5개 도구를 순차적으로 연결하면 API 자동화 → 논문 지식 → 에이전트 코딩 → 알림까지 완성됩니다.
+            <p className="scenario-conclusion">문서 + 분석 + 시뮬레이션. 이 세 가지가 같이 돌아가면 문제 해결 속도가 달라집니다.</p>
+          </div>
+        </section>
+
+        {/* ── 06. 로드맵 ── */}
+        <section>
+          <SectionBadge label="06. 12~17강 로드맵" />
+          <h2>6주 뒤 여러분은 3개의 URL과 포트폴리오를 갖게 됩니다</h2>
+          <p className="section-intro">
+            코드를 몰라도 됩니다. 결과물이 있으면 됩니다.
+            GitHub Pages URL, Streamlit Cloud URL, AI Studio 공유 링크. 이 세 개가 포트폴리오입니다.
+          </p>
+          <RoadmapSection />
+        </section>
+
+        {/* ── 07. Quality Gate ── */}
+        <section className="workshop-section">
+          <SectionBadge label="07. Quality Gate & 마무리" />
+          <h2>11강 완료 체크리스트</h2>
+          <p className="section-intro">
+            3개를 모두 체크하면 11강 완료입니다.
+          </p>
+          <QualityGate />
+
+          <div className="wrap-message" style={{ marginTop: '3rem' }}>
+            <Sparkles size={36} color="var(--accent)" />
+            <h3>"AI로 만든 것을 세상에 꺼내는 창구 — GitHub Pages, Streamlit Cloud, AI Studio"</h3>
+            <p>
+              여러분이 해야 할 일은 하나입니다.
+              <strong> "이런 게 필요하다"를 구체적으로 말하는 것.</strong>
+              그게 제조업 AI 활용의 핵심입니다.
+            </p>
+            <p style={{ marginTop: '1rem', color: '#0071e3', fontWeight: 700 }}>
+              → 12강에서 첫 번째 방법을 직접 실습합니다. 11강 수고하셨습니다!
             </p>
           </div>
-          <div className="coding-compare-grid" style={{ marginTop: '3rem' }}>
-            <motion.article
-              className="coding-compare-card traditional"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <img src={assetUrl('traditional-coding.png')} alt="전통적인 수동 방식" />
-              <div className="compare-content">
-                <span className="compare-kicker">Traditional (Manual Process)</span>
-                <h3>웹 UI에서 매번 복사-붙여넣기</h3>
-                <p>
-                  Gemini.google.com에 접속해서 프롬프트를 입력하고, 응답을 복사하여
-                  Excel/Word에 붙여넣는 반복 작업에 시간을 뺏깁니다.
-                </p>
-                <ul>
-                  <li>매번 웹 브라우저 열고 프롬프트 입력</li>
-                  <li>응답을 수동으로 복사하여 문서에 정리</li>
-                  <li>여러 데이터셋 분석 시 비효율적</li>
-                </ul>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="coding-compare-card vibe"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.08 }}
-            >
-              <img src={assetUrl('vibe-coding.png')} alt="Gemini API 자동화" />
-              <div className="compare-content">
-                <span className="compare-kicker">Gemini API (Automated)</span>
-                <h3>Python 스크립트로 자동 호출하고 결과 저장</h3>
-                <p>
-                  API Key를 발급받아 Python 코드로 Gemini를 호출하면, 반복 작업이
-                  자동화되고 결과가 구조화된 JSON으로 저장됩니다.
-                </p>
-                <ul>
-                  <li>API Key 한 번 발급으로 무제한 자동화</li>
-                  <li>CSV → Gemini → JSON 자동 흐름</li>
-                  <li>무료 할당량: 15 req/min</li>
-                </ul>
-              </div>
-            </motion.article>
-          </div>
         </section>
 
-        <section>
-          <span className="section-label">03. 왜 Gemini인가?</span>
-          <h2>100만 토큰 컨텍스트와 무료 API로 연구 업무에 최적화</h2>
-          <p className="section-intro">
-            Claude, ChatGPT와 비교했을 때 Gemini는 긴 논문 분석, 무료 API, NotebookLM 연동으로
-            엔지니어에게 가장 실용적입니다.
-          </p>
-          <PricingChart />
-          <LectureImage
-            src="pricing-comparison.png"
-            alt="Gemini Pro, Claude Pro, ChatGPT Plus 비교표"
-            caption="Gemini를 먼저 실습하는 이유를 컨텍스트, 무료 API, NotebookLM, Antigravity IDE 연동 관점에서 보여줍니다."
-          />
-          <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#333' }}>
-            <p style={{ fontWeight: 700 }}>Target Point:</p>
-            <p>"Gemini는 유료 구독 없이 무료 API로 시작할 수 있고, NotebookLM과 Antigravity IDE가 완벽하게 연동되어 연구 자동화에 최적화되어 있습니다."</p>
-          </div>
-        </section>
-
-        <section>
-          <span className="section-label">04. 첨단 공정기술 사례</span>
-          <h2>반도체·디스플레이·배터리 엔지니어가 Gemini 생태계를 쓰는 법</h2>
-          <p className="section-intro">
-            단순히 채팅하는 것이 아니라, API로 수율 분석 자동화, NotebookLM으로 논문 지식 베이스 구축,
-            AI Studio 시뮬레이션 환경 구축까지 전체 흐름을 연결합니다.
-          </p>
-          <div className="scenario-grid">
-            {fieldScenarios.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.before}</p>
-                  <div className="intent-box">
-                    <span>의도 지시문</span>
-                    <p>{item.intent}</p>
-                  </div>
-                  <p className="scenario-output">{item.output}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <ApiKeyDeepDive />
-          <AntigravityApiKeyIntegration />
-          <NotebookLMDeepDive />
-          <AiStudioSimulatorDeepDive />
-        </section>
-
-        <section className="workshop-section teaching-section">
-          <span className="section-label">05. 미니 워크숍</span>
-          <h2>실습: 내 첫 <mark>Gemini 생태계 앱</mark> 만들기</h2>
-          <p className="section-intro">
-            API Key 발급, NotebookLM 논문 업로드, AI Studio 시뮬레이터 구축을 차례로 완료하세요.
-          </p>
-          <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('panel4.png')}
-              alt="Gemini 생태계 실습 가이드"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-          <InteractiveWorkshop />
-          <FirstRunGuide />
-        </section>
-
-        <section>
-          <span className="section-label">06. 품질 점검 및 정리</span>
-          <h2>실행 전, 이 5가지만 확인하세요</h2>
-          <div className="checklist">
-            {intentChecklist.map((item) => (
-              <div className="check-item" key={item}>
-                <CheckCircle2 size={20} />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-          <LectureImage
-            src="security-checklist.png"
-            alt="API Key 보안 체크리스트 인포그래픽"
-            caption="실무 자동화 전에 .env, .gitignore, 키 재발급, 사용량 모니터링, 프로덕션 격리를 확인합니다."
-          />
-          <div className="wrap-message">
-            <Quote size={36} color="var(--accent)" />
-            <h3>"Gemini 생태계는 AI 모델 하나가 아니라, API-지식-배포-알림이 연결된 전체 워크플로우입니다."</h3>
-            <p>다음 강의: Telegram Bot으로 실시간 알림 받기 (12강)</p>
-          </div>
-          <NextLecturePreview />
-        </section>
-
+        {/* ── 전문가 포인트 ── */}
         <section className="professional-point">
           <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
-            <h3>Advanced Process Engineering Point</h3>
-            <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "Gemini 생태계는 단순히 AI 채팅이 아니라, API 자동화, 논문 지식 베이스, AI Studio 공정 시뮬레이터를 하나로 묶어
-              엔지니어의 연구 워크플로우를 완성합니다."<br/>
-              API Key 관리와 보안은 엔지니어가 책임지고, AI는 반복 작업을 자동화합니다.
+            <h3>Advanced Engineering Point</h3>
+            <p style={{ color: 'rgba(255,255,255,0.85)', marginTop: '1rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
+              "배포하지 않은 AI 결과물은 가치가 없습니다. 내 컴퓨터에만 있는 SOP, 내 컴퓨터에만 있는 분석 앱, 내 컴퓨터에만 있는 시뮬레이터 — 이것들은 팀에 기여하지 않습니다.
+              GitHub Pages, Streamlit Cloud, AI Studio 공유 링크로 바깥으로 꺼내는 순간, 가치가 시작됩니다."
             </p>
             <div className="point-strip">
-              <span><Wrench size={16} /> API는 자동화 도구</span>
-              <span><BookOpen size={16} /> NotebookLM은 지식 창고</span>
-              <span><Zap size={16} /> Antigravity는 개발 환경</span>
+              <span><Globe size={16} /> 문서 → GitHub Pages</span>
+              <span><BarChart3 size={16} /> 분석 → Streamlit Cloud</span>
+              <span><Sliders size={16} /> 시뮬레이션 → AI Studio</span>
             </div>
           </div>
         </section>
       </main>
 
       <footer>
-        <p>© 2026 Gemini Ecosystem for Fine Tech Engineering | LettUin Edu</p>
+        <p>© 2026 AI로 제조업 업무 효율화 | LettUin Edu — Ch.11</p>
       </footer>
     </div>
   );
