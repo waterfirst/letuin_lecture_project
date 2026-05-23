@@ -437,7 +437,7 @@ export default function App() {
             GitHub Pages · Streamlit Cloud · AI Studio 공유 링크
           </p>
           <div className="lesson-meta" aria-label="lesson summary">
-            <span>약 70분</span>
+            <span>약 40분</span>
             <span>개요 강의</span>
             <span>코드 없음</span>
             <span>결과물: 큰 그림</span>
