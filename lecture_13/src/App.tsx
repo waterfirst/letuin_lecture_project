@@ -223,9 +223,9 @@ const analysisScenarios = [
     title: '전체 현황 확인',
     icon: Eye,
     color: '#34A853',
-    finding: 'KPI 카드: 수율 88.6%, 불량 2,813건, 평균 yield_score 95.10',
+    finding: 'KPI: 수율 88.6% (pass 21,763/전체 24,576), 불량 2,813건, 평균 yield_score 95.10, pass/fail 분기점 91.5점',
     explanation:
-      'Excel로 이 네 숫자를 계산하려면 COUNTIF 함수 쓰고 나누고... 5분은 걸렸을 겁니다. CSV 올리는 데 5초 걸렸죠.',
+      'Excel로 이 네 숫자를 계산하려면 COUNTIF 함수 쓰고 나누고... 5분은 걸렸을 겁니다. CSV 올리는 데 5초. yield_score 미달 fail만 1,254건 — defect 없이 점수 미달로 fail 처리된 것.',
   },
   {
     number: 2,
@@ -233,9 +233,9 @@ const analysisScenarios = [
     icon: BarChart3,
     color: '#EA4335',
     finding:
-      '챔버별 수율 바 차트: C4 81.2% (빨강), C2 84.5% (빨강), C1 95.6%와 14포인트 차이',
+      'C1 95.6% ✅ (▲7.1%p) | C3 92.9% 🟠 (▲4.3%p) | C2 84.5% 🔴 (▼4.1%p) | C4 81.2% 🔴 최저 (▼7.4%p)',
     explanation:
-      '사이드바에서 C4만 선택 → XY 맵에서 불량 분포 패턴 확인. 특정 위치에 몰려 있으면 장비 내 특정 부위 문제, 전체적으로 퍼져 있으면 공정 조건 문제.',
+      'C4만 선택 → XY 맵에서 불량 패턴 확인. 특정 위치에 몰려 있으면 장비 특정 부위 문제, 전체적으로 퍼져 있으면 공정 조건 문제.',
   },
   {
     number: 3,
@@ -259,8 +259,8 @@ const analysisScenarios = [
     title: 'Edge zone 수율 저하',
     icon: Target,
     color: '#FF9800',
-    finding: 'Zone 필터: edge 85%, center 94.5%, middle 93.8%',
-    explanation: 'edge 쪽 증착 균일도 문제를 먼저 확인해야 합니다.',
+    finding: 'center 94.5% | middle 93.8% | edge 85.0% 🟠 → 9.5%p 낮음',
+    explanation: 'edge 쪽 증착 균일도 문제를 먼저 확인. center 대비 9.5%p 차이는 장비 edge 영역 점검 필요.',
   },
 ];
 
