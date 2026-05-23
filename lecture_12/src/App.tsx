@@ -1,25 +1,26 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  AlertCircle,
-  AlertTriangle,
   ArrowRight,
+  BarChart3,
   Check,
   CheckCircle2,
-  Code,
+  ClipboardList,
   Copy,
   ExternalLink,
-  Eye,
-  EyeOff,
+  FileCode2,
   FileText,
-  GitBranch,
-  Github,
-  Key,
-  Lock,
+  Globe,
+  Layers,
+  LayoutTemplate,
+  MessageSquareText,
+  Microscope,
   Quote,
-  Shield,
-  Terminal,
-  Unlock,
+  Rocket,
+  Search,
+  Share2,
+  Sparkles,
+  Upload,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -27,156 +28,121 @@ import {
 const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 
 // ============================================================================
-// DATA ARRAYS - Security & CI/CD
+// DATA ARRAYS - Gemini Defect Report & GitHub Pages
 // ============================================================================
 
 const learningGoals = [
   {
     step: '학습목표 1',
-    title: '.env 파일로 API Key 안전하게 관리',
-    body: 'API Key를 코드에서 분리하여 .env 파일로 관리하고 .gitignore로 보호합니다.',
-    type: 'env'
+    title: 'Gemini에게 설비 불량 분석 보고서를 HTML로 작성시키기',
+    body: 'gemini.google.com에서 프롬프트 하나로 Chart.js 포함 불량 보고서를 만듭니다.',
+    type: 'report',
   },
   {
     step: '학습목표 2',
-    title: 'GitHub Secrets로 배포 환경 암호화',
-    body: 'GitHub Actions에서 안전하게 API Key를 사용하는 방법을 배웁니다.',
-    type: 'secrets'
+    title: 'index.html과 README.md를 Gemini로 만들기',
+    body: 'GitHub Pages 배포에 필요한 파일을 Gemini가 자동 생성합니다.',
+    type: 'files',
   },
   {
     step: '학습목표 3',
-    title: 'GitHub Actions로 CI/CD 자동화',
-    body: 'push할 때마다 자동으로 테스트하고 배포하는 파이프라인을 구축합니다.',
-    type: 'cicd'
+    title: 'GitHub Pages로 배포하여 부서원에게 URL 공유',
+    body: 'GitHub 웹 UI에서 드래그 앤 드롭으로 업로드하고 Pages를 설정합니다.',
+    type: 'deploy',
   },
 ];
 
 const lessonFlow = [
-  { time: '3분', label: '목표 확인' },
-  { time: '7분', label: '개념·비유' },
-  { time: '8분', label: '실무 사례' },
-  { time: '17분', label: '지시문·실습' },
-  { time: '5분', label: '검증·정리' },
+  { time: '3분', label: '오프닝' },
+  { time: '12분', label: '보고서 생성' },
+  { time: '10분', label: '파일 생성' },
+  { time: '10분', label: 'Pages 배포' },
+  { time: '5분', label: '정리' },
 ];
 
 const roleFlow = [
-  { owner: '엔지니어', task: '.env 파일 생성, .gitignore 설정, GitHub Secrets 등록' },
-  { owner: 'GitHub', task: 'API Key 암호화 저장, Actions 로그 마스킹' },
-  { owner: 'GitHub Actions', task: '자동 테스트, 자동 배포, 알림 전송' },
+  { owner: '엔지니어', task: '불량 현상 설명 + 프롬프트 작성' },
+  { owner: 'Gemini', task: 'HTML 보고서 + index.html + README.md 생성' },
+  { owner: 'GitHub Pages', task: '정적 사이트 호스팅 + URL 공유' },
 ];
 
-const securityRisks = [
-  {
-    title: 'GitHub 직접 commit',
-    probability: 45,
-    severity: '매우 높음',
-    color: '#E74C3C',
-  },
-  {
-    title: '로그 파일 출력',
-    probability: 25,
-    severity: '높음',
-    color: '#E67E22',
-  },
-  {
-    title: '공개 채팅/스크린샷',
-    probability: 20,
-    severity: '중간',
-    color: '#F39C12',
-  },
-  {
-    title: '하드코딩',
-    probability: 10,
-    severity: '높음',
-    color: '#E67E22',
-  },
+const defectPrompt = `반도체 CVD 챔버 #3에서 박막 두께 균일도 불량이 발생했습니다.
+히터 존별 온도 편차가 원인입니다.
+이 불량에 대한 분석 보고서를 HTML로 만들어줘.
+포함: 불량 개요, 데이터 분석(Chart.js 히스토그램),
+원인 분석(5 Why), 대책, 효과 확인.
+깔끔한 보고서 스타일, 반응형, 인쇄 가능.`;
+
+const reportSections = [
+  { title: '불량 개요', desc: '장비명, 일시, 현상, 영향 범위' },
+  { title: '데이터 분석', desc: 'Chart.js 히스토그램 — 두께 분포' },
+  { title: '원인 분석', desc: '5 Why 분석 — 히터 존 온도 편차' },
+  { title: '대책', desc: '단기/장기 대책 매트릭스' },
+  { title: '효과 확인', desc: '개선 전/후 Cpk 비교' },
 ];
 
-const fieldScenarios = [
+const geminiSteps = [
+  { step: '1', title: 'gemini.google.com 접속', body: 'Google 계정으로 로그인합니다.', duration: '30초' },
+  { step: '2', title: '프롬프트 입력', body: '불량 현황과 요구사항을 구체적으로 작성합니다.', duration: '2분' },
+  { step: '3', title: 'HTML 코드 복사', body: 'Gemini가 생성한 HTML 코드를 전체 복사합니다.', duration: '30초' },
+  { step: '4', title: '로컬에 저장', body: 'report.html로 저장하고 브라우저에서 확인합니다.', duration: '1분' },
+  { step: '5', title: '수정 요청', body: '"차트 색상을 파란색으로 바꿔줘" 등 추가 지시합니다.', duration: '1분' },
+];
+
+const indexReadmeSteps = [
+  { step: '1', title: 'index.html 생성 프롬프트', body: '"report.html로 연결되는 index.html을 만들어줘. 프로젝트 이름, 보고서 링크, 작성일 포함."', duration: '1분' },
+  { step: '2', title: 'README.md 생성 프롬프트', body: '"이 GitHub 저장소의 README.md를 만들어줘. 프로젝트 설명, 파일 목록, GitHub Pages URL 포함."', duration: '1분' },
+  { step: '3', title: '코드 복사 & 저장', body: 'index.html과 README.md를 각각 파일로 저장합니다.', duration: '1분' },
+];
+
+const deploySteps = [
+  { num: '1', label: 'github.com 접속 & 로그인' },
+  { num: '2', label: 'New Repository 생성 (Public)' },
+  { num: '3', label: 'uploading your files 링크 클릭' },
+  { num: '4', label: 'report.html, index.html, README.md 드래그 앤 드롭' },
+  { num: '5', label: 'Commit changes 클릭' },
+  { num: '6', label: 'Settings 탭 → Pages 메뉴' },
+  { num: '7', label: 'Source: Deploy from a branch → main → /(root) → Save' },
+  { num: '8', label: '1~2분 후 URL 확인 → 부서원에게 공유' },
+];
+
+const fieldAlternatives = [
   {
-    icon: Lock,
-    title: '.env 파일 관리',
-    before: 'API Key를 코드에 직접 입력하여 GitHub에 노출',
-    intent: 'API Key를 .env 파일로 분리하고 .gitignore로 보호해줘.',
-    output: '.env 파일 생성 + .gitignore 설정 완료',
-  },
-  {
-    icon: Github,
-    title: 'GitHub Secrets 설정',
-    before: 'Actions에서 API Key를 평문으로 사용하여 로그 노출',
-    intent: 'GitHub Secrets에 API Key를 등록하고 workflow에서 안전하게 사용해줘.',
-    output: 'Secrets 등록 + workflow 암호화 완료',
+    icon: Layers,
+    field: '디스플레이',
+    title: 'OLED Mura 불량 보고서',
+    prompt: '"OLED 패널에서 Mura 불량이 발생했습니다. 증착 소스 정렬 편차가 원인입니다. HTML 분석 보고서를 만들어줘."',
+    cause: '증착 소스 정렬 편차',
   },
   {
     icon: Zap,
-    title: 'GitHub Actions CI/CD',
-    before: '수동으로 테스트하고 배포하여 실수 발생',
-    intent: 'push할 때마다 자동으로 테스트하고 배포하는 workflow를 만들어줘.',
-    output: '자동 테스트 + 자동 배포 파이프라인 구축',
+    field: '배터리',
+    title: '전극 코팅 두께 불량 보고서',
+    prompt: '"배터리 전극 코팅 두께 불량이 발생했습니다. 슬롯다이 갭 이상이 원인입니다. HTML 분석 보고서를 만들어줘."',
+    cause: '슬롯다이 갭 이상',
+  },
+  {
+    icon: Microscope,
+    field: '바이오',
+    title: '세포 배양 오염 보고서',
+    prompt: '"세포 배양 중 오염이 발생했습니다. 클린벤치 HEPA 필터 열화가 원인입니다. HTML 분석 보고서를 만들어줘."',
+    cause: 'HEPA 필터 열화',
   },
 ];
 
-const envSteps = [
-  { step: '1', title: '.env 파일 생성', body: 'GEMINI_API_KEY=your_key_here', duration: '30초' },
-  { step: '2', title: '.gitignore에 추가', body: 'echo ".env" >> .gitignore', duration: '10초' },
-  { step: '3', title: 'Python에서 로드', body: 'load_dotenv() 사용', duration: '1분' },
-  { step: '4', title: 'git status 확인', body: '.env가 untracked인지 확인', duration: '10초' },
+const qualityChecklist = [
+  'Gemini가 생성한 HTML을 브라우저에서 열어 정상 표시되는가?',
+  'Chart.js 히스토그램이 데이터와 함께 렌더링되는가?',
+  '5 Why 분석이 논리적으로 연결되는가?',
+  'index.html에서 report.html로 링크가 작동하는가?',
+  'GitHub Pages URL이 정상 접속되는가?',
 ];
 
-const gitignoreTemplate = `.env
-.env.local
-.env.production
-*.pem
-*_key.json
-credentials.json
-__pycache__/
-*.pyc
-venv/
-.venv/
-node_modules/
-dist/
-build/
-.DS_Store
-Thumbs.db`;
-
-const cicdSteps = [
-  { step: '1', title: 'workflow 파일 생성', body: '.github/workflows/ci.yml', duration: '2분' },
-  { step: '2', title: 'GitHub Secrets 등록', body: 'Settings → Secrets', duration: '1분' },
-  { step: '3', title: 'push 후 확인', body: 'Actions 탭에서 초록 체크', duration: '30초' },
-];
-
-const securityChecklist = [
-  '.env 파일을 절대 GitHub에 커밋하지 않기',
-  '.gitignore에 .env 추가 확인',
-  'GitHub Secrets에 API Key 등록',
-  'Actions 로그에서 Key 마스킹 확인',
-  '유출 시 즉시 Key 재발급',
-];
-
-const intentChecklist = [
-  '.env 파일이 생성되었는가?',
-  '.gitignore에 .env가 추가되었는가?',
-  'GitHub Secrets에 Key가 등록되었는가?',
-  'GitHub Actions workflow가 작동하는가?',
-  'git status에서 .env가 untracked인가?',
-];
-
-const envVerifyPoints = [
-  '.env 파일이 .gitignore에 포함되어 있는가?',
-  'git status에서 .env가 빨간색(untracked)인가?',
-  'Python에서 os.getenv()로 읽히는가?',
-];
-
-const secretsVerifyPoints = [
-  'GitHub Secrets에 Key가 등록되어 있는가?',
-  'workflow에서 secrets 변수로 참조하는가?',
-  'Actions 로그에서 Key가 ***로 마스킹되는가?',
-];
-
-const cicdVerifyPoints = [
-  'push 후 Actions 탭에서 workflow가 실행되는가?',
-  '테스트가 통과하면 초록 체크마크가 뜨는가?',
-  '배포가 자동으로 진행되는가?',
+const timeComparison = [
+  { task: 'Word 보고서 작성', traditional: '3시간', gemini: '5분' },
+  { task: '차트 삽입', traditional: '30분', gemini: '자동 생성' },
+  { task: '웹 변환', traditional: '2시간', gemini: '즉시' },
+  { task: '배포 & 공유', traditional: '별도 서버', gemini: 'GitHub Pages 무료' },
 ];
 
 // ============================================================================
@@ -184,40 +150,40 @@ const cicdVerifyPoints = [
 // ============================================================================
 
 function GoalVisual({ type }: { type: string }) {
-  if (type === 'env') {
+  if (type === 'report') {
     return (
       <div className="goal-visual definition">
         <div className="visual-item person">
-          <Lock size={18} />
-          <span>.env</span>
+          <MessageSquareText size={18} />
+          <span>프롬프트</span>
         </div>
         <ArrowRight size={14} className="visual-arrow" />
         <div className="visual-item ai">
-          <Shield size={18} />
-          <span>안전</span>
+          <FileCode2 size={18} />
+          <span>HTML</span>
         </div>
       </div>
     );
   }
-  if (type === 'secrets') {
+  if (type === 'files') {
     return (
       <div className="goal-visual elements">
-        <div className="element-tag">Secrets</div>
-        <div className="element-tag">암호화</div>
-        <div className="element-tag">마스킹</div>
+        <div className="element-tag">index.html</div>
+        <div className="element-tag">README.md</div>
+        <div className="element-tag">report.html</div>
       </div>
     );
   }
-  if (type === 'cicd') {
+  if (type === 'deploy') {
     return (
       <div className="goal-visual field">
         <div className="field-icons">
-          <div className="f-icon"><Terminal size={18} /></div>
-          <div className="f-icon"><Zap size={18} /></div>
+          <div className="f-icon"><Upload size={18} /></div>
+          <div className="f-icon"><Globe size={18} /></div>
         </div>
         <div className="success-indicator">
           <CheckCircle2 size={12} />
-          <span>자동화</span>
+          <span>배포 완료</span>
         </div>
       </div>
     );
@@ -225,27 +191,36 @@ function GoalVisual({ type }: { type: string }) {
   return null;
 }
 
-function SecurityRiskChart() {
-  const max = Math.max(...securityRisks.map((item) => item.probability));
-
+function TimeComparisonTable() {
   return (
     <div className="visual-card">
       <div className="visual-header">
-        <span>API Key Leak Risk</span>
-        <strong>발생 빈도</strong>
+        <span>시간 비교</span>
+        <strong>Word vs Gemini</strong>
       </div>
-      <div className="bar-chart" role="img" aria-label="API Key 유출 경로 차트">
-        {securityRisks.map((item) => (
-          <div className="bar-row" key={item.title}>
-            <span>{item.title}</span>
-            <div>
-              <i style={{ width: `${(item.probability / max) * 100}%`, background: item.color }} />
-            </div>
-            <strong>{item.probability}%</strong>
-          </div>
-        ))}
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
+          <thead>
+            <tr style={{ borderBottom: '2px solid #e5e5e5' }}>
+              <th style={{ textAlign: 'left', padding: '0.75rem', color: '#666' }}>작업</th>
+              <th style={{ textAlign: 'center', padding: '0.75rem', color: '#E74C3C' }}>Word 수작업</th>
+              <th style={{ textAlign: 'center', padding: '0.75rem', color: '#34A853' }}>Gemini + Pages</th>
+            </tr>
+          </thead>
+          <tbody>
+            {timeComparison.map((row) => (
+              <tr key={row.task} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                <td style={{ padding: '0.75rem', fontWeight: 600 }}>{row.task}</td>
+                <td style={{ padding: '0.75rem', textAlign: 'center', color: '#E74C3C' }}>{row.traditional}</td>
+                <td style={{ padding: '0.75rem', textAlign: 'center', color: '#34A853', fontWeight: 700 }}>{row.gemini}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <p>GitHub 직접 commit이 전체 유출의 45%를 차지합니다. .gitignore 하나로 대부분을 막을 수 있습니다.</p>
+      <p style={{ marginTop: '1rem', color: '#666', fontSize: '0.9rem' }}>
+        총 소요 시간: Word 약 5시간 30분 → Gemini + GitHub Pages 약 10분
+      </p>
     </div>
   );
 }
@@ -258,6 +233,7 @@ function LectureImage({ src, alt, caption }: { src: string; alt: string; caption
     </figure>
   );
 }
+
 function VerifyChecklist({ points }: { points: string[] }) {
   return (
     <div className="verify-checklist">
@@ -276,135 +252,20 @@ function VerifyChecklist({ points }: { points: string[] }) {
 // DEEP DIVE SECTIONS
 // ============================================================================
 
-function EnvFileDeepDive() {
+function GeminiReportDeepDive() {
   return (
     <div className="deep-dive">
       <div className="deep-dive-heading">
-        <span>Case 01 Deep Dive</span>
-        <h3>.env 파일 관리: API Key를 코드에서 분리하기</h3>
+        <span>STEP 1~5 Deep Dive</span>
+        <h3>Gemini에서 CVD 챔버 불량 보고서 HTML 만들기</h3>
         <p>
-          API Key를 코드에 직접 입력하면 GitHub에 노출됩니다. .env 파일로 분리하고 .gitignore로 보호합니다.
-        </p>
-        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
-          <img
-            src={assetUrl('panel1.png')}
-            alt=".env 파일 관리"
-            style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-          />
-        </div>
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 하드코딩 (위험)</span>
-          <h4>API Key를 코드에 직접 입력</h4>
-          <div className="code-preview-box">
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{`# app.py
-import google.generativeai as genai
-
-# ❌ 위험: API Key를 코드에 직접 입력
-api_key = "AIzaSyXXXXXXXXXXXXXXXX"
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel('gemini-pro')
-response = model.generate_content("Hello")
-print(response.text)`}</pre>
-          </div>
-          <ul>
-            <li>API Key가 GitHub에 노출됨</li>
-            <li>팀원 모두에게 Key가 공유됨</li>
-            <li>유출 시 $50,000 청구 위험</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: .env 분리 지시</span>
-          <h4>API Key를 .env 파일로 분리하고 .gitignore로 보호합니다</h4>
-          <p>
-            ".env 파일을 생성하고 GEMINI_API_KEY를 저장해줘. Python 코드에서는 python-dotenv로 읽어오고,
-            .gitignore에 .env를 추가해서 GitHub에 올라가지 않게 해줘."
-          </p>
-          <div className="aoi-rule-grid">
-            <div><strong>.env 파일</strong><span>GEMINI_API_KEY=your_key</span></div>
-            <div><strong>.gitignore</strong><span>.env 추가</span></div>
-            <div><strong>Python</strong><span>load_dotenv() 사용</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>.env 파일로 API Key를 안전하게 관리합니다</h4>
-          <div className="code-preview-box">
-            <div className="visual-header">
-              <span>.env 파일</span>
-              <strong>(GitHub에 올리지 않음)</strong>
-            </div>
-            <pre style={{ background: '#f5f5f7', color: '#333', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{`GEMINI_API_KEY=AIzaSyXXXXXXXXXXXXXXXX
-TELEGRAM_BOT_TOKEN=123456:ABCDEFGHIJ
-ANTHROPIC_API_KEY=sk-ant-XXXXXXXXXXXXXXX`}</pre>
-          </div>
-          <div className="code-preview-box" style={{ marginTop: '1rem' }}>
-            <div className="visual-header">
-              <span>Python 코드</span>
-              <strong>app.py</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{`# app.py
-import google.generativeai as genai
-import os
-from dotenv import load_dotenv
-
-load_dotenv()  # .env 파일 로드
-
-# ✅ 안전: 환경 변수로 읽기
-api_key = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel('gemini-pro')
-response = model.generate_content("Hello")
-print(response.text)`}</pre>
-          </div>
-          <div className="aoi-impact-strip">
-            <div><strong>GitHub 안전</strong><span>.env가 .gitignore에 포함</span></div>
-            <div><strong>팀 협업</strong><span>각자 본인 Key 사용</span></div>
-            <div><strong>유출 방지</strong><span>$50,000 청구 위험 제거</span></div>
-          </div>
-          <div className="security-checklist-box">
-            <Lock size={24} color="#EA4335" />
-            <h4>보안 체크리스트 (필수)</h4>
-            <ul className="security-list">
-              {securityChecklist.map((item, index) => (
-                <li key={index}>
-                  <Shield size={14} color="#34A853" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 API Key를 코드에 절대 입력하지 않고, .env 파일로 분리하여 .gitignore로 보호하는 것입니다.
-      </p>
-      <VerifyChecklist points={envVerifyPoints} />
-    </div>
-  );
-}
-
-function GitHubSecretsDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 02 Deep Dive</span>
-        <h3>GitHub Secrets: 배포 환경에서 안전하게 Key 사용하기</h3>
-        <p>
-          GitHub Actions에서 API Key를 사용할 때, workflow 파일에 직접 입력하면 로그에 노출됩니다.
-          GitHub Secrets에 등록하면 AES-256 암호화로 안전하게 보관됩니다.
+          gemini.google.com에 접속하여 프롬프트 하나로 Chart.js 포함 불량 분석 보고서를 생성합니다.
+          복사 → 저장 → 브라우저 확인 → 수정 요청까지 5단계입니다.
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
             src={assetUrl('panel2.png')}
-            alt="GitHub Secrets 설정"
+            alt="Gemini HTML 보고서 생성 화면"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
         </div>
@@ -412,248 +273,252 @@ function GitHubSecretsDeepDive() {
 
       <div className="yield-case-compare vertical-case-flow">
         <article className="yield-case-panel manual-panel">
-          <span>Before: workflow에 평문 입력</span>
-          <h4>API Key를 workflow 파일에 직접 입력</h4>
-          <div className="code-preview-box">
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{`# .github/workflows/deploy.yml
-name: Deploy
-
-on: [push]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy with API Key
-        run: |
-          # ❌ 위험: 평문으로 입력
-          export GEMINI_API_KEY="AIzaSyXXXXXX"
-          python deploy.py`}</pre>
-          </div>
+          <span>Before: Word 수작업</span>
+          <h4>Word로 보고서 작성 → 3시간 이상 소요</h4>
           <ul>
-            <li>API Key가 workflow 파일에 노출</li>
-            <li>Actions 로그에 Key가 평문으로 출력</li>
-            <li>저장소 접근자 모두에게 Key 공개</li>
+            <li>Word에서 표 그리고 데이터 입력 — 30분</li>
+            <li>Excel에서 차트 만들고 캡처 → 붙여넣기 — 30분</li>
+            <li>5 Why 분석 텍스트 직접 작성 — 1시간</li>
+            <li>대책 & 효과 확인 작성 — 1시간</li>
+            <li>포맷 정리, PDF 변환, 이메일 전송 — 30분</li>
           </ul>
         </article>
 
         <article className="yield-case-panel prompt-panel">
-          <span>Prompt: GitHub Secrets 설정 지시</span>
-          <h4>API Key를 GitHub Secrets에 등록하고 workflow에서 참조합니다</h4>
-          <p>
-            "GitHub Secrets에 GEMINI_API_KEY를 등록해줘. workflow 파일에서는 {'${{ secrets.GEMINI_API_KEY }}'} 로
-            참조하고, Actions 로그에서 자동으로 마스킹되게 해줘."
-          </p>
+          <span>프롬프트: Gemini에게 지시</span>
+          <h4>불량 현황 + 요구사항을 한 번에 전달합니다</h4>
+          <div className="code-preview-box">
+            <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '1.25rem', borderRadius: '8px', fontSize: '0.85rem', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>{defectPrompt}</pre>
+          </div>
           <div className="aoi-rule-grid">
-            <div><strong>Secrets 등록</strong><span>Settings → Secrets</span></div>
-            <div><strong>workflow 참조</strong><span>{'${{ secrets.KEY }}'}</span></div>
-            <div><strong>로그 마스킹</strong><span>자동으로 *** 표시</span></div>
+            <div><strong>불량 개요</strong><span>현상 + 영향 범위</span></div>
+            <div><strong>Chart.js</strong><span>히스토그램 자동 생성</span></div>
+            <div><strong>5 Why</strong><span>근본 원인 분석</span></div>
           </div>
         </article>
 
         <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>GitHub Secrets로 API Key가 암호화되어 안전합니다</h4>
-          <div className="github-secrets-result-box">
-            <div className="visual-header">
-              <span>GitHub Secrets 등록 방법</span>
-              <strong>Repository → Settings</strong>
-            </div>
-            <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-              <ol style={{ lineHeight: '1.8', paddingLeft: '1.5rem' }}>
-                <li>Repository → Settings 클릭</li>
-                <li>Secrets and variables → Actions 선택</li>
-                <li>New repository secret 클릭</li>
-                <li>Name: <strong>GEMINI_API_KEY</strong></li>
-                <li>Value: <strong>AIzaSy...</strong> (실제 Key 입력)</li>
-                <li>Add secret 클릭</li>
-              </ol>
-            </div>
-          </div>
-          <div className="code-preview-box" style={{ marginTop: '1rem' }}>
-            <div className="visual-header">
-              <span>workflow 파일</span>
-              <strong>.github/workflows/deploy.yml</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{`# .github/workflows/deploy.yml
-name: Deploy
-
-on: [push]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    env:
-      # ✅ 안전: Secrets에서 참조
-      GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy
-        run: python deploy.py`}</pre>
+          <span>After: Gemini 산출물</span>
+          <h4>완성된 HTML 보고서 — 브라우저에서 바로 확인</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {reportSections.map((sec) => (
+              <div key={sec.title} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+                <CheckCircle2 size={16} color="#34A853" />
+                <div>
+                  <strong style={{ fontSize: '0.95rem' }}>{sec.title}</strong>
+                  <span style={{ marginLeft: '0.5rem', color: '#666', fontSize: '0.85rem' }}>{sec.desc}</span>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="aoi-impact-strip">
-            <div><strong>AES-256 암호화</strong><span>Secrets 저장소에 안전 보관</span></div>
-            <div><strong>로그 마스킹</strong><span>Actions에서 *** 표시</span></div>
-            <div><strong>접근 제어</strong><span>관리자만 Key 확인 가능</span></div>
+            <div><strong>작성 시간</strong><span>3시간 → 5분</span></div>
+            <div><strong>차트</strong><span>Chart.js 자동 포함</span></div>
+            <div><strong>반응형</strong><span>모바일에서도 확인</span></div>
           </div>
         </article>
       </div>
 
       <p className="case-takeaway">
-        핵심은 API Key를 workflow 파일에 직접 입력하지 않고, GitHub Secrets에 등록하여
-        암호화된 상태로 안전하게 사용하는 것입니다.
+        핵심은 불량 현황을 구체적으로 설명하고, 포함할 섹션(개요, 데이터, 원인, 대책, 효과)을 명확히 지시하는 것입니다.
       </p>
-      <VerifyChecklist points={secretsVerifyPoints} />
+      <VerifyChecklist points={[
+        'HTML 파일을 브라우저에서 열었을 때 모든 섹션이 표시되는가?',
+        'Chart.js 히스토그램이 정상 렌더링되는가?',
+        '5 Why 분석의 논리가 자연스러운가?',
+      ]} />
     </div>
   );
 }
 
-function CICDDeepDive() {
+function IndexReadmeDeepDive() {
   return (
     <div className="deep-dive">
       <div className="deep-dive-heading">
-        <span>Case 03 Deep Dive</span>
-        <h3>GitHub Actions CI/CD: 자동 테스트 & 배포 파이프라인</h3>
+        <span>파일 구성 Deep Dive</span>
+        <h3>Gemini로 index.html + README.md 만들기</h3>
         <p>
-          push할 때마다 수동으로 테스트하고 배포하는 대신, GitHub Actions로 자동화합니다.
-          테스트 통과 시에만 자동 배포됩니다.
+          GitHub Pages는 index.html을 첫 페이지로 인식합니다.
+          Gemini에게 index.html과 README.md를 각각 만들어달라고 요청합니다.
         </p>
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
           <img
             src={assetUrl('panel3.png')}
-            alt="GitHub Actions CI/CD"
+            alt="index.html과 README.md 생성 화면"
             style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
           />
         </div>
       </div>
 
       <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 수동 배포</span>
-          <h4>매번 수동으로 테스트하고 배포</h4>
-          <ul>
-            <li>로컬에서 pytest 실행</li>
-            <li>테스트 통과 확인</li>
-            <li>수동으로 Streamlit Community Cloud 배포</li>
-            <li>실수로 테스트 없이 배포하여 버그 발생</li>
-            <li>팀원마다 배포 방법이 다름</li>
-          </ul>
+        <article className="yield-case-panel prompt-panel">
+          <span>Prompt 1: index.html</span>
+          <h4>보고서 목록 페이지를 만들어달라고 요청합니다</h4>
+          <div className="code-preview-box">
+            <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '1.25rem', borderRadius: '8px', fontSize: '0.85rem', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>{`"report.html로 연결되는 index.html을 만들어줘.
+프로젝트 이름: CVD 챔버 불량 분석
+보고서 링크, 작성일, 작성자 포함.
+깔끔한 카드 스타일 디자인."`}</pre>
+          </div>
+          <div className="aoi-rule-grid">
+            <div><strong>역할</strong><span>GitHub Pages 첫 페이지</span></div>
+            <div><strong>링크</strong><span>report.html 연결</span></div>
+            <div><strong>디자인</strong><span>카드 스타일</span></div>
+          </div>
         </article>
 
         <article className="yield-case-panel prompt-panel">
-          <span>Prompt: GitHub Actions 설정 지시</span>
-          <h4>push할 때마다 자동으로 테스트하고 배포합니다</h4>
-          <p>
-            ".github/workflows/ci.yml 파일을 만들어줘. push할 때마다 pytest를 자동 실행하고,
-            테스트 통과 시에만 Streamlit Community Cloud에 자동 배포해줘. 실패 시 Slack 알림도 보내줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>자동 테스트</strong><span>push → pytest 실행</span></div>
-            <div><strong>조건 배포</strong><span>테스트 통과 시만</span></div>
-            <div><strong>알림</strong><span>Slack/Email</span></div>
+          <span>Prompt 2: README.md</span>
+          <h4>저장소 설명 파일을 만들어달라고 요청합니다</h4>
+          <div className="code-preview-box">
+            <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '1.25rem', borderRadius: '8px', fontSize: '0.85rem', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>{`"이 GitHub 저장소의 README.md를 만들어줘.
+프로젝트: CVD 챔버 #3 불량 분석 보고서
+파일 목록: index.html, report.html
+GitHub Pages URL 자리표시자 포함.
+마크다운 형식으로 깔끔하게."`}</pre>
+          </div>
+          <div className="aoi-rule-grid">
+            <div><strong>역할</strong><span>저장소 첫 화면 설명</span></div>
+            <div><strong>파일 목록</strong><span>3개 파일 안내</span></div>
+            <div><strong>URL</strong><span>Pages 주소 안내</span></div>
           </div>
         </article>
 
         <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>GitHub Actions로 push → 테스트 → 배포가 자동화됩니다</h4>
-          <div className="code-preview-box">
-            <div className="visual-header">
-              <span>workflow 파일</span>
-              <strong>.github/workflows/ci.yml</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem', overflow: 'auto' }}>{`name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    env:
-      GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
-      - name: Run tests
-        run: pytest tests/ -v
-
-  deploy:
-    needs: test  # 테스트 통과 후에만 실행
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to Streamlit Cloud
-        run: |
-          echo "✅ 자동 배포 완료"
-          # Streamlit Cloud API 호출`}</pre>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>수동 → 자동</strong><span>push만 하면 끝</span></div>
-            <div><strong>버그 차단</strong><span>테스트 실패 시 배포 차단</span></div>
-            <div><strong>팀 표준화</strong><span>모두 동일한 흐름</span></div>
-          </div>
-          <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
-            <h4 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#0071e3' }}>GitHub Actions 파이프라인 흐름</h4>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <div style={{ padding: '0.75rem 1rem', background: 'white', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                <GitBranch size={20} color="#333" />
-                <strong style={{ marginLeft: '0.5rem' }}>git push</strong>
-              </div>
-              <ArrowRight size={20} color="#999" />
-              <div style={{ padding: '0.75rem 1rem', background: 'white', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                <Terminal size={20} color="#27AE60" />
-                <strong style={{ marginLeft: '0.5rem' }}>자동 테스트</strong>
-              </div>
-              <ArrowRight size={20} color="#999" />
-              <div style={{ padding: '0.75rem 1rem', background: 'white', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                <Zap size={20} color="#4285F4" />
-                <strong style={{ marginLeft: '0.5rem' }}>자동 배포</strong>
-              </div>
-              <ArrowRight size={20} color="#999" />
-              <div style={{ padding: '0.75rem 1rem', background: 'white', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                <CheckCircle2 size={20} color="#34A853" />
-                <strong style={{ marginLeft: '0.5rem' }}>완료</strong>
+          <span>결과: 3개 파일 준비 완료</span>
+          <h4>GitHub에 업로드할 파일이 모두 준비되었습니다</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+              <FileCode2 size={20} color="#16a766" />
+              <div>
+                <strong>index.html</strong>
+                <span style={{ marginLeft: '0.5rem', color: '#666', fontSize: '0.85rem' }}>— 보고서 목록 페이지 (GitHub Pages 첫 화면)</span>
               </div>
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
+              <BarChart3 size={20} color="#4285F4" />
+              <div>
+                <strong>report.html</strong>
+                <span style={{ marginLeft: '0.5rem', color: '#666', fontSize: '0.85rem' }}>— 불량 분석 보고서 (Chart.js 포함)</span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: '#fefce8', borderRadius: '8px', border: '1px solid #fef08a' }}>
+              <FileText size={20} color="#ca8a04" />
+              <div>
+                <strong>README.md</strong>
+                <span style={{ marginLeft: '0.5rem', color: '#666', fontSize: '0.85rem' }}>— 저장소 설명 파일</span>
+              </div>
+            </div>
+          </div>
+          <div className="aoi-impact-strip">
+            <div><strong>파일 수</strong><span>3개</span></div>
+            <div><strong>생성 시간</strong><span>약 3분</span></div>
+            <div><strong>코딩 필요</strong><span>없음</span></div>
           </div>
         </article>
       </div>
 
       <p className="case-takeaway">
-        핵심은 수동 작업을 자동화하여 실수를 제거하고, 테스트 통과 시에만 배포하여 품질을 보장하는 것입니다.
+        핵심은 index.html이 GitHub Pages의 첫 페이지 역할을 하며, report.html로 연결되는 구조를 만드는 것입니다.
       </p>
-      <VerifyChecklist points={cicdVerifyPoints} />
+      <VerifyChecklist points={[
+        'index.html에서 report.html 링크를 클릭하면 보고서가 열리는가?',
+        'README.md가 마크다운 문법에 맞게 작성되었는가?',
+        '3개 파일이 모두 같은 폴더에 있는가?',
+      ]} />
+    </div>
+  );
+}
+
+function GitHubPagesDeepDive() {
+  return (
+    <div className="deep-dive">
+      <div className="deep-dive-heading">
+        <span>배포 Deep Dive</span>
+        <h3>GitHub Pages 배포 8단계 (웹 UI 전용)</h3>
+        <p>
+          git 명령어 없이, GitHub 웹사이트에서 드래그 앤 드롭으로 파일을 업로드하고
+          Pages를 설정하여 URL을 공유합니다.
+        </p>
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+          <img
+            src={assetUrl('panel4.png')}
+            alt="GitHub Pages 배포 화면"
+            style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+          />
+        </div>
+      </div>
+
+      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+        <img
+          src={assetUrl('comic.png')}
+          alt="GitHub Pages 배포 8단계 흐름도"
+          style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+        />
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <div className="yield-case-compare vertical-case-flow">
+          <article className="yield-case-panel result-panel">
+            <span>8단계 상세 안내</span>
+            <h4>모두 웹 브라우저에서 마우스로 진행합니다</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {deploySteps.map((item) => (
+                <div key={item.num} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.85rem 1rem', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #4285F4' }}>
+                  <span style={{ background: '#4285F4', color: 'white', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>{item.num}</span>
+                  <span style={{ fontSize: '0.95rem' }}>{item.label}</span>
+                </div>
+              ))}
+            </div>
+            <div className="aoi-impact-strip" style={{ marginTop: '1.5rem' }}>
+              <div><strong>git 명령어</strong><span>사용 안 함</span></div>
+              <div><strong>업로드</strong><span>드래그 앤 드롭</span></div>
+              <div><strong>비용</strong><span>무료</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div className="highlight-box" style={{ marginTop: '2rem', background: '#f0f7ff', borderLeftColor: '#4285F4' }}>
+        <p style={{ fontWeight: 700, color: '#4285F4' }}>배포 완료 후 URL 형식:</p>
+        <p style={{ fontFamily: 'monospace', fontSize: '1.05rem', marginTop: '0.5rem' }}>
+          https://username.github.io/repository-name/
+        </p>
+        <p style={{ marginTop: '0.5rem', color: '#666' }}>
+          이 URL을 부서 단톡방이나 이메일로 공유하면 누구나 보고서를 확인할 수 있습니다.
+        </p>
+      </div>
+
+      <p className="case-takeaway">
+        핵심은 git 명령어 없이 GitHub 웹 UI만으로 파일 업로드와 Pages 배포가 모두 가능하다는 것입니다.
+      </p>
+      <VerifyChecklist points={[
+        'Repository가 Public으로 생성되었는가?',
+        'index.html, report.html, README.md가 모두 업로드되었는가?',
+        'Settings → Pages에서 Source가 main / /(root)로 설정되었는가?',
+        '배포 URL에 접속했을 때 index.html이 표시되는가?',
+      ]} />
     </div>
   );
 }
 
 function InteractiveWorkshop() {
   const [fields, setFields] = useState({
-    env: '',
-    gitignore: '',
-    secrets: '',
+    equipment: '',
+    defect: '',
+    cause: '',
   });
   const [copied, setCopied] = useState(false);
 
   const hasContent = Object.values(fields).some(Boolean);
 
   const generated = hasContent
-    ? `1. .env 파일: ${fields.env || '[생성 예정]'}
-2. .gitignore: ${fields.gitignore || '[설정 예정]'}
-3. GitHub Secrets: ${fields.secrets || '[등록 예정]'}
-
-다음 단계: git status 확인 → push → Actions 탭 확인`
+    ? `${fields.equipment || '[설비명]'}에서 ${fields.defect || '[불량 현상]'}이 발생했습니다.
+${fields.cause || '[원인]'}이 원인입니다.
+이 불량에 대한 분석 보고서를 HTML로 만들어줘.
+포함: 불량 개요, 데이터 분석(Chart.js 히스토그램),
+원인 분석(5 Why), 대책, 효과 확인.
+깔끔한 보고서 스타일, 반응형, 인쇄 가능.`
     : '';
 
   const handleCopy = () => {
@@ -665,17 +530,17 @@ function InteractiveWorkshop() {
   };
 
   const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'env', label: '.env 파일 상태', placeholder: '예: GEMINI_API_KEY=AIzaSy... 저장 완료' },
-    { key: 'gitignore', label: '.gitignore 확인', placeholder: '예: .env 추가 완료' },
-    { key: 'secrets', label: 'GitHub Secrets', placeholder: '예: Settings → Secrets에 등록 완료' },
+    { key: 'equipment', label: '설비명', placeholder: '예: CVD 챔버 #3, OLED 증착기, 슬롯다이 코터' },
+    { key: 'defect', label: '불량 현상', placeholder: '예: 박막 두께 균일도 불량, Mura 불량, 코팅 불균일' },
+    { key: 'cause', label: '추정 원인', placeholder: '예: 히터 존 온도 편차, 소스 정렬 편차, 갭 이상' },
   ];
 
   return (
     <div className="interactive-workshop">
       <div className="iw-header">
-        <FileText size={22} color="var(--accent)" />
-        <strong>3단계 보안 체크리스트</strong>
-        <p>.env, .gitignore, GitHub Secrets 설정을 확인하세요.</p>
+        <Sparkles size={22} color="var(--accent)" />
+        <strong>나만의 불량 보고서 프롬프트 생성기</strong>
+        <p>아래 정보를 입력하면 Gemini에 바로 붙여넣을 수 있는 프롬프트가 생성됩니다.</p>
       </div>
       <div className="iw-body">
         <div className="iw-inputs">
@@ -694,11 +559,11 @@ function InteractiveWorkshop() {
         </div>
         <div className="iw-output">
           <div className="iw-output-header">
-            <Shield size={18} color="var(--accent)" />
-            <strong>보안 점검 현황</strong>
+            <MessageSquareText size={18} color="var(--accent)" />
+            <strong>생성된 프롬프트</strong>
           </div>
           <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
-            {generated || '위 3단계를 입력하면\n보안 점검 현황이 표시됩니다.'}
+            {generated || '위 정보를 입력하면\nGemini 프롬프트가 자동 생성됩니다.'}
           </div>
           <button
             className={`iw-copy-btn ${copied ? 'copied' : ''}`}
@@ -707,7 +572,7 @@ function InteractiveWorkshop() {
           >
             {copied
               ? <><Check size={15} />복사됨!</>
-              : <><Copy size={15} />체크리스트 복사</>}
+              : <><Copy size={15} />프롬프트 복사</>}
           </button>
         </div>
       </div>
@@ -720,10 +585,10 @@ function FirstRunGuide() {
     <div className="first-run-guide">
       <div className="frg-title">
         <ExternalLink size={18} color="var(--accent)" />
-        <strong>지금 바로 해보기 — .env 파일 생성 & GitHub Secrets 설정</strong>
+        <strong>지금 바로 해보기 — Gemini로 보고서 만들고 GitHub Pages 배포</strong>
       </div>
       <div className="frg-steps">
-        {envSteps.map((item) => (
+        {geminiSteps.map((item) => (
           <div className="frg-step" key={item.step}>
             <span className="frg-num">{item.step}</span>
             <div>
@@ -756,6 +621,7 @@ function NextLecturePreview() {
 export default function App() {
   return (
     <div className="app-container">
+      {/* ── HEADER ───────────────────────────────────────────── */}
       <header className="main-header">
         <div className="header-top">
           <motion.div
@@ -777,7 +643,7 @@ export default function App() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="header-tag">API Key 보안 & 자동화 파이프라인</span>
+            <span className="header-tag">Gemini 불량 보고서 & GitHub Pages 배포</span>
           </motion.div>
         </div>
 
@@ -787,29 +653,31 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h1>Ch.12 환경 관리 & 보안 & GitHub Actions</h1>
-          <p className="subtitle">API Key 유출 실화부터 .env, GitHub Secrets, CI/CD 자동화까지 — 보안 없는 배포는 시한폭탄</p>
+          <h1>Ch.12 Gemini로 불량 보고서 만들어 GitHub Pages에 배포</h1>
+          <p className="subtitle">Word로 3시간 걸리던 불량 보고서를 Gemini로 5분에 만들고, GitHub Pages로 부서원에게 URL 공유</p>
           <div className="lesson-meta" aria-label="lesson summary">
             <span>40분</span>
-            <span>보안 실습</span>
-            <span>CI/CD</span>
-            <span>결과물: 안전한 배포 파이프라인</span>
+            <span>Gemini 웹</span>
+            <span>GitHub Pages</span>
+            <span>결과물: 불량 보고서 웹사이트</span>
           </div>
         </motion.div>
         <LectureImage
-          src="security-cicd-overview.png"
-          alt="API Key, .env, GitHub Secrets, Actions, Deploy가 한 흐름으로 연결되는 보안 배포 파이프라인입니다."
-          caption="API Key, .env, GitHub Secrets, Actions, Deploy가 한 흐름으로 연결되는 보안 배포 파이프라인입니다."
+          src="panel1.png"
+          alt="Gemini로 불량 보고서를 HTML로 만들고 GitHub Pages에 배포하는 전체 흐름입니다."
+          caption="Gemini로 HTML 보고서 생성 → GitHub 업로드 → Pages 배포 → URL 공유"
         />
       </header>
 
       <main>
+        {/* ── Section 01: 오프닝 ──────────────────────────────── */}
         <section className="overview-section">
-          <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>AWS 요금 청구서 $50,000 — 실화입니다</h2>
+          <span className="section-label">01. 오프닝 (0:00-3:00)</span>
+          <h2>Word로 3시간 → Gemini로 5분</h2>
           <p className="section-intro">
-            개발자가 AWS API Key를 GitHub에 실수로 올렸습니다. 30분 뒤 자동 봇이 Key를 발견했고,
-            하루 만에 $50,000(약 6,700만 원)이 청구됐습니다. 이 강의에서는 이런 사고를 예방하는 법을 배웁니다.
+            설비 불량 보고서를 매번 Word로 작성하시나요? 표 그리고, 차트 만들고, 포맷 맞추고, PDF 변환하고...
+            Gemini에게 프롬프트 하나 주면 Chart.js 포함 HTML 보고서가 5분 만에 완성됩니다.
+            GitHub Pages로 배포하면 URL 하나로 부서 전체가 바로 확인할 수 있습니다.
           </p>
           <div className="learning-goals-grid" aria-label="학습목표">
             {learningGoals.map((item) => (
@@ -831,27 +699,23 @@ export default function App() {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('lecture-12-security-cicd.png')}
-              alt="API Key 유출 실화"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-            />
-          </div>
+          <TimeComparisonTable />
         </section>
 
+        {/* ── Section 02: Gemini 보고서 생성 ──────────────────── */}
         <section className="definition-section">
-          <span className="section-label">02. .env 파일이란 무엇인가</span>
-          <h2>.env 파일은 비밀 정보를 코드에서 분리하는 방법입니다</h2>
+          <span className="section-label">02. Gemini에서 불량 보고서 HTML 만들기 (3:00-15:00)</span>
+          <h2>프롬프트 하나로 Chart.js 포함 불량 분석 보고서 완성</h2>
           <p className="section-intro">
-            API Key, DB 비밀번호, 토큰 등을 코드에 직접 입력하면 GitHub에 노출됩니다.
-            .env 파일로 분리하고 .gitignore로 보호하면 안전합니다.
+            gemini.google.com에 접속하여 불량 현황을 설명하고, 보고서에 포함할 내용을 지시합니다.
+            Gemini가 불량 개요, 데이터 분석(Chart.js 히스토그램), 원인 분석(5 Why), 대책, 효과 확인을
+            모두 포함한 HTML 파일을 생성합니다.
           </p>
           <div className="one-line-definition inline-definition">
             <span>한 문장 정의</span>
-            <strong>.env 파일은 비밀 정보를 코드에서 분리하여 .gitignore로 보호하는 환경 변수 관리 파일입니다.</strong>
+            <strong>Gemini는 불량 현상을 설명하면 Chart.js 포함 HTML 분석 보고서를 자동으로 만들어주는 AI입니다.</strong>
           </div>
-          <div className="role-flow" aria-label="보안 역할 분리">
+          <div className="role-flow" aria-label="역할 분담">
             {roleFlow.map((item, index) => (
               <div className="role-step" key={`${item.owner}-${item.task}`}>
                 <span>{item.owner}</span>
@@ -860,37 +724,74 @@ export default function App() {
               </div>
             ))}
           </div>
-          <div className="code-preview-box" style={{ marginTop: '2rem' }}>
-            <div className="visual-header">
-              <span>.gitignore 템플릿</span>
-              <strong>프로젝트 첫 커밋 전에 생성</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.85rem' }}>{gitignoreTemplate}</pre>
+
+          <div className="highlight-box" style={{ marginTop: '2rem', background: '#f0f7ff', borderLeftColor: '#4285F4' }}>
+            <p style={{ fontWeight: 700, color: '#4285F4' }}>핵심 프롬프트:</p>
+            <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '1.25rem', borderRadius: '8px', fontSize: '0.85rem', lineHeight: '1.7', whiteSpace: 'pre-wrap', marginTop: '0.75rem' }}>{defectPrompt}</pre>
           </div>
+
+          <GeminiReportDeepDive />
         </section>
 
+        {/* ── Section 03: index.html + README.md ──────────────── */}
         <section>
-          <span className="section-label">03. API Key 유출 경로</span>
-          <h2>GitHub 직접 commit이 전체 유출의 45%를 차지합니다</h2>
+          <span className="section-label">03. Gemini로 index.html + README.md 만들기 (15:00-25:00)</span>
+          <h2>GitHub Pages 배포에 필요한 파일을 Gemini가 만들어줍니다</h2>
           <p className="section-intro">
-            .gitignore 하나로 대부분의 유출을 막을 수 있습니다. 보안은 나중에 하는 게 아니라 처음부터 하는 것입니다.
+            GitHub Pages는 index.html을 첫 페이지로 인식합니다. report.html로 연결되는 index.html과
+            저장소를 설명하는 README.md를 Gemini에게 요청합니다.
           </p>
-          <SecurityRiskChart />
-          <div className="highlight-box" style={{ background: '#fff7f7', borderLeftColor: '#E74C3C' }}>
-            <p style={{ fontWeight: 700, color: '#E74C3C' }}>실화 경고:</p>
-            <p>"API Key를 GitHub에 올린 후 30분 만에 자동 봇이 발견하여 $50,000 청구. .gitignore 하나로 막을 수 있었습니다."</p>
+
+          <div className="first-run-guide" style={{ marginTop: '2rem' }}>
+            <div className="frg-title">
+              <LayoutTemplate size={18} color="var(--accent)" />
+              <strong>파일 생성 3단계</strong>
+            </div>
+            <div className="frg-steps">
+              {indexReadmeSteps.map((item) => (
+                <div className="frg-step" key={item.step}>
+                  <span className="frg-num">{item.step}</span>
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          <IndexReadmeDeepDive />
         </section>
 
+        {/* ── Section 04: GitHub Pages 배포 ───────────────────── */}
         <section>
-          <span className="section-label">04. 첨단 공정기술 사례</span>
-          <h2>반도체·디스플레이·배터리 엔지니어의 보안 관리</h2>
+          <span className="section-label">04. GitHub Pages 배포 8단계 (25:00-35:00)</span>
+          <h2>git 명령어 없이 웹 브라우저에서 배포 완료</h2>
           <p className="section-intro">
-            공정 데이터 분석 앱을 배포할 때도 API Key 보안은 필수입니다.
-            .env, GitHub Secrets, CI/CD 자동화를 모두 적용합니다.
+            GitHub 웹사이트에서 드래그 앤 드롭으로 파일을 업로드하고,
+            Settings에서 Pages를 설정하면 1~2분 후 URL이 생성됩니다.
+            git 명령어는 전혀 사용하지 않습니다.
+          </p>
+
+          <div className="highlight-box" style={{ background: '#fef3c7', borderLeftColor: '#f59e0b' }}>
+            <p style={{ fontWeight: 700, color: '#b45309' }}>중요:</p>
+            <p>이 과정에서는 git clone, git add, git commit, git push 등의 명령어를 사용하지 않습니다.
+            모든 작업은 GitHub 웹사이트의 마우스 클릭과 드래그 앤 드롭으로 진행합니다.</p>
+          </div>
+
+          <GitHubPagesDeepDive />
+        </section>
+
+        {/* ── Section 05: 다른 분야 활용 ─────────────────────── */}
+        <section>
+          <span className="section-label">04-1. 다른 분야에 적용하기</span>
+          <h2>디스플레이 / 배터리 / 바이오 — 같은 방법, 다른 프롬프트</h2>
+          <p className="section-intro">
+            CVD 챔버 외에도 동일한 방법으로 다양한 설비 불량 보고서를 만들 수 있습니다.
+            프롬프트에서 설비명, 불량 현상, 원인만 바꾸면 됩니다.
           </p>
           <div className="scenario-grid">
-            {fieldScenarios.map((item) => {
+            {fieldAlternatives.map((item) => {
               const Icon = item.icon;
               return (
                 <motion.div
@@ -904,43 +805,43 @@ export default function App() {
                     <Icon size={24} />
                   </div>
                   <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.before}</p>
+                  <p className="scenario-before">{item.field} 분야</p>
                   <div className="intent-box">
-                    <span>의도 지시문</span>
-                    <p>{item.intent}</p>
+                    <span>프롬프트</span>
+                    <p>{item.prompt}</p>
                   </div>
-                  <p className="scenario-output">{item.output}</p>
+                  <p className="scenario-output">원인: {item.cause}</p>
                 </motion.div>
               );
             })}
           </div>
-          <EnvFileDeepDive />
-          <GitHubSecretsDeepDive />
-          <CICDDeepDive />
         </section>
 
+        {/* ── Section 06: 미니 워크숍 ────────────────────────── */}
         <section className="workshop-section teaching-section">
-          <span className="section-label">05. 미니 워크숍</span>
-          <h2>실습: 내 첫 <mark>보안 배포 파이프라인</mark> 만들기</h2>
+          <span className="section-label">05. Quality Gate & 마무리 (35:00-40:00)</span>
+          <h2>실습: 내 설비의 <mark>불량 보고서 프롬프트</mark> 만들기</h2>
           <p className="section-intro">
-            .env 파일 생성, .gitignore 설정, GitHub Secrets 등록을 차례로 완료하세요.
+            본인 담당 설비의 불량 정보를 입력하면 Gemini 프롬프트가 자동 생성됩니다.
+            복사해서 gemini.google.com에 바로 붙여넣으세요.
           </p>
           <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
             <img
-              src={assetUrl('panel4.png')}
-              alt="보안 파이프라인 실습"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+              src={assetUrl('logo.png')}
+              alt="실습 카드"
+              style={{ maxWidth: '240px', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
             />
           </div>
           <InteractiveWorkshop />
           <FirstRunGuide />
         </section>
 
+        {/* ── Section 07: 품질 점검 ──────────────────────────── */}
         <section>
-          <span className="section-label">06. 품질 점검 및 정리</span>
+          <span className="section-label">05-1. 품질 점검 및 정리</span>
           <h2>배포 전, 이 5가지만 확인하세요</h2>
           <div className="checklist">
-            {intentChecklist.map((item) => (
+            {qualityChecklist.map((item) => (
               <div className="check-item" key={item}>
                 <CheckCircle2 size={20} />
                 <span>{item}</span>
@@ -949,31 +850,33 @@ export default function App() {
           </div>
           <div className="wrap-message">
             <Quote size={36} color="var(--accent)" />
-            <h3>"보안은 나중에 하는 게 아니라 처음부터 하는 것입니다. .env와 .gitignore는 첫 커밋 전에 설정하세요."</h3>
+            <h3>"보고서는 내용이 핵심이지, 포맷에 시간을 쓸 필요가 없습니다. Gemini가 포맷을 맡고, 여러분은 분석에 집중하세요."</h3>
             <p>다음 강의: 하이테크 물리 & 공정 시뮬레이터 제작 (13강)</p>
           </div>
           <NextLecturePreview />
         </section>
 
+        {/* ── Professional Point ──────────────────────────────── */}
         <section className="professional-point">
           <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
             <h3>Advanced Process Engineering Point</h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "API Key 유출은 $50,000 청구로 이어질 수 있습니다. .env 파일, .gitignore, GitHub Secrets로
-              3중 보안을 구축하고, GitHub Actions로 자동화하여 실수를 제거하세요."<br/>
-              보안은 선택이 아니라 필수입니다.
+              "불량 보고서에 3시간을 쓰면 그만큼 공정 개선에 쓸 시간이 줄어듭니다.
+              Gemini로 보고서를 5분에 만들고, 남은 시간에 5 Why 분석을 더 깊이 하세요.
+              GitHub Pages URL 하나면 부서 전체가 실시간으로 보고서를 확인할 수 있습니다."
             </p>
             <div className="point-strip">
-              <span><Lock size={16} /> .env는 비밀 창고</span>
-              <span><Shield size={16} /> .gitignore는 방패</span>
-              <span><Zap size={16} /> Actions는 자동화</span>
+              <span><Sparkles size={16} /> Gemini = 보고서 자동화</span>
+              <span><Globe size={16} /> Pages = 무료 웹 배포</span>
+              <span><Share2 size={16} /> URL = 즉시 공유</span>
             </div>
           </div>
         </section>
       </main>
 
+      {/* ── FOOTER ──────────────────────────────────────────── */}
       <footer>
-        <p>© 2026 Security & CI/CD for Fine Tech Engineering | LettUin Edu</p>
+        <p>&copy; 2026 Gemini Defect Report & GitHub Pages for Fine Tech Engineering | LettUin Edu</p>
       </footer>
     </div>
   );
