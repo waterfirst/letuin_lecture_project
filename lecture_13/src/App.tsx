@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Activity,
+  AlertTriangle,
   ArrowRight,
   BarChart3,
   Battery,
@@ -15,9 +16,11 @@ import {
   FileText,
   Github,
   Globe,
+  Info,
   LineChart,
   Quote,
   Rocket,
+  Search,
   Sparkles,
   TrendingUp,
   Upload,
@@ -106,33 +109,47 @@ const domainExamples = [
   },
 ];
 
-const oledPromptText = `OLED 증착 공정 데이터(oled_deposition_xymap.csv)를 분석하는 Streamlit 앱을 만들어줘.
+const oledPromptText = `아래 OLED 증착 공정 데이터(oled_deposition_xymap.csv)를 분석하는 Streamlit 대시보드를 만들어줘.
 
-데이터 구조:
-- 24,576행, 29컬럼
-- 핵심 컬럼: chamber_id(C1~C4), panel_id, lot_id, x_position, y_position, thickness, yield_score, pass_fail
-- yield_score: 0~100 연속값 (품질 점수)
-- pass_fail: 0 또는 1 (합격 판정, 1=합격)
+[데이터 구조]
+- 행: 24,576 (측정점)
+- 주요 컬럼: chamber_id(C1~C4), panel_id, lot_id, x_position, y_position, thickness, yield_score(0~100 연속값, 품질 점수), pass_fail('pass' 또는 'fail', 합격 판정)
 
-수율 정의 (중요!):
-- 올바른 수율 = pass_fail이 1인 비율 x 100
-- yield_score는 수율이 아님, 품질 점수임
+[★ 수율 정의 — 중요]
+- 올바른 수율 = pass_fail이 'pass'인 비율 × 100
+- yield_score는 수율이 아님! 품질 점수임
+- yield_score 평균을 수율로 사용하지 말 것
 
-앱 기능:
-1. CSV 파일 업로드 (st.file_uploader)
-2. 챔버별 수율 바 차트 (pass_fail 기준)
-3. 챔버별 두께 분포 박스플롯
-4. X-Y 위치별 두께 히트맵 (선택한 챔버/패널)
-5. 이상치 감지: 3-sigma 벗어나는 측정점 표시
-6. 요약 통계 테이블
+[요구사항]
+1. KPI 카드: 전체 측정점 수, 전체 수율(%), 평균 yield_score, 불량 건수
+2. 사이드바: chamber_id, lot_id 필터
+3. 챔버별 수율 바 차트: pass_fail='pass' 비율로 계산, Y축 범위 70~100%
+4. 챔버별 두께 분포 박스플롯
+5. X-Y 위치별 불량 맵 (pass_fail='fail' 측정점을 빨간 점으로)
+6. 불량 유형 파레토 차트 (defect_type 컬럼)
+7. yield_score 히스토그램 (91.5점 기준선 표시)
 
 app.py와 requirements.txt 두 파일로 만들어줘.`;
 
+const requirementsPromptText = `위에서 만든 app.py를 실행하는 데 필요한 requirements.txt를 만들어줘. streamlit, pandas, plotly 버전을 포함하고, Streamlit Cloud에서 정상 작동하는 안정적인 버전으로 지정해줘.`;
+
 const resultInterpretation = [
   { chamber: 'C1', yield: '95.6%', note: '가장 높음', color: '#34A853' },
+  { chamber: 'C3', yield: '92.9%', note: '', color: '#FBBC04' },
   { chamber: 'C2', yield: '84.5%', note: '', color: '#4285F4' },
-  { chamber: 'C3', yield: '89.1%', note: '', color: '#FBBC04' },
   { chamber: 'C4', yield: '81.2%', note: '가장 낮음 → 점검 필요', color: '#EA4335' },
+];
+
+const overallStats = {
+  totalYield: '88.6%',
+  avgYieldScore: '95.10',
+  defectCount: '2,813',
+};
+
+const paretoData = [
+  { type: 'particle', count: '957건', rank: '1위' },
+  { type: 'thick_spot', count: '408건', rank: '2위' },
+  { type: 'map_hotspot', count: '97건', rank: '3위' },
 ];
 
 const procedureSteps = [
@@ -144,6 +161,7 @@ const procedureSteps = [
       'Antigravity IDE 접속',
       '위의 OLED 전용 프롬프트를 복사하여 입력',
       'AI가 app.py 생성 확인',
+      'requirements.txt 프롬프트를 추가로 입력',
       'AI가 requirements.txt 생성 확인',
       '로컬에서 streamlit run app.py로 테스트',
     ],
@@ -152,14 +170,15 @@ const procedureSteps = [
   },
   {
     step: '2',
-    title: '파일 확인',
-    description: 'AI가 만든 app.py와 requirements.txt 파일이 정상인지 확인합니다.',
+    title: '파일 확인 및 수율 계산 검증',
+    description: 'AI가 만든 app.py와 requirements.txt 파일이 정상인지 확인하고, 수율 계산이 pass_fail 기준인지 반드시 검증합니다.',
     details: [
-      'app.py: CSV 업로드 + 챔버별 수율 + 두께 분포 + 히트맵 + 이상치 감지 포함',
-      'requirements.txt: streamlit, pandas, numpy, plotly 등 포함',
+      'app.py: KPI 카드 + 챔버별 수율 바 차트 + 두께 분포 + 불량 맵 + 파레토 차트 포함',
+      'requirements.txt: streamlit, pandas, plotly 안정 버전 포함',
       '브라우저에서 localhost:8501 접속',
       'oled_deposition_xymap.csv 파일 업로드',
-      '챔버별 수율이 pass_fail 기준으로 계산되는지 확인 (C1: 95.6%, C4: 81.2%)',
+      '전체 수율이 88.6%로 나오는지 확인 (95%대면 yield_score 평균 사용 중)',
+      '챔버별 수율: C1 95.6%, C2 84.5%, C3 92.9%, C4 81.2% 확인',
     ],
     icon: FileText,
     color: '#34A853',
@@ -195,11 +214,29 @@ const procedureSteps = [
 ];
 
 const qualityChecklist = [
-  'Antigravity에서 app.py가 생성되었는가?',
+  'app.py가 생성되었는가?',
   'requirements.txt가 함께 만들어졌는가?',
-  '로컬에서 streamlit run app.py가 정상 실행되는가?',
-  '챔버별 수율이 pass_fail 기준으로 계산되는가? (C1: 95.6%, C4: 81.2%)',
+  '전체 수율이 88.6%로 나오는가? (95%대면 yield_score 평균 사용 중)',
+  '챔버별 수율: C1 95.6%, C2 84.5%, C3 92.9%, C4 81.2%로 나오는가?',
   'Streamlit Cloud 배포 URL에서 CSV 업로드가 작동하는가?',
+];
+
+const keyMessages = [
+  {
+    icon: Database,
+    text: '프롬프트 맨 위에 CSV 컬럼 구조를 정확히 넣어줬습니다. AI한테 데이터 구조를 알려줘야 맞는 코드가 나와요.',
+    color: '#4285F4',
+  },
+  {
+    icon: BarChart3,
+    text: 'Y축 범위를 70~100%로 지정했습니다. 안 하면 AI가 0~100으로 잡아서 챔버 간 차이가 안 보여요.',
+    color: '#34A853',
+  },
+  {
+    icon: Search,
+    text: 'AI가 만든 코드를 100% 신뢰하지 말고, 핵심 계산 로직은 한 번 눈으로 확인하는 습관',
+    color: '#EA4335',
+  },
 ];
 
 // ============================================================================
@@ -246,6 +283,15 @@ function GoalVisual({ type }: { type: string }) {
     );
   }
   return null;
+}
+
+function KeyMessageBox({ icon: Icon, text, color }: { icon: typeof Info; text: string; color: string }) {
+  return (
+    <div style={{ background: '#f5f5f7', borderRadius: '8px', padding: '1rem 1.25rem', borderLeft: `4px solid ${color}`, marginBottom: '0.75rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+      <Icon size={20} color={color} style={{ flexShrink: 0, marginTop: '2px' }} />
+      <p style={{ fontSize: '0.95rem', color: '#333', margin: 0, lineHeight: '1.6' }}>{text}</p>
+    </div>
+  );
 }
 
 function DomainPromptCards() {
@@ -313,14 +359,66 @@ function OledPromptCard() {
   );
 }
 
+function RequirementsPromptCard() {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(requirementsPromptText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+  return (
+    <div className="visual-card" style={{ marginTop: '1.5rem' }}>
+      <div className="visual-header" style={{ background: '#1a73e8' }}>
+        <span>추가 프롬프트</span>
+        <strong>requirements.txt 생성 프롬프트</strong>
+      </div>
+      <div style={{ padding: '1.5rem' }}>
+        <div style={{ background: '#f5f5f7', borderRadius: '8px', padding: '1.25rem', borderLeft: '4px solid #1a73e8', whiteSpace: 'pre-wrap', fontSize: '0.9rem', lineHeight: '1.7', color: '#333' }}>
+          {requirementsPromptText}
+        </div>
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            onClick={handleCopy}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid #ccc', background: copied ? '#1a73e8' : '#fff', color: copied ? '#fff' : '#333', cursor: 'pointer', fontSize: '0.85rem' }}
+          >
+            {copied ? <><Check size={14} />복사됨!</> : <><Copy size={14} />프롬프트 복사</>}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ResultInterpretationCard() {
   return (
     <div className="visual-card">
       <div className="visual-header">
         <span>결과 해석</span>
-        <strong>챔버별 수율 비교 (pass_fail 기준)</strong>
+        <strong>실제 데이터 분석 결과 (pass_fail 기준)</strong>
       </div>
       <div style={{ padding: '1.5rem' }}>
+        {/* Overall KPI */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ padding: '1rem', background: '#E8F5E9', borderRadius: '8px', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.8rem', color: '#2E7D32', margin: '0 0 0.25rem 0', fontWeight: 600 }}>전체 수율</p>
+            <p style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: 0, color: '#1B5E20' }}>{overallStats.totalYield}</p>
+            <p style={{ fontSize: '0.75rem', color: '#388E3C', margin: '0.25rem 0 0 0' }}>pass_fail 기준</p>
+          </div>
+          <div style={{ padding: '1rem', background: '#FFF3E0', borderRadius: '8px', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.8rem', color: '#E65100', margin: '0 0 0.25rem 0', fontWeight: 600 }}>평균 yield_score</p>
+            <p style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: 0, color: '#BF360C' }}>{overallStats.avgYieldScore}</p>
+            <p style={{ fontSize: '0.75rem', color: '#E65100', margin: '0.25rem 0 0 0' }}>이건 수율이 아님!</p>
+          </div>
+          <div style={{ padding: '1rem', background: '#FFEBEE', borderRadius: '8px', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.8rem', color: '#C62828', margin: '0 0 0.25rem 0', fontWeight: 600 }}>불량 건수</p>
+            <p style={{ fontSize: '1.8rem', fontWeight: 'bold', margin: 0, color: '#B71C1C' }}>{overallStats.defectCount}</p>
+            <p style={{ fontSize: '0.75rem', color: '#C62828', margin: '0.25rem 0 0 0' }}>pass_fail='fail'</p>
+          </div>
+        </div>
+
+        {/* Chamber-level yield */}
+        <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: '#333' }}>챔버별 수율 비교 (pass_fail 기준)</h4>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
           {resultInterpretation.map((item) => (
             <div key={item.chamber} style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px', borderLeft: `4px solid ${item.color}`, textAlign: 'center' }}>
@@ -330,12 +428,51 @@ function ResultInterpretationCard() {
             </div>
           ))}
         </div>
+
+        {/* Pareto data */}
+        <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: '#333' }}>불량 유형 파레토 (상위 3개)</h4>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          {paretoData.map((item) => (
+            <div key={item.type} style={{ padding: '0.75rem 1rem', background: '#f5f5f7', borderRadius: '8px', borderLeft: '4px solid #9C27B0', textAlign: 'center' }}>
+              <p style={{ fontSize: '0.8rem', color: '#7B1FA2', margin: '0 0 0.25rem 0', fontWeight: 600 }}>{item.rank}</p>
+              <strong style={{ fontSize: '1rem', color: '#333' }}>{item.type}</strong>
+              <p style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: '0.25rem 0 0 0', color: '#4A148C' }}>{item.count}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Verification warning */}
         <div style={{ background: '#FFF3E0', borderRadius: '8px', padding: '1rem', borderLeft: '4px solid #FF9800', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <AlertTriangle size={18} color="#E65100" />
+            <p style={{ fontSize: '0.95rem', color: '#E65100', fontWeight: 700, margin: 0 }}>
+              검증 포인트
+            </p>
+          </div>
           <p style={{ fontSize: '0.9rem', color: '#E65100', fontWeight: 600, margin: '0 0 0.5rem 0' }}>
-            yield_score 평균으로 계산하면 모든 챔버가 85~90으로 비슷해 보여서 문제를 놓침
+            챔버별 수율이 93~96% 수준으로 비슷하게 나오면 yield_score 평균을 쓰고 있는 것.
           </p>
           <p style={{ fontSize: '0.9rem', color: '#333', margin: 0 }}>
-            pass_fail 기준으로 계산해야 C4의 문제가 드러남
+            AI에게 "챔버별 수율 계산을 pass_fail=pass 비율로 수정해줘"라고 요청.
+          </p>
+        </div>
+
+        {/* Code verification */}
+        <div style={{ background: '#E3F2FD', borderRadius: '8px', padding: '1rem', borderLeft: '4px solid #1565C0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <Search size={18} color="#1565C0" />
+            <p style={{ fontSize: '0.95rem', color: '#1565C0', fontWeight: 700, margin: 0 }}>
+              코드 검증 포인트
+            </p>
+          </div>
+          <p style={{ fontSize: '0.9rem', color: '#333', margin: '0 0 0.5rem 0' }}>
+            코드에서 수율 계산 부분을 찾아서 확인:
+          </p>
+          <p style={{ fontSize: '0.85rem', color: '#1B5E20', fontFamily: 'monospace', margin: '0 0 0.25rem 0' }}>
+            df['pass_fail'].value_counts() 또는 pass_count / total_count * 100 패턴이 있으면 정상.
+          </p>
+          <p style={{ fontSize: '0.85rem', color: '#C62828', fontFamily: 'monospace', margin: 0 }}>
+            yield_score.mean()이 수율로 쓰이고 있으면 수정 필요.
           </p>
         </div>
       </div>
@@ -566,7 +703,7 @@ export default function App() {
           <h1>Ch.13 데이터 분석 자동화 & Streamlit 배포</h1>
           <p className="subtitle">Antigravity IDE에서 AI에게 OLED 증착 공정 데이터 분석 앱을 만들게 하고, GitHub + Streamlit Cloud로 배포합니다.</p>
           <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.75)', marginTop: '0.5rem' }}>
-            실습 데이터: oled_deposition_xymap.csv (24,576행, 29컬럼)
+            실습 데이터: oled_deposition_xymap.csv (24,576행 -- 측정점)
           </p>
           <div className="lesson-meta" aria-label="lesson summary">
             <span>6단계</span>
@@ -644,7 +781,16 @@ export default function App() {
             아래 프롬프트를 Antigravity IDE에 입력하면 OLED 증착 공정 분석 앱이 생성됩니다.
             수율 정의(pass_fail 기준)를 명확히 알려주는 것이 핵심입니다.
           </p>
+
+          {/* Key message boxes */}
+          <div style={{ marginBottom: '2rem' }}>
+            {keyMessages.map((msg) => (
+              <KeyMessageBox key={msg.text} icon={msg.icon} text={msg.text} color={msg.color} />
+            ))}
+          </div>
+
           <OledPromptCard />
+          <RequirementsPromptCard />
           <ResultInterpretationCard />
           <h3 style={{ marginTop: '3rem', marginBottom: '1rem' }}>다른 분야에도 동일한 패턴 적용</h3>
           <p className="section-intro">
