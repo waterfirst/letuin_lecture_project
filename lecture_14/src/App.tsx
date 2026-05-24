@@ -570,6 +570,64 @@ export default function App() {
         </section>
 
         {/* ================================================================ */}
+        {/* SECTION 02-2: AI 이미지 분석기의 목적과 활용                     */}
+        {/* ================================================================ */}
+        <section>
+          <span className="section-label">02-2. AI 이미지 분석기 — 목적과 4대 분야 활용</span>
+          <h2>이미지 한 장이 <mark>정량적 판정 보고서</mark>로 바뀝니다</h2>
+          <p className="section-intro">
+            Google AI Studio에 시스템 프롬프트 하나를 설정하면, 이미지를 업로드할 때마다
+            AI가 결함/이상 위치, 신뢰도 점수, 자연어 소견을 자동으로 출력합니다.
+            코드 설치 불필요, 공유 링크 하나로 팀 전체가 사용 가능합니다.
+          </p>
+
+          <div className="highlight-box" style={{ background: '#E8F5E9', borderLeftColor: '#27AE60' }}>
+            <p style={{ fontWeight: 700, color: '#27AE60' }}>이 도구의 목적</p>
+            <ul style={{ paddingLeft: '1.2rem', lineHeight: '2', marginTop: '0.5rem' }}>
+              <li><strong>주관적 판정 → 정량적 분석:</strong> "이상해 보인다" 대신 "신뢰도 0.92, 좌표 (120, 340), 유형: 핵비대"</li>
+              <li><strong>개인 편차 제거:</strong> 검사자 A와 B가 같은 이미지를 보고 다른 판정 → AI는 항상 동일한 기준</li>
+              <li><strong>대량 처리:</strong> 수백 장 이미지를 하나씩 보는 대신, 연속 업로드 → 연속 판정</li>
+              <li><strong>즉시 배포:</strong> 설치 없이 공유 링크 하나로 팀 전체가 사용</li>
+            </ul>
+          </div>
+
+          <div style={{ marginTop: '2rem' }}>
+            <h3 style={{ marginBottom: '1rem', color: '#333' }}>4대 분야에서 이렇게 활용합니다</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+
+              <div style={{ background: '#EBF5FB', borderRadius: '12px', padding: '1.2rem', borderLeft: '4px solid #2980B9' }}>
+                <h4 style={{ color: '#2980B9', marginBottom: '0.5rem' }}>반도체</h4>
+                <p style={{ fontSize: '0.9rem', color: '#333', fontWeight: 600 }}>웨이퍼 결함 이미지 분석기</p>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.3rem' }}>스크래치, 파티클, 크랙 위치와 심각도를 자동 판정. SEM/광학 현미경 이미지 업로드.</p>
+              </div>
+
+              <div style={{ background: '#F5EEF8', borderRadius: '12px', padding: '1.2rem', borderLeft: '4px solid #8E44AD' }}>
+                <h4 style={{ color: '#8E44AD', marginBottom: '0.5rem' }}>디스플레이</h4>
+                <p style={{ fontSize: '0.9rem', color: '#333', fontWeight: 600 }}>패널 불량 이미지 분석기</p>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.3rem' }}>Mura, 데드 픽셀, 얼룩 패턴을 자동 분류. 검사 이미지 업로드 → 불량 유형 + 위치.</p>
+              </div>
+
+              <div style={{ background: '#E8F8F5', borderRadius: '12px', padding: '1.2rem', borderLeft: '4px solid #27AE60' }}>
+                <h4 style={{ color: '#27AE60', marginBottom: '0.5rem' }}>배터리</h4>
+                <p style={{ fontSize: '0.9rem', color: '#333', fontWeight: 600 }}>전극 표면 결함 분석기</p>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.3rem' }}>코팅 불균일, 핀홀, 크랙을 SEM 이미지에서 자동 검출. 위치 + 크기 + 심각도.</p>
+              </div>
+
+              <div style={{ background: '#FEF9E7', borderRadius: '12px', padding: '1.2rem', borderLeft: '4px solid #F39C12' }}>
+                <h4 style={{ color: '#F39C12', marginBottom: '0.5rem' }}>바이오</h4>
+                <p style={{ fontSize: '0.9rem', color: '#333', fontWeight: 600 }}>세포 형태 분석기 (오늘 실습)</p>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.3rem' }}>이상 세포 좌표, 신뢰도, N/C ratio, 염색 패턴을 자동 분석. 소견 요약까지.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="highlight-box" style={{ background: '#FFF3E0', borderLeftColor: '#FF9800', marginTop: '1.5rem' }}>
+            <p style={{ fontWeight: 700, color: '#E65100' }}>핵심 포인트</p>
+            <p>시스템 프롬프트만 바꾸면 같은 AI Studio에서 웨이퍼 결함 분석기, 패널 불량 분석기, 전극 결함 분석기, 세포 분석기 어떤 것이든 만들 수 있습니다. 오늘은 바이오 세포 분석으로 실습하지만, 여러분 분야에 맞게 프롬프트만 교체하면 됩니다.</p>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
         {/* SECTION 03: 왜 세포 분석에 AI가 필요한가?                       */}
         {/* ================================================================ */}
         <section>
