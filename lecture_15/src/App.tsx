@@ -1,178 +1,281 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Activity,
-  AlertTriangle,
-  ArrowRight,
-  BarChart3,
-  Battery,
-  Bell,
-  Brain,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  Code,
-  Copy,
-  Eye,
-  Gauge,
-  LineChart,
-  Mail,
-  Quote,
-  Send,
-  Smartphone,
-  Target,
-  Thermometer,
-  TrendingUp,
-  Wrench,
-  Zap,
+  AlertTriangle, ArrowRight, Brain, Check, CheckCircle2, ChevronRight,
+  Copy, ExternalLink, Eye, Globe, Key, Layers, Link2, MessageSquare,
+  Quote, Rocket, Search, Share2, Sparkles, Target, Users, Zap,
 } from 'lucide-react';
 
 const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 
 // ============================================================================
-// DATA ARRAYS - Sensor Forecast & Alert
+// DATA ARRAYS
 // ============================================================================
 
 const learningGoals = [
   {
     step: '학습목표 1',
-    title: 'Prophet으로 시계열 예측',
-    body: '센서 CSV를 Prophet 모델에 학습시키고 60분 뒤까지의 추세를 예측해 임계 초과 시점을 찾아냅니다.',
-    type: 'api',
+    title: 'Gemini API Key 확인 & AI Studio 프로젝트 생성',
+    body: '14강에서 발급한 API Key를 확인하고, 새 프롬프트 프로젝트를 생성합니다.',
+    type: 'key',
   },
   {
     step: '학습목표 2',
-    title: '3가지 이상 감지 로직 결합',
-    body: '3-sigma, Isolation Forest, Rolling 추세 3가지 방법을 결합해 오탐을 줄이고 확실한 이상만 잡습니다.',
-    type: 'knowledge',
+    title: '3단계 프롬프트로 3D 열응력 시뮬레이터 구축',
+    body: 'UI 설계 → 물리 엔진 → 3D 시각화 순서로 다층 소재 휨(Warpage) 시뮬레이터를 완성합니다.',
+    type: 'simulator',
   },
   {
     step: '학습목표 3',
-    title: '텔레그램 봇 연동 자동화',
-    body: 'BotFather로 생성한 텔레그램 봇 API를 연동하여 센서 이상 발생 시 심각도별 실시간 메시지 발송을 구현합니다.',
-    type: 'deploy',
+    title: '공유 링크로 팀원과 시뮬레이터 배포',
+    body: '완성된 시뮬레이터를 공유 링크로 배포하여 팀 협업에 즉시 활용합니다.',
+    type: 'share',
   },
 ];
 
 const lessonFlow = [
-  { time: '3분', label: '목표 확인' },
-  { time: '7분', label: '개념·비유' },
-  { time: '8분', label: '실무 사례' },
-  { time: '17분', label: '지시문·실습' },
-  { time: '5분', label: '검증·정리' },
+  { time: '1단계', label: '문제 정의 (다층 소재 열 휨)' },
+  { time: '2단계', label: 'AI Studio 프로젝트 생성' },
+  { time: '3단계', label: 'Phase 1 — UI 레이아웃' },
+  { time: '4단계', label: 'Phase 2 — 물리 엔진' },
+  { time: '5단계', label: 'Phase 3 — 3D 시각화' },
+  { time: '6단계', label: '공유 링크 배포 + Quality Gate' },
 ];
 
 const roleFlow = [
-  { owner: '엔지니어', task: '임계값 정의, 알림 규칙 설계, 결과 검토' },
-  { owner: 'Prophet', task: '추세·계절성 학습, 미래 60분 예측' },
-  { owner: 'Detector', task: '3가지 방법으로 이상 탐지·확정' },
-  { owner: 'Telegram Alert', task: 'BotFather 연동 텔레그램 메시지 발송' },
+  { owner: '제조 엔지니어', task: '층 구성 정의, 물성치 입력, 결과 검증' },
+  { owner: 'Google AI Studio', task: 'Gemini가 시뮬레이터 코드 자동 생성' },
+  { owner: '공유 링크', task: '팀원 즉시 접속, 동일 시뮬레이터 사용' },
 ];
 
-const sensorCapabilities = [
+const manualVsAI = [
   {
-    icon: Battery,
-    title: '배터리',
-    description: '온도·전압·전류·용량을 학습해 충전 사이클별 용량 감소를 예측합니다.',
-    features: ['60℃ 초과 즉시 알림', '사이클별 SOH 추정', 'BMS 연동'],
-    cost: '15분 사전 예측',
-    freeQuota: '24/7 무중단',
+    label: '기존: 유한요소법(FEM) 소프트웨어',
+    items: [
+      '라이선스 비용 수천만원 (ANSYS, ABAQUS)',
+      '모델링 + 메시 + 경계조건 설정에 반나절',
+      '전문 교육 필수 (석사 이상 역학 지식)',
+      '파라미터 변경 시 재모델링 필요',
+    ],
   },
   {
-    icon: Thermometer,
-    title: '반도체',
-    description: '공정 챔버의 온도·압력·가스농도·습도를 모니터링합니다.',
-    features: ['압력 ±5% 이탈', '챔버 이상 15분 전', '레시피별 임계값'],
-    cost: 'Prophet 예측',
-    freeQuota: '실시간 1분 주기',
-  },
-  {
-    icon: Gauge,
-    title: '디스플레이',
-    description: '패널의 전력·휘도·색온도·전류 변화를 분석합니다.',
-    features: ['휘도 90% 미달', '추세 기반 수명 예측', '품질 등급 추적'],
-    cost: 'JSON 알림',
-    freeQuota: '라인별 분리',
-  },
-  {
-    icon: Activity,
-    title: '바이오',
-    description: '배양 공정의 pH·온도·용존산소·교반속도를 추적합니다.',
-    features: ['pH 7.0±0.5 이탈', '배양 곡선 패턴 학습', '오염 조기 경보'],
-    cost: '심각도 자동 판정',
-    freeQuota: '멀티채널 통보',
+    label: 'AI: 웹 기반 시뮬레이터',
+    items: [
+      '무료 (AI Studio + React)',
+      '프롬프트 입력 → 즉시 시뮬레이터 생성',
+      '슬라이더로 파라미터 실시간 변경',
+      '3D 결과를 팀원과 링크 하나로 공유',
+    ],
   },
 ];
 
-const fieldScenarios = [
+const phase1PromptText = `다층 소재의 열응력을 분석하는 웹 기반 시뮬레이터의 기본 화면을 React와 Tailwind CSS로 만들어주세요.
+
+[화면 구조]
+좌측: 제어 패널(Control Panel)
+- 레이어 속성 테이블: 소재명, 두께(μm), 탄성률(GPa), CTE(ppm/°C)
+- 기본 3층 구조: Silicon(500μm, 130GPa, 2.6ppm), Copper(50μm, 120GPa, 17ppm), Polyimide(25μm, 3GPa, 30ppm)
+- 온도 변화(ΔT) 슬라이더: 0~200°C
+- 표면 패터닝 타입 선택: Uniform / Longitudinal / Grid
+
+우측 상단: 3D 시뮬레이션 뷰어 영역 (빈 공간, 나중에 Three.js 삽입)
+우측 하단: 분석 결과 요약표
+- 곡률 반지름(mm), 최대 변위(μm), 휨 형태(Smile/Cry)
+
+[TypeScript 인터페이스]
+interface Layer { name: string; thickness: number; modulus: number; cte: number; }
+interface SimulationResult { curvatureRadius: number; maxDisplacement: number; warpageType: 'smile' | 'cry'; stressMap: number[][]; }`;
+
+const phase2PromptText = `이제 레이어 데이터를 바탕으로 열 휨(Thermal Warpage)을 계산하는 핵심 함수를 구현해주세요.
+
+[계산 로직]
+1. 기계적 중립축(Neutral Axis) 계산:
+   z_neutral = Σ(E_i × t_i × z_i) / Σ(E_i × t_i)
+   - E_i: i번째 층 탄성률
+   - t_i: i번째 층 두께
+   - z_i: i번째 층 중심 z좌표
+
+2. 굽힘 강성(Bending Stiffness):
+   D = Σ E_i × [t_i³/12 + t_i × (z_i - z_neutral)²]
+
+3. 열 모멘트(Thermal Moment):
+   M_thermal = ΔT × Σ E_i × α_i × t_i × (z_i - z_neutral)
+
+4. 곡률(Curvature):
+   κ = M_thermal / D
+   곡률 반지름: R = 1/κ
+   최대 변위: δ = (L²/2) × κ  (L = 판 길이)
+
+5. 패턴 보정 계수:
+   - Uniform: factor = 1.0
+   - Longitudinal: factor = 0.7 (한 방향만 구속)
+   - Grid: factor = 0.85 (양방향 부분 구속)
+
+6. 응력 분포:
+   σ_i(z) = E_i × (α_i × ΔT - κ × (z - z_neutral))
+
+[요구사항]
+- calculateSimulation(layers, deltaT, pattern) 함수 구현
+- 휨 방향 판별: κ > 0이면 'smile', κ < 0이면 'cry'
+- 각 층별 최대/최소 응력값 계산
+- XY 격자(20×20)에서 z 변위 맵 생성`;
+
+const phase3PromptText = `3D 시각화와 종합 분석 대시보드를 추가해주세요.
+
+[요구사항]
+1. Three.js 또는 Plotly.js로 3D 표면 플롯:
+   - 20×20 격자의 z 변위를 높이로 표현
+   - 색상: 응력 크기에 따라 파랑(압축)→흰색(0)→빨강(인장) 그라데이션
+   - 마우스 드래그로 회전, 스크롤로 줌
+
+2. 응력 분포 단면도:
+   - 두께 방향(z축) vs 응력 그래프
+   - 각 층 경계를 수직 점선으로 표시
+   - 중립축 위치 빨간 수평선
+
+3. 결과 요약 카드:
+   - 곡률 반지름 R (mm)
+   - 최대 변위 δ (μm)
+   - 휨 형태 (Smile ∪ / Cry ∩)
+   - 최대 인장응력 / 최대 압축응력 (MPa)
+
+4. 파라미터 감도 분석:
+   - ΔT를 0~200°C로 sweep한 변위 변화 그래프
+   - 각 층 두께를 ±50% 변경했을 때 변위 변화 바 차트
+
+5. JSON Export: 전체 시뮬레이션 결과 다운로드 버튼`;
+
+const systemPromptText = `당신은 다층 박막(Multi-layer Thin Film) 구조의 열응력 및 휨(Warpage) 시뮬레이션 전문가입니다.
+
+[역할]
+사용자가 입력한 다층 소재의 물성치와 온도 조건을 바탕으로, 열 팽창 불일치에 의한 내부 응력과 변형을 계산합니다.
+
+[입력 파라미터]
+- layers: [{name, thickness_um, modulus_GPa, cte_ppm}]
+- deltaT: 온도 변화 (°C)
+- pattern_type: "uniform" | "longitudinal" | "grid"
+- plate_size_mm: 판 크기 (기본 100mm × 100mm)
+
+[물리 모델]
+1. 중립축: z_n = Σ(E_i·t_i·z_i) / Σ(E_i·t_i)
+2. 굽힘 강성: D = Σ E_i·[t_i³/12 + t_i·(z_i - z_n)²]
+3. 열 모멘트: M = ΔT · Σ E_i·α_i·t_i·(z_i - z_n)
+4. 곡률: κ = M/D, 반지름 R = 1/|κ|
+5. 최대 변위: δ = (L²/2)·|κ|
+6. 층별 응력: σ_i = E_i·(α_i·ΔT - κ·(z - z_n))
+7. 패턴 보정: uniform=1.0, longitudinal=0.7, grid=0.85
+
+[출력 형식 - JSON]
+{
+  "neutralAxis_um": 250.5,
+  "curvatureRadius_mm": 850,
+  "maxDisplacement_um": 45.2,
+  "warpageType": "smile",
+  "layerStress": [
+    {"name": "Silicon", "max_MPa": 12.5, "min_MPa": -8.3},
+    {"name": "Copper", "max_MPa": 85.2, "min_MPa": 42.1},
+    {"name": "Polyimide", "max_MPa": -5.1, "min_MPa": -15.8}
+  ],
+  "patternFactor": 1.0,
+  "recommendation": "설계 요약"
+}
+
+[제약조건]
+- 층 수: 2~10층
+- 두께 범위: 1~5000 μm
+- ΔT 범위: 0~300°C
+- 판 크기: 10~500 mm
+- 소재 DB 내장: Si, Cu, Al, PI, FR-4, Solder, Glass, SiO2`;
+
+const procedureSteps = [
   {
-    icon: Battery,
-    title: '배터리: 온도 폭주 사전 예측',
-    before: '온도 모니터를 사람이 화면으로 주시하다가 폭주가 시작된 뒤에야 인지',
-    intent: '최근 24시간 배터리 셀 온도를 Prophet으로 학습해 60℃ 초과 시점을 15분 전 예측하고 담당자에게 알림을 보내줘.',
-    output: '15분 사전 경보 + 셀 위치·상승률·예상 도달 시간 JSON',
+    step: '1',
+    title: 'AI Studio 접속 & 프로젝트 생성',
+    description: 'aistudio.google.com에 접속하여 새 프롬프트 프로젝트를 생성합니다.',
+    details: [
+      'aistudio.google.com 접속 → Google 로그인',
+      'Create new prompt 클릭',
+      '(선택) 14강에서 발급한 API Key 확인',
+      '프로젝트 이름: "3D Warpage Simulator"',
+    ],
+    icon: Key,
+    color: '#4285F4',
   },
   {
-    icon: Thermometer,
-    title: '반도체: 챔버 압력 이탈 감지',
-    before: '오퍼레이터가 분당 한 번 화면을 보고 압력 이탈을 수기로 기록',
-    intent: '챔버 압력 데이터를 3-sigma·Isolation Forest·Rolling 추세 3가지 방법으로 검사해 2개 이상 일치할 때만 이상으로 확정해줘.',
-    output: '확정 이상 카운트 + 시점별 좌표 + 심각도 등급',
+    step: '2',
+    title: 'Phase 1 — UI 레이아웃 & 데이터 구조',
+    description: '제어 패널, 3D 뷰어, 결과 요약의 3영역 레이아웃과 TypeScript 인터페이스를 만듭니다.',
+    details: [
+      'Phase 1 프롬프트를 채팅창에 입력',
+      '좌측 제어 패널: 레이어 테이블 + ΔT 슬라이더',
+      '우측 상단: 3D 뷰어 빈 영역 확인',
+      '우측 하단: 결과 요약 카드 영역 확인',
+      'Layer 인터페이스 타입 정의 확인',
+    ],
+    icon: Layers,
+    color: '#34A853',
   },
   {
-    icon: Gauge,
-    title: '디스플레이: 휘도 저하 추세 분석',
-    before: '주간 점검 때만 휘도를 측정해 저하 추세를 놓침',
-    intent: '시간당 휘도 로그에서 추세선을 추출해 90% 기준치 도달 시점을 예측하고 라인 매니저에게 텔레그램 봇으로 알려줘.',
-    output: '휘도 90% 도달 예상일 + 텔레그램 메시지 자동 발송',
+    step: '3',
+    title: 'Phase 2 — 물리 엔진 (중립축, 굽힘, 곡률)',
+    description: '고체역학 기반 다층 박막 휨 계산 함수를 구현합니다.',
+    details: [
+      'Phase 2 프롬프트 추가 입력 (같은 대화에서)',
+      '중립축(Neutral Axis) 계산 확인',
+      '굽힘 강성(D) + 열 모멘트(M) → 곡률(κ) 도출',
+      '패턴 보정 계수 적용 (uniform/longitudinal/grid)',
+      'Smile/Cry 판별 로직 확인',
+    ],
+    icon: Eye,
+    color: '#FBBC04',
   },
   {
-    icon: Activity,
-    title: '바이오: pH 이탈 즉시 통보',
-    before: 'pH 미터를 야간 교대 근무자가 1시간마다 수동 확인',
-    intent: '발효조 pH가 7.0±0.5 이탈하면 즉시 텔레그램 봇으로 통보하고 마지막 10분 추세 그래프를 첨부해줘.',
-    output: '심각도 HIGH → 텔레그램 봇 긴급 발송(소리 알림)',
+    step: '4',
+    title: 'Phase 3 — 3D 시각화 & 공유',
+    description: 'Three.js 3D 표면 플롯, 응력 단면도, 감도 분석을 추가하고 공유합니다.',
+    details: [
+      'Phase 3 프롬프트로 3D 시각화 추가',
+      '색상 맵: 파랑(압축) → 빨강(인장)',
+      '응력 단면도: 층 경계 + 중립축 표시',
+      'ΔT sweep 감도 분석 그래프',
+      'Share → Get link → 팀원 공유',
+    ],
+    icon: Share2,
+    color: '#EA4335',
   },
 ];
 
-const apiSteps = [
-  { step: '1', title: 'pip install prophet', body: 'Prophet과 scikit-learn 준비', duration: '1분' },
-  { step: '2', title: 'CSV 로드 & 정리', body: 'timestamp/value를 ds/y로 리네임', duration: '30초' },
-  { step: '3', title: 'Prophet 모델 학습', body: 'fit() 후 60분 future 생성', duration: '20초' },
-  { step: '4', title: '임계 초과 알림', body: 'send_alert로 멀티채널 발송', duration: '3초' },
+const qualityChecklist = [
+  '레이어 물성치 입력 UI가 정상 동작하는가?',
+  'ΔT 슬라이더 변경 시 결과가 실시간 업데이트되는가?',
+  '중립축 위치가 물리적으로 타당한가? (두꺼운 층 쪽에 가까워야 함)',
+  'CTE 큰 층이 위에 있으면 Smile, 아래에 있으면 Cry로 나오는가?',
+  '3D 표면 플롯에서 응력 색상 분포가 보이는가?',
+  '공유 링크로 팀원이 접속 가능한가?',
 ];
 
-const intentChecklist = [
-  '센서 CSV가 ds/y 컬럼으로 정리되었는가?',
-  'Prophet 모델 학습과 60분 예측이 동작하는가?',
-  '3-sigma·Isolation Forest·Rolling 3가지 감지가 결합되었는가?',
-  '심각도 HIGH/MEDIUM/LOW 별 텔레그램 알림 분기가 정의되었는가?',
-  'Telegram 봇 토큰과 CHAT ID가 .env에 안전하게 저장되었는가?',
+const keyMessages = [
+  {
+    icon: Layers,
+    text: '3단계 프롬프트: UI 뼈대 → 물리 두뇌 → 시각화 피부 순서로 쌓으면 AI가 복잡한 공학 시뮬레이터도 정확하게 만듭니다.',
+    color: '#4285F4',
+  },
+  {
+    icon: Eye,
+    text: '핵심 수식: κ = M_thermal / D. 곡률은 열 모멘트를 굽힘 강성으로 나눈 것. CTE 차이가 클수록, ΔT가 클수록 많이 휜다.',
+    color: '#34A853',
+  },
+  {
+    icon: AlertTriangle,
+    text: 'AI가 만든 물리 엔진을 맹신하지 마세요. 중립축 위치와 Smile/Cry 방향이 상식에 맞는지 반드시 검증하세요.',
+    color: '#EA4335',
+  },
 ];
 
-const forecastVerifyPoints = [
-  '시간 컬럼이 datetime으로 파싱되었는가?',
-  'Prophet 신뢰구간(yhat_lower/upper)이 확보되었는가?',
-  '재학습 주기(1분/5분)가 운영에 맞게 설정되었는가?',
-];
-
-const anomalyVerifyPoints = [
-  '3가지 방법 중 2개 이상 일치할 때만 확정되는가?',
-  'Isolation Forest contamination이 데이터에 맞게 튜닝되었는가?',
-  'Rolling window 크기가 데이터 주기와 어긋나지 않는가?',
-];
-
-const alertVerifyPoints = [
-  '심각도별 알림(소리/무음) 분기(HIGH/MEDIUM/LOW)가 명확한가?',
-  'Telegram Bot 토큰과 CHAT ID가 환경변수로 분리되었는가?',
-  '실패 시 재시도와 로그가 남는가?',
-];
-
-const responseComparison = [
-  { model: 'AI 예측 + 자동 알림', price: '3초 대응', context: '15분 사전 예측', free: '24/7 무중단', score: 96 },
-  { model: '수동 모니터링', price: '30분+', context: '사후 인지', free: '주간만 가능', score: 55 },
-  { model: '단순 임계 알림', price: '즉시', context: '추세 미반영', free: '오탐 다수', score: 70 },
+const deploymentMethods = [
+  { lecture: '13강', method: 'Streamlit Cloud', type: '인터랙티브 앱', icon: Rocket },
+  { lecture: '14강', method: 'AI Studio 링크', type: 'OLED 공진 시뮬레이터', icon: Sparkles },
+  { lecture: '15강', method: 'AI Studio 링크', type: '3D 열응력 시뮬레이터', icon: Share2 },
 ];
 
 // ============================================================================
@@ -180,495 +283,60 @@ const responseComparison = [
 // ============================================================================
 
 function GoalVisual({ type }: { type: string }) {
-  if (type === 'api') {
+  if (type === 'key') {
     return (
       <div className="goal-visual definition">
-        <div className="visual-item person">
-          <LineChart size={18} />
-          <span>Sensor</span>
-        </div>
+        <div className="visual-item person"><Key size={18} /><span>API Key</span></div>
         <ArrowRight size={14} className="visual-arrow" />
-        <div className="visual-item ai">
-          <TrendingUp size={18} />
-          <span>Forecast</span>
-        </div>
+        <div className="visual-item ai"><Brain size={18} /><span>AI Studio</span></div>
       </div>
     );
   }
-  if (type === 'knowledge') {
+  if (type === 'simulator') {
     return (
       <div className="goal-visual elements">
-        <div className="element-tag">3-sigma</div>
-        <div className="element-tag">IsolationForest</div>
-        <div className="element-tag">Rolling</div>
+        <div className="element-tag">중립축</div>
+        <div className="element-tag">곡률</div>
+        <div className="element-tag">3D 응력</div>
       </div>
     );
   }
-  if (type === 'deploy') {
+  if (type === 'share') {
     return (
       <div className="goal-visual field">
         <div className="field-icons">
-          <div className="f-icon"><Send size={18} /></div>
-          <div className="f-icon"><Bell size={18} /></div>
+          <div className="f-icon"><Share2 size={18} /></div>
+          <div className="f-icon"><Link2 size={18} /></div>
         </div>
-        <div className="success-indicator">
-          <CheckCircle2 size={12} />
-          <span>3초 자동 알림</span>
-        </div>
+        <div className="success-indicator"><CheckCircle2 size={12} /><span>공유 링크 배포</span></div>
       </div>
     );
   }
   return null;
 }
 
-function ResponseChart() {
-  const max = Math.max(...responseComparison.map((item) => item.score));
+function KeyMessageBox({ icon: Icon, text, color }: { icon: typeof Eye; text: string; color: string }) {
+  return (
+    <div style={{ background: '#f5f5f7', borderRadius: '8px', padding: '1rem 1.25rem', borderLeft: `4px solid ${color}`, marginBottom: '0.75rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+      <Icon size={20} color={color} style={{ flexShrink: 0, marginTop: '2px' }} />
+      <p style={{ fontSize: '0.95rem', color: '#333', margin: 0, lineHeight: '1.6' }}>{text}</p>
+    </div>
+  );
+}
 
+function PromptCard({ title, promptText, color }: { title: string; promptText: string; color: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => { navigator.clipboard.writeText(promptText).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); };
   return (
     <div className="visual-card">
-      <div className="visual-header">
-        <span>대응 방식 비교</span>
-        <strong>종합 점수</strong>
+      <div className="visual-header" style={{ background: color }}>
+        <span>프롬프트</span><strong>{title}</strong>
       </div>
-      <div className="bar-chart" role="img" aria-label="대응 방식 비교 차트">
-        {responseComparison.map((item) => (
-          <div className="bar-row" key={item.model}>
-            <span>{item.model}</span>
-            <div>
-              <i style={{ width: `${(item.score / max) * 100}%` }} />
-            </div>
-            <strong>{item.score}</strong>
-          </div>
-        ))}
-      </div>
-      <p>AI 예측은 15분 전 사전 경보와 3초 자동 알림으로 골든타임을 확보합니다.</p>
-    </div>
-  );
-}
-
-function LectureImage({
-  src,
-  alt,
-  caption,
-  variant = 'wide',
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-  variant?: 'wide' | 'poster';
-}) {
-  return (
-    <figure className={`lecture-image ${variant}`}>
-      <img src={assetUrl(src)} alt={alt} loading="lazy" />
-      <figcaption>{caption}</figcaption>
-    </figure>
-  );
-}
-
-function VerifyChecklist({ points }: { points: string[] }) {
-  return (
-    <div className="verify-checklist">
-      <span>엔지니어 검증 포인트</span>
-      {points.map((point) => (
-        <div className="verify-item" key={point}>
-          <CheckCircle2 size={15} />
-          <p>{point}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ============================================================================
-// DEEP DIVE SECTIONS
-// ============================================================================
-
-function TimeSeriesDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 01 Deep Dive</span>
-        <h3>시계열 예측: Prophet으로 60분 뒤 센서값까지 미리 보기</h3>
-        <p>
-          센서 로그를 Prophet 모델에 학습시키면 추세·계절성을 자동으로 분리해 60분 뒤까지의
-          예측값과 신뢰구간을 받을 수 있습니다. 임계 초과 시점을 사전에 잡습니다.
-        </p>
-        <LectureImage
-          src="sensor-forecast-alert-overview.png"
-          alt="센서 데이터 수집부터 예측, 이상 감지, 알림 발송까지 이어지는 운영 흐름"
-          caption="센서 수집 → 시계열 예측 → 이상 감지 → 멀티채널 알림으로 이어지는 전체 파이프라인입니다."
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow" aria-label="시계열 예측 Before Prompt After">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 수동 모니터링</span>
-          <h4>화면 주시와 엑셀 기록으로 추세를 따라가던 방식</h4>
-          <ul>
-            <li>엔지니어가 모니터 앞에서 센서 그래프를 직접 주시</li>
-            <li>이상이 시작된 뒤에야 엑셀에 수기 기록</li>
-            <li>야간·휴일에는 사실상 감시 공백</li>
-            <li>미세한 추세 변화는 사람이 잡아내기 어려움</li>
-          </ul>
-          <div className="mini-excel dense-excel">
-            <strong>수동 모니터링 흐름</strong>
-            <div style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px', marginTop: '0.5rem' }}>
-              <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
-                1. 모니터에서 센서 값 확인<br/>
-                2. 이상치 발견 시 엑셀에 입력<br/>
-                3. 전화로 담당자에게 통보<br/>
-                4. 30분+ 지난 뒤에야 조치<br/>
-                5. 야간/휴일에는 사후 보고
-              </p>
-            </div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: Prophet 예측 지시</span>
-          <h4>Prophet으로 60분 미래값과 임계 초과 시점을 추출합니다</h4>
-          <p>
-            "battery_temp.csv를 timestamp/temperature 컬럼으로 읽어서 ds/y로 리네임하고,
-            changepoint_prior_scale=0.05로 Prophet 학습 후 60분 후까지 분 단위로 예측해줘.
-            예측값(yhat)이 60℃를 초과하는 첫 시점을 찾아 15분 사전 알림 시각도 함께 알려줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>모델</strong><span>Prophet (additive trend)</span></div>
-            <div><strong>주기</strong><span>1분 freq, 60 periods</span></div>
-            <div><strong>임계</strong><span>60℃ 초과 사전 경보</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>예측 추세선과 임계 초과 시점이 코드로 자동 산출됩니다</h4>
-          <div className="code-preview-box">
-            <div className="visual-header">
-              <span>Python Script</span>
-              <strong>forecast_battery.py</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`import pandas as pd
-from prophet import Prophet
-
-# 1. 데이터 로드 & 컬럼 매핑
-df = pd.read_csv('battery_temp.csv')
-df = df.rename(columns={'timestamp': 'ds', 'temperature': 'y'})
-
-# 2. Prophet 모델 학습
-model = Prophet(
-    changepoint_prior_scale=0.05,
-    seasonality_mode='multiplicative'
-)
-model.fit(df)
-
-# 3. 미래 60분 예측
-future = model.make_future_dataframe(periods=60, freq='T')
-forecast = model.predict(future)
-
-# 4. 임계 초과 시점 탐색 (60℃)
-threshold = 60
-alerts = forecast[forecast['yhat'] > threshold]
-
-if len(alerts) > 0:
-    first_hit = alerts.iloc[0]['ds']
-    early_warning = first_hit - pd.Timedelta(minutes=15)
-    print(f"WARN: {first_hit} 초과 예상, 사전 경보: {early_warning}")
-    send_alert(early_warning)`}</pre>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>15분 전</strong><span>임계 초과 사전 예측</span></div>
-            <div><strong>95%+</strong><span>15분 후 예측 정확도</span></div>
-            <div><strong>1분 주기</strong><span>재학습으로 추세 반영</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 Prophet이 미래값을 단정짓는 것이 아니라, 신뢰구간을 가진 예측을 통해 엔지니어가
-        조치할 수 있는 골든타임을 만들어주는 것입니다.
-      </p>
-      <VerifyChecklist points={forecastVerifyPoints} />
-    </div>
-  );
-}
-
-function AnomalyDetectionDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 02 Deep Dive</span>
-        <h3>이상 감지: 3가지 방법을 결합해 오탐을 줄이는 다층 디텍터</h3>
-        <p>
-          단일 알고리즘은 오탐과 누락을 동시에 줄이기 어렵습니다. 3-sigma·Isolation Forest·
-          Rolling 추세 3가지를 결합하고 2개 이상 일치할 때만 이상으로 확정합니다.
-        </p>
-        <LectureImage
-          src="panel1.png"
-          alt="3가지 이상 감지 방법(통계·ML·추세)을 결합해 이상을 확정하는 다층 구조"
-          caption="통계 기반, ML 기반, 추세 기반 3가지를 결합하면 오탐과 누락이 동시에 줄어듭니다."
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 단순 임계 비교</span>
-          <h4>"값이 임계값을 넘으면 알림" 한 줄 로직</h4>
-          <ul>
-            <li>단일 임계값으로만 판단해 추세를 반영하지 못함</li>
-            <li>노이즈 한 번에도 알림이 발생해 알림 피로 증가</li>
-            <li>완만한 추세 상승은 임계 직전까지 감지 못함</li>
-            <li>오탐 다수 → 결국 사람이 알림을 무시</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: 다층 디텍터 지시</span>
-          <h4>3-sigma·Isolation Forest·Rolling 3가지 결합 로직</h4>
-          <p>
-            "MultiLayerAnomalyDetector 클래스를 만들어줘. 3-sigma로 통계적 이상,
-            IsolationForest(contamination=0.01)로 ML 이상, Rolling mean 95퍼센타일로 추세
-            이상을 각각 계산하고, 3가지 중 2개 이상이 True인 시점만 이상으로 확정해줘."
-          </p>
-          <div className="aoi-rule-grid">
-            <div><strong>3-sigma</strong><span>평균 ± 3σ 범위 이탈</span></div>
-            <div><strong>Isolation Forest</strong><span>contamination=0.01</span></div>
-            <div><strong>Rolling 추세</strong><span>window=10, p95 임계</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>3가지가 합의한 시점만 알림으로 올라와 오탐이 사라집니다</h4>
-          <div className="notebooklm-result-box">
-            <div className="visual-header">
-              <span>Detector Code</span>
-              <strong>multi_detector.py</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`from sklearn.ensemble import IsolationForest
-import numpy as np
-import pandas as pd
-
-class MultiLayerAnomalyDetector:
-    def __init__(self):
-        self.iforest = IsolationForest(contamination=0.01)
-
-    def detect_statistical(self, data):
-        mean, std = np.mean(data), np.std(data)
-        upper, lower = mean + 3*std, mean - 3*std
-        return (data > upper) | (data < lower)
-
-    def detect_ml(self, data):
-        preds = self.iforest.fit_predict(data.reshape(-1, 1))
-        return preds == -1
-
-    def detect_trend(self, data, window=10):
-        roll = pd.Series(data).rolling(window).mean()
-        diff = np.abs(data - roll)
-        return diff > np.percentile(diff, 95)
-
-    def combined_detect(self, data):
-        votes = (
-            self.detect_statistical(data).astype(int)
-            + self.detect_ml(data).astype(int)
-            + self.detect_trend(data).astype(int)
-        )
-        return votes >= 2
-
-detector = MultiLayerAnomalyDetector()
-anomalies = detector.combined_detect(values)
-print(f"확정 이상: {np.sum(anomalies)}건")`}</pre>
-          </div>
-          <div className="aoi-impact-strip">
-            <div><strong>오탐 60%↓</strong><span>2개 이상 일치 조건</span></div>
-            <div><strong>누락 감소</strong><span>추세 변화도 포착</span></div>
-            <div><strong>설명 가능</strong><span>어느 디텍터가 반응했는지 로깅</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 어느 알고리즘이 좋은가가 아니라, 서로 다른 가정의 디텍터를 합쳐 한 가지 오류에
-        흔들리지 않는 의사결정 구조를 만드는 것입니다.
-      </p>
-      <VerifyChecklist points={anomalyVerifyPoints} />
-    </div>
-  );
-}
-
-function AlertSystemDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 03 Deep Dive</span>
-        <h3>텔레그램 알림: BotFather 연동 및 심각도별(소리/무음) 분기 발송</h3>
-        <p>
-          모든 이상을 같은 감도로 보내면 알림 피로가 쌓입니다. HIGH/MEDIUM/LOW 심각도에 따라
-          토큰 기반의 Telegram Bot API를 활용하여 소리/무음 알림을 분기하여 골든타임을 지킵니다.
-        </p>
-        <LectureImage
-          src="panel2.png"
-          alt="센서 감지에서 심각도 분류, 텔레그램 봇 알림 발송까지의 아키텍처 다이어그램"
-          caption="감지·분류·발송을 분리한 알림 아키텍처입니다. BotFather로 봇을 만들고 HTTP API로 초고속 연동합니다."
-          variant="poster"
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 다중 SDK 혼재</span>
-          <h4>SMTP, Slack API, Twilio 등 복잡한 설정</h4>
-          <ul>
-            <li>각 채널마다 서로 다른 라이브러리와 SDK 설치 필요</li>
-            <li>자격증명 관리가 번거롭고 토큰 누출 위험 증가</li>
-            <li>Twilio SMS의 국내 발송 지연 및 해외 비용 부담</li>
-            <li>알림 형식이 각각 달라 유지보수 및 디버깅 난항</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: Telegram 봇 알림 지시</span>
-          <h4>심각도에 따라 소리 알림 여부와 대상을 분기합니다</h4>
-          <p>
-            "TelegramAlertSystem 클래스를 만들어줘. BotFather로 발급받은 API 토큰과 Chat ID를 환경변수에서 읽어서, send_alert(severity, sensor, value, threshold)를 호출하면 HIGH는 소리 알림과 함께 긴급 채널로, MEDIUM은 소리 알림과 함께 경보 채널로, LOW는 무음 알림(disable_notification=True)으로 로그 채널에 발송해줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>HIGH</strong><span>Emergency 채널 + 소리 알림</span></div>
-            <div><strong>MEDIUM</strong><span>Operations 채널 + 소리 알림</span></div>
-            <div><strong>LOW</strong><span>Logs 채널 + 무음(Silent) 알림</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>표준 HTTP API로 심각도별 라우팅이 3초 안에 끝납니다</h4>
-          <div className="firebase-result-box">
-            <div className="visual-header">
-              <span>Alert System</span>
-              <strong>telegram_alert.py</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`import os, requests
-
-class TelegramAlertSystem:
-    def __init__(self):
-        self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN') # BotFather 발급 토큰
-        self.chat_id_high = os.getenv('TELEGRAM_CHAT_ID_HIGH')
-        self.chat_id_medium = os.getenv('TELEGRAM_CHAT_ID_MEDIUM')
-        self.chat_id_low = os.getenv('TELEGRAM_CHAT_ID_LOW')
-
-    def send_message(self, chat_id, message, silent=False):
-        url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
-        payload = {
-            "chat_id": chat_id,
-            "text": message,
-            "parse_mode": "HTML",
-            "disable_notification": silent # 무음 발송 플래그
-        }
-        response = requests.post(url, json=payload, timeout=5)
-        return response.json()
-
-    def send_alert(self, severity, sensor, value, threshold):
-        msg = (f"🚨 <b>[센서 이상 감지]</b>\\n"
-               f"• 등급: {severity}\\n"
-               f"• 센서: {sensor}\\n"
-               f"• 현재값: <b>{value:.2f}</b>\\n"
-               f"• 임계값: {threshold:.2f}")
-
-        if severity == 'HIGH':
-            # HIGH: 긴급 소리 알림 발송
-            self.send_message(self.chat_id_high, f"🔥 <b>[URGENT]</b>\\n{msg}", silent=False)
-        elif severity == 'MEDIUM':
-            # MEDIUM: 일반 소리 알림 발송
-            self.send_message(self.chat_id_medium, f"⚠️ <b>[WARNING]</b>\\n{msg}", silent=False)
-        else:
-            # LOW: 로그 채널에 무음 알림 발송
-            self.send_message(self.chat_id_low, f"ℹ️ <b>[INFO]</b>\\n{msg}", silent=True)`}</pre>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>3초 즉시 도달</strong><span>HTTP API 직접 호출로 초고속</span></div>
-            <div><strong>소리/무음 분기</strong><span>채널 알림 피로 극복</span></div>
-            <div><strong>토큰 기반 보안</strong><span>.env 환경변수 분리 보장</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 여러 SDK를 복잡하게 다루는 것이 아니라, 텔레그램 Bot API라는 단일 인터페이스를 통해 소리/무음 여부와 대상 채널을 정교하게 제어하는 스마트한 알림 시스템을 구축하는 것입니다.
-      </p>
-      <VerifyChecklist points={alertVerifyPoints} />
-    </div>
-  );
-}
-
-function InteractiveWorkshop() {
-  const [fields, setFields] = useState({
-    forecast: '',
-    detect: '',
-    alert: '',
-  });
-  const [copied, setCopied] = useState(false);
-
-  const hasContent = Object.values(fields).some(Boolean);
-
-  const generated = hasContent
-    ? `1. 예측 설정: ${fields.forecast || '[예: Prophet 60분 예측, 임계 60℃]'}
-2. 이상 감지: ${fields.detect || '[예: 3-sigma + IsolationForest + Rolling 결합]'}
-3. 텔레그램 알림: ${fields.alert || '[예: HIGH=Telegram 소리 알림, LOW=Telegram 무음 알림]'}
-
-다음 단계: 1개 센서 검증 → 4개 센서 확장 → 라인 전체 적용`
-    : '';
-
-  const handleCopy = () => {
-    if (!generated) return;
-    navigator.clipboard.writeText(generated).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
-  };
-
-  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'forecast', label: '시계열 예측 설정', placeholder: '예: Prophet 60분 예측, 임계 60℃ 초과' },
-    { key: 'detect', label: '이상 감지 조합', placeholder: '예: 3-sigma + IsolationForest + Rolling 2개 이상 일치' },
-    { key: 'alert', label: '텔레그램 알림 규칙', placeholder: '예: HIGH=Emergency(소리), LOW=Logs(무음)' },
-  ];
-
-  return (
-    <div className="interactive-workshop">
-      <div className="iw-header">
-        <Bell size={22} color="var(--accent)" />
-        <strong>3단계 예측·감지·알림 파이프라인 체크</strong>
-        <p>예측 / 감지 / 알림 3단계를 입력하면 실습 체크리스트가 자동 생성됩니다.</p>
-      </div>
-      <div className="iw-body">
-        <div className="iw-inputs">
-          {inputRows.map((row) => (
-            <div className="iw-field" key={row.key}>
-              <label htmlFor={`iw-${row.key}`}>{row.label}</label>
-              <input
-                id={`iw-${row.key}`}
-                type="text"
-                placeholder={row.placeholder}
-                value={fields[row.key]}
-                onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="iw-output">
-          <div className="iw-output-header">
-            <Brain size={18} color="var(--accent)" />
-            <strong>실습 체크리스트</strong>
-          </div>
-          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
-            {generated || '위 3단계를 입력하면\n실습 체크리스트가 표시됩니다.'}
-          </div>
-          <button
-            className={`iw-copy-btn ${copied ? 'copied' : ''}`}
-            onClick={handleCopy}
-            disabled={!hasContent}
-          >
-            {copied
-              ? <><Check size={15} />복사됨!</>
-              : <><Copy size={15} />체크리스트 복사</>}
+      <div style={{ padding: '1.5rem' }}>
+        <div style={{ background: '#f5f5f7', borderRadius: '8px', padding: '1.25rem', borderLeft: `4px solid ${color}`, whiteSpace: 'pre-wrap', fontSize: '0.9rem', lineHeight: '1.7', color: '#333' }}>{promptText}</div>
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={handleCopy} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid #ccc', background: copied ? color : '#fff', color: copied ? '#fff' : '#333', cursor: 'pointer', fontSize: '0.85rem' }}>
+            {copied ? <><Check size={14} />복사됨!</> : <><Copy size={14} />프롬프트 복사</>}
           </button>
         </div>
       </div>
@@ -676,333 +344,177 @@ function InteractiveWorkshop() {
   );
 }
 
-function FirstRunGuide() {
+function LectureImage({ src, alt, caption }: { src: string; alt: string; caption: string }) {
+  return (<figure className="lecture-image"><img src={assetUrl(src)} alt={alt} loading="lazy" /><figcaption>{caption}</figcaption></figure>);
+}
+
+function VerifyChecklist({ points }: { points: string[] }) {
   return (
-    <div className="first-run-guide">
-      <div className="frg-title">
-        <ChevronRight size={18} color="var(--accent)" />
-        <strong>지금 바로 해보기 — Prophet 첫 예측</strong>
+    <div className="verify-checklist"><span>Quality Gate 체크리스트</span>
+      {points.map((point) => (<div className="verify-item" key={point}><CheckCircle2 size={15} /><p>{point}</p></div>))}
+    </div>
+  );
+}
+
+function ProcedureCard({ proc }: { proc: typeof procedureSteps[0] }) {
+  const Icon = proc.icon;
+  return (
+    <div className="deep-dive">
+      <div className="deep-dive-heading">
+        <span>Step {proc.step}</span><h3>{proc.title}</h3><p>{proc.description}</p>
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+          <img src={assetUrl(proc.step === '1' ? 'panel1.png' : proc.step === '2' ? 'panel2.png' : proc.step === '3' ? 'panel3.png' : 'panel4.png')} alt={proc.title} style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
+        </div>
       </div>
-      <div className="frg-steps">
-        {apiSteps.map((item) => (
-          <div className="frg-step" key={item.step}>
-            <span className="frg-num">{item.step}</span>
-            <div>
-              <strong>{item.title}</strong>
-              <p>{item.body}</p>
-            </div>
-          </div>
-        ))}
+      <div className="yield-case-compare vertical-case-flow">
+        <article className="yield-case-panel prompt-panel">
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Icon size={16} color={proc.color} />절차</span>
+          <h4>{proc.title}</h4>
+          <ol style={{ lineHeight: '2', paddingLeft: '1.5rem', fontSize: '0.95rem' }}>{proc.details.map((d, i) => <li key={i}>{d}</li>)}</ol>
+        </article>
       </div>
     </div>
   );
 }
 
-function NextLecturePreview() {
+function InteractiveWorkshop() {
+  const [fields, setFields] = useState({ phase1: '', phase2: '', shareLink: '' });
+  const [copied, setCopied] = useState(false);
+  const hasContent = Object.values(fields).some(Boolean);
+  const generated = hasContent ? `1. Phase 1 (UI): ${fields.phase1 || '[진행 예정]'}\n2. Phase 2 (물리엔진): ${fields.phase2 || '[진행 예정]'}\n3. 공유 링크: ${fields.shareLink || '[생성 예정]'}` : '';
+  const handleCopy = () => { if (!generated) return; navigator.clipboard.writeText(generated).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); };
+  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
+    { key: 'phase1', label: 'Phase 1 (UI 레이아웃)', placeholder: '예: 3영역 레이아웃 + 레이어 테이블 정상' },
+    { key: 'phase2', label: 'Phase 2 (물리 엔진)', placeholder: '예: Smile/Cry 판별 정상, 곡률 계산 OK' },
+    { key: 'shareLink', label: '공유 링크', placeholder: '예: https://aistudio.google.com/...' },
+  ];
   return (
-    <div className="next-lecture-card">
-      <div className="nlc-header">
-        <span>16강 미리보기</span>
-        <h3>통합 대시보드: 센서·이미지·알림을 한 화면으로</h3>
-        <p>이번 강의에서 만든 예측·감지·알림 파이프라인을 한 화면에 모아 실시간 대시보드로 시각화합니다.</p>
+    <div className="interactive-workshop">
+      <div className="iw-header"><Rocket size={22} color="var(--accent)" /><strong>실습 체크리스트</strong><p>각 Phase 완료 상태를 기록하세요.</p></div>
+      <div className="iw-body">
+        <div className="iw-inputs">{inputRows.map((row) => (<div className="iw-field" key={row.key}><label htmlFor={`iw-${row.key}`}>{row.label}</label><input id={`iw-${row.key}`} type="text" placeholder={row.placeholder} value={fields[row.key]} onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))} /></div>))}</div>
+        <div className="iw-output">
+          <div className="iw-output-header"><Sparkles size={18} color="var(--accent)" /><strong>진행 현황</strong></div>
+          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>{generated || '위 항목 입력 시 표시됩니다.'}</div>
+          <button className={`iw-copy-btn ${copied ? 'copied' : ''}`} onClick={handleCopy} disabled={!hasContent}>{copied ? <><Check size={15} />복사됨!</> : <><Copy size={15} />복사</>}</button>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function FirstRunGuide() {
+  const quickSteps = [
+    { step: '1', title: 'AI Studio 접속', body: 'Google 로그인' },
+    { step: '2', title: '새 프롬프트', body: 'Create new prompt' },
+    { step: '3', title: 'Phase 1', body: 'UI 뼈대 만들기' },
+    { step: '4', title: 'Phase 2', body: '물리 엔진 구현' },
+    { step: '5', title: 'Phase 3', body: '3D 시각화' },
+    { step: '6', title: '공유 링크', body: '팀원에게 배포' },
+  ];
+  return (
+    <div className="first-run-guide">
+      <div className="frg-title"><ExternalLink size={18} color="var(--accent)" /><strong>6단계 요약</strong></div>
+      <div className="frg-steps">{quickSteps.map((item) => (<div className="frg-step" key={item.step}><span className="frg-num">{item.step}</span><div><strong>{item.title}</strong><p>{item.body}</p></div></div>))}</div>
     </div>
   );
 }
 
 // ============================================================================
-// MAIN APP COMPONENT
+// MAIN APP
 // ============================================================================
 
 export default function App() {
   return (
     <div className="app-container">
-      <header className="main-header">
-        <div className="header-top">
-          <motion.div
-            className="logo-group"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <img
-              src={assetUrl('logo.png')}
-              alt="LettUin Edu"
-              className="header-logo"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="header-tag-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="header-tag">센서 예측과 알림으로 골든타임 확보</span>
-          </motion.div>
+      {/* HERO */}
+      <motion.section className="section hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+        <div className="hero-badge">렛유인 코딩 과정</div>
+        <h1>15강: Google AI Studio 실습 (2)</h1>
+        <p className="hero-subtitle">3D 열응력 & 휨(Warpage) 시뮬레이터</p>
+        <div className="hero-chips">
+          <span>Gemini API</span><span>Multi-layer Stress</span><span>Warpage</span><span>3D 시각화</span>
         </div>
+      </motion.section>
 
-        <motion.div
-          className="hero-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h1>Ch.15 센서 데이터 예측 & 알림 시스템</h1>
-          <p className="subtitle">Prophet 시계열 예측, 다층 이상 감지, 텔레그램 봇 연동으로 24/7 자동 모니터링 구축</p>
-          <div className="lesson-meta" aria-label="lesson summary">
-            <span>40분</span>
-            <span>실습 중심</span>
-            <span>Prophet + Telegram</span>
-            <span>결과물: 예측·텔레그램 파이프라인</span>
-          </div>
-        </motion.div>
-      </header>
+      {/* LEARNING GOALS */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><Target size={22} /> 학습 목표</h2>
+        <div className="goals-row">
+          {learningGoals.map((goal) => (<div className="goal-card" key={goal.step}><span className="goal-step">{goal.step}</span><h3>{goal.title}</h3><p>{goal.body}</p><GoalVisual type={goal.type} /></div>))}
+        </div>
+      </motion.section>
 
-      <main>
-        <section className="overview-section">
-          <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>오늘 여러분은 센서 데이터를 <mark>15분 전에 예측</mark>하고 3초 안에 알림을 보냅니다</h2>
-          <p className="section-intro">
-            사람이 24시간 화면을 보던 모니터링을, Prophet 예측·다층 이상 감지·멀티채널 알림으로
-            연결해 사후 대응을 사전 대응으로 바꿉니다. 골든타임을 자동으로 확보합니다.
-          </p>
-          <div className="learning-goals-grid" aria-label="학습목표">
-            {learningGoals.map((item) => (
-              <div className="learning-goal-card" key={item.step}>
-                <span>{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <div className="goal-visual-wrapper">
-                  <GoalVisual type={item.type} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="lesson-timeline" aria-label="40분 강의 진행표">
-            {lessonFlow.map((item) => (
-              <div className="timeline-step" key={item.label}>
-                <strong>{item.time}</strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('lecture-15-sensor-alert.png')}
-              alt="센서 예측·알림 코믹"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-        </section>
+      {/* LESSON FLOW */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><ArrowRight size={22} /> 강의 흐름 (40분)</h2>
+        <div className="flow-row">{lessonFlow.map((item, i) => (<div className="flow-item" key={i}><span className="flow-time">{item.time}</span><span className="flow-label">{item.label}</span>{i < lessonFlow.length - 1 && <ChevronRight size={16} className="flow-arrow" />}</div>))}</div>
+        <div className="role-flow">{roleFlow.map((r, i) => (<div className="role-item" key={i}><strong>{r.owner}</strong><p>{r.task}</p></div>))}</div>
+      </motion.section>
 
-        <section className="definition-section">
-          <span className="section-label">02. 센서 데이터 예측이란?</span>
-          <h2>예측은 단순 임계 비교가 아니라 <mark>추세를 학습한 사전 경보</mark>입니다</h2>
-          <p className="section-intro">
-            센서값 자체가 아니라 시간에 따른 추세·계절성을 학습해 미래 시점을 예측합니다. 예측값이
-            임계를 넘는 순간을 미리 잡아내고, 다층 이상 감지와 멀티채널 알림으로 연결합니다.
-          </p>
-          <div className="one-line-definition inline-definition">
-            <span>한 문장 정의</span>
-            <strong>센서 예측 & 알림은 시계열 학습·다층 감지·멀티채널 발송을 묶어 사후 대응을 15분 전 사전 대응으로 바꾸는 운영 시스템입니다.</strong>
-          </div>
-          <LectureImage
-            src="panel3.png"
-            alt="배터리·반도체·디스플레이·바이오 산업의 센서 데이터 예측 사례 요약"
-            caption="산업마다 센서 종류는 다르지만 예측·감지·알림 3단계 구조는 동일합니다."
-          />
-          <div className="role-flow" aria-label="센서 예측 파이프라인 역할 분리">
-            {roleFlow.map((item, index) => (
-              <div className="role-step" key={`${item.owner}-${item.task}`}>
-                <span>{item.owner}</span>
-                <strong>{item.task}</strong>
-                {index < roleFlow.length - 1 && <ArrowRight size={22} />}
-              </div>
-            ))}
-          </div>
-          <div className="scenario-grid">
-            {sensorCapabilities.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.description}</p>
-                  <div className="intent-box">
-                    <span>대표 활용</span>
-                    <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0 0 0' }}>
-                      {item.features.map((f) => <li key={f}>{f}</li>)}
-                    </ul>
-                  </div>
-                  <p className="scenario-output">{item.cost} / {item.freeQuota}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <div className="coding-compare-grid" style={{ marginTop: '3rem' }}>
-            <motion.article
-              className="coding-compare-card traditional"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <img src={assetUrl('traditional-coding.png')} alt="전통적인 수동 모니터링" />
-              <div className="compare-content">
-                <span className="compare-kicker">Traditional (Manual Monitoring)</span>
-                <h3>사람이 화면을 보고 엑셀로 기록</h3>
-                <p>
-                  엔지니어가 모니터 앞에서 센서 값을 주시하고, 이상 발생 후에야 엑셀에 기록하며
-                  전화로 통보합니다. 야간·휴일에는 사실상 감시 공백이 생깁니다.
-                </p>
-                <ul>
-                  <li>대응 시간 30분+ (사후 인지)</li>
-                  <li>피로·휴일에 따라 누락 발생</li>
-                  <li>추세 변화 미세 감지가 어려움</li>
-                </ul>
-              </div>
-            </motion.article>
+      {/* PROBLEM & COMIC */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><AlertTriangle size={22} /> 문제 정의: 다층 소재 열 휨</h2>
+        <LectureImage src="comic.png" alt="제조 엔지니어 Warpage 고민" caption="반도체 패키징, 디스플레이, PCB 등 다층 구조에서 온도 변화 시 CTE 불일치로 발생하는 Warpage" />
+        <div className="compare-grid">{manualVsAI.map((col, i) => (<div className="compare-card" key={i}><h4>{col.label}</h4><ul>{col.items.map((item, j) => <li key={j}>{item}</li>)}</ul></div>))}</div>
+      </motion.section>
 
-            <motion.article
-              className="coding-compare-card vibe"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.08 }}
-            >
-              <img src={assetUrl('vibe-coding.png')} alt="AI 예측·자동 알림" />
-              <div className="compare-content">
-                <span className="compare-kicker">AI Forecast (Automated Alert)</span>
-                <h3>Prophet 예측 + 다층 감지 + 텔레그램 알림</h3>
-                <p>
-                  Prophet으로 추세를 학습해 15분 전 사전 경보를 만들고, 3가지 이상 감지로
-                  오탐을 줄이며, BotFather로 연동한 텔레그램 봇으로 즉시 알림이 도달합니다.
-                </p>
-                <ul>
-                  <li>15분 전 사전 예측, 3초 자동 알림</li>
-                  <li>3가지 디텍터 결합으로 오탐 60%↓</li>
-                  <li>텔레그램 BotFather 연동 + 로그 보존</li>
-                </ul>
-              </div>
-            </motion.article>
-          </div>
-        </section>
+      {/* PROCEDURE STEPS */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><Rocket size={22} /> 실습 절차</h2>
+        {procedureSteps.map((proc) => <ProcedureCard key={proc.step} proc={proc} />)}
+      </motion.section>
 
-        <section>
-          <span className="section-label">03. 왜 시계열 예측인가?</span>
-          <h2>수동 모니터링과 단순 임계 알림 대비 골든타임이 압도적입니다</h2>
-          <p className="section-intro">
-            수동은 사후 대응에 30분+, 단순 임계는 추세를 반영 못해 오탐이 많습니다. Prophet 기반
-            예측과 다층 감지를 결합하면 15분 사전 경보와 3초 자동 알림이 함께 동작합니다.
-          </p>
-          <ResponseChart />
-          <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#333' }}>
-            <p style={{ fontWeight: 700 }}>Target Point:</p>
-            <p>"시계열 예측의 진짜 가치는 정확도 자체보다도, 신뢰구간을 통해 사람이 조치할 수 있는 15분 골든타임을 만들어 주는 것입니다."</p>
-          </div>
-        </section>
+      {/* PHASE PROMPTS */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><MessageSquare size={22} /> 3단계 프롬프트</h2>
+        <p style={{ color: '#555', marginBottom: '1.5rem', fontSize: '0.95rem' }}>💡 <strong>팁:</strong> Phase 1 → 확인 → Phase 2 → 확인 → Phase 3 순서로 입력하세요.</p>
+        <PromptCard title="Phase 1: UI 레이아웃 & 데이터 구조" promptText={phase1PromptText} color="#4285F4" />
+        <div style={{ height: '1.5rem' }} />
+        <PromptCard title="Phase 2: 물리 엔진 (중립축 + 곡률 + 응력)" promptText={phase2PromptText} color="#34A853" />
+        <div style={{ height: '1.5rem' }} />
+        <PromptCard title="Phase 3: 3D 시각화 & 감도 분석" promptText={phase3PromptText} color="#EA4335" />
+      </motion.section>
 
-        <section>
-          <span className="section-label">04. 첨단 공정기술 사례</span>
-          <h2>배터리·반도체·디스플레이·바이오 엔지니어가 예측·알림을 쓰는 법</h2>
-          <p className="section-intro">
-            배터리 온도 폭주, 챔버 압력 이탈, 휘도 저하 추세, pH 이탈까지 — 같은 예측·감지·알림
-            3단계 구조로 4개 산업의 문제를 동일하게 해결합니다.
-          </p>
-          <div className="scenario-grid">
-            {fieldScenarios.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.before}</p>
-                  <div className="intent-box">
-                    <span>의도 지시문</span>
-                    <p>{item.intent}</p>
-                  </div>
-                  <p className="scenario-output">{item.output}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <TimeSeriesDeepDive />
-          <AnomalyDetectionDeepDive />
-          <AlertSystemDeepDive />
-        </section>
+      {/* SYSTEM PROMPT */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><Brain size={22} /> 시스템 프롬프트 (전문)</h2>
+        <PromptCard title="3D 열응력 시뮬레이터 시스템 프롬프트" promptText={systemPromptText} color="#9C27B0" />
+        <p style={{ color: '#666', fontSize: '0.85rem', marginTop: '1rem' }}>이 시스템 프롬프트를 AI Studio의 "System Instructions"에 붙여넣으면 열응력 시뮬레이터로 동작합니다.</p>
+      </motion.section>
 
-        <section className="workshop-section teaching-section">
-          <span className="section-label">05. 미니 워크숍</span>
-          <h2>실습: 내 첫 <mark>센서 예측·알림 파이프라인</mark> 설계하기</h2>
-          <p className="section-intro">
-            예측·감지·알림 3단계를 정의해 체크리스트로 복사한 뒤, 1개 센서 → 4개 센서 → 라인 전체
-            순으로 확장하세요.
-          </p>
-          <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('comic.png')}
-              alt="센서 예측·알림 실습 가이드"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-          <InteractiveWorkshop />
-          <FirstRunGuide />
-        </section>
+      {/* KEY MESSAGES */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><Quote size={22} /> 핵심 메시지</h2>
+        {keyMessages.map((msg, i) => <KeyMessageBox key={i} icon={msg.icon} text={msg.text} color={msg.color} />)}
+      </motion.section>
 
-        <section>
-          <span className="section-label">06. 품질 점검 및 정리</span>
-          <h2>배포 전, 이 5가지만 확인하세요</h2>
-          <div className="checklist">
-            {intentChecklist.map((item) => (
-              <div className="check-item" key={item}>
-                <CheckCircle2 size={20} />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div className="wrap-message">
-            <Quote size={36} color="var(--accent)" />
-            <h3>"센서 예측·알림의 본질은 정확한 점이 아니라, 사람이 조치할 수 있는 골든타임을 만들어내는 것입니다."</h3>
-            <p>다음 강의: 통합 대시보드 — 센서·이미지·알림을 한 화면으로 (16강)</p>
-          </div>
-          <NextLecturePreview />
-        </section>
+      {/* INTERACTIVE WORKSHOP */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <InteractiveWorkshop />
+        <FirstRunGuide />
+      </motion.section>
 
-        <section className="professional-point">
-          <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
-            <h3>Advanced Process Engineering Point</h3>
-            <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "센서 예측·알림은 사람의 야간·휴일 감시를 대체하는 것이 아니라, 시계열 추세를 미리
-              읽고 텔레그램 알림으로 골든타임을 만들어 엔지니어가 진짜 조치에 집중하도록 만듭니다."<br/>
-              임계·심각도·채널 규칙은 엔지니어가 정의하고, 반복 감지와 발송은 시스템이 맡습니다.
-            </p>
-            <div className="point-strip">
-              <span><TrendingUp size={16} /> Prophet은 골든타임 엔진</span>
-              <span><Target size={16} /> 다층 감지는 오탐 방지</span>
-              <span><Bell size={16} /> 텔레그램은 도달성 보장</span>
-            </div>
-          </div>
-        </section>
-      </main>
+      {/* QUALITY GATE */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><CheckCircle2 size={22} /> Quality Gate</h2>
+        <VerifyChecklist points={qualityChecklist} />
+      </motion.section>
 
-      <footer>
-        <p>© 2026 Sensor Forecast & Alert for Fine Tech Engineering | LettUin Edu</p>
+      {/* DEPLOYMENT COMPARISON */}
+      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <h2 className="section-title"><Globe size={22} /> 배포 방식 비교</h2>
+        <div className="deploy-grid">
+          {deploymentMethods.map((d, i) => { const Icon = d.icon; return (<div className={`deploy-card ${d.lecture === '15강' ? 'active' : ''}`} key={i}><Icon size={24} /><span className="deploy-lecture">{d.lecture}</span><strong>{d.method}</strong><p>{d.type}</p></div>); })}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: '#f0f7ff', borderRadius: '12px' }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1a73e8', margin: 0 }}>"제조 현장의 복잡한 물리 문제도, 프롬프트 3개면 시뮬레이터가 됩니다"</p>
+        </div>
+      </motion.section>
+
+      {/* FOOTER */}
+      <footer style={{ textAlign: 'center', padding: '2rem 0', borderTop: '1px solid #eee', color: '#999', fontSize: '0.85rem' }}>
+        <p>제조 엔지니어를 위한 AI 코딩 과정 — 15강 3D 열응력 시뮬레이터</p>
       </footer>
     </div>
   );
