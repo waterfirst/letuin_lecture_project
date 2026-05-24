@@ -712,6 +712,70 @@ export default function App() {
         </section>
 
         {/* ================================================================ */}
+        {/* SECTION 04-2: 실제 세포 이미지 분석 시연                         */}
+        {/* ================================================================ */}
+        <section>
+          <span className="section-label">04-2. 실제 세포 이미지로 분석 시연</span>
+          <h2>GPT로 만든 세포 이미지를 <mark>AI Studio에 업로드하여 분석</mark>합니다</h2>
+          <p className="section-intro">
+            텍스트 입력뿐 아니라 실제 세포 이미지를 AI Studio에 업로드하면
+            AI가 이상 세포의 위치, 신뢰도, 소견을 자동으로 분석합니다.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', margin: '2rem 0' }}>
+            <div style={{ background: '#f8f9fa', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <img src={assetUrl('sample_a_normal.png')} alt="정상 세포 군집" style={{ width: '100%', height: 'auto' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', color: '#27AE60', marginBottom: '0.3rem' }}>Sample A: 정상 세포</h3>
+                <p style={{ fontSize: '0.85rem', color: '#666' }}>균일한 크기, 매끈한 경계, 정상 N/C ratio. AI 분석 결과: "이상 세포 없음, 정상 소견"</p>
+              </div>
+            </div>
+
+            <div style={{ background: '#f8f9fa', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <img src={assetUrl('sample_b_mixed.png')} alt="이상 세포 포함" style={{ width: '100%', height: 'auto' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', color: '#E74C3C', marginBottom: '0.3rem' }}>Sample B: 이상 세포 5개 발견</h3>
+                <p style={{ fontSize: '0.85rem', color: '#666' }}>#1 핵비대(0.92), #2 불규칙경계(0.87), #3 과염색(0.78), #4 핵비대(0.71), #5 불규칙(0.65). 추가 검사 권장.</p>
+              </div>
+            </div>
+
+            <div style={{ background: '#f8f9fa', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <img src={assetUrl('sample_c_cluster.png')} alt="의심 군집" style={{ width: '100%', height: 'auto' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', color: '#E74C3C', marginBottom: '0.3rem' }}>Sample C: 의심 군집 패턴</h3>
+                <p style={{ fontSize: '0.85rem', color: '#666' }}>중심부에 이상 세포 12개 군집. 신뢰도 0.94. 조직 검사 강력 권장.</p>
+              </div>
+            </div>
+
+            <div style={{ background: '#f8f9fa', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <img src={assetUrl('sample_d_comparison.png')} alt="정상 vs 이상 비교" style={{ width: '100%', height: 'auto' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', color: '#8E44AD', marginBottom: '0.3rem' }}>Sample D: 정상 vs 이상 비교</h3>
+                <p style={{ fontSize: '0.85rem', color: '#666' }}>정상: N/C 0.3, 매끈, 정상염색. 이상: N/C 0.7(HIGH), 불규칙, 과염색.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="highlight-box" style={{ background: '#F5EEF8', borderLeftColor: '#8E44AD' }}>
+            <p style={{ fontWeight: 700, color: '#8E44AD' }}>실습 절차:</p>
+            <ol style={{ paddingLeft: '1.2rem', lineHeight: '2' }}>
+              <li>GPT 이미지 생성 또는 위 샘플 이미지 다운로드</li>
+              <li>AI Studio 채팅창에서 이미지 업로드 버튼(📎) 클릭</li>
+              <li>이미지 첨부 후 "이 세포 이미지를 분석해줘" 입력</li>
+              <li>AI가 이상 세포 좌표, 신뢰도, 유형, 소견 출력</li>
+              <li>다른 이미지로 반복 → 결과 비교</li>
+            </ol>
+          </div>
+
+          <div className="highlight-box" style={{ background: '#FFF3CD', borderLeftColor: '#F39C12', marginTop: '1rem' }}>
+            <p style={{ fontWeight: 700, color: '#E67E22' }}>시뮬레이션 예측:</p>
+            <p>Sample B 분석 결과에서 "#1 핵비대 세포(신뢰도 0.92)"가 발견되면, AI에게 추가 질문:<br/>
+            <strong>"#1 세포의 N/C ratio가 0.7이고 H&E 과염색이라면, 예상되는 진행 경로와 추가 검사 항목을 알려줘"</strong><br/>
+            → AI가 진행 예측(분화 단계, 악성 가능성), 권장 검사(면역조직화학, FISH), 추적 관찰 주기를 출력합니다.</p>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
         {/* SECTION 05: 공유 링크로 배포                                    */}
         {/* ================================================================ */}
         <section>
