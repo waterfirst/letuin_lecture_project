@@ -27,7 +27,7 @@ const learningGoals = [
   },
   {
     step: '학습목표 3',
-    title: '공유 링크로 팀원과 시���레이터 배포',
+    title: '공유 링크로 팀원과 시뮬레이터 배포',
     body: 'AI Studio 공유 링크를 생성해 팀원이 동일한 시뮬레이터를 즉시 사용할 수 있게 합니다.',
     type: 'share',
   },
@@ -43,7 +43,7 @@ const lessonFlow = [
 ];
 
 const roleFlow = [
-  { owner: 'OLED ��지니어', task: '문제 정의, 파라미터 설정, 결과 검증' },
+  { owner: 'OLED 엔지니어', task: '문제 정의, 파라미터 설정, 결과 검증' },
   { owner: 'Google AI Studio', task: 'Gemini가 공진 시뮬레이터 코드 자동 생성' },
   { owner: '공유 링크', task: '팀원 즉시 접속, 동일 시뮬레이터 사용' },
 ];
@@ -101,7 +101,7 @@ const phase3PromptText = `"성능 분석" 탭을 추가해줘.
 1. 종합 KPI 카드: 평균 휘도 유지율(%), 최대 색좌표 변화(Δu'v'), 예상 수명 향상(%)
 2. 바 차트: 기존 구조 vs 최적화 구조의 R/G/B별 60° 휘도 유지율 비교
 3. 레이더 차트: 시야각 성능, 전력효율, 수명, 색재현율, 제조용이성 5축 비교
-4. ���지니어 리포트 요약: "ITO 두께를 R=Xnm, G=Ynm, B=Znm 설정 시 시야각 60°에서 평균 휘도 유지율 N%, Δu'v' < 0.02 확보"
+4. 엔지니어 리포트 요약: "ITO 두께를 R=Xnm, G=Ynm, B=Znm 설정 시 시야각 60°에서 평균 휘도 유지율 N%, Δu'v' < 0.02 확보"
 5. Export 버튼: 분석 결과를 JSON으로 다운로드`;
 
 const systemPromptText = `당신은 OLED 탠덤(Tandem) 구조의 광학 공진(Optical Resonance) 시뮬레이션 전문가입니다.
@@ -130,7 +130,7 @@ ITO(Indium Tin Oxide) 두께 최적화를 통해 시야각 색변화 및 휘도 
 }
 
 [제약조건]
-- ITO 두�� 범위: 80~220nm
+- ITO 두께 범위: 80~220nm
 - 목표: 60°에서 상대 휘도 80% 이상, Δu'v' < 0.02
 - 공진 차수(m): 2차 또는 3차 권장`;
 
@@ -171,7 +171,7 @@ const procedureSteps = [
       'Phase 2 프롬프트 추가 입력',
       'Fabry-Perot 공진 조건: 2nd·cos(θ) = mλ',
       'Recharts 라인 차트: 시야각(0~60°) vs 상대 휘도',
-      'R/G/B 3개 라인 색상 구분 확���',
+      'R/G/B 3개 라인 색상 구분 확인',
       '슬라이더로 두께 변경 시 그래프 실시간 반영 확인',
     ],
     icon: Eye,
@@ -194,7 +194,7 @@ const procedureSteps = [
 ];
 
 const qualityChecklist = [
-  'Gemini API Key가 정��� 발급되었는가?',
+  'Gemini API Key가 정상 발급되었는가?',
   'Phase 1: 구조 비교 UI가 탭으로 정상 표시되는가?',
   'Phase 2: 시야각(0~60°) vs 휘도 그래프가 렌더링되는가?',
   'Phase 2: 슬라이더 조작 시 그래프가 실시간 업데이트되는가?',
@@ -522,7 +522,7 @@ export default function App() {
         </div>
         <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1.5rem', background: '#f0f7ff', borderRadius: '12px' }}>
           <p style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1a73e8', margin: 0 }}>
-            "프롬프트만 잘 쓰면, 코드를 모르는 엔지니어도 시��레이터를 만들 수 있습니다"
+            "프롬프트만 잘 쓰면, 코드를 모르는 엔지니어도 시뮬레이터를 만들 수 있습니다"
           </p>
         </div>
       </motion.section>
