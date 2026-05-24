@@ -427,30 +427,65 @@ function FirstRunGuide() {
 export default function App() {
   return (
     <div className="app-container">
-      {/* HERO */}
-      <motion.section className="section hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-        <div className="hero-badge">렛유인 코딩 과정</div>
-        <h1>15강: Google AI Studio 실습 (2)</h1>
-        <p className="hero-subtitle">3D 열응력 & 휨(Warpage) 시뮬레이터</p>
-        <div className="hero-chips">
-          <span>Gemini API</span><span>Multi-layer Stress</span><span>Warpage</span><span>3D 시각화</span>
+      {/* HEADER — 13강 동일 형식 */}
+      <header className="main-header">
+        <div className="header-top">
+          <motion.div className="logo-group" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <img src={assetUrl('logo.png')} alt="LettUin Edu" className="header-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+          </motion.div>
+          <motion.div className="header-tag-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <span className="header-tag">다층 소재 열응력 시뮬레이터로 Warpage 예측</span>
+          </motion.div>
         </div>
-      </motion.section>
+        <motion.div className="hero-section" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <h1>Ch.15 Google AI Studio 실습 (2) — 3D 열응력 & 휨 시뮬레이터</h1>
+          <p className="subtitle">3단계 프롬프트로 다층 박막의 CTE 불일치에 의한 Warpage를 계산하고 3D로 시각화하는 시뮬레이터를 만듭니다.</p>
+          <div className="lesson-meta">
+            <span>40분</span>
+            <span>실습 중심</span>
+            <span>Gemini API</span>
+            <span>결과물: 3D Warpage 시뮬레이터</span>
+          </div>
+        </motion.div>
+      </header>
 
-      {/* LEARNING GOALS */}
-      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 className="section-title"><Target size={22} /> 학습 목표</h2>
-        <div className="goals-row">
-          {learningGoals.map((goal) => (<div className="goal-card" key={goal.step}><span className="goal-step">{goal.step}</span><h3>{goal.title}</h3><p>{goal.body}</p><GoalVisual type={goal.type} /></div>))}
+      <main>
+      {/* 01. 학습목표 */}
+      <section className="overview-section">
+        <span className="section-label">01. 오프닝 및 학습목표</span>
+        <h2>AI Studio로 3D 열응력 시뮬레이터 만들기</h2>
+        <p className="section-intro">반도체 패키징, 디스플레이, PCB 등 제조 현장에서 만나는 Warpage 문제를 AI로 시뮬레이션합니다.</p>
+        <div className="learning-goals-grid">
+          {learningGoals.map((item) => (
+            <div className="learning-goal-card" key={item.step}>
+              <span>{item.step}</span><h3>{item.title}</h3><p>{item.body}</p>
+              <div className="goal-visual-wrapper"><GoalVisual type={item.type} /></div>
+            </div>
+          ))}
         </div>
-      </motion.section>
+        <div className="lesson-timeline">
+          {lessonFlow.map((item) => (<div className="timeline-step" key={item.label}><strong>{item.time}</strong><span>{item.label}</span></div>))}
+        </div>
+      </section>
 
-      {/* LESSON FLOW */}
-      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 className="section-title"><ArrowRight size={22} /> 강의 흐름 (40분)</h2>
-        <div className="flow-row">{lessonFlow.map((item, i) => (<div className="flow-item" key={i}><span className="flow-time">{item.time}</span><span className="flow-label">{item.label}</span>{i < lessonFlow.length - 1 && <ChevronRight size={16} className="flow-arrow" />}</div>))}</div>
-        <div className="role-flow">{roleFlow.map((r, i) => (<div className="role-item" key={i}><strong>{r.owner}</strong><p>{r.task}</p></div>))}</div>
-      </motion.section>
+      {/* 02. 전체 흐름 */}
+      <section className="definition-section">
+        <span className="section-label">02. 전체 흐름 이해</span>
+        <h2>UI 뼈대 → 물리 두뇌 → 3D 피부</h2>
+        <p className="section-intro">제조 엔지니어가 층 구성을 정의하면, AI가 UI → 물리 엔진 → 3D 시각화 순서로 시뮬레이터를 완성합니다.</p>
+        <div className="one-line-definition inline-definition">
+          <span>한 문장 정의</span>
+          <strong>Google AI Studio에서 다층 박막 열응력(중립축, 곡률, 응력 분포) 계산과 3D 변형 시각화를 수행하는 Warpage 시뮬레이터를 구축하고 팀에 배포합니다.</strong>
+        </div>
+        <div className="role-flow">
+          {roleFlow.map((item, index) => (
+            <div className="role-step" key={`${item.owner}-${item.task}`}>
+              <span>{item.owner}</span><strong>{item.task}</strong>
+              {index < roleFlow.length - 1 && <ArrowRight size={22} />}
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* PROBLEM & COMIC */}
       <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -516,6 +551,7 @@ export default function App() {
       <footer style={{ textAlign: 'center', padding: '2rem 0', borderTop: '1px solid #eee', color: '#999', fontSize: '0.85rem' }}>
         <p>제조 엔지니어를 위한 AI 코딩 과정 — 15강 3D 열응력 시뮬레이터</p>
       </footer>
+      </main>
     </div>
   );
 }

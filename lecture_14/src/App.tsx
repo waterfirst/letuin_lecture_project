@@ -400,49 +400,72 @@ function FirstRunGuide() {
 export default function App() {
   return (
     <div className="app-container">
-      {/* HERO */}
-      <motion.section className="section hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-        <div className="hero-badge">렛유인 코딩 과정</div>
-        <h1>14강: Google AI Studio 실습</h1>
-        <p className="hero-subtitle">OLED 탠덤 공진 시뮬레이터</p>
-        <div className="hero-chips">
-          <span>Gemini API</span><span>Tandem OLED</span><span>ITO 최적화</span><span>Fabry-Perot</span>
+      {/* HEADER — 13강 동일 형식 */}
+      <header className="main-header">
+        <div className="header-top">
+          <motion.div className="logo-group" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <img src={assetUrl('logo.png')} alt="LettUin Edu" className="header-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+          </motion.div>
+          <motion.div className="header-tag-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <span className="header-tag">Google AI Studio로 OLED 공진 시뮬레이터 구축</span>
+          </motion.div>
         </div>
-      </motion.section>
+        <motion.div className="hero-section" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <h1>Ch.14 Google AI Studio 실습 — OLED 탠덤 공진 시뮬레이터</h1>
+          <p className="subtitle">3단계 프롬프트로 R/G/B ITO 두께를 최적화하는 Fabry-Perot 공진 시뮬레이터를 만들고, 공유 링크로 배포합니다.</p>
+          <div className="lesson-meta">
+            <span>40분</span>
+            <span>실습 중심</span>
+            <span>Gemini API</span>
+            <span>결과물: AI 시뮬레이터 공유 링크</span>
+          </div>
+        </motion.div>
+      </header>
 
-      {/* LEARNING GOALS */}
-      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 className="section-title"><Target size={22} /> 학습 목표</h2>
-        <div className="goals-row">
-          {learningGoals.map((goal) => (
-            <div className="goal-card" key={goal.step}>
-              <span className="goal-step">{goal.step}</span>
-              <h3>{goal.title}</h3>
-              <p>{goal.body}</p>
-              <GoalVisual type={goal.type} />
+      <main>
+      {/* 01. 학습목표 */}
+      <section className="overview-section">
+        <span className="section-label">01. 오프닝 및 학습목표</span>
+        <h2>AI Studio로 OLED 공진 시뮬레이터 만들기</h2>
+        <p className="section-intro">
+          14강에서 탠덤 OLED의 시야각 색변화 문제를 해결하는 ITO 두께 최적화 시뮬레이터를 Google AI Studio에서 만듭니다.
+          프롬프트만 잘 쓰면, 코드를 모르는 엔지니어도 시뮬레이터를 만들 수 있습니다.
+        </p>
+        <div className="learning-goals-grid">
+          {learningGoals.map((item) => (
+            <div className="learning-goal-card" key={item.step}>
+              <span>{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              <div className="goal-visual-wrapper"><GoalVisual type={item.type} /></div>
             </div>
           ))}
         </div>
-      </motion.section>
-
-      {/* LESSON FLOW */}
-      <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 className="section-title"><ArrowRight size={22} /> 강의 흐름 (40분)</h2>
-        <div className="flow-row">
-          {lessonFlow.map((item, i) => (
-            <div className="flow-item" key={i}>
-              <span className="flow-time">{item.time}</span>
-              <span className="flow-label">{item.label}</span>
-              {i < lessonFlow.length - 1 && <ChevronRight size={16} className="flow-arrow" />}
-            </div>
+        <div className="lesson-timeline">
+          {lessonFlow.map((item) => (
+            <div className="timeline-step" key={item.label}><strong>{item.time}</strong><span>{item.label}</span></div>
           ))}
+        </div>
+      </section>
+
+      {/* 02. 전체 흐름 */}
+      <section className="definition-section">
+        <span className="section-label">02. 전체 흐름 이해</span>
+        <h2>3단계 프롬프트로 시뮬레이터 구축</h2>
+        <p className="section-intro">엔지니어가 문제를 정의하고, AI가 Phase 1(UI) → Phase 2(수식) → Phase 3(분석) 순서로 시뮬레이터를 완성합니다.</p>
+        <div className="one-line-definition inline-definition">
+          <span>한 문장 정의</span>
+          <strong>Google AI Studio에서 Fabry-Perot 공진 수식 기반 OLED ITO 두께 최적화 시뮬레이터를 만들고, 공유 링크로 팀 배포하는 과정입니다.</strong>
         </div>
         <div className="role-flow">
-          {roleFlow.map((r, i) => (
-            <div className="role-item" key={i}><strong>{r.owner}</strong><p>{r.task}</p></div>
+          {roleFlow.map((item, index) => (
+            <div className="role-step" key={`${item.owner}-${item.task}`}>
+              <span>{item.owner}</span><strong>{item.task}</strong>
+              {index < roleFlow.length - 1 && <ArrowRight size={22} />}
+            </div>
           ))}
         </div>
-      </motion.section>
+      </section>
 
       {/* PROBLEM & COMIC */}
       <motion.section className="section" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -531,6 +554,7 @@ export default function App() {
       <footer style={{ textAlign: 'center', padding: '2rem 0', borderTop: '1px solid #eee', color: '#999', fontSize: '0.85rem' }}>
         <p>OLED 엔지니어를 위한 AI 코딩 과정 — 14강 Google AI Studio 실습</p>
       </footer>
+      </main>
     </div>
   );
 }
