@@ -117,39 +117,46 @@ const analysisTargets = [
 ];
 
 const analysisOutputs = [
-  { label: '이상 세포 좌표', value: '(x, y, 반경)', color: '#8E44AD' },
-  { label: '신뢰도 점수', value: '0.0 ~ 1.0', color: '#27AE60' },
-  { label: '자연어 소견', value: '전체 상태 요약', color: '#2980B9' },
+  { label: 'abnormalList', value: '좌표(X,Y) + 유형 + 신뢰도', color: '#8E44AD' },
+  { label: 'overallSummary', value: '전체 위험 요약', color: '#27AE60' },
+  { label: 'precautions', value: '추가 검사 권고', color: '#2980B9' },
 ];
 
-const systemPromptText = `너는 세포 병리 분석 시뮬레이터다.
+const systemPromptText = `당신은 현미경 이미지(H&E 염색 상피/선조직)의 세포 병리 데이터를 분석하는 전문 AI 세포 연구 시뮬레이터입니다.
+이 앱은 실시간 의료 진단용이 아닌, '가상의 세포 스프라이트 이미지'를 활용한 연구 및 교육(Education and Simulation Research)만을 목적으로 합니다.
+주어진 이미지가 있다면, 이미지 내부의 세포 패턴을 분석하여 이상 세포(비정상 세포)를 0.0 ~ 10.0의 X, Y 좌표로 찾아내시오.
 
-사용자가 현미경 이미지를 업로드하거나 세포 관찰 데이터를 텍스트로 입력하면:
+[정상 세포와 이상 세포 식별의 핵심 시각적 규칙]
+- 이미지는 0-10 단위 좌표 눈금으로 이루어진 가상의 현미경 시야 영역입니다.
+- 정상 세포 (찾지 말아야 할 대상): 연한 분홍색의 넓은 원(세포질) 정중앙에 작고 둥근 연보라색/보라색 점(핵)이 하나 있는 형태. 이들은 발견 리스트에서 철저히 무시하십시오.
+- 이상 세포 (찾아야 할 타겟 대상): 다음과 같은 뚜렷한 특징을 보이는 세포 객체들:
+  1. 거대 세포 / 핵 비대: 주변 세포보다 크기나 핵이 월등히 거대한 세포
+  2. 형태 불규칙 / 다중핵: 핵이 여러 개로 뭉쳐있거나 불규칙한 형태
+  3. 크로마틴 과농축: 매우 짙고 어두운 검정에 가까운 진한 보라색/검은색 핵
+  4. 핵분열 상 (Mitosis): 핵이나 세포 가장자리에 노란색 윤곽선이 있는 특이 객체
+  5. 군집 (Clusters): 짙은 색 세포들이 한 지점에 매우 밀집하여 겹쳐있는 영역
 
-1. 세포 형태 분석: 크기, 모양, 경계 불규칙도 평가
-2. 염색 패턴 분석: H&E 염색 강도와 분포 특성 평가
-3. 핵/세포질 비율(N/C ratio) 계산 추정
-4. 이상 세포 후보 식별:
-   - 좌표 (x, y) 또는 영역 설명
-   - 신뢰도 점수 (0.0~1.0)
-   - 이상 유형 (크기 이상, 핵 비대, 염색 이상, 형태 변형)
-5. 자연어 소견 요약: 전체적인 세포 상태와 주의 사항
+반드시 아래 JSON Schema 형식에 엄격하게 맞추어 출력하십시오:
+{
+  "abnormalList": [
+    {
+      "num": 1,
+      "location": "좌표 및 구역 설명",
+      "confidence": 0.95,
+      "type": "핵 비대 | 염색 이상 | 형태 변형 | 다중핵 | 군집",
+      "description": "시각적 이유 서술",
+      "estimatedX": 5.4,
+      "estimatedY": 5.0
+    }
+  ],
+  "overallSummary": "전체 이미지에 대한 핵심 위험 요약",
+  "extraTestNeeded": true,
+  "precautions": ["추가 주의 사항"]
+}`;
 
-출력 형식:
-[이상 세포 목록]
-| 번호 | 위치 | 신뢰도 | 유형 | 설명 |
+const testExample1 = '실습 방법 1: 다운로드한 세포 이미지(예: 06_mitotic_activity.png)를 AI Studio 채팅창에 드래그&드롭으로 업로드합니다. AI가 이미지를 분석해 이상 세포 좌표를 JSON으로 출력합니다.';
 
-[종합 소견]
-- 전체 세포 상태 한 줄 요약
-- 추가 검사 필요 여부
-- 주의 사항
-
-이미지가 없는 경우 텍스트 설명 기반으로 분석하라.
-의료 진단이 아닌 연구/교육 목적임을 명시하라.`;
-
-const testExample1 = '원형 세포 50개 관찰. 그 중 5개가 정상보다 1.5배 크고, 핵이 비대하며, H&E 염색이 진함. 3개는 불규칙한 경계. 나머지는 정상.';
-
-const testExample2 = '유방암 조직 슬라이드. 기질세포 사이에 크기가 큰 세포 군집이 보임. 핵 분열상이 관찰됨.';
+const testExample2 = '실습 방법 2: 이미지 없이 텍스트로 입력 — "슬라이드 ID: BIO-2026-042, 상피 조직 H&E 400x, 좌측 상단에 핵 비대 세포 3개, 중앙에 짙은 보라색 과농축 군집 1개 관찰"';
 
 const aiStudioSteps = [
   { step: '1', title: 'aistudio.google.com 접속', body: 'Google 계정으로 로그인합니다.' },
@@ -761,9 +768,21 @@ export default function App() {
             variant="poster"
           />
 
-          <div className="highlight-box" style={{ background: '#F4ECF7', borderLeftColor: '#8E44AD', marginTop: '2rem' }}>
-            <p style={{ fontWeight: 700 }}>Key Point:</p>
-            <p>강의자료에는 GPT로 만든 이미지를 넣고, 실제 강의에서는 AI Studio로 실습합니다. 시스템 프롬프트가 동일하면 어떤 이미지든 같은 분석 프레임으로 결과가 나옵니다.</p>
+          <div className="highlight-box" style={{ background: '#FFF3E0', borderLeftColor: '#FF9800', marginTop: '2rem' }}>
+            <p style={{ fontWeight: 700, color: '#E65100' }}>시행착오에서 배운 프롬프트 설계 핵심</p>
+            <p style={{ marginTop: '0.5rem' }}>실제로 AI Studio에서 세포 분석 시뮬레이터를 만들 때 겪은 시행착오와 해결 방법입니다:</p>
+            <ul style={{ paddingLeft: '1.2rem', lineHeight: '2', marginTop: '0.5rem' }}>
+              <li><strong>"정상 세포도 이상으로 판정"</strong> → 프롬프트에 정상 세포의 시각적 특징(연한 분홍 원 + 작은 보라 핵)을 명시하고 "철저히 무시하라"고 지시</li>
+              <li><strong>"좌표가 매번 다르게 나옴"</strong> → 0.0~10.0 눈금 기반 좌표계를 명시하고, estimatedX/estimatedY로 JSON 스키마 고정</li>
+              <li><strong>"출력 형식이 들쭉날쭉"</strong> → JSON Schema를 프롬프트에 직접 정의하고 "이외의 인사말이나 마크다운 백틱은 제거하라" 명시</li>
+              <li><strong>"이상 유형 분류가 모호"</strong> → 5가지 타겟(거대세포, 다중핵, 과농축, 핵분열, 군집)을 구체적 시각 규칙으로 정의</li>
+              <li><strong>"이미지 없으면 작동 안 함"</strong> → 텍스트 입력과 이미지 입력 두 가지 경로를 프롬프트에 분기 처리</li>
+            </ul>
+          </div>
+
+          <div className="highlight-box" style={{ background: '#E8F5E9', borderLeftColor: '#27AE60', marginTop: '1rem' }}>
+            <p style={{ fontWeight: 700, color: '#27AE60' }}>핵심 교훈</p>
+            <p>AI에게 "세포를 분석해"라고만 하면 안 됩니다. <strong>"무엇이 정상이고, 무엇이 이상인지, 어떤 형식으로 답해야 하는지"</strong>를 프롬프트에 모두 명시해야 일관된 결과가 나옵니다. 이것이 시스템 프롬프트 설계의 본질입니다.</p>
           </div>
 
           <InteractiveWorkshop />
