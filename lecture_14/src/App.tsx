@@ -770,14 +770,78 @@ export default function App() {
         </section>
 
         {/* ================================================================ */}
-        {/* SECTION 04-2: 실제 세포 이미지 분석 시연                         */}
+        {/* SECTION 04-2: 실습용 샘플 이미지 다운로드                        */}
         {/* ================================================================ */}
         <section>
-          <span className="section-label">04-2. 실제 세포 이미지로 분석 시연</span>
-          <h2>GPT로 만든 세포 이미지를 <mark>AI Studio에 업로드하여 분석</mark>합니다</h2>
+          <span className="section-label">04-2. 실습용 세포 이미지 12종 다운로드</span>
+          <h2>AI Studio에서 분석할 <mark>샘플 이미지 12종</mark>을 다운로드하세요</h2>
           <p className="section-intro">
-            텍스트 입력뿐 아니라 실제 세포 이미지를 AI Studio에 업로드하면
+            아래 12개 세포 이미지를 다운로드한 뒤, AI Studio에 업로드하여 분석합니다.
+            정상부터 의심 군집까지 난이도별로 구성되어 있습니다.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', margin: '1.5rem 0' }}>
+            {[
+              { file: '01_normal_healthy.png', label: '01. 정상 건강 조직', diff: '쉬움', color: '#27AE60' },
+              { file: '02_normal_dense.png', label: '02. 밀집 정상 세포', diff: '쉬움', color: '#27AE60' },
+              { file: '03_single_enlarged.png', label: '03. 비대 세포 1개', diff: '중간', color: '#F39C12' },
+              { file: '04_two_irregular.png', label: '04. 불규칙 경계 2개', diff: '중간', color: '#F39C12' },
+              { file: '05_darkstain_cluster.png', label: '05. 과염색 군집', diff: '중간', color: '#F39C12' },
+              { file: '06_mixed_three_types.png', label: '06. 혼합 3유형', diff: '어려움', color: '#E74C3C' },
+              { file: '07_edge_abnormals.png', label: '07. 가장자리 이상', diff: '어려움', color: '#E74C3C' },
+              { file: '08_mitotic_figures.png', label: '08. 핵분열상', diff: '어려움', color: '#E74C3C' },
+              { file: '09_high_nc_ratio.png', label: '09. 높은 N/C ratio', diff: '어려움', color: '#E74C3C' },
+              { file: '10_large_cluster.png', label: '10. 대형 의심 군집', diff: '고난도', color: '#8E44AD' },
+              { file: '11_scattered_abnormals.png', label: '11. 산재 이상세포', diff: '고난도', color: '#8E44AD' },
+              { file: '12_borderline_case.png', label: '12. 경계 사례', diff: '고난도', color: '#8E44AD' },
+            ].map((item) => (
+              <a
+                key={item.file}
+                href={`samples/${item.file}`}
+                download={item.file}
+                style={{
+                  display: 'block',
+                  background: '#f8f9fa',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  textDecoration: 'none',
+                  color: '#333',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                  transition: 'transform 0.2s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
+              >
+                <img
+                  src={assetUrl(`samples/${item.file}`)}
+                  alt={item.label}
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+                <div style={{ padding: '0.6rem 0.8rem' }}>
+                  <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#333', marginBottom: '0.2rem' }}>{item.label}</p>
+                  <span style={{ fontSize: '0.7rem', color: item.color, fontWeight: 700 }}>{item.diff}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div className="highlight-box" style={{ background: '#E8F5E9', borderLeftColor: '#27AE60' }}>
+            <p style={{ fontWeight: 700, color: '#27AE60' }}>다운로드 방법</p>
+            <p>이미지를 클릭하면 자동으로 다운로드됩니다. 또는 이미지 위에서 마우스 우클릭 → "다른 이름으로 저장".</p>
+          </div>
+        </section>
+
+        {/* ================================================================ */}
+        {/* SECTION 04-3: 이미지 업로드 분석 시연                             */}
+        {/* ================================================================ */}
+        <section>
+          <span className="section-label">04-3. AI Studio에서 이미지 분석 실습</span>
+          <h2>다운로드한 이미지를 <mark>AI Studio에 업로드하여 분석</mark>합니다</h2>
+          <p className="section-intro">
+            위에서 다운로드한 세포 이미지를 AI Studio에 업로드하면
             AI가 이상 세포의 위치, 신뢰도, 소견을 자동으로 분석합니다.
+            쉬운 것(01~02)부터 시작해서 어려운 것(10~12)으로 진행합니다.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', margin: '2rem 0' }}>
