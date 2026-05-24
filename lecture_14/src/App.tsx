@@ -774,26 +774,24 @@ export default function App() {
         {/* ================================================================ */}
         <section>
           <span className="section-label">04-2. 실습용 세포 이미지 12종 다운로드</span>
-          <h2>AI Studio에서 분석할 <mark>샘플 이미지 12종</mark>을 다운로드하세요</h2>
+          <h2>AI Studio에서 분석할 <mark>H&E 염색 세포 이미지 10종</mark>을 다운로드하세요</h2>
           <p className="section-intro">
-            아래 12개 세포 이미지를 다운로드한 뒤, AI Studio에 업로드하여 분석합니다.
-            정상부터 의심 군집까지 난이도별로 구성되어 있습니다.
+            아래 10개 세포 이미지는 H&E(헤마톡실린-에오신) 염색 현미경 관찰을 시뮬레이션한 것입니다.
+            정상 조직부터 고등급 병변까지 단계별로 구성되어 있습니다. 400배율 기준.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', margin: '1.5rem 0' }}>
             {[
-              { file: '01_normal_healthy.png', label: '01. 정상 건강 조직', diff: '쉬움', color: '#27AE60' },
-              { file: '02_normal_dense.png', label: '02. 밀집 정상 세포', diff: '쉬움', color: '#27AE60' },
-              { file: '03_single_enlarged.png', label: '03. 비대 세포 1개', diff: '중간', color: '#F39C12' },
-              { file: '04_two_irregular.png', label: '04. 불규칙 경계 2개', diff: '중간', color: '#F39C12' },
-              { file: '05_darkstain_cluster.png', label: '05. 과염색 군집', diff: '중간', color: '#F39C12' },
-              { file: '06_mixed_three_types.png', label: '06. 혼합 3유형', diff: '어려움', color: '#E74C3C' },
-              { file: '07_edge_abnormals.png', label: '07. 가장자리 이상', diff: '어려움', color: '#E74C3C' },
-              { file: '08_mitotic_figures.png', label: '08. 핵분열상', diff: '어려움', color: '#E74C3C' },
-              { file: '09_high_nc_ratio.png', label: '09. 높은 N/C ratio', diff: '어려움', color: '#E74C3C' },
-              { file: '10_large_cluster.png', label: '10. 대형 의심 군집', diff: '고난도', color: '#8E44AD' },
-              { file: '11_scattered_abnormals.png', label: '11. 산재 이상세포', diff: '고난도', color: '#8E44AD' },
-              { file: '12_borderline_case.png', label: '12. 경계 사례', diff: '고난도', color: '#8E44AD' },
+              { file: '01_normal_epithelial.png', label: '01. 정상 상피조직', diff: '정상', color: '#27AE60' },
+              { file: '02_normal_glandular.png', label: '02. 정상 선조직', diff: '정상', color: '#27AE60' },
+              { file: '03_mild_atypia.png', label: '03. 경도 이형성', diff: '초기', color: '#F39C12' },
+              { file: '04_moderate_dysplasia.png', label: '04. 중등도 이형성', diff: '중간', color: '#F39C12' },
+              { file: '05_hyperstained_focus.png', label: '05. 국소 과염색', diff: '중간', color: '#F39C12' },
+              { file: '06_mitotic_activity.png', label: '06. 핵분열 증가', diff: '의심', color: '#E74C3C' },
+              { file: '07_mixed_pathology.png', label: '07. 복합 병리', diff: '의심', color: '#E74C3C' },
+              { file: '08_suspicious_cluster.png', label: '08. 의심 군집', diff: '고위험', color: '#8E44AD' },
+              { file: '09_high_grade.png', label: '09. 고등급 병변', diff: '고위험', color: '#8E44AD' },
+              { file: '10_borderline.png', label: '10. 경계 사례', diff: '판별어려움', color: '#666' },
             ].map((item) => (
               <a
                 key={item.file}
