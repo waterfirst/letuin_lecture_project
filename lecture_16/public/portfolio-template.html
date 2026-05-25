@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 AI 엔지니어 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0f0f;color:#e0e0e0;line-height:1.6}
+
+/* ── 헤더 ── */
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:4rem 2rem;text-align:center}
+.header h1{font-size:2.5rem;font-weight:900;color:#fff;margin-bottom:0.5rem}
+.header .subtitle{font-size:1.15rem;color:rgba(255,255,255,0.7);margin-bottom:1.5rem}
+.header .links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.header .links a{color:#64b5f6;text-decoration:none;font-size:0.95rem;padding:0.4rem 1rem;border:1px solid #64b5f644;border-radius:20px;transition:all .2s}
+.header .links a:hover{background:#64b5f622;border-color:#64b5f6}
+
+/* ── 기술 스택 요약 ── */
+.tech-summary{padding:2rem;text-align:center;border-bottom:1px solid #222}
+.tech-summary h2{font-size:1.1rem;color:#888;margin-bottom:1rem;font-weight:600}
+.tech-badges{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
+.tech-badges span{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:600;background:#1e1e2e;color:#a0a0b0;border:1px solid #333}
+
+/* ── 프로젝트 그리드 ── */
+.projects{max-width:1100px;margin:3rem auto;padding:0 2rem}
+.projects h2{font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:2rem;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+
+/* ── 카드 ── */
+.card{background:#1a1a1a;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.4)}
+.card-stripe{height:4px}
+.card-stripe.github-pages{background:#34A853}
+.card-stripe.streamlit{background:#FF4B4B}
+.card-stripe.ai-studio{background:#4285F4}
+.card-stripe.other{background:#9C27B0}
+.card-body{padding:1.5rem}
+.card-body .emoji{font-size:1.8rem;margin-bottom:0.75rem}
+.card-body h3{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:0.25rem}
+.card-body .platform{font-size:0.75rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:12px;display:inline-block;margin-bottom:0.75rem}
+.platform.github-pages{background:#34A85322;color:#34A853}
+.platform.streamlit{background:#FF4B4B22;color:#FF4B4B}
+.platform.ai-studio{background:#4285F422;color:#4285F4}
+.platform.other{background:#9C27B022;color:#9C27B0}
+.card-body .desc{font-size:0.9rem;color:#999;margin-bottom:1rem;line-height:1.5}
+.card-body .tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
+.card-body .tags span{font-size:0.75rem;padding:0.2rem 0.6rem;background:#262630;color:#8888aa;border-radius:10px}
+.card-body .demo-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.2rem;background:#4285F4;color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:background .2s}
+.card-body .demo-btn:hover{background:#3367d6}
+
+/* ── 푸터 ── */
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid #222;color:#555;font-size:0.85rem}
+.footer a{color:#64b5f6;text-decoration:none}
+
+/* ── 반응형 ── */
+@media(max-width:600px){
+  .header h1{font-size:1.8rem}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     아래 내용을 자기 정보로 수정하세요!
+     Antigravity(agy)에서 이 파일을 열고 수정해도 됩니다.
+     ═══════════════════════════════════════════════════ -->
+
+<!-- 헤더: 이름과 소개를 수정하세요 -->
+<header class="header">
+  <h1>홍길동</h1>
+  <p class="subtitle">제조 AI 엔지니어 | 렛유인 코딩 과정 수료</p>
+  <div class="links">
+    <a href="https://github.com/USERNAME" target="_blank">GitHub</a>
+    <a href="mailto:your@email.com">Email</a>
+  </div>
+</header>
+
+<!-- 기술 스택: 자기가 사용한 기술로 수정 -->
+<section class="tech-summary">
+  <h2>TECH STACK</h2>
+  <div class="tech-badges">
+    <span>Python</span>
+    <span>Streamlit</span>
+    <span>Gemini API</span>
+    <span>React</span>
+    <span>TypeScript</span>
+    <span>Plotly</span>
+    <span>Three.js</span>
+    <span>GitHub Pages</span>
+  </div>
+</section>
+
+<!-- 프로젝트 카드: URL과 내용을 자기 것으로 수정하세요 -->
+<section class="projects">
+  <h2>Projects</h2>
+  <div class="grid">
+
+    <!-- 카드 1: 12강 GitHub Pages -->
+    <div class="card">
+      <div class="card-stripe github-pages"></div>
+      <div class="card-body">
+        <div class="emoji">📄</div>
+        <h3>AI 코딩 강의 자료</h3>
+        <span class="platform github-pages">GitHub Pages</span>
+        <p class="desc">렛유인 AI 코딩 과정 강의 슬라이드 및 실습 자료. React + Vite 기반 인터랙티브 프레젠테이션.</p>
+        <div class="tags">
+          <span>React</span><span>TypeScript</span><span>Vite</span>
+        </div>
+        <a href="https://username.github.io/lecture-project/" target="_blank" class="demo-btn">데모 보기 →</a>
+      </div>
+    </div>
+
+    <!-- 카드 2: 13강 Streamlit -->
+    <div class="card">
+      <div class="card-stripe streamlit"></div>
+      <div class="card-body">
+        <div class="emoji">📊</div>
+        <h3>OLED 증착 데이터 분석</h3>
+        <span class="platform streamlit">Streamlit Cloud</span>
+        <p class="desc">챔버별 수율 분석, 두께 분포 박스플롯, X-Y 불량 맵 자동화 대시보드.</p>
+        <div class="tags">
+          <span>Python</span><span>Streamlit</span><span>Pandas</span><span>Plotly</span>
+        </div>
+        <a href="https://oled-analyzer.streamlit.app" target="_blank" class="demo-btn">데모 보기 →</a>
+      </div>
+    </div>
+
+    <!-- 카드 3: 14강 AI Studio -->
+    <div class="card">
+      <div class="card-stripe ai-studio"></div>
+      <div class="card-body">
+        <div class="emoji">🔬</div>
+        <h3>OLED 탠덤 공진 시뮬레이터</h3>
+        <span class="platform ai-studio">Google AI Studio</span>
+        <p class="desc">Fabry-Perot 공진 기반 R/G/B ITO 두께 최적화. 시야각 vs 휘도 실시간 그래프.</p>
+        <div class="tags">
+          <span>Gemini API</span><span>Recharts</span><span>광학 수식</span>
+        </div>
+        <a href="https://aistudio.google.com/share/xxxxx" target="_blank" class="demo-btn">데모 보기 →</a>
+      </div>
+    </div>
+
+    <!-- 카드 4: 15강 AI Studio -->
+    <div class="card">
+      <div class="card-stripe ai-studio"></div>
+      <div class="card-body">
+        <div class="emoji">🏗️</div>
+        <h3>3D 열응력 Warpage 시뮬레이터</h3>
+        <span class="platform ai-studio">Google AI Studio</span>
+        <p class="desc">다층 박막 CTE 불일치에 의한 휨 예측. 중립축, 곡률, 3D 응력 분포 시각화.</p>
+        <div class="tags">
+          <span>Gemini API</span><span>Three.js</span><span>고체역학</span>
+        </div>
+        <a href="https://aistudio.google.com/share/yyyyy" target="_blank" class="demo-btn">데모 보기 →</a>
+      </div>
+    </div>
+
+    <!-- ★ 카드 추가하려면 여기에 복사+붙여넣기 하세요 ★ -->
+
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Built with AI | <a href="https://letuin.com" target="_blank">렛유인 코딩 과정</a></p>
+</footer>
+
+</body>
+</html>

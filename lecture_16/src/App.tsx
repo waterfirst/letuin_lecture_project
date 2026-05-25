@@ -15,36 +15,36 @@ const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 const learningGoals = [
   {
     step: '학습목표 1',
-    title: '포트폴리오 생성기 실행',
-    body: '준비된 HTML 생성기에 자기 URL을 입력하여 포트폴리오 HTML을 만듭니다.',
+    title: 'Antigravity CLI 설치 & GitHub Token 발급',
+    body: 'Antigravity CLI(agy)를 설치하고, GitHub Classic Token을 발급받아 연동합니다.',
     type: 'create',
   },
   {
     step: '학습목표 2',
-    title: '프로젝트 카드 커스터마이징',
-    body: '제목, 설명, 기술 스택 태그를 수정하여 자신만의 포트폴리오를 완성합니다.',
+    title: 'AI로 포트폴리오 HTML 생성',
+    body: 'agy 프롬프트로 12~15강 실습 URL이 포함된 디자인 포트폴리오 페이지를 만듭니다.',
     type: 'customize',
   },
   {
     step: '학습목표 3',
-    title: 'GitHub Pages 배포',
-    body: '생성된 index.html을 GitHub에 올리고 Public URL로 공개합니다.',
+    title: 'GitHub Pages 자동 배포',
+    body: 'agy로 GitHub repo 생성 + push + Pages 활성화까지 CLI 한 줄로 완료합니다.',
     type: 'deploy',
   },
 ];
 
 const lessonFlow = [
-  { time: '1단계', label: '포트폴리오 생성기 열기' },
-  { time: '2단계', label: '프로젝트 카드 작성 (4개+)' },
-  { time: '3단계', label: 'HTML 생성 & 미리보기' },
-  { time: '4단계', label: 'GitHub Pages 배포' },
-  { time: '5단계', label: 'URL 확인 + 공유' },
-  { time: '6단계', label: 'Quality Gate 체크' },
+  { time: '1단계', label: 'Antigravity CLI 설치' },
+  { time: '2단계', label: 'GitHub Classic Token 발급' },
+  { time: '3단계', label: 'agy로 포트폴리오 HTML 생성' },
+  { time: '4단계', label: '디자인 커스터마이징' },
+  { time: '5단계', label: 'GitHub Pages 자동 배포' },
+  { time: '6단계', label: 'URL 확인 + Quality Gate' },
 ];
 
 const roleFlow = [
-  { owner: '수강생', task: '프로젝트 URL 입력, 카드 작성, 결과 검증' },
-  { owner: '포트폴리오 생성기', task: 'HTML 자동 생성 + 미리보기 + 다운로드' },
+  { owner: '수강생', task: '실습 URL 준비, 디자인 프롬프트 작성' },
+  { owner: 'Antigravity CLI', task: 'AI가 포트폴리오 HTML 자동 생성' },
   { owner: 'GitHub Pages', task: 'Public 호스팅, URL 배포, 24/7 공개' },
 ];
 
@@ -72,76 +72,172 @@ const manualVsAI = [
 const procedureSteps = [
   {
     step: '1',
-    title: '포트폴리오 생성기 열기',
-    description: '강의 페이지 하단의 생성기를 열고 프로필 정보를 입력합니다.',
+    title: 'Antigravity CLI 설치',
+    description: 'Windows / Mac 환경에서 Antigravity CLI(agy)를 설치합니다.',
     details: [
-      '강의 페이지 하단 "포트폴리오 생성기 열기" 클릭',
-      '이름, 한 줄 소개, GitHub URL 입력',
-      '기본 프로젝트 카드 4개 확인',
+      'Windows: PowerShell에서 irm https://antigravity.google/cli/install.ps1 | iex',
+      'Windows PATH 추가: $env:Path += ";C:\\Users\\USERNAME\\AppData\\Local\\agy\\bin"',
+      'Mac: 터미널에서 curl -fsSL https://antigravity.google/cli/install.sh | bash',
+      'Mac PATH 추가: export PATH="$HOME/.local/bin:$PATH" (zshrc에 추가)',
+      '설치 확인: agy --help',
+      '업데이트: agy update',
     ],
-    icon: Layout,
+    icon: Code,
     color: '#4285F4',
   },
   {
     step: '2',
-    title: '프로젝트 카드 작성 (4개 이상)',
-    description: '12~15강에서 만든 URL을 프로젝트 카드에 입력합니다.',
+    title: 'GitHub Classic Token 발급',
+    description: 'GitHub Personal Access Token(Classic)을 발급받아 agy에 연동합니다.',
     details: [
-      '카드 1: 12강 GitHub Pages 정적 문서 URL',
-      '카드 2: 13강 Streamlit 데이터 분석 앱 URL',
-      '카드 3: 14강 OLED 시뮬레이터 AI Studio 링크',
-      '카드 4: 15강 Warpage 시뮬레이터 AI Studio 링크',
-      '각 카드: 제목 + 설명 + URL + 기술 스택 + 플랫폼 선택',
-      '(선택) "프로젝트 추가" 버튼으로 최대 8개',
+      'GitHub > Settings > Developer settings > Personal access tokens > Tokens (classic)',
+      'Generate new token (classic) 클릭',
+      'Note: "antigravity-portfolio"',
+      'Expiration: 90 days',
+      'Scopes: repo (전체 체크), workflow 체크',
+      'Generate token > 토큰 복사 (한 번만 보임!)',
+      'agy 실행 시 토큰 입력 또는 환경변수 설정',
     ],
-    icon: Code,
+    icon: Key,
     color: '#34A853',
   },
   {
     step: '3',
-    title: 'HTML 생성 & 미리보기',
-    description: '포트폴리오 생성 버튼으로 HTML을 만들고 미리보기를 확인합니다.',
+    title: 'agy로 포트폴리오 HTML 생성',
+    description: 'Antigravity AI에게 디자인 프롬프트를 주고 포트폴리오 index.html을 생성합니다.',
     details: [
-      '"포트폴리오 생성" 버튼 클릭',
-      '오른쪽 iframe에서 미리보기 확인',
-      '각 카드 링크 클릭해서 데모 열리는지 확인',
-      '수정 필요하면 카드 내용 변경 후 재생성',
-      '"HTML 다운로드" 버튼으로 index.html 저장',
+      'agy 실행 후 포트폴리오 프롬프트 입력',
+      '12~15강 실습 URL 4개를 프롬프트에 포함',
+      'AI가 index.html 생성 확인',
+      '로컬 브라우저에서 미리보기 (파일 더블클릭)',
+      '디자인 수정이 필요하면 추가 프롬프트 입력',
     ],
-    icon: Eye,
+    icon: Layout,
     color: '#FBBC04',
   },
   {
     step: '4',
-    title: 'GitHub Pages 배포',
-    description: 'index.html을 GitHub에 올리고 Pages를 활성화합니다.',
+    title: 'GitHub Pages 자동 배포',
+    description: 'agy + GitHub Token으로 repo 생성부터 Pages 배포까지 CLI에서 완료합니다.',
     details: [
-      'GitHub에서 New repository (Public)',
-      '이름: portfolio 또는 my-portfolio',
-      'Add file > Upload files > index.html 드래그',
+      'GitHub에 portfolio repo 생성 (agy가 안내하거나 수동)',
+      'git init > git add index.html > git commit',
+      'git remote add origin https://github.com/USERNAME/portfolio.git',
+      'git push -u origin main (Token으로 인증)',
       'Settings > Pages > Branch: main > Save',
-      '1~2분 후 URL 활성화 확인',
-      'README About에 URL 추가',
+      '1~2분 후 https://USERNAME.github.io/portfolio/ 확인',
     ],
     icon: Globe,
     color: '#EA4335',
   },
 ];
 
-const gitCommandText = `# 터미널에서 배포하는 경우
+const agyInstallWindows = `# Windows PowerShell
+irm https://antigravity.google/cli/install.ps1 | iex
+
+# PATH 추가 (현재 터미널에서 바로 사용)
+$env:Path += ";C:\\Users\\USERNAME\\AppData\\Local\\agy\\bin"
+
+# 설치 확인 및 업데이트
+agy update
+agy --help`;
+
+const agyInstallMac = `# Mac 터미널 (zsh/bash)
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+
+# PATH 추가 (~/.zshrc 또는 ~/.bashrc에 추가)
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# 설치 확인 및 업데이트
+agy update
+agy --help`;
+
+const githubTokenSteps = `# GitHub Classic Token 발급 경로
+GitHub.com > Settings > Developer settings
+> Personal access tokens > Tokens (classic)
+> Generate new token (classic)
+
+# 설정
+Note: antigravity-portfolio
+Expiration: 90 days
+Scopes: [v] repo (전체), [v] workflow
+
+# 토큰 복사 후 환경변수 설정
+# Windows PowerShell:
+$env:GITHUB_TOKEN = "ghp_xxxxxxxxxxxx"
+
+# Mac/Linux:
+export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"`;
+
+const portfolioPromptText = `나의 AI 엔지니어 포트폴리오 웹페이지(index.html)를 만들어줘.
+
+[프로필]
+- 이름: (자기 이름)
+- 한 줄 소개: 제조 AI 엔지니어 | 렛유인 코딩 과정 수료
+- GitHub: https://github.com/USERNAME
+
+[프로젝트 목록 - 아래 URL을 실제 자기 URL로 교체]
+1. 제목: AI 코딩 강의 자료
+   URL: https://username.github.io/lecture-project/
+   플랫폼: GitHub Pages
+   기술: React, TypeScript, Vite
+   설명: 렛유인 AI 코딩 과정 강의 슬라이드 및 실습 자료
+
+2. 제목: OLED 증착 데이터 분석 대시보드
+   URL: https://oled-analyzer.streamlit.app
+   플랫폼: Streamlit Cloud
+   기술: Python, Streamlit, Pandas, Plotly
+   설명: 챔버별 수율 분석, 두께 분포, 불량 맵 자동화
+
+3. 제목: OLED 탠덤 공진 시뮬레이터
+   URL: https://aistudio.google.com/share/xxxxx
+   플랫폼: Google AI Studio
+   기술: Gemini API, Fabry-Perot 수식, Recharts
+   설명: R/G/B ITO 두께 최적화, 시야각 vs 휘도 그래프
+
+4. 제목: 3D 열응력 Warpage 시뮬레이터
+   URL: https://aistudio.google.com/share/yyyyy
+   플랫폼: Google AI Studio
+   기술: Gemini API, Three.js, 고체역학
+   설명: 다층 박막 CTE 불일치 휨 예측 + 3D 시각화
+
+[디자인 요구사항]
+- 단일 HTML 파일 (외부 의존성 없음, Google Fonts만 허용)
+- 반응형 (모바일 호환)
+- 상단: 그라디언트 헤더 (어두운 파랑→보라) + 이름 + 소개
+- 프로젝트 카드: 그리드 레이아웃, 호버 시 그림자 + 살짝 올라가는 효과
+- 플랫폼별 색상 뱃지: GitHub Pages=초록, Streamlit=빨강, AI Studio=파랑
+- 기술 스택: 작은 둥근 뱃지로 표시
+- 각 카드에 "데모 보기" 버튼 (해당 URL로 새 탭)
+- 하단 푸터: "Built with AI | 렛유인 코딩 과정"
+- 다크 모드 기본, 깔끔하고 모던한 느낌`;
+
+const designRefinePrompt = `포트폴리오 페이지를 더 예쁘게 개선해줘.
+
+[추가 디자인]
+- 카드에 아이콘 추가 (프로젝트 성격에 맞는 이모지)
+- 상단에 기술 스택 요약 섹션 (사용한 전체 기술을 뱃지로 나열)
+- 부드러운 스크롤 애니메이션 (카드가 아래에서 위로 페이드인)
+- 카드 상단에 플랫폼별 컬러 스트라이프
+- "연락처" 섹션: GitHub, 이메일 링크
+- 폰트: Inter 또는 Pretendard
+- 전체적으로 깔끔하고 여백이 넉넉한 레이아웃`;
+
+const gitDeployCommand = `# Git으로 GitHub Pages 배포
 git init
 git add index.html
-git commit -m "Add portfolio dashboard"
+git commit -m "Deploy portfolio"
 git branch -M main
 git remote add origin https://github.com/USERNAME/portfolio.git
 git push -u origin main
 
 # GitHub Pages 활성화
-Repository Settings > Pages > Source: Deploy from a branch
-Branch: main > / (root) > Save
+# Settings > Pages > Source: Deploy from a branch
+# Branch: main > / (root) > Save
 
 # 1~2분 후 URL:
-https://USERNAME.github.io/portfolio/`;
+# https://USERNAME.github.io/portfolio/`;
 
 const qualityChecklist = [
   '프로젝트 4개 이상의 URL이 입력되었는가?',
@@ -332,7 +428,7 @@ export default function App() {
             <img src={assetUrl('logo.png')} alt="LettUin Edu" className="header-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           </motion.div>
           <motion.div className="header-tag-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            <span className="header-tag">실습 URL을 모아 GitHub Pages 포트폴리오로 배포</span>
+            <span className="header-tag">Antigravity CLI로 포트폴리오를 만들고 GitHub Pages 배포</span>
           </motion.div>
         </div>
         <motion.div className="hero-section" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
@@ -413,32 +509,72 @@ export default function App() {
         </section>
 
         <section>
-          <span className="section-label">05. Git 배포 명령어</span>
-          <h2>터미널에서 배포하는 경우</h2>
-          <PromptCard title="GitHub Pages 배포 명령어" promptText={gitCommandText} color="#333333" />
+          <span className="section-label">05. Antigravity CLI 설치</span>
+          <h2>Windows / Mac에서 agy 설치하기</h2>
+          <p className="section-intro">Antigravity CLI는 터미널에서 AI에게 코드를 만들게 하는 도구입니다. 명령어는 antigravity가 아니라 agy입니다.</p>
+          <PromptCard title="Windows PowerShell 설치" promptText={agyInstallWindows} color="#0078D4" />
+          <div style={{ height: '1.5rem' }} />
+          <PromptCard title="Mac 터미널 설치" promptText={agyInstallMac} color="#333333" />
+          <div style={{ marginTop: '1.5rem', background: '#FFF3E0', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #FF9800' }}>
+            <p style={{ fontSize: '0.95rem', color: '#E65100', margin: 0, lineHeight: '1.7' }}>
+              <strong>주의:</strong> 설치 후 터미널을 새로 열거나 PATH를 수동 추가해야 agy 명령어가 동작합니다. 로그인은 브라우저 창이 자동으로 열리며 소셜 인증으로 진행됩니다.
+            </p>
+          </div>
         </section>
 
         <section>
-          <span className="section-label">06. 핵심 메시지</span>
+          <span className="section-label">06. GitHub Classic Token 발급</span>
+          <h2>agy에서 GitHub에 Push하려면 Token이 필요합니다</h2>
+          <p className="section-intro">GitHub Classic Token을 발급받아 환경변수에 설정하면, 터미널에서 비밀번호 없이 push할 수 있습니다.</p>
+          <PromptCard title="GitHub Classic Token 발급 절차" promptText={githubTokenSteps} color="#333333" />
+          <div style={{ marginTop: '1.5rem', background: '#FFEBEE', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #EA4335' }}>
+            <p style={{ fontSize: '0.95rem', color: '#C62828', margin: 0, lineHeight: '1.7' }}>
+              <strong>보안 주의:</strong> Token은 한 번만 보여줍니다. 반드시 안전한 곳에 저장하세요. 코드나 GitHub에 절대 올리지 마세요.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">07. agy로 포트폴리오 만들기</span>
+          <h2>AI에게 디자인 프롬프트를 주고 index.html 생성</h2>
+          <p className="section-intro">agy를 실행하고 아래 프롬프트를 입력하면 12~15강 URL이 포함된 포트폴리오 HTML이 자동 생성됩니다. URL은 자신의 것으로 교체하세요.</p>
+          <PromptCard title="포트폴리오 생성 프롬프트 (agy에 입력)" promptText={portfolioPromptText} color="#4285F4" />
+          <div style={{ height: '1.5rem' }} />
+          <PromptCard title="디자인 개선 추가 프롬프트" promptText={designRefinePrompt} color="#9C27B0" />
+          <div style={{ marginTop: '1.5rem', background: '#E8F5E9', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #34A853' }}>
+            <p style={{ fontSize: '0.95rem', color: '#1B5E20', margin: 0, lineHeight: '1.7' }}>
+              <strong>팁:</strong> 첫 번째 프롬프트로 기본 구조를 만들고, 두 번째 프롬프트로 디자인을 다듬으세요. 한 번에 다 시키면 결과가 불안정합니다.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">08. GitHub Pages 배포</span>
+          <h2>생성된 index.html을 GitHub에 올리고 배포</h2>
+          <PromptCard title="Git 배포 명령어" promptText={gitDeployCommand} color="#333333" />
+        </section>
+
+        <section>
+          <span className="section-label">09. 핵심 메시지</span>
           <h2>오늘 기억할 세 가지</h2>
           {keyMessages.map((msg, i) => <KeyMessageBox key={i} icon={msg.icon} text={msg.text} color={msg.color} />)}
         </section>
 
         <section className="workshop-section teaching-section">
-          <span className="section-label">07. 미니 워크숍</span>
+          <span className="section-label">10. 미니 워크숍</span>
           <h2>실습: 포트폴리오 배포 체크리스트</h2>
           <InteractiveWorkshop />
           <FirstRunGuide />
         </section>
 
         <section>
-          <span className="section-label">08. 품질 점검</span>
+          <span className="section-label">11. 품질 점검</span>
           <h2>배포 전, 이 5가지만 확인하세요</h2>
           <VerifyChecklist points={qualityChecklist} />
         </section>
 
         <section>
-          <span className="section-label">09. 배포 방식 비교</span>
+          <span className="section-label">12. 배포 방식 비교</span>
           <h2>12~16강 배포 플랫폼 총정리</h2>
           <div className="scenario-grid">
             {deploymentMethods.map((d, i) => {
@@ -460,12 +596,19 @@ export default function App() {
         </section>
 
         <section style={{ textAlign: 'center', padding: '3rem 2rem' }}>
-          <span className="section-label">포트폴리오 생성기</span>
-          <h2>아래 버튼으로 생성기를 열고 실습하세요</h2>
-          <div style={{ marginTop: '2rem' }}>
-            <a href={`${import.meta.env.BASE_URL}portfolio-generator.html`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2rem', background: '#4285F4', color: '#fff', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(66,133,244,0.3)' }}>
+          <span className="section-label">포트폴리오 템플릿 다운로드</span>
+          <h2>index.html 템플릿을 다운로드하고 Antigravity에서 수정하세요</h2>
+          <p className="section-intro" style={{ maxWidth: '640px', margin: '0 auto 2rem' }}>
+            아래 버튼으로 기본 포트폴리오 HTML을 다운로드합니다. URL과 내용을 자기 것으로 바꾸고, agy에서 디자인을 다듬은 후 GitHub Pages에 배포하세요.
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href={`${import.meta.env.BASE_URL}portfolio-template.html`} download="index.html" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2rem', background: '#4285F4', color: '#fff', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(66,133,244,0.3)' }}>
               <ExternalLink size={20} />
-              포트폴리오 생성기 열기
+              index.html 다운로드
+            </a>
+            <a href={`${import.meta.env.BASE_URL}portfolio-template.html`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2rem', background: '#fff', color: '#4285F4', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', border: '2px solid #4285F4' }}>
+              <Eye size={20} />
+              미리보기
             </a>
           </div>
         </section>
