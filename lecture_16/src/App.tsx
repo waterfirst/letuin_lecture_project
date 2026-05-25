@@ -15,36 +15,36 @@ const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
 const learningGoals = [
   {
     step: '학습목표 1',
-    title: 'Antigravity CLI 설치 & GitHub Token 발급',
-    body: 'Antigravity CLI(agy)를 설치하고, GitHub Classic Token을 발급받아 연동합니다.',
+    title: 'Google Stitch로 포트폴리오 디자인',
+    body: 'stitch.withgoogle.com에서 프롬프트로 포트폴리오 UI를 디자인하고 HTML/CSS를 Export합니다.',
     type: 'create',
   },
   {
     step: '학습목표 2',
-    title: 'AI로 포트폴리오 HTML 생성',
-    body: 'agy 프롬프트로 12~15강 실습 URL이 포함된 디자인 포트폴리오 페이지를 만듭니다.',
+    title: 'Antigravity CLI로 코드 완성',
+    body: 'Stitch에서 받은 HTML을 agy에서 열고, 12~15강 실습 URL과 기능을 추가하여 완성합니다.',
     type: 'customize',
   },
   {
     step: '학습목표 3',
-    title: 'GitHub Pages 자동 배포',
-    body: 'agy로 GitHub repo 생성 + push + Pages 활성화까지 CLI 한 줄로 완료합니다.',
+    title: 'GitHub Pages 배포',
+    body: 'GitHub Classic Token을 발급받고, 완성된 포트폴리오를 GitHub Pages로 배포합니다.',
     type: 'deploy',
   },
 ];
 
 const lessonFlow = [
-  { time: '1단계', label: 'Antigravity CLI 설치' },
-  { time: '2단계', label: 'GitHub Classic Token 발급' },
-  { time: '3단계', label: 'agy로 포트폴리오 HTML 생성' },
-  { time: '4단계', label: '디자인 커스터마이징' },
-  { time: '5단계', label: 'GitHub Pages 자동 배포' },
+  { time: '1단계', label: 'Google Stitch에서 디자인' },
+  { time: '2단계', label: 'HTML/CSS Export' },
+  { time: '3단계', label: 'Antigravity CLI 설치 & 코드 완성' },
+  { time: '4단계', label: 'GitHub Classic Token 발급' },
+  { time: '5단계', label: 'GitHub Pages 배포' },
   { time: '6단계', label: 'URL 확인 + Quality Gate' },
 ];
 
 const roleFlow = [
-  { owner: '수강생', task: '실습 URL 준비, 디자인 프롬프트 작성' },
-  { owner: 'Antigravity CLI', task: 'AI가 포트폴리오 HTML 자동 생성' },
+  { owner: 'Google Stitch', task: '프롬프트 → UI 디자인 → HTML/CSS Export' },
+  { owner: 'Antigravity CLI', task: 'Stitch HTML에 실습 URL + 기능 추가, 코드 완성' },
   { owner: 'GitHub Pages', task: 'Public 호스팅, URL 배포, 24/7 공개' },
 ];
 
@@ -72,55 +72,54 @@ const manualVsAI = [
 const procedureSteps = [
   {
     step: '1',
-    title: 'Antigravity CLI 설치',
-    description: 'Windows / Mac 환경에서 Antigravity CLI(agy)를 설치합니다.',
+    title: 'Google Stitch에서 포트폴리오 디자인',
+    description: 'stitch.withgoogle.com에서 프롬프트로 포트폴리오 UI를 디자인합니다.',
     details: [
-      'Windows: PowerShell에서 irm https://antigravity.google/cli/install.ps1 | iex',
-      'Windows PATH 추가: $env:Path += ";C:\\Users\\USERNAME\\AppData\\Local\\agy\\bin"',
-      'Mac: 터미널에서 curl -fsSL https://antigravity.google/cli/install.sh | bash',
-      'Mac PATH 추가: export PATH="$HOME/.local/bin:$PATH" (zshrc에 추가)',
-      '설치 확인: agy --help',
-      '업데이트: agy update',
+      'stitch.withgoogle.com 접속 (Google 계정 로그인)',
+      '프롬프트 입력: "AI 엔지니어 포트폴리오 페이지를 디자인해줘"',
+      '카드 레이아웃, 색상, 폰트 등을 실시간으로 수정',
+      '마음에 들면 Export > HTML/CSS 선택',
+      '다운로드된 HTML 파일을 작업 폴더에 저장',
     ],
-    icon: Code,
+    icon: Layout,
     color: '#4285F4',
   },
   {
     step: '2',
-    title: 'GitHub Classic Token 발급',
-    description: 'GitHub Personal Access Token(Classic)을 발급받아 agy에 연동합니다.',
+    title: 'Antigravity CLI 설치 & HTML 완성',
+    description: 'agy를 설치하고, Stitch에서 받은 HTML에 실습 URL과 기능을 추가합니다.',
     details: [
-      'GitHub > Settings > Developer settings > Personal access tokens > Tokens (classic)',
-      'Generate new token (classic) 클릭',
-      'Note: "antigravity-portfolio"',
-      'Expiration: 90 days',
-      'Scopes: repo (전체 체크), workflow 체크',
-      'Generate token > 토큰 복사 (한 번만 보임!)',
-      'agy 실행 시 토큰 입력 또는 환경변수 설정',
+      'Windows: irm https://antigravity.google/cli/install.ps1 | iex',
+      'Mac: curl -fsSL https://antigravity.google/cli/install.sh | bash',
+      'agy update로 설치 확인',
+      'Stitch HTML 파일이 있는 폴더에서 agy 실행',
+      '"이 HTML에 12~15강 프로젝트 URL을 추가해줘" 프롬프트 입력',
+      'AI가 URL, 데모 버튼, 기술 스택 뱃지 추가',
     ],
-    icon: Key,
+    icon: Code,
     color: '#34A853',
   },
   {
     step: '3',
-    title: 'agy로 포트폴리오 HTML 생성',
-    description: 'Antigravity AI에게 디자인 프롬프트를 주고 포트폴리오 index.html을 생성합니다.',
+    title: 'GitHub Classic Token 발급',
+    description: 'GitHub Pages 배포를 위한 Personal Access Token을 발급받습니다.',
     details: [
-      'agy 실행 후 포트폴리오 프롬프트 입력',
-      '12~15강 실습 URL 4개를 프롬프트에 포함',
-      'AI가 index.html 생성 확인',
-      '로컬 브라우저에서 미리보기 (파일 더블클릭)',
-      '디자인 수정이 필요하면 추가 프롬프트 입력',
+      'GitHub > Settings > Developer settings > Tokens (classic)',
+      'Generate new token (classic)',
+      'Note: antigravity-portfolio / Expiration: 90 days',
+      'Scopes: repo 전체 체크 + workflow',
+      'Generate token > 토큰 복사 (한 번만 보임!)',
+      '환경변수 설정: $env:GITHUB_TOKEN="ghp_..." (Win) / export GITHUB_TOKEN="ghp_..." (Mac)',
     ],
-    icon: Layout,
+    icon: Key,
     color: '#FBBC04',
   },
   {
     step: '4',
-    title: 'GitHub Pages 자동 배포',
-    description: 'agy + GitHub Token으로 repo 생성부터 Pages 배포까지 CLI에서 완료합니다.',
+    title: 'GitHub Pages 배포',
+    description: '완성된 index.html을 GitHub에 push하고 Pages를 활성화합니다.',
     details: [
-      'GitHub에 portfolio repo 생성 (agy가 안내하거나 수동)',
+      'GitHub에 portfolio repo 생성 (Public)',
       'git init > git add index.html > git commit',
       'git remote add origin https://github.com/USERNAME/portfolio.git',
       'git push -u origin main (Token으로 인증)',
@@ -131,6 +130,40 @@ const procedureSteps = [
     color: '#EA4335',
   },
 ];
+
+const stitchPromptText = `AI 엔지니어 개인 포트폴리오 웹페이지를 디자인해줘.
+
+[레이아웃]
+- 상단: 그라디언트 헤더 (어두운 파랑→보라) + 이름 + 한 줄 소개 + GitHub 링크
+- 중간: 기술 스택 뱃지 섹션 (Python, Streamlit, React, Gemini API 등)
+- 메인: 프로젝트 카드 4개를 2x2 그리드로 배치
+- 각 카드: 이모지 아이콘 + 제목 + 플랫폼 뱃지(색상별) + 설명 2줄 + 기술 태그 + "데모 보기" 버튼
+- 하단: 연락처 (GitHub, Email) + 푸터
+
+[디자인 스타일]
+- 다크 모드 기본 (#0f0f0f 배경)
+- 카드: 둥근 모서리(16px), 호버 시 살짝 올라가는 효과 + 그림자
+- 플랫폼별 카드 상단 컬러 스트라이프: 초록(GitHub Pages) / 빨강(Streamlit) / 파랑(AI Studio)
+- 폰트: Inter, 깔끔하고 여백 넉넉하게
+- 반응형: 모바일에서 1열, 데스크탑에서 2열
+
+[색상 팔레트]
+- 배경: #0f0f0f, 카드: #1a1a1a, 텍스트: #e0e0e0
+- 액센트: #4285F4(파랑), #34A853(초록), #FF4B4B(빨강), #9C27B0(보라)`;
+
+const stitchExportSteps = `# Google Stitch에서 HTML Export 하는 법
+
+1. stitch.withgoogle.com 접속 (Google 계정 로그인)
+2. 위 프롬프트를 입력하여 디자인 생성
+3. 실시간으로 색상, 레이아웃, 폰트 수정
+4. 마음에 들면 우측 상단 Export 버튼 클릭
+5. "HTML/CSS" 형식 선택 → 다운로드
+6. 다운로드된 파일을 작업 폴더에 index.html로 저장
+
+# 💡 Stitch 팁
+- 하루 400 디자인 크레딧 무료 (충분합니다)
+- "Redesign" 버튼으로 같은 내용 다른 스타일 시도 가능
+- 음성으로 수정 지시도 가능 ("카드를 3열로 바꿔줘")`;
 
 const agyInstallWindows = `# Windows PowerShell
 irm https://antigravity.google/cli/install.ps1 | iex
@@ -145,13 +178,42 @@ agy --help`;
 const agyInstallMac = `# Mac 터미널 (zsh/bash)
 curl -fsSL https://antigravity.google/cli/install.sh | bash
 
-# PATH 추가 (~/.zshrc 또는 ~/.bashrc에 추가)
+# PATH 추가 (~/.zshrc에 추가)
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 
 # 설치 확인 및 업데이트
 agy update
 agy --help`;
+
+const agyCompletePrompt = `이 index.html 파일에 내 프로젝트 정보를 추가해줘.
+
+[추가할 프로젝트 - URL을 자기 것으로 교체]
+1. 제목: AI 코딩 강의 자료
+   URL: https://username.github.io/lecture-project/
+   플랫폼: GitHub Pages (초록 뱃지)
+   기술: React, TypeScript, Vite
+
+2. 제목: OLED 증착 데이터 분석 대시보드
+   URL: https://oled-analyzer.streamlit.app
+   플랫폼: Streamlit Cloud (빨강 뱃지)
+   기술: Python, Streamlit, Pandas, Plotly
+
+3. 제목: OLED 탠덤 공진 시뮬레이터
+   URL: https://aistudio.google.com/share/xxxxx
+   플랫폼: Google AI Studio (파랑 뱃지)
+   기술: Gemini API, Fabry-Perot, Recharts
+
+4. 제목: 3D 열응력 Warpage 시뮬레이터
+   URL: https://aistudio.google.com/share/yyyyy
+   플랫폼: Google AI Studio (파랑 뱃지)
+   기술: Gemini API, Three.js, 고체역학
+
+[요구사항]
+- 각 카드에 "데모 보기" 버튼 → 해당 URL로 새 탭
+- 프로필 섹션: 이름, 소개, GitHub URL 수정
+- 단일 HTML 파일로 유지 (외부 의존성 없음)
+- Stitch 디자인 스타일 최대한 유지`;
 
 const githubTokenSteps = `# GitHub Classic Token 발급 경로
 GitHub.com > Settings > Developer settings
@@ -164,65 +226,8 @@ Expiration: 90 days
 Scopes: [v] repo (전체), [v] workflow
 
 # 토큰 복사 후 환경변수 설정
-# Windows PowerShell:
-$env:GITHUB_TOKEN = "ghp_xxxxxxxxxxxx"
-
-# Mac/Linux:
-export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"`;
-
-const portfolioPromptText = `나의 AI 엔지니어 포트폴리오 웹페이지(index.html)를 만들어줘.
-
-[프로필]
-- 이름: (자기 이름)
-- 한 줄 소개: 제조 AI 엔지니어 | 렛유인 코딩 과정 수료
-- GitHub: https://github.com/USERNAME
-
-[프로젝트 목록 - 아래 URL을 실제 자기 URL로 교체]
-1. 제목: AI 코딩 강의 자료
-   URL: https://username.github.io/lecture-project/
-   플랫폼: GitHub Pages
-   기술: React, TypeScript, Vite
-   설명: 렛유인 AI 코딩 과정 강의 슬라이드 및 실습 자료
-
-2. 제목: OLED 증착 데이터 분석 대시보드
-   URL: https://oled-analyzer.streamlit.app
-   플랫폼: Streamlit Cloud
-   기술: Python, Streamlit, Pandas, Plotly
-   설명: 챔버별 수율 분석, 두께 분포, 불량 맵 자동화
-
-3. 제목: OLED 탠덤 공진 시뮬레이터
-   URL: https://aistudio.google.com/share/xxxxx
-   플랫폼: Google AI Studio
-   기술: Gemini API, Fabry-Perot 수식, Recharts
-   설명: R/G/B ITO 두께 최적화, 시야각 vs 휘도 그래프
-
-4. 제목: 3D 열응력 Warpage 시뮬레이터
-   URL: https://aistudio.google.com/share/yyyyy
-   플랫폼: Google AI Studio
-   기술: Gemini API, Three.js, 고체역학
-   설명: 다층 박막 CTE 불일치 휨 예측 + 3D 시각화
-
-[디자인 요구사항]
-- 단일 HTML 파일 (외부 의존성 없음, Google Fonts만 허용)
-- 반응형 (모바일 호환)
-- 상단: 그라디언트 헤더 (어두운 파랑→보라) + 이름 + 소개
-- 프로젝트 카드: 그리드 레이아웃, 호버 시 그림자 + 살짝 올라가는 효과
-- 플랫폼별 색상 뱃지: GitHub Pages=초록, Streamlit=빨강, AI Studio=파랑
-- 기술 스택: 작은 둥근 뱃지로 표시
-- 각 카드에 "데모 보기" 버튼 (해당 URL로 새 탭)
-- 하단 푸터: "Built with AI | 렛유인 코딩 과정"
-- 다크 모드 기본, 깔끔하고 모던한 느낌`;
-
-const designRefinePrompt = `포트폴리오 페이지를 더 예쁘게 개선해줘.
-
-[추가 디자인]
-- 카드에 아이콘 추가 (프로젝트 성격에 맞는 이모지)
-- 상단에 기술 스택 요약 섹션 (사용한 전체 기술을 뱃지로 나열)
-- 부드러운 스크롤 애니메이션 (카드가 아래에서 위로 페이드인)
-- 카드 상단에 플랫폼별 컬러 스트라이프
-- "연락처" 섹션: GitHub, 이메일 링크
-- 폰트: Inter 또는 Pretendard
-- 전체적으로 깔끔하고 여백이 넉넉한 레이아웃`;
+# Windows:  $env:GITHUB_TOKEN = "ghp_xxxxxxxxxxxx"
+# Mac:      export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"`;
 
 const gitDeployCommand = `# Git으로 GitHub Pages 배포
 git init
@@ -428,16 +433,16 @@ export default function App() {
             <img src={assetUrl('logo.png')} alt="LettUin Edu" className="header-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           </motion.div>
           <motion.div className="header-tag-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            <span className="header-tag">Antigravity CLI로 포트폴리오를 만들고 GitHub Pages 배포</span>
+            <span className="header-tag">Google Stitch 디자인 + Antigravity 코드 완성 + GitHub Pages 배포</span>
           </motion.div>
         </div>
         <motion.div className="hero-section" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <h1>Ch.16 통합 포트폴리오 대시보드</h1>
-          <p className="subtitle">12~15강에서 만든 GitHub Pages, Streamlit, AI Studio 링크를 하나의 대시보드로 통합하고, GitHub Pages로 배포합니다.</p>
+          <p className="subtitle">Google Stitch로 포트폴리오를 디자인하고, Antigravity CLI로 코드를 완성한 후, GitHub Pages로 배포합니다.</p>
           <div className="lesson-meta">
             <span>40분</span>
             <span>실습 중심</span>
-            <span>GitHub Pages</span>
+            <span>Stitch + agy</span>
             <span>결과물: 포트폴리오 URL</span>
           </div>
         </motion.div>
@@ -446,9 +451,9 @@ export default function App() {
       <main>
         <section className="overview-section">
           <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>12~15강 결과물을 한 페이지 포트폴리오로 통합하기</h2>
+          <h2>Stitch로 디자인하고, agy로 완성하고, GitHub Pages로 배포</h2>
           <p className="section-intro">
-            GitHub Pages, Streamlit Cloud, AI Studio에 흩어진 실습 결과물을 포트폴리오 생성기로 하나의 HTML 페이지에 모으고, GitHub Pages로 배포합니다.
+            Google Stitch에서 프롬프트로 포트폴리오 UI를 디자인하고, Antigravity CLI에서 12~15강 실습 URL을 추가하여 완성한 후, GitHub Pages로 배포합니다.
           </p>
           <div className="learning-goals-grid">
             {learningGoals.map((item) => (
@@ -509,23 +514,39 @@ export default function App() {
         </section>
 
         <section>
-          <span className="section-label">05. Antigravity CLI 설치</span>
-          <h2>Windows / Mac에서 agy 설치하기</h2>
-          <p className="section-intro">Antigravity CLI는 터미널에서 AI에게 코드를 만들게 하는 도구입니다. 명령어는 antigravity가 아니라 agy입니다.</p>
-          <PromptCard title="Windows PowerShell 설치" promptText={agyInstallWindows} color="#0078D4" />
+          <span className="section-label">05. Google Stitch에서 디자인</span>
+          <h2>프롬프트 한 줄로 포트폴리오 UI를 디자인합니다</h2>
+          <p className="section-intro">Google Stitch(stitch.withgoogle.com)는 프롬프트로 UI를 디자인하고 HTML/CSS로 Export하는 무료 AI 디자인 도구입니다. 하루 400크레딧 무료.</p>
+          <PromptCard title="Stitch 디자인 프롬프트 (stitch.withgoogle.com에 입력)" promptText={stitchPromptText} color="#4285F4" />
           <div style={{ height: '1.5rem' }} />
-          <PromptCard title="Mac 터미널 설치" promptText={agyInstallMac} color="#333333" />
-          <div style={{ marginTop: '1.5rem', background: '#FFF3E0', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #FF9800' }}>
-            <p style={{ fontSize: '0.95rem', color: '#E65100', margin: 0, lineHeight: '1.7' }}>
-              <strong>주의:</strong> 설치 후 터미널을 새로 열거나 PATH를 수동 추가해야 agy 명령어가 동작합니다. 로그인은 브라우저 창이 자동으로 열리며 소셜 인증으로 진행됩니다.
+          <PromptCard title="Stitch에서 HTML Export 하는 법" promptText={stitchExportSteps} color="#9C27B0" />
+          <div style={{ marginTop: '1.5rem', background: '#E8F5E9', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #34A853' }}>
+            <p style={{ fontSize: '0.95rem', color: '#1B5E20', margin: 0, lineHeight: '1.7' }}>
+              <strong>핵심:</strong> Stitch는 디자인 전문가입니다. 여기서 예쁜 레이아웃을 만들고, 코드 완성(URL 추가, 버튼 연결)은 Antigravity에서 합니다. 역할을 나누세요.
             </p>
           </div>
         </section>
 
         <section>
-          <span className="section-label">06. GitHub Classic Token 발급</span>
-          <h2>agy에서 GitHub에 Push하려면 Token이 필요합니다</h2>
-          <p className="section-intro">GitHub Classic Token을 발급받아 환경변수에 설정하면, 터미널에서 비밀번호 없이 push할 수 있습니다.</p>
+          <span className="section-label">06. Antigravity CLI 설치 & 코드 완성</span>
+          <h2>Stitch HTML을 agy에서 열고 실습 URL을 추가합니다</h2>
+          <p className="section-intro">Antigravity CLI(agy)는 터미널에서 AI에게 코드를 만들게 하는 도구입니다. Stitch에서 받은 HTML을 열고 프로젝트 정보를 추가합니다.</p>
+          <PromptCard title="Windows PowerShell 설치" promptText={agyInstallWindows} color="#0078D4" />
+          <div style={{ height: '1rem' }} />
+          <PromptCard title="Mac 터미널 설치" promptText={agyInstallMac} color="#333333" />
+          <div style={{ height: '1.5rem' }} />
+          <PromptCard title="agy에서 Stitch HTML에 프로젝트 추가 (URL을 자기 것으로 교체)" promptText={agyCompletePrompt} color="#34A853" />
+          <div style={{ marginTop: '1.5rem', background: '#FFF3E0', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #FF9800' }}>
+            <p style={{ fontSize: '0.95rem', color: '#E65100', margin: 0, lineHeight: '1.7' }}>
+              <strong>팁:</strong> agy 실행 시 Stitch에서 받은 index.html이 있는 폴더에서 실행하세요. AI가 파일을 읽고 수정합니다.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <span className="section-label">07. GitHub Classic Token 발급</span>
+          <h2>GitHub Pages 배포를 위한 Token 발급</h2>
+          <p className="section-intro">GitHub에 push하려면 Classic Token이 필요합니다. 한 번 발급하면 90일간 사용 가능합니다.</p>
           <PromptCard title="GitHub Classic Token 발급 절차" promptText={githubTokenSteps} color="#333333" />
           <div style={{ marginTop: '1.5rem', background: '#FFEBEE', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #EA4335' }}>
             <p style={{ fontSize: '0.95rem', color: '#C62828', margin: 0, lineHeight: '1.7' }}>
@@ -535,22 +556,8 @@ export default function App() {
         </section>
 
         <section>
-          <span className="section-label">07. agy로 포트폴리오 만들기</span>
-          <h2>AI에게 디자인 프롬프트를 주고 index.html 생성</h2>
-          <p className="section-intro">agy를 실행하고 아래 프롬프트를 입력하면 12~15강 URL이 포함된 포트폴리오 HTML이 자동 생성됩니다. URL은 자신의 것으로 교체하세요.</p>
-          <PromptCard title="포트폴리오 생성 프롬프트 (agy에 입력)" promptText={portfolioPromptText} color="#4285F4" />
-          <div style={{ height: '1.5rem' }} />
-          <PromptCard title="디자인 개선 추가 프롬프트" promptText={designRefinePrompt} color="#9C27B0" />
-          <div style={{ marginTop: '1.5rem', background: '#E8F5E9', borderRadius: '12px', padding: '1.25rem', borderLeft: '4px solid #34A853' }}>
-            <p style={{ fontSize: '0.95rem', color: '#1B5E20', margin: 0, lineHeight: '1.7' }}>
-              <strong>팁:</strong> 첫 번째 프롬프트로 기본 구조를 만들고, 두 번째 프롬프트로 디자인을 다듬으세요. 한 번에 다 시키면 결과가 불안정합니다.
-            </p>
-          </div>
-        </section>
-
-        <section>
           <span className="section-label">08. GitHub Pages 배포</span>
-          <h2>생성된 index.html을 GitHub에 올리고 배포</h2>
+          <h2>완성된 index.html을 GitHub에 올리고 배포</h2>
           <PromptCard title="Git 배포 명령어" promptText={gitDeployCommand} color="#333333" />
         </section>
 
@@ -596,10 +603,10 @@ export default function App() {
         </section>
 
         <section style={{ textAlign: 'center', padding: '3rem 2rem' }}>
-          <span className="section-label">포트폴리오 템플릿 다운로드</span>
-          <h2>index.html 템플릿을 다운로드하고 Antigravity에서 수정하세요</h2>
+          <span className="section-label">포트폴리오 샘플 다운로드</span>
+          <h2>Stitch 없이 바로 시작하고 싶다면? 샘플 HTML을 다운로드하세요</h2>
           <p className="section-intro" style={{ maxWidth: '640px', margin: '0 auto 2rem' }}>
-            아래 버튼으로 기본 포트폴리오 HTML을 다운로드합니다. URL과 내용을 자기 것으로 바꾸고, agy에서 디자인을 다듬은 후 GitHub Pages에 배포하세요.
+            Google Stitch 대신 아래 샘플 HTML로 시작할 수도 있습니다. 다운로드 후 agy에서 열고 URL만 자기 것으로 교체하세요.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href={`${import.meta.env.BASE_URL}portfolio-template.html`} download="index.html" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '1rem 2rem', background: '#4285F4', color: '#fff', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(66,133,244,0.3)' }}>
