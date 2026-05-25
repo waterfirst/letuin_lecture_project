@@ -1,675 +1,262 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import {
-  Activity,
-  ArrowRight,
-  BarChart3,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Cloud,
-  Code,
-  Copy,
-  Database,
-  FileText,
-  Github,
-  Image as ImageIcon,
   Layers,
-  Layout,
-  Quote,
+  Eye,
+  AlertTriangle,
+  Copy,
+  Check,
+  ChevronRight,
+  Globe,
   Rocket,
-  Share2,
-  Star,
-  Target,
-  Wrench,
-  Zap,
+  Layout,
+  Monitor,
+  Code,
+  ExternalLink,
 } from 'lucide-react';
 
-const assetUrl = (filename: string) => `${import.meta.env.BASE_URL}${filename}`;
+const assetUrl = (filename: string) =>
+  `${import.meta.env.BASE_URL}assets/images/${filename}`;
 
-// ============================================================================
-// DATA ARRAYS - Integrated Dashboard & Portfolio
-// ============================================================================
+/* ===== 데이터 배열 ===== */
 
 const learningGoals = [
   {
-    step: '학습목표 1',
-    title: 'Streamlit 멀티페이지 앱 구성',
-    body: 'app.py와 pages/ 구조로 데이터·OLED·Warpage 페이지를 하나의 웹 앱으로 묶습니다.',
-    type: 'api',
+    step: 1,
+    title: '포트폴리오 생성기 실행',
+    body: '준비된 HTML 생성기에 자기 URL을 입력하여 포트폴리오 HTML을 만듭니다.',
+    type: 'create',
   },
   {
-    step: '학습목표 2',
-    title: '13~15강 시뮬레이터 13~15강 기능 통합 분석 통합',
-    body: 'DataAnalyzer, OLEDSimulator, WarpageSimulator를 IntegratedAnalyzer로 묶어 통합 리포트를 만듭니다.',
-    type: 'knowledge',
+    step: 2,
+    title: '프로젝트 카드 커스터마이징',
+    body: '제목, 설명, 기술 스택 태그를 수정하여 자신만의 포트폴리오를 완성합니다.',
+    type: 'customize',
   },
   {
-    step: '학습목표 3',
-    title: 'GitHub 포트폴리오 배포',
-    body: 'README.md 작성, Streamlit Cloud 호스팅, GitHub Public 저장소까지 취업용 포트폴리오를 완성합니다.',
+    step: 3,
+    title: 'GitHub Pages 배포',
+    body: '생성된 index.html을 GitHub에 올리고 Public URL로 공개합니다.',
     type: 'deploy',
   },
 ];
 
 const lessonFlow = [
-  { time: '3분', label: '목표 확인' },
-  { time: '7분', label: '개념·비유' },
-  { time: '8분', label: '실무 사례' },
-  { time: '17분', label: '지시문·실습' },
-  { time: '5분', label: '검증·정리' },
+  { label: '생성기 열기', icon: Layout },
+  { label: '프로젝트 입력', icon: Code },
+  { label: 'HTML 생성', icon: Monitor },
+  { label: 'Pages 배포', icon: Globe },
 ];
 
 const roleFlow = [
-  { owner: '엔지니어', task: '페이지 구조 설계, README 작성, 배포 관리' },
-  { owner: 'Streamlit', task: '멀티페이지 라우팅, 위젯 UI, 실시간 차트' },
-  { owner: 'IntegratedAnalyzer', task: '데이터·이미지·센서 결과 통합' },
-  { owner: 'GitHub', task: 'Public 저장소, Streamlit Cloud 자동 배포' },
+  { role: '수강생', desc: '프로젝트 URL 입력 및 카드 작성' },
+  { role: '생성기', desc: 'HTML 포트폴리오 자동 생성' },
+  { role: 'GitHub Pages', desc: '정적 파일 호스팅 및 배포' },
 ];
 
-const dashboardFeatures = [
+const procedureSteps = [
   {
-    icon: Database,
-    title: '데이터 분석 페이지',
-    description: 'CSV 업로드 후 Gemini API로 인사이트를 자동 추출합니다.',
-    features: ['file_uploader 위젯', 'dataframe 미리보기', 'Gemini 인사이트 호출'],
-    cost: 'Streamlit + Gemini',
-    freeQuota: '13강 자산 재사용',
+    step: 1,
+    title: '포트폴리오 생성기 열기',
+    desc: '강의 페이지 하단의 생성기를 열고 프로젝트 URL을 입력합니다.',
+    image: 'panel1.png',
   },
   {
-    icon: ImageIcon,
-    title: 'OLED 공진 시뮬레이터',
-    description: '14강에서 만든 Fabry-Perot 공진 기반 ITO 두께 최적화 시뮬레이터입니다.',
-    features: ['ITO 두께 슬라이더', '시야각 vs 휘도 그래프', 'R/G/B 최적값 출력'],
-    cost: 'Fabry-Perot 수식',
-    freeQuota: '14강 OLED 시뮬레이터',
+    step: 2,
+    title: '프로젝트 카드 작성',
+    desc: '최소 4개 프로젝트의 제목, 설명, URL, 기술 스택을 입력합니다.',
+    image: 'panel2.png',
   },
   {
-    icon: Activity,
-    title: '3D Warpage 시뮬레이터',
-    description: '15강에서 만든 다층 박막 열응력 및 휨 시뮬레이터입니다.',
-    features: ['중립축/곡률 계산', '3D 표면 플롯', '층별 응력 분포'],
-    cost: 'Three.js + 고체역학',
-    freeQuota: '15강 Warpage 시뮬레이터',
+    step: 3,
+    title: 'HTML 생성 & 미리보기',
+    desc: 'Generate 버튼으로 포트폴리오 HTML을 생성하고 미리보기를 확인합니다.',
+    image: 'panel3.png',
   },
   {
-    icon: BarChart3,
-    title: '통합 리포트',
-    description: '3개 시스템 결과를 종합해 헬스 스코어로 요약합니다.',
-    features: ['통합 메트릭', 'JSON 리포트', '헬스 스코어'],
-    cost: 'IntegratedAnalyzer',
-    freeQuota: '한 번의 클릭',
+    step: 4,
+    title: 'GitHub Pages 배포',
+    desc: '생성된 HTML을 GitHub repo에 올리고 Pages를 활성화합니다.',
+    image: 'panel4.png',
   },
 ];
 
-const fieldScenarios = [
+const qualityChecklist = [
+  '프로젝트 4개 이상의 URL이 입력되었는가?',
+  '각 카드에 제목, 설명, 기술 스택이 있는가?',
+  '생성된 HTML을 브라우저에서 미리보기했는가?',
+  'GitHub Pages에 index.html이 배포되었는가?',
+  '포트폴리오 URL에서 모든 카드 링크가 정상 동작하는가?',
+];
+
+const keyMessages = [
   {
-    icon: Database,
-    title: '반도체: 통합 운영 대시보드',
-    before: '수율 분석, 결함 검사, 센서 모니터링을 각각 다른 스크립트로 실행',
-    intent: '세 시스템을 하나의 Streamlit 앱으로 묶고, 사이드바에서 페이지를 전환하면서 통합 리포트를 만들어줘.',
-    output: 'Streamlit 앱이 3개 페이지를 통합하고 통합 메트릭/JSON 리포트 제공',
+    icon: Layers,
+    color: '#4285F4',
+    text: '포트폴리오의 핵심은 코드 양이 아닙니다. 처음 보는 사람이 클릭 한 번으로 체험할 수 있는 데모 URL이 핵심입니다.',
   },
   {
-    icon: ImageIcon,
-    title: '디스플레이: 라인 통합 모니터',
-    before: 'OLED 공진 시뮬레이터, Warpage 분석, 공정 데이터가 각각 분리',
-    intent: 'OLED ITO 최적화, Warpage 예측, 데이터 분석을 하나의 대시보드로 통합해줘.',
-    output: '한 화면에서 공진·응력·데이터를 통합 시각화 + Streamlit Cloud로 공유',
+    icon: Eye,
+    color: '#34A853',
+    text: 'GitHub Pages, Streamlit Cloud, AI Studio 공유 링크 — 12~15강에서 만든 모든 결과물이 한 페이지에 모입니다.',
   },
   {
-    icon: Github,
-    title: '취업 포트폴리오',
-    before: '코드는 로컬에만 있고 README 없음, 회사에 보여줄 결과물 부재',
-    intent: 'README와 스크린샷, 실행 방법을 정리해 GitHub Public + Streamlit Cloud로 공개해줘.',
-    output: 'github.com/username/ai-dashboard 공개 + 채용 담당자가 바로 클릭하는 데모 URL',
+    icon: AlertTriangle,
+    color: '#EA4335',
+    text: 'README와 .env.example 없이 코드만 올리면 채용 담당자는 실행할 수 없습니다. 항상 데모 URL을 최상단에.',
   },
 ];
 
-const setupSteps = [
-  { step: '1', title: '프로젝트 구조 생성', body: 'app.py + pages/ + utils/ 폴더', duration: '2분' },
-  { step: '2', title: '3개 페이지 작성', body: '데이터/이미지/센서 페이지 통합', duration: '15분' },
-  { step: '3', title: 'README & requirements', body: 'README.md, requirements.txt 작성', duration: '5분' },
-  { step: '4', title: 'GitHub & Streamlit Cloud', body: 'Public 저장소 푸시, 클라우드 배포', duration: '8분' },
+const deployComparison = [
+  { lecture: '12강', platform: 'GitHub Pages', desc: '정적 문서', active: false },
+  { lecture: '13강', platform: 'Streamlit Cloud', desc: '데이터 분석 앱', active: false },
+  { lecture: '14강', platform: 'AI Studio 링크', desc: 'OLED 시뮬레이터', active: false },
+  { lecture: '15강', platform: 'AI Studio 링크', desc: 'Warpage 시뮬레이터', active: false },
+  { lecture: '16강', platform: 'GitHub Pages', desc: '통합 포트폴리오 대시보드', active: true },
 ];
 
-const intentChecklist = [
-  'Streamlit 멀티페이지 구조(app.py + pages/)가 만들어졌는가?',
-  '데이터·OLED·Warpage 페이지가 모두 동작하는가?',
-  'IntegratedAnalyzer가 3개 결과를 하나의 JSON으로 묶는가?',
-  'README.md에 기능·기술 스택·실행 방법이 모두 적혔는가?',
-  'GitHub Public 저장소와 Streamlit Cloud 데모가 열리는가?',
-];
+/* ===== 헬퍼 컴포넌트 ===== */
 
-const streamlitVerifyPoints = [
-  'app.py가 set_page_config로 wide 레이아웃을 설정하는가?',
-  'pages/ 폴더의 파일명이 사이드바 메뉴로 잘 노출되는가?',
-  'st.metric, st.dataframe, st.file_uploader가 정상 동작하는가?',
-];
-
-const integrationVerifyPoints = [
-  'IntegratedAnalyzer가 OLEDSimulator, WarpageSimulator, DataAnalyzer를 인스턴스화하는가?',
-  'generate_report 반환 JSON에 timestamp가 포함되는가?',
-  'health_score가 0~100 범위로 계산되는가?',
-];
-
-const portfolioVerifyPoints = [
-  'README.md에 스크린샷·실행 명령·라이선스가 모두 포함됐는가?',
-  '.env.example로 GEMINI_API_KEY 입력 위치를 안내했는가?',
-  'Streamlit Cloud 데모 URL이 README 최상단에 있는가?',
-];
-
-const dashboardComparison = [
-  { model: '통합 Streamlit', price: '무료 Cloud', context: '1개 앱·웹 UI', free: '24/7 공개', score: 96 },
-  { model: '개별 스크립트', price: '실행 환경 필수', context: '터미널 출력', free: '공유 어려움', score: 55 },
-  { model: '엑셀 + 폴더', price: '수기 정리', context: '시각화 없음', free: '버전 관리 X', score: 40 },
-];
-
-// ============================================================================
-// HELPER COMPONENTS
-// ============================================================================
-
-function GoalVisual({ type }: { type: string }) {
-  if (type === 'api') {
-    return (
-      <div className="goal-visual definition">
-        <div className="visual-item person">
-          <Code size={18} />
-          <span>app.py</span>
-        </div>
-        <ArrowRight size={14} className="visual-arrow" />
-        <div className="visual-item ai">
-          <Layout size={18} />
-          <span>pages/</span>
-        </div>
-      </div>
-    );
-  }
-  if (type === 'knowledge') {
-    return (
-      <div className="goal-visual elements">
-        <div className="element-tag">데이터</div>
-        <div className="element-tag">이미지</div>
-        <div className="element-tag">센서</div>
-      </div>
-    );
-  }
-  if (type === 'deploy') {
-    return (
-      <div className="goal-visual field">
-        <div className="field-icons">
-          <div className="f-icon"><Github size={18} /></div>
-          <div className="f-icon"><Cloud size={18} /></div>
-        </div>
-        <div className="success-indicator">
-          <CheckCircle2 size={12} />
-          <span>Public 배포 완료</span>
-        </div>
-      </div>
-    );
-  }
-  return null;
-}
-
-function DashboardChart() {
-  const max = Math.max(...dashboardComparison.map((item) => item.score));
-
+function GoalVisual({ goal }: { goal: (typeof learningGoals)[0] }) {
+  const typeColor: Record<string, string> = {
+    create: '#4285F4',
+    customize: '#34A853',
+    deploy: '#FBBC04',
+  };
   return (
-    <div className="visual-card">
+    <div className="visual-card" style={{ borderTop: `4px solid ${typeColor[goal.type]}` }}>
       <div className="visual-header">
-        <span>관리 방식 비교</span>
-        <strong>종합 점수</strong>
+        <span className="step-badge" style={{ background: typeColor[goal.type] }}>
+          Step {goal.step}
+        </span>
+        <h3>{goal.title}</h3>
       </div>
-      <div className="bar-chart" role="img" aria-label="대시보드 통합 방식 비교 차트">
-        {dashboardComparison.map((item) => (
-          <div className="bar-row" key={item.model}>
-            <span>{item.model}</span>
-            <div>
-              <i style={{ width: `${(item.score / max) * 100}%` }} />
-            </div>
-            <strong>{item.score}</strong>
-          </div>
-        ))}
-      </div>
-      <p>Streamlit 통합 앱은 웹 UI, 24/7 공유, 무료 클라우드 호스팅까지 한 번에 해결합니다.</p>
+      <p>{goal.body}</p>
     </div>
   );
 }
 
-function LectureImage({
-  src,
-  alt,
-  caption,
-  variant = 'wide',
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-  variant?: 'wide' | 'poster';
-}) {
+function KeyMessageBox({ msg }: { msg: (typeof keyMessages)[0] }) {
+  const Icon = msg.icon;
   return (
-    <figure className={`lecture-image ${variant}`}>
-      <img src={assetUrl(src)} alt={alt} loading="lazy" />
-      <figcaption>{caption}</figcaption>
-    </figure>
+    <div className="key-message-box" style={{ borderLeft: `4px solid ${msg.color}` }}>
+      <Icon size={24} color={msg.color} />
+      <p>{msg.text}</p>
+    </div>
   );
 }
 
-function VerifyChecklist({ points }: { points: string[] }) {
+function PromptCard({ title, content }: { title: string; content: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="prompt-card">
+      <div className="prompt-header">
+        <span>{title}</span>
+        <button onClick={handleCopy} className="copy-btn">
+          {copied ? <Check size={16} /> : <Copy size={16} />}
+          {copied ? '복사됨' : '복사'}
+        </button>
+      </div>
+      <pre className="prompt-content">{content}</pre>
+    </div>
+  );
+}
+
+function LectureImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="lecture-image">
+      <img src={assetUrl(src)} alt={alt} loading="lazy" />
+    </div>
+  );
+}
+
+function VerifyChecklist() {
+  const [checks, setChecks] = useState<boolean[]>(new Array(qualityChecklist.length).fill(false));
+  const toggle = (i: number) => {
+    const next = [...checks];
+    next[i] = !next[i];
+    setChecks(next);
+  };
+  const done = checks.filter(Boolean).length;
   return (
     <div className="verify-checklist">
-      <span>엔지니어 검증 포인트</span>
-      {points.map((point) => (
-        <div className="verify-item" key={point}>
-          <CheckCircle2 size={15} />
-          <p>{point}</p>
-        </div>
-      ))}
+      <h3>품질 체크리스트 ({done}/{qualityChecklist.length})</h3>
+      <ul>
+        {qualityChecklist.map((item, i) => (
+          <li key={i} onClick={() => toggle(i)} className={checks[i] ? 'checked' : ''}>
+            <span className="checkbox">{checks[i] ? '\u2713' : ''}</span>
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-// ============================================================================
-// DEEP DIVE SECTIONS
-// ============================================================================
-
-function StreamlitDeepDive() {
+function ProcedureCard({ step }: { step: (typeof procedureSteps)[0] }) {
   return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 01 Deep Dive</span>
-        <h3>Streamlit 멀티페이지 구조: app.py + pages/ 하나로 묶기</h3>
-        <p>
-          분산된 .py 스크립트를 Streamlit 멀티페이지 앱으로 정리하면, 사이드바 자동 메뉴와
-          공통 위젯으로 데이터·OLED·Warpage 페이지를 한 번에 운영할 수 있습니다.
-        </p>
-        <LectureImage
-          src="panel1.png"
-          alt="Streamlit app.py와 pages/ 폴더 구조, 사이드바 자동 메뉴 다이어그램"
-          caption="app.py는 메인 페이지, pages/ 폴더의 파일이 자동으로 사이드바 메뉴가 됩니다."
-        />
+    <div className="procedure-card">
+      <div className="procedure-header">
+        <span className="procedure-number">{step.step}</span>
+        <h4>{step.title}</h4>
       </div>
-
-      <div className="yield-case-compare vertical-case-flow" aria-label="Streamlit 멀티페이지 Before Prompt After">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 분산된 .py 스크립트</span>
-          <h4>analyze_data.py, check_images.py, monitor_sensors.py를 각각 터미널로 실행</h4>
-          <ul>
-            <li>기능마다 별도 파이썬 파일을 따로 실행</li>
-            <li>결과는 print 출력 또는 로컬 CSV로만 확인</li>
-            <li>동료와 공유하려면 환경 설치부터 다시 안내</li>
-            <li>실시간 차트나 위젯이 없어 보고용으로 부적합</li>
-          </ul>
-          <div className="mini-excel dense-excel">
-            <strong>분산 스크립트 흐름</strong>
-            <div style={{ padding: '1rem', background: '#f5f5f7', borderRadius: '8px', marginTop: '0.5rem' }}>
-              <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
-                1. python analyze_data.py<br/>
-                2. python check_images.py<br/>
-                3. python monitor_sensors.py<br/>
-                4. 결과를 엑셀로 옮겨 보고<br/>
-                5. 매번 환경/경로 설명 반복
-              </p>
-            </div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: Streamlit 통합 지시</span>
-          <h4>app.py + pages/ 구조로 한 번에 묶어주세요</h4>
-          <p>
-            "Streamlit 멀티페이지 구조로 묶어줘. app.py는 set_page_config(layout='wide')과
-            대시보드 메트릭을 보여주고, pages/ 폴더에 데이터분석/OLED시뮬레이터/Warpage시뮬레이터 페이지를
-            한국어 파일명으로 만들어줘. 각 페이지에는 file_uploader, dataframe, button 위젯과
-            결과 표시 영역을 배치해줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>app.py</strong><span>set_page_config + metric</span></div>
-            <div><strong>pages/</strong><span>한국어 파일명 자동 메뉴</span></div>
-            <div><strong>위젯</strong><span>file_uploader, dataframe</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>streamlit run app.py 한 줄로 통합 대시보드가 열립니다</h4>
-          <div className="code-preview-box">
-            <div className="visual-header">
-              <span>Streamlit App</span>
-              <strong>app.py + pages/</strong>
-            </div>
-            <pre style={{ background: '#1e1e1e', color: '#d4d4d4', padding: '1rem', borderRadius: '8px', fontSize: '0.82rem', overflow: 'auto' }}>{`ai_dashboard/
-├── app.py
-├── pages/
-│   ├── 1_데이터분석.py
-│   ├── 2_OLED시뮬레이터.py
-│   └── 3_Warpage시뮬레이터.py
-├── utils/
-│   ├── data_analyzer.py
-│   ├── oled_simulator.py
-│   └── warpage_simulator.py
-├── requirements.txt
-└── README.md
-
-# app.py
-import streamlit as st
-
-st.set_page_config(page_title="AI Dashboard", layout="wide")
-st.title("AI 자동화 통합 대시보드")
-st.markdown("13~15강 모든 기능 통합")
-
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.metric("총 분석", "1,234", "+12%")
-with col2:
-    st.metric("OLED 최적화", "3건", "R/G/B")
-with col3:
-    st.metric("Warpage", "2건", "Si/Cu")
-
-# pages/1_데이터분석.py
-import streamlit as st
-import pandas as pd
-
-st.title("데이터 분석")
-uploaded_file = st.file_uploader("CSV 업로드", type="csv")
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
-    st.dataframe(df)
-    if st.button("Gemini 분석 실행"):
-        insights = get_gemini_insights(df)
-        st.success("분석 완료!")
-        st.write(insights)`}</pre>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>3개 → 1개</strong><span>실행 명령 단순화</span></div>
-            <div><strong>웹 UI</strong><span>file_uploader/metric</span></div>
-            <div><strong>자동 메뉴</strong><span>pages/ 파일명 기반</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 Streamlit이 자동으로 라우팅을 만들어주는 구조를 활용해, 13~15강에서 만든
-        모듈을 그대로 import해 페이지로 노출하는 것입니다.
-      </p>
-      <VerifyChecklist points={streamlitVerifyPoints} />
-    </div>
-  );
-}
-
-function IntegrationDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 02 Deep Dive</span>
-        <h3>3개 시스템 통합: IntegratedAnalyzer로 한 번에 리포트 만들기</h3>
-        <p>
-          DataAnalyzer, OLEDSimulator, WarpageSimulator를 한 클래스로 감싸고 generate_report()를
-          호출하면, 세 시스템의 최신 결과가 하나의 JSON으로 정리됩니다.
-        </p>
-        <LectureImage
-          src="panel2.png"
-          alt="IntegratedAnalyzer가 데이터·OLED·Warpage 결과를 통합 리포트로 합치는 구조"
-          caption="한 번의 호출로 3개 모듈 결과를 합치고, 통합 메트릭과 헬스 스코어까지 함께 반환합니다."
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 결과 수동 조합</span>
-          <h4>분석 결과를 엑셀에 직접 옮겨 비교</h4>
-          <ul>
-            <li>데이터 분석은 CSV, OLED 시뮬레이션은 JSON, Warpage 결과는 별도 파일</li>
-            <li>3가지 결과를 사람이 엑셀에 복사·붙여넣기로 정리</li>
-            <li>버전·시점이 어긋나 어제/오늘 자료가 섞이기 쉬움</li>
-            <li>헬스 스코어 같은 종합 지표는 만들 수 없음</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: 통합 리포트 지시</span>
-          <h4>IntegratedAnalyzer 클래스로 묶어주세요</h4>
-          <p>
-            "DataAnalyzer, OLEDSimulator, WarpageSimulator를 멤버로 갖는 IntegratedAnalyzer
-            클래스를 만들어줘. generate_report()는 timestamp, data, image, sensor, health_score
-            키를 갖는 dict를 반환하고, calculate_health()로 0~100 점수를 계산해줘."
-          </p>
-          <div className="aoi-rule-grid">
-            <div><strong>클래스</strong><span>IntegratedAnalyzer</span></div>
-            <div><strong>출력</strong><span>timestamp + 3개 결과 + score</span></div>
-            <div><strong>호출</strong><span>generate_report() 한 줄</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>Streamlit 버튼 한 번이면 통합 리포트가 화면에 뜹니다</h4>
-          <div className="notebooklm-result-box">
-            <div className="visual-header">
-              <span>Integrated Report</span>
-              <strong>JSON 통합 출력</strong>
-            </div>
-            <div style={{ padding: '1rem', background: '#f0f7ff', borderRadius: '8px', border: '1px solid #d1e7ff' }}>
-              <pre style={{ fontSize: '0.82rem', lineHeight: '1.7', color: '#1d1d1f', margin: 0 }}>{`# utils/integrated_analyzer.py
-class IntegratedAnalyzer:
-    def __init__(self):
-        self.data_analyzer = DataAnalyzer()
-        self.image_inspector = OLEDSimulator()
-        self.sensor_predictor = WarpageSimulator()
-
-    def generate_report(self):
-        data_results = self.data_analyzer.get_latest()
-        image_results = self.image_inspector.get_summary()
-        sensor_results = self.sensor_predictor.get_alerts()
-
-        return {
-          'timestamp': datetime.now(),
-          'data': data_results,
-          'image': image_results,
-          'sensor': sensor_results,
-          'health_score': self.calculate_health(),
-        }
-
-# pages/통합리포트.py
-if st.button("통합 리포트 생성"):
-    report = IntegratedAnalyzer().generate_report()
-    col1, col2, col3 = st.columns(3)
-    col1.metric("데이터", report['data']['status'])
-    col2.metric("불량", report['image']['defects'])
-    col3.metric("알림", report['sensor']['alerts'])
-    st.json(report)`}</pre>
-            </div>
-          </div>
-          <div className="aoi-impact-strip">
-            <div><strong>1회 클릭</strong><span>3개 결과 동시 갱신</span></div>
-            <div><strong>일관된 시점</strong><span>timestamp 공유</span></div>
-            <div><strong>헬스 스코어</strong><span>0~100 종합 지표</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 3개 모듈을 강제로 합치는 것이 아니라, 인터페이스(get_latest/get_summary/get_alerts)를
-        통일해 IntegratedAnalyzer가 그대로 조립할 수 있도록 만드는 것입니다.
-      </p>
-      <VerifyChecklist points={integrationVerifyPoints} />
-    </div>
-  );
-}
-
-function PortfolioDeepDive() {
-  return (
-    <div className="deep-dive">
-      <div className="deep-dive-heading">
-        <span>Case 03 Deep Dive</span>
-        <h3>GitHub & Streamlit Cloud: 채용 담당자가 바로 클릭하는 포트폴리오</h3>
-        <p>
-          README, requirements.txt, .env.example을 갖춘 Public 저장소를 만들고 Streamlit Cloud에
-          연결하면, 누구나 데모 URL 하나로 프로젝트를 체험할 수 있습니다.
-        </p>
-        <LectureImage
-          src="lecture-16-dashboard.png"
-          alt="GitHub Public 저장소와 Streamlit Cloud 배포 흐름"
-          caption="git push가 일어나면 GitHub Actions가 검사하고 Streamlit Cloud가 자동으로 배포합니다."
-          variant="poster"
-        />
-      </div>
-
-      <div className="yield-case-compare vertical-case-flow">
-        <article className="yield-case-panel manual-panel">
-          <span>Before: 로컬에만 있는 코드</span>
-          <h4>면접 때 노트북을 열어 보여줘야 하는 프로젝트</h4>
-          <ul>
-            <li>README가 없거나 한 줄짜리</li>
-            <li>requirements.txt 없이 패키지 버전 일치 어려움</li>
-            <li>채용 담당자는 코드를 실행해보지 못하고 글만 읽음</li>
-            <li>면접에서 시간 안에 시연이 어려움</li>
-          </ul>
-        </article>
-
-        <article className="yield-case-panel prompt-panel">
-          <span>Prompt: 포트폴리오 배포 지시</span>
-          <h4>README와 클라우드 배포까지 한 번에 정리해주세요</h4>
-          <p>
-            "AI 자동화 통합 대시보드 README를 작성해줘. 주요 기능, 기술 스택, 실행 방법
-            (git clone, pip install, .env 설정, streamlit run), 스크린샷 위치, 라이선스(MIT)를
-            포함하고, GitHub Public 저장소와 Streamlit Cloud 무료 호스팅을 연결하는 절차도
-            함께 알려줘."
-          </p>
-          <div className="aoi-rule-grid sensor-rule-grid">
-            <div><strong>README</strong><span>기능·스택·실행</span></div>
-            <div><strong>GitHub</strong><span>Public 저장소</span></div>
-            <div><strong>Streamlit Cloud</strong><span>무료 호스팅 URL</span></div>
-          </div>
-        </article>
-
-        <article className="yield-case-panel result-panel">
-          <span>After: AI 산출물</span>
-          <h4>README + 데모 URL이 채용 담당자 손에 바로 닿습니다</h4>
-          <div className="firebase-result-box">
-            <div className="visual-header">
-              <span>Portfolio Package</span>
-              <strong>README + Cloud URL</strong>
-            </div>
-            <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-              <pre style={{ fontSize: '0.82rem', lineHeight: '1.7', color: '#1d1d1f', margin: 0 }}>{`# AI 자동화 통합 대시보드
-
-제조 현장 데이터 분석, OLED 최적화, 센서 예측을
-하나로 통합한 Streamlit 웹 대시보드.
-
-## 주요 기능
-- 데이터 분석: CSV 업로드 → Gemini 인사이트
-- OLED 최적화: Vision API 결함 검출
-- 센서 예측: Prophet 시계열 + 알림
-
-## 기술 스택
-- Python 3.10+, Streamlit, Gemini API
-- Prophet, Plotly, Pandas
-
-## 실행 방법
-git clone https://github.com/username/ai-dashboard.git
-cd ai-dashboard
-pip install -r requirements.txt
-cp .env.example .env  # GEMINI_API_KEY 입력
-streamlit run app.py
-
-## 데모
-https://ai-dashboard.streamlit.app
-
-## 라이선스
-MIT License`}</pre>
-            </div>
-          </div>
-          <div className="aoi-impact-strip sensor-impact-strip">
-            <div><strong>Public 공개</strong><span>채용 담당자 즉시 확인</span></div>
-            <div><strong>데모 URL</strong><span>설치 없이 클릭 실행</span></div>
-            <div><strong>자동 배포</strong><span>git push → 자동 빌드</span></div>
-          </div>
-        </article>
-      </div>
-
-      <p className="case-takeaway">
-        핵심은 "코드가 깔끔한가"가 아니라 "처음 보는 사람도 5분 안에 실행해볼 수 있는가"입니다.
-        README와 데모 URL이 두 가지 모두를 책임집니다.
-      </p>
-      <VerifyChecklist points={portfolioVerifyPoints} />
+      <p>{step.desc}</p>
+      <LectureImage src={step.image} alt={step.title} />
     </div>
   );
 }
 
 function InteractiveWorkshop() {
   const [fields, setFields] = useState({
-    streamlit: '',
-    integration: '',
-    portfolio: '',
+    projectCount: '',
+    githubRepo: '',
+    pagesUrl: '',
   });
-  const [copied, setCopied] = useState(false);
-
-  const hasContent = Object.values(fields).some(Boolean);
-
-  const generated = hasContent
-    ? `1. Streamlit 구조: ${fields.streamlit || '[예: app.py + pages/ 3개 + utils/]'}
-2. 통합 리포트: ${fields.integration || '[예: IntegratedAnalyzer.generate_report()]'}
-3. 포트폴리오 배포: ${fields.portfolio || '[예: GitHub Public + Streamlit Cloud URL]'}
-
-다음 단계: 로컬 streamlit run → GitHub push → Streamlit Cloud 연결`
-    : '';
-
-  const handleCopy = () => {
-    if (!generated) return;
-    navigator.clipboard.writeText(generated).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
-  };
-
-  const inputRows: { key: keyof typeof fields; label: string; placeholder: string }[] = [
-    { key: 'streamlit', label: 'Streamlit 구조', placeholder: '예: app.py + pages/1_데이터분석.py 등 3개 페이지' },
-    { key: 'integration', label: '통합 리포트 구성', placeholder: '예: IntegratedAnalyzer.generate_report() + health_score' },
-    { key: 'portfolio', label: '포트폴리오 배포', placeholder: '예: GitHub Public + Streamlit Cloud 데모 URL' },
-  ];
+  const update = (key: string, val: string) => setFields({ ...fields, [key]: val });
+  const allFilled = Object.values(fields).every((v) => v.trim() !== '');
 
   return (
     <div className="interactive-workshop">
-      <div className="iw-header">
-        <Layout size={22} color="var(--accent)" />
-        <strong>3단계 통합 대시보드 체크</strong>
-        <p>구조·통합·배포를 입력하면 실습 체크리스트가 자동 생성됩니다.</p>
+      <h3>실습 기록</h3>
+      <p>아래에 오늘 실습 결과를 기록하세요.</p>
+      <div className="workshop-fields">
+        <label>
+          입력한 프로젝트 수
+          <input
+            type="text"
+            placeholder="예: 5"
+            value={fields.projectCount}
+            onChange={(e) => update('projectCount', e.target.value)}
+          />
+        </label>
+        <label>
+          GitHub Repo URL
+          <input
+            type="text"
+            placeholder="https://github.com/username/portfolio"
+            value={fields.githubRepo}
+            onChange={(e) => update('githubRepo', e.target.value)}
+          />
+        </label>
+        <label>
+          GitHub Pages URL
+          <input
+            type="text"
+            placeholder="https://username.github.io/portfolio"
+            value={fields.pagesUrl}
+            onChange={(e) => update('pagesUrl', e.target.value)}
+          />
+        </label>
       </div>
-      <div className="iw-body">
-        <div className="iw-inputs">
-          {inputRows.map((row) => (
-            <div className="iw-field" key={row.key}>
-              <label htmlFor={`iw-${row.key}`}>{row.label}</label>
-              <input
-                id={`iw-${row.key}`}
-                type="text"
-                placeholder={row.placeholder}
-                value={fields[row.key]}
-                onChange={(e) => setFields((prev) => ({ ...prev, [row.key]: e.target.value }))}
-              />
-            </div>
-          ))}
+      {allFilled && (
+        <div className="workshop-success">
+          모든 항목이 입력되었습니다! 포트폴리오 배포를 완료했습니다.
         </div>
-        <div className="iw-output">
-          <div className="iw-output-header">
-            <Rocket size={18} color="var(--accent)" />
-            <strong>실습 체크리스트</strong>
-          </div>
-          <div className={`iw-generated-text ${hasContent ? 'active' : ''}`}>
-            {generated || '위 3단계를 입력하면\n실습 체크리스트가 표시됩니다.'}
-          </div>
-          <button
-            className={`iw-copy-btn ${copied ? 'copied' : ''}`}
-            onClick={handleCopy}
-            disabled={!hasContent}
-          >
-            {copied
-              ? <><Check size={15} />복사됨!</>
-              : <><Copy size={15} />체크리스트 복사</>}
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -677,331 +264,174 @@ function InteractiveWorkshop() {
 function FirstRunGuide() {
   return (
     <div className="first-run-guide">
-      <div className="frg-title">
-        <ChevronRight size={18} color="var(--accent)" />
-        <strong>지금 바로 해보기 — 통합 대시보드 첫 배포</strong>
-      </div>
-      <div className="frg-steps">
-        {setupSteps.map((item) => (
-          <div className="frg-step" key={item.step}>
-            <span className="frg-num">{item.step}</span>
-            <div>
-              <strong>{item.title}</strong>
-              <p>{item.body}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <h3>처음이신가요?</h3>
+      <ol>
+        <li>이 페이지 하단의 <strong>포트폴리오 생성기</strong>를 엽니다.</li>
+        <li>12~15강에서 배포한 URL을 준비합니다.</li>
+        <li>프로젝트 카드에 제목, 설명, URL을 입력합니다.</li>
+        <li>HTML을 생성하고 GitHub Pages에 배포합니다.</li>
+      </ol>
     </div>
   );
 }
 
-function NextLecturePreview() {
-  return (
-    <div className="next-lecture-card">
-      <div className="nlc-header">
-        <span>17강 미리보기</span>
-        <h3>기술 면접 & 피칭: 포트폴리오를 무기로 만드는 법</h3>
-        <p>완성된 통합 대시보드를 자기소개·면접·피칭 자료로 어떻게 활용할지, STAR 기법과 함께 정리합니다.</p>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// MAIN APP COMPONENT
-// ============================================================================
+/* ===== 메인 App ===== */
 
 export default function App() {
   return (
-    <div className="app-container">
+    <div className="app">
+      {/* 헤더 */}
       <header className="main-header">
-        <div className="header-top">
-          <motion.div
-            className="logo-group"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <img
-              src={assetUrl('logo.png')}
-              alt="LettUin Edu"
-              className="header-logo"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="header-tag-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="header-tag">통합 대시보드 & 포트폴리오 완성</span>
-          </motion.div>
+        <div className="logo-group">
+          <Rocket size={28} color="#4285F4" />
+          <span className="logo-text">렛유인 AI 코딩</span>
         </div>
-
-        <motion.div
-          className="hero-section"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h1>Ch.16 통합 대시보드 & 포트폴리오</h1>
-          <p className="subtitle">13~15강 시뮬레이터를 Streamlit으로 통합하고 GitHub Public + Streamlit Cloud로 공개합니다</p>
-          <div className="lesson-meta" aria-label="lesson summary">
-            <span>40분</span>
-            <span>실습 중심</span>
-            <span>Streamlit + GitHub</span>
-            <span>결과물: Public 데모 URL</span>
-          </div>
-        </motion.div>
+        <span className="header-tag">실습 URL을 모아 GitHub Pages 포트폴리오로 배포</span>
       </header>
 
-      <main>
-        <section className="overview-section">
-          <span className="section-label">01. 오프닝 및 학습목표</span>
-          <h2>오늘 여러분은 13~15강을 묶어 <mark>통합 대시보드 포트폴리오</mark>를 완성합니다</h2>
-          <p className="section-intro">
-            분산된 분석 스크립트를 Streamlit 멀티페이지로 묶고, IntegratedAnalyzer로 결과를
-            합친 다음, GitHub Public + Streamlit Cloud로 누구나 클릭 가능한 데모로 공개합니다.
-          </p>
-          <div className="learning-goals-grid" aria-label="학습목표">
-            {learningGoals.map((item) => (
-              <div className="learning-goal-card" key={item.step}>
-                <span>{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <div className="goal-visual-wrapper">
-                  <GoalVisual type={item.type} />
+      {/* 히어로 섹션 */}
+      <section className="hero-section">
+        <h1>Ch.16 통합 포트폴리오 대시보드</h1>
+        <p className="subtitle">
+          12~15강에서 만든 GitHub Pages, Streamlit, AI Studio 링크를 하나의 대시보드로 통합하고,
+          GitHub Pages로 배포합니다.
+        </p>
+        <div className="lesson-meta">
+          <span>40분</span>
+          <span>실습 중심</span>
+          <span>GitHub Pages</span>
+          <span>결과물: 포트폴리오 URL</span>
+        </div>
+      </section>
+
+      {/* 수업 흐름 */}
+      <section className="overview-section">
+        <h2>수업 흐름</h2>
+        <div className="flow-row">
+          {lessonFlow.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <React.Fragment key={i}>
+                <div className="flow-item">
+                  <Icon size={28} />
+                  <span>{item.label}</span>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="lesson-timeline" aria-label="40분 강의 진행표">
-            {lessonFlow.map((item) => (
-              <div className="timeline-step" key={item.label}>
-                <strong>{item.time}</strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('panel3.png')}
-              alt="통합 대시보드 코믹"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-        </section>
+                {i < lessonFlow.length - 1 && <ChevronRight size={20} className="flow-arrow" />}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </section>
 
-        <section className="definition-section">
-          <span className="section-label">02. 통합 대시보드란?</span>
-          <h2>Streamlit + 통합 클래스 + Public 배포가 합쳐진 <mark>한 화면 운영 시스템</mark>입니다</h2>
-          <p className="section-intro">
-            데이터 분석, OLED 최적화, 센서 예측이 모두 한 곳에 모이고, 사이드바 하나로 전환되며,
-            URL 하나로 누구에게나 공유됩니다.
-          </p>
-          <div className="one-line-definition inline-definition">
-            <span>한 문장 정의</span>
-            <strong>통합 대시보드는 13~15강 결과를 Streamlit 멀티페이지 + 통합 리포트 + Public 배포로 묶은 운영 가능한 포트폴리오입니다.</strong>
-          </div>
-          <LectureImage
-            src="integrated-dashboard-overview.png"
-            alt="데이터 분석, OLED 최적화, 센서 예측, 통합 리포트가 하나의 대시보드로 묶이는 개요"
-            caption="데이터·OLED·Warpage·리포트·포트폴리오까지 하나의 Streamlit 앱으로 패키징합니다."
-          />
-          <div className="role-flow" aria-label="통합 대시보드 역할 분리">
-            {roleFlow.map((item, index) => (
-              <div className="role-step" key={`${item.owner}-${item.task}`}>
-                <span>{item.owner}</span>
-                <strong>{item.task}</strong>
-                {index < roleFlow.length - 1 && <ArrowRight size={22} />}
-              </div>
-            ))}
-          </div>
-          <div className="scenario-grid">
-            {dashboardFeatures.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.description}</p>
-                  <div className="intent-box">
-                    <span>대표 위젯/기능</span>
-                    <ul style={{ paddingLeft: '1.2rem', margin: '0.5rem 0 0 0' }}>
-                      {item.features.map((f) => <li key={f}>{f}</li>)}
-                    </ul>
-                  </div>
-                  <p className="scenario-output">{item.cost} / {item.freeQuota}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <div className="coding-compare-grid" style={{ marginTop: '3rem' }}>
-            <motion.article
-              className="coding-compare-card traditional"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <img src={assetUrl('panel1.png')} alt="분산된 개별 시뮬레이터" />
-              <div className="compare-content">
-                <span className="compare-kicker">Traditional (Separate Scripts)</span>
-                <h3>기능마다 따로 실행하는 개별 스크립트</h3>
-                <p>
-                  데이터 분석, OLED 최적화, 센서 예측이 각각 다른 .py 파일에 흩어져 있어
-                  실행 명령과 결과 경로가 매번 달라지고, 공유와 시각화가 어렵습니다.
-                </p>
-                <ul>
-                  <li>매번 터미널에서 별도 명령 실행</li>
-                  <li>결과를 사람이 엑셀에 옮겨 정리</li>
-                  <li>README 없음, 공유·재현 어려움</li>
-                </ul>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="coding-compare-card vibe"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.08 }}
-            >
-              <img src={assetUrl('panel3.png')} alt="통합 대시보드 포트폴리오" />
-              <div className="compare-content">
-                <span className="compare-kicker">Integrated Dashboard (Streamlit + GitHub)</span>
-                <h3>한 화면·한 URL로 운영되는 통합 대시보드</h3>
-                <p>
-                  Streamlit 멀티페이지로 3개 시스템을 묶고, IntegratedAnalyzer로 결과를
-                  합쳐 GitHub Public 저장소와 Streamlit Cloud URL로 누구에게나 공유합니다.
-                </p>
-                <ul>
-                  <li>streamlit run app.py 한 줄로 실행</li>
-                  <li>통합 메트릭과 JSON 리포트 자동 생성</li>
-                  <li>Public URL로 채용 담당자가 즉시 시연 가능</li>
-                </ul>
-              </div>
-            </motion.article>
-          </div>
-        </section>
-
-        <section>
-          <span className="section-label">03. 왜 통합 대시보드인가?</span>
-          <h2>분산 스크립트·엑셀 폴더 대비 운영성과 공유성에서 차원이 다릅니다</h2>
-          <p className="section-intro">
-            개별 스크립트는 실행할 사람만 결과를 봅니다. 통합 대시보드는 한 URL로 누구나 보며,
-            결과는 항상 같은 인터페이스로 정리됩니다.
-          </p>
-          <DashboardChart />
-          <div className="highlight-box" style={{ background: '#f5f5f7', borderLeftColor: '#333' }}>
-            <p style={{ fontWeight: 700 }}>Target Point:</p>
-            <p>"통합 대시보드의 진짜 가치는 화려한 UI가 아니라, 13~15강 결과를 한 URL로 24/7 공유하면서 통합 리포트로 운영 의사결정을 돕는다는 점입니다."</p>
-          </div>
-        </section>
-
-        <section>
-          <span className="section-label">04. 첨단 공정기술 사례</span>
-          <h2>반도체·디스플레이·취업 포트폴리오에 통합 대시보드를 적용하는 법</h2>
-          <p className="section-intro">
-            현장 운영 모니터링, 라인 통합 대시보드, 그리고 채용용 포트폴리오까지 — 통합
-            대시보드는 같은 구조로 모두 활용 가능합니다.
-          </p>
-          <div className="scenario-grid">
-            {fieldScenarios.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  className="scenario-card"
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="scenario-icon">
-                    <Icon size={24} />
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p className="scenario-before">{item.before}</p>
-                  <div className="intent-box">
-                    <span>의도 지시문</span>
-                    <p>{item.intent}</p>
-                  </div>
-                  <p className="scenario-output">{item.output}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-          <StreamlitDeepDive />
-          <IntegrationDeepDive />
-          <PortfolioDeepDive />
-        </section>
-
-        <section className="workshop-section teaching-section">
-          <span className="section-label">05. 미니 워크숍</span>
-          <h2>실습: 내 첫 <mark>통합 대시보드 포트폴리오</mark> 설계하기</h2>
-          <p className="section-intro">
-            구조·통합·배포 3단계를 정의해 체크리스트로 복사한 뒤, 로컬 실행 → GitHub 푸시 →
-            Streamlit Cloud 배포 순으로 차례대로 진행하세요.
-          </p>
-          <div style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={assetUrl('comic.png')}
-              alt="통합 대시보드 실습 가이드"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-            />
-          </div>
-          <InteractiveWorkshop />
-          <FirstRunGuide />
-        </section>
-
-        <section>
-          <span className="section-label">06. 품질 점검 및 정리</span>
-          <h2>배포 전, 이 5가지만 확인하세요</h2>
-          <div className="checklist">
-            {intentChecklist.map((item) => (
-              <div className="check-item" key={item}>
-                <CheckCircle2 size={20} />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div className="wrap-message">
-            <Quote size={36} color="var(--accent)" />
-            <h3>"통합 대시보드의 본질은 '한 URL로 시연 가능한 운영 가능한 포트폴리오'입니다. 코드의 양보다 사용자가 5분 안에 체험할 수 있는지가 중요합니다."</h3>
-            <p>다음 강의: 기술 면접 & 피칭 — 포트폴리오를 무기로 (17강)</p>
-          </div>
-          <NextLecturePreview />
-        </section>
-
-        <section className="professional-point">
-          <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
-            <h3>Advanced Process Engineering Point</h3>
-            <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "통합 대시보드는 기능을 새로 만드는 것이 아니라, 13~15강에서 만든 모듈을 동일한 인터페이스로
-              묶고 한 URL로 공개하는 작업입니다. 엔지니어가 인터페이스를 정의하고, Streamlit이 화면을 만들며,
-              GitHub과 Streamlit Cloud가 배포를 책임집니다."<br/>
-              결과물은 코드가 아니라 '클릭 가능한 시연'입니다.
-            </p>
-            <div className="point-strip">
-              <span><Layout size={16} /> Streamlit은 화면 엔진</span>
-              <span><Layers size={16} /> IntegratedAnalyzer는 통합 허브</span>
-              <span><Github size={16} /> GitHub은 시연 채널</span>
+      {/* 역할 분담 */}
+      <section className="definition-section">
+        <h2>역할 분담</h2>
+        <div className="role-flow">
+          {roleFlow.map((r, i) => (
+            <div className="role-card" key={i}>
+              <strong>{r.role}</strong>
+              <p>{r.desc}</p>
             </div>
-          </div>
-        </section>
-      </main>
+          ))}
+        </div>
+      </section>
 
-      <footer>
-        <p>© 2026 Integrated Dashboard for Fine Tech Engineering | LettUin Edu</p>
+      {/* 학습 목표 */}
+      <section className="goals-section">
+        <h2>학습 목표</h2>
+        <div className="goals-grid">
+          {learningGoals.map((g) => (
+            <GoalVisual key={g.step} goal={g} />
+          ))}
+        </div>
+      </section>
+
+      {/* 핵심 메시지 */}
+      <section className="messages-section">
+        <h2>핵심 메시지</h2>
+        {keyMessages.map((m, i) => (
+          <KeyMessageBox key={i} msg={m} />
+        ))}
+      </section>
+
+      {/* 배포 비교표 */}
+      <section className="deep-dive">
+        <h2 className="deep-dive-heading">배포 플랫폼 비교 (12~16강)</h2>
+        <div className="comparison-table">
+          <table>
+            <thead>
+              <tr>
+                <th>강의</th>
+                <th>플랫폼</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              {deployComparison.map((row, i) => (
+                <tr key={i} className={row.active ? 'active-row' : ''}>
+                  <td>{row.lecture}</td>
+                  <td>{row.platform}</td>
+                  <td>
+                    {row.desc}
+                    {row.active && <span className="current-badge"> (현재 강의)</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* 실습 절차 */}
+      <section className="procedure-section">
+        <h2>실습 절차</h2>
+        <div className="procedure-grid">
+          {procedureSteps.map((s) => (
+            <ProcedureCard key={s.step} step={s} />
+          ))}
+        </div>
+      </section>
+
+      {/* 프롬프트 / 명령어 카드 */}
+      <section className="prompt-section">
+        <h2>GitHub Pages 배포 명령어</h2>
+        <PromptCard
+          title="Git 초기화 및 Push"
+          content={"git init\ngit add index.html\ngit commit -m \"Add portfolio dashboard\"\ngit branch -M main\ngit remote add origin https://github.com/USERNAME/portfolio.git\ngit push -u origin main"}
+        />
+        <PromptCard
+          title="GitHub Pages 활성화 경로"
+          content={"Repository Settings > Pages > Source: Deploy from a branch\nBranch: main > / (root) > Save\n\n약 1~2분 후 URL 활성화:\nhttps://USERNAME.github.io/portfolio/"}
+        />
+      </section>
+
+      {/* 첫 실행 가이드 */}
+      <FirstRunGuide />
+
+      {/* 품질 체크리스트 */}
+      <VerifyChecklist />
+
+      {/* 실습 워크숍 */}
+      <InteractiveWorkshop />
+
+      {/* 생성기 링크 */}
+      <section className="generator-link-section">
+        <h2>포트폴리오 생성기</h2>
+        <p>아래 버튼을 눌러 포트폴리오 생성기를 새 탭에서 열 수 있습니다.</p>
+        <a
+          href="./portfolio-generator.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="generator-btn"
+        >
+          <ExternalLink size={18} />
+          포트폴리오 생성기 열기
+        </a>
+      </section>
+
+      {/* 푸터 */}
+      <footer className="main-footer">
+        <p>렛유인 AI 코딩 과정 &mdash; Ch.16 통합 포트폴리오 대시보드</p>
       </footer>
     </div>
   );

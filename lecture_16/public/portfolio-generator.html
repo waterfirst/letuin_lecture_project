@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI 엔지니어 포트폴리오 생성기</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f1117;color:#e4e4e7;min-height:100vh;line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:24px 20px}
+h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#4285F4,#34A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.page-desc{color:#a1a1aa;margin-bottom:32px;font-size:0.95rem}
+/* 프로필 섹션 */
+.section-title{font-size:1.1rem;font-weight:600;margin-bottom:12px;color:#f4f4f5;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:4px;height:20px;background:#4285F4;border-radius:2px}
+.profile-section{background:#1a1b23;border:1px solid #27272a;border-radius:12px;padding:20px;margin-bottom:24px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profile-grid .full{grid-column:1/-1}
+label{display:block;font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;font-weight:500}
+input,textarea,select{width:100%;padding:10px 12px;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#f4f4f5;font-size:0.9rem;font-family:inherit;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#4285F4}
+textarea{resize:vertical;min-height:48px}
+/* 프로젝트 카드 */
+.projects-section{margin-bottom:24px}
+.project-card{background:#1a1b23;border:1px solid #27272a;border-radius:12px;padding:20px;margin-bottom:16px;position:relative}
+.project-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.project-card-header span{font-weight:600;color:#4285F4}
+.btn-delete{background:#3f3f46;border:none;color:#ef4444;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:500;transition:background .2s}
+.btn-delete:hover{background:#ef4444;color:#fff}
+.project-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.project-fields .full{grid-column:1/-1}
+/* 버튼들 */
+.btn-row{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.btn{padding:12px 24px;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-add{background:#27272a;color:#4285F4;border:1px dashed #4285F4}
+.btn-add:hover{background:#1e3a5f}
+.btn-generate{background:linear-gradient(135deg,#4285F4,#34A853);color:#fff}
+.btn-generate:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(66,133,244,.4)}
+.btn-download{background:#34A853;color:#fff}
+.btn-download:hover{background:#2d9148}
+.btn-download:disabled{opacity:.4;cursor:not-allowed}
+/* 미리보기 */
+.preview-section{margin-top:32px}
+.preview-frame{width:100%;height:600px;border:1px solid #3f3f46;border-radius:12px;background:#fff}
+/* 반응형 */
+@media(max-width:600px){
+  .profile-grid,.project-fields{grid-template-columns:1fr}
+  .btn-row{flex-direction:column}
+  h1{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>AI 엔지니어 포트폴리오 생성기</h1>
+  <p class="page-desc">12~15강에서 만든 프로젝트 URL을 입력하고, 포트폴리오 HTML을 자동 생성하세요.</p>
+
+  <!-- 프로필 -->
+  <div class="profile-section">
+    <div class="section-title">프로필 정보</div>
+    <div class="profile-grid">
+      <div><label>이름</label><input id="profileName" placeholder="홍길동"/></div>
+      <div><label>GitHub URL</label><input id="profileGithub" placeholder="https://github.com/username"/></div>
+      <div class="full"><label>한 줄 소개</label><input id="profileBio" placeholder="AI/ML 엔지니어를 꿈꾸는 개발자입니다."/></div>
+    </div>
+  </div>
+
+  <!-- 프로젝트 입력 -->
+  <div class="projects-section">
+    <div class="section-title">프로젝트 목록</div>
+    <div id="projectCards"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-add" onclick="addProject()">+ 프로젝트 추가</button>
+    <button class="btn btn-generate" onclick="generatePortfolio()">포트폴리오 생성</button>
+    <button class="btn btn-download" id="btnDownload" disabled onclick="downloadHtml()">HTML 다운로드</button>
+  </div>
+
+  <!-- 미리보기 -->
+  <div class="preview-section" id="previewSection" style="display:none">
+    <div class="section-title">미리보기</div>
+    <iframe id="previewFrame" class="preview-frame"></iframe>
+  </div>
+</div>
+
+<script>
+let projectCount = 0;
+let generatedHtml = '';
+
+function createProjectCard(index) {
+  return `<div class="project-card" id="card-${index}">
+    <div class="project-card-header">
+      <span>프로젝트 #${index}</span>
+      <button class="btn-delete" onclick="removeProject(${index})">삭제</button>
+    </div>
+    <div class="project-fields">
+      <div><label>프로젝트 제목</label><input id="title-${index}" placeholder="예: OLED 시뮬레이터"/></div>
+      <div><label>배포 플랫폼</label>
+        <select id="platform-${index}">
+          <option value="github">GitHub Pages</option>
+          <option value="streamlit">Streamlit Cloud</option>
+          <option value="aistudio">AI Studio</option>
+          <option value="other">기타</option>
+        </select>
+      </div>
+      <div class="full"><label>설명</label><textarea id="desc-${index}" rows="2" placeholder="프로젝트에 대한 간단한 설명"></textarea></div>
+      <div class="full"><label>URL</label><input id="url-${index}" placeholder="https://username.github.io/project"/></div>
+      <div class="full"><label>기술 스택 (쉼표로 구분)</label><input id="stack-${index}" placeholder="Python, Streamlit, Pandas"/></div>
+    </div>
+  </div>`;
+}
+
+function addProject() {
+  if (projectCount >= 8) { alert('최대 8개까지 추가할 수 있습니다.'); return; }
+  projectCount++;
+  document.getElementById('projectCards').insertAdjacentHTML('beforeend', createProjectCard(projectCount));
+}
+
+function removeProject(idx) {
+  const card = document.getElementById('card-' + idx);
+  if (card) card.remove();
+}
+
+function getProjects() {
+  const cards = document.querySelectorAll('.project-card');
+  const projects = [];
+  cards.forEach(card => {
+    const id = card.id.replace('card-', '');
+    const title = document.getElementById('title-' + id)?.value || '';
+    const platform = document.getElementById('platform-' + id)?.value || 'other';
+    const desc = document.getElementById('desc-' + id)?.value || '';
+    const url = document.getElementById('url-' + id)?.value || '';
+    const stack = document.getElementById('stack-' + id)?.value || '';
+    if (title.trim() || url.trim()) {
+      projects.push({ title, platform, desc, url, stack: stack.split(',').map(s => s.trim()).filter(Boolean) });
+    }
+  });
+  return projects;
+}
+
+function platformColor(p) {
+  if (p === 'github') return '#2da44e';
+  if (p === 'streamlit') return '#ff4b4b';
+  if (p === 'aistudio') return '#4285F4';
+  return '#71717a';
+}
+
+function platformLabel(p) {
+  if (p === 'github') return 'GitHub Pages';
+  if (p === 'streamlit') return 'Streamlit Cloud';
+  if (p === 'aistudio') return 'AI Studio';
+  return '기타';
+}
+
+function generatePortfolio() {
+  const name = document.getElementById('profileName').value || '이름 없음';
+  const github = document.getElementById('profileGithub').value || '#';
+  const bio = document.getElementById('profileBio').value || '';
+  const projects = getProjects();
+
+  if (projects.length < 1) { alert('최소 1개 이상의 프로젝트를 입력하세요.'); return; }
+
+  let cardsHtml = '';
+  projects.forEach(p => {
+    const badges = p.stack.map(s => '<span class="badge">' + s + '</span>').join('');
+    cardsHtml += `<div class="card">
+      <div class="card-header">
+        <span class="platform-badge" style="background:${platformColor(p.platform)}">${platformLabel(p.platform)}</span>
+      </div>
+      <h3>${p.title || '제목 없음'}</h3>
+      <p class="card-desc">${p.desc}</p>
+      <div class="card-stack">${badges}</div>
+      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="card-link">데모 보기 &rarr;</a>
+    </div>`;
+  });
+
+  generatedHtml = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>${name} - AI 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0f14;color:#e4e4e7;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:60px 20px;text-align:center}
+.header h1{font-size:2.2rem;font-weight:700;margin-bottom:8px;color:#fff}
+.header p{color:#a5b4fc;font-size:1.1rem;margin-bottom:16px}
+.header a{color:#60a5fa;text-decoration:none;font-size:0.9rem}
+.header a:hover{text-decoration:underline}
+.grid{max-width:1000px;margin:40px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.card{background:#1a1b23;border:1px solid #27272a;border-radius:12px;padding:24px;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.card-header{margin-bottom:12px}
+.platform-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;color:#fff}
+.card h3{font-size:1.1rem;margin-bottom:8px;color:#f4f4f5}
+.card-desc{color:#a1a1aa;font-size:0.88rem;margin-bottom:12px;line-height:1.5}
+.card-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.badge{background:#27272a;color:#a5b4fc;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:500}
+.card-link{display:inline-block;color:#60a5fa;font-size:0.88rem;font-weight:500;text-decoration:none;transition:color .2s}
+.card-link:hover{color:#93c5fd}
+.footer{text-align:center;padding:40px 20px;color:#52525b;font-size:0.82rem;border-top:1px solid #27272a;margin-top:40px}
+@media(max-width:600px){.header h1{font-size:1.6rem}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>${name}</h1>
+  <p>${bio}</p>
+  <a href="${github}" target="_blank">GitHub Profile &rarr;</a>
+</div>
+<div class="grid">
+${cardsHtml}
+</div>
+<footer class="footer">
+  Built with 렛유인 AI 코딩 과정 | ${new Date().getFullYear()}
+</footer>
+</body>
+</html>`;
+
+  // 미리보기 표시
+  const previewSection = document.getElementById('previewSection');
+  previewSection.style.display = 'block';
+  const frame = document.getElementById('previewFrame');
+  frame.srcdoc = generatedHtml;
+
+  document.getElementById('btnDownload').disabled = false;
+}
+
+function downloadHtml() {
+  if (!generatedHtml) return;
+  const blob = new Blob([generatedHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'index.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// 초기 4개 프로젝트 카드 생성
+window.addEventListener('DOMContentLoaded', () => {
+  for (let i = 0; i < 4; i++) addProject();
+});
+</script>
+</body>
+</html>
