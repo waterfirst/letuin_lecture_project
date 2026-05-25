@@ -35,13 +35,13 @@ const learningGoals = [
   {
     step: '학습목표 1',
     title: 'Streamlit 멀티페이지 앱 구성',
-    body: 'app.py와 pages/ 구조로 데이터·이미지·센서 페이지를 하나의 웹 앱으로 묶습니다.',
+    body: 'app.py와 pages/ 구조로 데이터·OLED·Warpage 페이지를 하나의 웹 앱으로 묶습니다.',
     type: 'api',
   },
   {
     step: '학습목표 2',
-    title: '13~15강 기능 통합',
-    body: 'DataAnalyzer, ImageInspector, SensorPredictor를 IntegratedAnalyzer로 묶어 통합 리포트를 만듭니다.',
+    title: '13~15강 시뮬레이터 13~15강 기능 통합 분석 통합',
+    body: 'DataAnalyzer, OLEDSimulator, WarpageSimulator를 IntegratedAnalyzer로 묶어 통합 리포트를 만듭니다.',
     type: 'knowledge',
   },
   {
@@ -78,19 +78,19 @@ const dashboardFeatures = [
   },
   {
     icon: ImageIcon,
-    title: '이미지 검사 페이지',
-    description: 'Vision API로 제조 결함을 자동 검출하고 JSON 결과를 표시합니다.',
-    features: ['이미지 업로드', '결함 좌표 시각화', 'JSON 결과 표시'],
-    cost: 'Vision + PIL',
-    freeQuota: '14강 자산 재사용',
+    title: 'OLED 공진 시뮬레이터',
+    description: '14강에서 만든 Fabry-Perot 공진 기반 ITO 두께 최적화 시뮬레이터입니다.',
+    features: ['ITO 두께 슬라이더', '시야각 vs 휘도 그래프', 'R/G/B 최적값 출력'],
+    cost: 'Fabry-Perot 수식',
+    freeQuota: '14강 OLED 시뮬레이터',
   },
   {
     icon: Activity,
-    title: '센서 예측 페이지',
-    description: 'Prophet 시계열 예측과 이상 알림을 실시간으로 표시합니다.',
-    features: ['Prophet 예측 차트', '이상치 알림', '실시간 갱신'],
-    cost: 'Prophet + Plotly',
-    freeQuota: '15강 자산 재사용',
+    title: '3D Warpage 시뮬레이터',
+    description: '15강에서 만든 다층 박막 열응력 및 휨 시뮬레이터입니다.',
+    features: ['중립축/곡률 계산', '3D 표면 플롯', '층별 응력 분포'],
+    cost: 'Three.js + 고체역학',
+    freeQuota: '15강 Warpage 시뮬레이터',
   },
   {
     icon: BarChart3,
@@ -113,9 +113,9 @@ const fieldScenarios = [
   {
     icon: ImageIcon,
     title: '디스플레이: 라인 통합 모니터',
-    before: '패널 검사 결과는 엑셀, 픽셀 결함은 별도 폴더, 알림은 SMS로 분산',
-    intent: '검사·결함·알림 데이터를 하나의 페이지에서 차트로 확인할 수 있게 통합해줘.',
-    output: '한 화면에서 데이터·이미지·알림을 통합 시각화 + Streamlit Cloud로 공유',
+    before: 'OLED 공진 시뮬레이터, Warpage 분석, 공정 데이터가 각각 분리',
+    intent: 'OLED ITO 최적화, Warpage 예측, 데이터 분석을 하나의 대시보드로 통합해줘.',
+    output: '한 화면에서 공진·응력·데이터를 통합 시각화 + Streamlit Cloud로 공유',
   },
   {
     icon: Github,
@@ -135,7 +135,7 @@ const setupSteps = [
 
 const intentChecklist = [
   'Streamlit 멀티페이지 구조(app.py + pages/)가 만들어졌는가?',
-  '데이터·이미지·센서 페이지가 모두 동작하는가?',
+  '데이터·OLED·Warpage 페이지가 모두 동작하는가?',
   'IntegratedAnalyzer가 3개 결과를 하나의 JSON으로 묶는가?',
   'README.md에 기능·기술 스택·실행 방법이 모두 적혔는가?',
   'GitHub Public 저장소와 Streamlit Cloud 데모가 열리는가?',
@@ -148,7 +148,7 @@ const streamlitVerifyPoints = [
 ];
 
 const integrationVerifyPoints = [
-  'IntegratedAnalyzer가 3개 모듈을 모두 인스턴스화하는가?',
+  'IntegratedAnalyzer가 OLEDSimulator, WarpageSimulator, DataAnalyzer를 인스턴스화하는가?',
   'generate_report 반환 JSON에 timestamp가 포함되는가?',
   'health_score가 0~100 범위로 계산되는가?',
 ];
@@ -281,7 +281,7 @@ function StreamlitDeepDive() {
         <h3>Streamlit 멀티페이지 구조: app.py + pages/ 하나로 묶기</h3>
         <p>
           분산된 .py 스크립트를 Streamlit 멀티페이지 앱으로 정리하면, 사이드바 자동 메뉴와
-          공통 위젯으로 데이터·이미지·센서 페이지를 한 번에 운영할 수 있습니다.
+          공통 위젯으로 데이터·OLED·Warpage 페이지를 한 번에 운영할 수 있습니다.
         </p>
         <LectureImage
           src="panel1.png"
@@ -319,7 +319,7 @@ function StreamlitDeepDive() {
           <h4>app.py + pages/ 구조로 한 번에 묶어주세요</h4>
           <p>
             "Streamlit 멀티페이지 구조로 묶어줘. app.py는 set_page_config(layout='wide')과
-            대시보드 메트릭을 보여주고, pages/ 폴더에 데이터분석/이미지검사/센서예측 페이지를
+            대시보드 메트릭을 보여주고, pages/ 폴더에 데이터분석/OLED시뮬레이터/Warpage시뮬레이터 페이지를
             한국어 파일명으로 만들어줘. 각 페이지에는 file_uploader, dataframe, button 위젯과
             결과 표시 영역을 배치해줘."
           </p>
@@ -342,12 +342,12 @@ function StreamlitDeepDive() {
 ├── app.py
 ├── pages/
 │   ├── 1_데이터분석.py
-│   ├── 2_이미지검사.py
-│   └── 3_센서예측.py
+│   ├── 2_OLED시뮬레이터.py
+│   └── 3_Warpage시뮬레이터.py
 ├── utils/
 │   ├── data_analyzer.py
-│   ├── image_inspector.py
-│   └── sensor_predictor.py
+│   ├── oled_simulator.py
+│   └── warpage_simulator.py
 ├── requirements.txt
 └── README.md
 
@@ -362,9 +362,9 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.metric("총 분석", "1,234", "+12%")
 with col2:
-    st.metric("이미지 검사", "567", "+8%")
+    st.metric("OLED 최적화", "3건", "R/G/B")
 with col3:
-    st.metric("센서 알림", "89", "-5%")
+    st.metric("Warpage", "2건", "Si/Cu")
 
 # pages/1_데이터분석.py
 import streamlit as st
@@ -404,12 +404,12 @@ function IntegrationDeepDive() {
         <span>Case 02 Deep Dive</span>
         <h3>3개 시스템 통합: IntegratedAnalyzer로 한 번에 리포트 만들기</h3>
         <p>
-          DataAnalyzer, ImageInspector, SensorPredictor를 한 클래스로 감싸고 generate_report()를
+          DataAnalyzer, OLEDSimulator, WarpageSimulator를 한 클래스로 감싸고 generate_report()를
           호출하면, 세 시스템의 최신 결과가 하나의 JSON으로 정리됩니다.
         </p>
         <LectureImage
           src="panel2.png"
-          alt="IntegratedAnalyzer가 데이터·이미지·센서 결과를 통합 리포트로 합치는 구조"
+          alt="IntegratedAnalyzer가 데이터·OLED·Warpage 결과를 통합 리포트로 합치는 구조"
           caption="한 번의 호출로 3개 모듈 결과를 합치고, 통합 메트릭과 헬스 스코어까지 함께 반환합니다."
         />
       </div>
@@ -419,7 +419,7 @@ function IntegrationDeepDive() {
           <span>Before: 결과 수동 조합</span>
           <h4>분석 결과를 엑셀에 직접 옮겨 비교</h4>
           <ul>
-            <li>데이터 분석 결과는 CSV, 이미지 결함은 JSON, 센서 알림은 로그</li>
+            <li>데이터 분석은 CSV, OLED 시뮬레이션은 JSON, Warpage 결과는 별도 파일</li>
             <li>3가지 결과를 사람이 엑셀에 복사·붙여넣기로 정리</li>
             <li>버전·시점이 어긋나 어제/오늘 자료가 섞이기 쉬움</li>
             <li>헬스 스코어 같은 종합 지표는 만들 수 없음</li>
@@ -430,7 +430,7 @@ function IntegrationDeepDive() {
           <span>Prompt: 통합 리포트 지시</span>
           <h4>IntegratedAnalyzer 클래스로 묶어주세요</h4>
           <p>
-            "DataAnalyzer, ImageInspector, SensorPredictor를 멤버로 갖는 IntegratedAnalyzer
+            "DataAnalyzer, OLEDSimulator, WarpageSimulator를 멤버로 갖는 IntegratedAnalyzer
             클래스를 만들어줘. generate_report()는 timestamp, data, image, sensor, health_score
             키를 갖는 dict를 반환하고, calculate_health()로 0~100 점수를 계산해줘."
           </p>
@@ -454,8 +454,8 @@ function IntegrationDeepDive() {
 class IntegratedAnalyzer:
     def __init__(self):
         self.data_analyzer = DataAnalyzer()
-        self.image_inspector = ImageInspector()
-        self.sensor_predictor = SensorPredictor()
+        self.image_inspector = OLEDSimulator()
+        self.sensor_predictor = WarpageSimulator()
 
     def generate_report(self):
         data_results = self.data_analyzer.get_latest()
@@ -554,12 +554,12 @@ function PortfolioDeepDive() {
             <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
               <pre style={{ fontSize: '0.82rem', lineHeight: '1.7', color: '#1d1d1f', margin: 0 }}>{`# AI 자동화 통합 대시보드
 
-제조 현장 데이터 분석, 이미지 검사, 센서 예측을
+제조 현장 데이터 분석, OLED 최적화, 센서 예측을
 하나로 통합한 Streamlit 웹 대시보드.
 
 ## 주요 기능
 - 데이터 분석: CSV 업로드 → Gemini 인사이트
-- 이미지 검사: Vision API 결함 검출
+- OLED 최적화: Vision API 결함 검출
 - 센서 예측: Prophet 시계열 + 알림
 
 ## 기술 스택
@@ -747,7 +747,7 @@ export default function App() {
           transition={{ delay: 0.2 }}
         >
           <h1>Ch.16 통합 대시보드 & 포트폴리오</h1>
-          <p className="subtitle">13~15강 기능을 Streamlit으로 통합하고 GitHub Public + Streamlit Cloud로 공개합니다</p>
+          <p className="subtitle">13~15강 시뮬레이터를 Streamlit으로 통합하고 GitHub Public + Streamlit Cloud로 공개합니다</p>
           <div className="lesson-meta" aria-label="lesson summary">
             <span>40분</span>
             <span>실습 중심</span>
@@ -798,7 +798,7 @@ export default function App() {
           <span className="section-label">02. 통합 대시보드란?</span>
           <h2>Streamlit + 통합 클래스 + Public 배포가 합쳐진 <mark>한 화면 운영 시스템</mark>입니다</h2>
           <p className="section-intro">
-            데이터 분석, 이미지 검사, 센서 예측이 모두 한 곳에 모이고, 사이드바 하나로 전환되며,
+            데이터 분석, OLED 최적화, 센서 예측이 모두 한 곳에 모이고, 사이드바 하나로 전환되며,
             URL 하나로 누구에게나 공유됩니다.
           </p>
           <div className="one-line-definition inline-definition">
@@ -807,8 +807,8 @@ export default function App() {
           </div>
           <LectureImage
             src="integrated-dashboard-overview.png"
-            alt="데이터 분석, 이미지 검사, 센서 예측, 통합 리포트가 하나의 대시보드로 묶이는 개요"
-            caption="데이터·이미지·센서·리포트·포트폴리오까지 하나의 Streamlit 앱으로 패키징합니다."
+            alt="데이터 분석, OLED 최적화, 센서 예측, 통합 리포트가 하나의 대시보드로 묶이는 개요"
+            caption="데이터·OLED·Warpage·리포트·포트폴리오까지 하나의 Streamlit 앱으로 패키징합니다."
           />
           <div className="role-flow" aria-label="통합 대시보드 역할 분리">
             {roleFlow.map((item, index) => (
@@ -853,12 +853,12 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <img src={assetUrl('traditional-coding.png')} alt="분산된 개별 스크립트" />
+              <img src={assetUrl('panel1.png')} alt="분산된 개별 시뮬레이터" />
               <div className="compare-content">
                 <span className="compare-kicker">Traditional (Separate Scripts)</span>
                 <h3>기능마다 따로 실행하는 개별 스크립트</h3>
                 <p>
-                  데이터 분석, 이미지 검사, 센서 예측이 각각 다른 .py 파일에 흩어져 있어
+                  데이터 분석, OLED 최적화, 센서 예측이 각각 다른 .py 파일에 흩어져 있어
                   실행 명령과 결과 경로가 매번 달라지고, 공유와 시각화가 어렵습니다.
                 </p>
                 <ul>
@@ -876,7 +876,7 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
             >
-              <img src={assetUrl('vibe-coding.png')} alt="Streamlit 통합 대시보드" />
+              <img src={assetUrl('panel3.png')} alt="통합 대시보드 포트폴리오" />
               <div className="compare-content">
                 <span className="compare-kicker">Integrated Dashboard (Streamlit + GitHub)</span>
                 <h3>한 화면·한 URL로 운영되는 통합 대시보드</h3>
