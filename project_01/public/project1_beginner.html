@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로젝트 1 — 초급 (Beginner) | 반도체 CVD 박막 두께 Wafer Map 데이터 분석</title>
+<style>
+  :root {
+    --bg: #0a0a14;
+    --card-bg: #12121f;
+    --card-border: #1e1e30;
+    --text: #e8e8f0;
+    --text-muted: #9090a8;
+    --accent: #3fb950;
+    --accent-dim: rgba(63,185,80,0.12);
+    --yellow: #f0c000;
+    --red: #f85149;
+    --code-bg: #1a1a2e;
+    --link: #58a6ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 0;
+    text-align: center;
+  }
+  .nav a {
+    display: inline-block;
+    padding: 6px 22px;
+    margin: 0 6px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .nav a.green { background: var(--accent); color: #000; }
+  .nav a.yellow { background: transparent; border: 1px solid var(--yellow); color: var(--yellow); }
+  .nav a.yellow:hover { background: var(--yellow); color: #000; }
+  .nav a.red { background: transparent; border: 1px solid var(--red); color: var(--red); }
+  .nav a.red:hover { background: var(--red); color: #fff; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* BADGE */
+  .badge-wrap { text-align: center; margin: 30px 0 10px; }
+  .badge {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 800;
+    padding: 14px 36px;
+    border-radius: 16px;
+    background: var(--accent-dim);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 12px 0 32px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    margin-bottom: 24px;
+  }
+  .card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--accent);
+  }
+  .card h3 { font-size: 1.05rem; margin: 18px 0 8px; color: var(--text); }
+  .card p { margin-bottom: 10px; color: var(--text); }
+  .card ul, .card ol { padding-left: 22px; margin-bottom: 12px; }
+  .card li { margin-bottom: 6px; }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 10px 12px;
+    border: 1px solid var(--card-border);
+    text-align: left;
+  }
+  th { background: #1a1a30; color: var(--accent); font-weight: 600; }
+
+  /* CODE BLOCK */
+  .code-wrap {
+    position: relative;
+    margin: 12px 0;
+  }
+  .code-wrap pre {
+    background: var(--code-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #c8c8e0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+  .copy-btn:hover { opacity: 1; }
+
+  .highlight { background: var(--accent-dim); border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+  .warn { background: rgba(240,192,0,0.1); border-left: 4px solid var(--yellow); padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+  .step-num {
+    display: inline-block;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .step { display: flex; align-items: flex-start; margin-bottom: 18px; }
+  .step-content { flex: 1; }
+  .step-content strong { color: var(--accent); }
+
+  .score-table th:first-child { width: 50%; }
+  .score-table td:last-child { text-align: center; font-weight: 700; color: var(--accent); }
+
+  .checklist li { list-style: none; padding-left: 0; }
+  .checklist li::before { content: "[ ] "; font-family: monospace; color: var(--accent); }
+
+  footer {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--card-border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 12px 10px 40px; }
+    .card { padding: 18px 14px 16px; }
+    .badge { font-size: 1.2rem; padding: 10px 22px; }
+    h1 { font-size: 1.15rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <a href="project1_beginner.html" class="green">초급 (하)</a>
+  <a href="project1_intermediate.html" class="yellow">중급 (중)</a>
+  <a href="project1_advanced.html" class="red">고급 (상)</a>
+</nav>
+
+<div class="container">
+
+<!-- BADGE -->
+<div class="badge-wrap">
+  <div class="badge">&#x1F7E2; 초급 (Beginner)</div>
+</div>
+<h1>프로젝트 1 &mdash; 반도체 CVD 박막 두께 Wafer Map 데이터 분석</h1>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+  <h2>1. 프로젝트 개요</h2>
+  <p>실제 반도체 양산 공정에서 널리 쓰이는 <strong>PECVD 실리콘 산화막(SiOx) 박막 증착 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
+  <p>엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.</p>
+  <div class="highlight">
+    <strong>수행 기간:</strong> CH.1 이후 주말 2일 (토~일)<br>
+    <strong>핵심 목표:</strong> 데이터 정제(Outlier/NaN 필터링)를 통한 신뢰성 있는 웨이퍼 2D 맵 및 설비 트렌드 시각화와 결함 판정
+  </div>
+</div>
+
+<!-- 2. 학습 목표 -->
+<div class="card">
+  <h2>2. 초급 학습 목표</h2>
+  <ol>
+    <li><strong>AI 대화형 데이터 분석 경험</strong> &mdash; Gemini 웹 챗에 CSV를 업로드하고, 프롬프트만으로 이상치/결측치를 자동 탐지하는 흐름을 체험합니다.</li>
+    <li><strong>프롬프트 엔지니어링 기초</strong> &mdash; 원하는 분석 결과를 도출하기 위해 명확하고 구체적인 지시문을 작성하는 능력을 기릅니다.</li>
+    <li><strong>반도체 공정 데이터 이해</strong> &mdash; Lot, CVD 설비, 웨이퍼 좌표, 두께 값 등 반도체 계측 데이터 구조를 파악합니다.</li>
+    <li><strong>HTML 보고서 생성</strong> &mdash; Gemini가 생성해 준 HTML 소스를 로컬에 저장하여 완성된 보고서를 열어보는 경험을 합니다.</li>
+  </ol>
+</div>
+
+<!-- 3. 사용 데이터셋 -->
+<div class="card">
+  <h2>3. 사용 데이터셋</h2>
+  <p>모든 수강생은 아래 엘립소메터 49점 계측 데이터를 사용합니다. CSV 파일을 다운로드하여 Gemini에 업로드하세요.</p>
+
+  <h3>CSV 다운로드 링크</h3>
+  <ul>
+    <li><a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project1/public/data/siox_thickness_data_1.csv" target="_blank">siox_thickness_data_1.csv</a> &mdash; CVD_M02 설비 오목형(Edge-High) 이상 데이터</li>
+    <li><a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project1/public/data/siox_thickness_data_2.csv" target="_blank">siox_thickness_data_2.csv</a> &mdash; CVD_M03 설비 볼록형(Center-High) 이상 데이터</li>
+  </ul>
+
+  <h3>데이터 컬럼 설명</h3>
+  <table>
+    <tr><th>컬럼명</th><th>타입</th><th>설명</th></tr>
+    <tr><td><code>lot_id</code></td><td>Object</td><td>생산 Lot 번호 (LOT-001 ~ LOT-040)</td></tr>
+    <tr><td><code>cvd_machine</code></td><td>Object</td><td>증착 CVD 설비 번호 (CVD_M01 ~ CVD_M03)</td></tr>
+    <tr><td><code>meas_time</code></td><td>Object</td><td>박막 측정 완료 시간 (시계열)</td></tr>
+    <tr><td><code>position_x</code></td><td>Float</td><td>웨이퍼 상의 측정 X 좌표 (mm)</td></tr>
+    <tr><td><code>position_y</code></td><td>Float</td><td>웨이퍼 상의 측정 Y 좌표 (mm)</td></tr>
+    <tr><td><code>thickness_value</code></td><td>Float</td><td>엘립소메터 측정 SiOx 두께 (nm)</td></tr>
+  </table>
+</div>
+
+<!-- 4. 단계별 수행 방법 -->
+<div class="card">
+  <h2>4. 단계별 수행 방법</h2>
+  <p>로컬 코딩 빌드 없이 웹 브라우저의 <strong>Gemini Chat(웹 클라이언트)</strong>에 직접 CSV 파일을 업로드한 후 프롬프트 엔지니어링만으로 분석합니다.</p>
+
+  <div class="step">
+    <span class="step-num">1</span>
+    <div class="step-content">
+      <strong>Gemini 접속 및 CSV 업로드</strong>
+      <p>웹 브라우저에서 <a href="https://gemini.google.com" target="_blank">gemini.google.com</a>에 접속합니다. 채팅창의 파일 첨부(클립) 아이콘을 클릭하여 <code>siox_thickness_data_1.csv</code> 파일을 업로드합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">2</span>
+    <div class="step-content">
+      <strong>데이터 구조 파악 요청</strong>
+      <p>업로드된 CSV의 컬럼 구조, 행 수, 데이터 타입을 파악하고, 기초 통계(평균, 표준편차, 최소/최대값)를 요약해 달라고 지시합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">3</span>
+    <div class="step-content">
+      <strong>이상치 및 결측치 탐지</strong>
+      <p>극단값 이상치(<code>-999.0</code>, <code>999.9</code>, <code>0.0</code>, <code>250.3</code>)와 비어 있는 결측치(NaN)를 감지하고 요약하도록 프롬프트합니다. 어떤 Lot과 설비에서 주로 발생하는지도 함께 분석합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">4</span>
+    <div class="step-content">
+      <strong>Lot별 Uniformity 비교 분석</strong>
+      <p>이상치를 제거한 전후의 Lot별 Uniformity (%) 변화를 비교하는 표를 요청합니다. Uniformity 공식: <code>(Max - Min) / (2 * Mean) * 100</code></p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">5</span>
+    <div class="step-content">
+      <strong>CVD_M02 설비 이상 원인 분석</strong>
+      <p>특정 시간대에 CVD_M02 설비에서 비정상적으로 균일도가 치솟은 현상에 대한 원인 분석을 지시합니다. 오목형(Edge-High) 패턴이 나타나는 이유를 설명해 달라고 요청합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">6</span>
+    <div class="step-content">
+      <strong>HTML 보고서 생성 요청</strong>
+      <p>모든 분석 결과와 웨이퍼 2D 맵 컨셉, 개선 조치 방안이 정리된 <strong>다크모드 스타일의 단일 파일 보고서</strong> <code>report_beginner.html</code> 소스코드를 요청합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">7</span>
+    <div class="step-content">
+      <strong>로컬 저장 및 확인</strong>
+      <p>Gemini가 제공한 HTML 소스코드를 복사하여 텍스트 에디터(메모장 등)에 붙여넣고, <code>report_beginner.html</code>로 저장한 뒤 브라우저에서 열어 최종 확인합니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 핵심 도구 설명 -->
+<div class="card">
+  <h2>5. 핵심 도구: Gemini Web Chat</h2>
+  <p><strong>Google Gemini</strong>는 Google이 제공하는 AI 대화 서비스입니다. 코딩 없이 자연어 프롬프트만으로 데이터를 분석할 수 있습니다.</p>
+
+  <h3>접속 방법</h3>
+  <ol>
+    <li>웹 브라우저에서 <a href="https://gemini.google.com" target="_blank">gemini.google.com</a>에 접속합니다.</li>
+    <li>Google 계정으로 로그인합니다.</li>
+    <li>채팅창 하단의 클립(첨부) 아이콘을 클릭하여 CSV 파일을 업로드합니다.</li>
+    <li>한국어로 자유롭게 분석 요청을 입력합니다.</li>
+  </ol>
+
+  <h3>활용 팁</h3>
+  <ul>
+    <li>한 번에 하나의 요청만 구체적으로 작성하면 더 정확한 결과를 얻습니다.</li>
+    <li>결과가 부족하면 "더 자세히", "표로 정리해줘" 등 후속 프롬프트를 보냅니다.</li>
+    <li>HTML 코드 요청 시 "단일 파일", "다크모드", "CSS 포함" 등 조건을 명시합니다.</li>
+  </ul>
+</div>
+
+<!-- 6. 프롬프트 예시 -->
+<div class="card">
+  <h2>6. 프롬프트 예시</h2>
+  <p>아래 프롬프트들을 순서대로 Gemini에 붙여넣어 사용하세요.</p>
+
+  <h3>Step 2: 데이터 구조 파악</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>첨부된 CSV 파일을 분석해줘.
+- 전체 행(row) 수와 컬럼(column) 수를 알려줘
+- 각 컬럼의 데이터 타입을 정리해줘
+- thickness_value 컬럼의 기초 통계(평균, 표준편차, 최소, 최대, 중앙값)를 계산해줘
+- lot_id와 cvd_machine의 고유값(unique) 목록을 보여줘</pre>
+  </div>
+
+  <h3>Step 3: 이상치/결측치 탐지</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>thickness_value 컬럼에서 아래 이상치와 결측치를 모두 찾아줘:
+1. 극단적 이상치: -999.0, 999.9, 0.0, 250.3
+2. 비어있는 값(NaN/null)
+
+각각에 대해:
+- 총 몇 건인지
+- 어떤 lot_id, cvd_machine에서 주로 발생하는지
+- 발생 시간대(meas_time) 범위
+를 표로 정리해줘.</pre>
+  </div>
+
+  <h3>Step 4: Uniformity 비교</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>Lot별로 두께 균일도(Uniformity)를 계산해줘.
+공식: Uniformity(%) = (Max - Min) / (2 * Mean) * 100
+
+아래 두 가지 경우를 비교하는 표를 만들어줘:
+1. 이상치 제거 전 (원본 데이터)
+2. 이상치(-999.0, 999.9, 0.0, 250.3)와 NaN 제거 후
+
+cvd_machine별로 구분해서 보여주고,
+어느 설비에서 Uniformity 차이가 가장 큰지 분석해줘.</pre>
+  </div>
+
+  <h3>Step 5: 설비 이상 원인 분석</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>CVD_M02 설비에서 이상치가 집중된 시간대를 분석해줘.
+- 해당 시간대에 측정된 웨이퍼의 두께 분포 패턴을 설명해줘
+- 웨이퍼 중심(Center) 대비 가장자리(Edge) 두께가 어떻게 다른지 분석해줘
+- "오목형(Edge-High)" 패턴이란 무엇이고, CVD 설비에서 왜 발생하는지 설명해줘
+- 이를 개선하기 위한 조치 방안 3가지를 제안해줘</pre>
+  </div>
+
+  <h3>Step 6: HTML 보고서 생성</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>지금까지 분석한 내용을 모두 포함하는 완성된 HTML 보고서를 만들어줘.
+
+요구사항:
+- 파일명: report_beginner.html
+- 단일 HTML 파일 (외부 의존성 없이 CSS 인라인 포함)
+- 다크모드 스타일 (배경 #0d1117, 텍스트 흰색 계열)
+- 반응형 디자인 (모바일 지원)
+- 포함할 섹션:
+  1. 프로젝트 제목 및 개요
+  2. 데이터 구조 요약 표
+  3. 이상치/결측치 탐지 결과 표
+  4. 이상치 제거 전후 Uniformity 비교 표
+  5. CVD_M02 설비 이상 원인 분석
+  6. 웨이퍼 2D 맵 컨셉 설명 (HTML 테이블로 시각적 표현)
+  7. 개선 조치 방안
+  8. 결론
+
+전체 HTML 소스코드를 출력해줘.</pre>
+  </div>
+</div>
+
+<!-- 7. 평가 채점 기준 -->
+<div class="card">
+  <h2>7. 평가 채점 기준</h2>
+  <table class="score-table">
+    <tr><th>평가 항목</th><th>배점</th></tr>
+    <tr><td>데이터 이상치/결측치 탐지 정확성 (4종 이상치 + NaN 모두 식별)</td><td>20점</td></tr>
+    <tr><td>Lot별 Uniformity 계산 및 전후 비교 표 포함</td><td>20점</td></tr>
+    <tr><td>CVD_M02 설비 이상 원인 분석의 논리성</td><td>15점</td></tr>
+    <tr><td>웨이퍼 2D 맵 컨셉 표현 (HTML 표/그림 등)</td><td>15점</td></tr>
+    <tr><td>HTML 보고서 완성도 (다크모드, 반응형, 깔끔한 레이아웃)</td><td>15점</td></tr>
+    <tr><td>개선 조치 방안 및 결론의 타당성</td><td>10점</td></tr>
+    <tr><td>전체 프롬프트 활용 기록 제출</td><td>5점</td></tr>
+  </table>
+  <p style="text-align:right; margin-top:8px; font-weight:700; color:var(--accent);">합계: 100점</p>
+</div>
+
+<!-- 8. 제출물 체크리스트 -->
+<div class="card">
+  <h2>8. 제출물 체크리스트</h2>
+  <ul class="checklist">
+    <li><code>report_beginner.html</code> 파일 (Gemini가 생성한 단일 다크모드 보고서)</li>
+    <li>보고서에 이상치/결측치 탐지 결과 표가 포함되어 있는가</li>
+    <li>보고서에 Uniformity 비교 분석 표가 포함되어 있는가</li>
+    <li>보고서에 CVD_M02 설비 이상 원인 분석이 포함되어 있는가</li>
+    <li>보고서에 웨이퍼 2D 맵 컨셉 시각 자료가 포함되어 있는가</li>
+    <li>보고서에 개선 조치 방안 및 결론이 포함되어 있는가</li>
+    <li>HTML 파일이 브라우저에서 정상 렌더링되는가</li>
+    <li>Gemini 대화 프롬프트 기록 스크린샷 또는 텍스트 파일</li>
+  </ul>
+</div>
+
+<!-- 9. 트러블슈팅 -->
+<div class="card">
+  <h2>9. 트러블슈팅 (FAQ)</h2>
+
+  <h3>Q. Gemini가 CSV 파일을 인식하지 못해요</h3>
+  <p>A. 파일 크기가 너무 크면 인식이 안될 수 있습니다. CSV를 텍스트 에디터로 열어 상위 100행만 복사하여 텍스트로 붙여넣기를 시도해 보세요. 또한 파일 확장자가 <code>.csv</code>인지 확인하세요.</p>
+
+  <h3>Q. Gemini가 HTML 코드를 중간에 잘라요</h3>
+  <p>A. 출력 길이 제한 때문입니다. "이어서 계속 출력해줘"라고 입력하거나, 보고서를 섹션별로 나눠서 요청한 뒤 합치세요.</p>
+
+  <h3>Q. HTML 파일을 저장했는데 브라우저에서 안 열려요</h3>
+  <p>A. 파일을 저장할 때 인코딩을 <strong>UTF-8</strong>로 지정하고, 확장자가 <code>.html</code>인지 확인하세요. 메모장에서 저장 시 "모든 파일(*.*)"을 선택해야 합니다.</p>
+
+  <h3>Q. Uniformity 공식이 이해가 안 돼요</h3>
+  <div class="highlight">
+    <strong>Uniformity (%) = (Max - Min) / (2 &times; Mean) &times; 100</strong><br><br>
+    한 웨이퍼 내에서 가장 두꺼운 곳과 가장 얇은 곳의 차이를 평균 두께의 2배로 나눈 값입니다. 값이 작을수록 균일하게 증착된 것이고, 클수록 불균일합니다. 일반적으로 2% 이하가 양호합니다.
+  </div>
+
+  <h3>Q. 오목형(Edge-High)이 뭔가요?</h3>
+  <p>A. 웨이퍼 가장자리(Edge)의 박막 두께가 중심(Center)보다 높은 패턴입니다. CVD 챔버의 가스 유량 분배 불균형, 히터 온도 편차, 또는 샤워헤드(Showerhead) 막힘 등이 원인일 수 있습니다.</p>
+</div>
+
+<!-- 10. 예시 결과물 -->
+<div class="card">
+  <h2>10. 예시 결과물 이미지 설명</h2>
+  <p>완성된 <code>report_beginner.html</code>은 아래와 같은 구성을 가집니다:</p>
+  <ul>
+    <li><strong>상단 헤더</strong>: 프로젝트 제목, 수행자 이름, 날짜가 표시된 다크모드 배너</li>
+    <li><strong>데이터 요약 섹션</strong>: 총 행 수, 컬럼 정보, 기초 통계값이 카드 형태로 나열</li>
+    <li><strong>이상치 탐지 표</strong>: 이상치 유형별 건수, 발생 설비/Lot 매핑 테이블</li>
+    <li><strong>Uniformity 비교 표</strong>: 클리닝 전후를 색상으로 구분한 비교 테이블</li>
+    <li><strong>웨이퍼 맵 컨셉</strong>: HTML 테이블 또는 색상 그리드로 표현한 49점 계측 위치 맵</li>
+    <li><strong>원인 분석 및 결론</strong>: 오목형 패턴 원인과 CVD 공정 개선 방안이 정리된 단락</li>
+  </ul>
+  <div class="warn">
+    <strong>참고:</strong> 초급에서는 실제 동적 차트가 아닌 HTML 표/개념도 수준의 시각화로도 충분합니다. 동적 차트는 중급 이상에서 다룹니다.
+  </div>
+</div>
+
+</div><!-- container -->
+
+<footer>
+  렛유인 AI + 바이브코딩 강의 | CH.1 수료 후 프로젝트 1 &mdash; 초급 (Beginner)
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '복사됨!';
+    setTimeout(() => { btn.textContent = '복사'; }, 1500);
+  });
+}
+</script>
+</body>
+</html>

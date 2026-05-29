@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P3 상 - 나만의 엔지니어 AI 툴킷</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a14;color:#e8e8f0;font-family:'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:60px}
+a{color:#f85149;text-decoration:none}a:hover{text-decoration:underline}
+.nav{position:sticky;top:0;z-index:100;background:#12121e;border-bottom:1px solid #2a2a3a;display:flex;justify-content:center;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.nav a{padding:8px 24px;border-radius:8px;font-weight:700;font-size:0.95rem;transition:all .2s}
+.nav .active{background:#f85149;color:#fff}
+.nav a:not(.active):hover{background:#1a1a2e}
+.nav .lv-beginner{border:2px solid #3fb950;color:#3fb950}
+.nav .lv-intermediate{border:2px solid #f0c000;color:#f0c000}
+.nav .lv-advanced{border:2px solid #f85149;color:#f85149}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+.badge{display:inline-block;background:#f85149;color:#fff;font-size:1.6rem;font-weight:900;padding:12px 36px;border-radius:16px;margin:28px 0 10px 0;letter-spacing:1px}
+h1{font-size:1.8rem;margin:10px 0 6px;color:#e8e8f0}
+.subtitle{color:#9898a8;font-size:1rem;margin-bottom:30px}
+.card{background:#14142a;border:1px solid #2a2a3a;border-radius:16px;padding:28px 24px;margin-bottom:24px}
+.card h2{font-size:1.25rem;color:#f85149;margin-bottom:14px;border-bottom:1px solid #2a2a3a;padding-bottom:10px}
+.card h3{font-size:1.08rem;color:#c0c0d0;margin:18px 0 8px}
+.card ul,.card ol{padding-left:22px;margin:8px 0}
+.card li{margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.92rem}
+th,td{border:1px solid #2a2a3a;padding:10px 12px;text-align:left}
+th{background:#1a1a30;color:#f85149;font-weight:700}
+tr:nth-child(even){background:#11112a}
+pre{position:relative;background:#0d0d1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px;overflow-x:auto;margin:10px 0;font-size:0.9rem;line-height:1.6}
+code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
+.copy-btn{position:absolute;top:8px;right:8px;background:#f85149;color:#fff;border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:0.8rem;font-weight:700;opacity:0.85}
+.copy-btn:hover{opacity:1}
+.highlight{color:#f85149;font-weight:700}
+.warn{color:#f0c000}
+.danger{color:#f85149}
+.check-list li{list-style:none;padding-left:4px}
+.check-list li::before{content:'\\2610 ';color:#f85149}
+.faq dt{font-weight:700;color:#f85149;margin-top:14px}
+.faq dd{margin:4px 0 10px 0;color:#c8c8d8}
+.step-num{display:inline-block;background:#f85149;color:#fff;width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%;font-weight:900;font-size:0.9rem;margin-right:8px}
+.challenge-box{background:#1a1018;border:1px solid #f85149;border-radius:10px;padding:16px;margin:12px 0}
+.challenge-box strong{color:#f85149}
+@media(max-width:640px){.container{padding:12px 8px}.card{padding:18px 14px}.badge{font-size:1.2rem;padding:10px 24px}h1{font-size:1.4rem}pre{font-size:0.8rem;padding:12px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="project3_beginner.html" class="lv-beginner">하 (기본)</a>
+  <a href="project3_intermediate.html" class="lv-intermediate">중 (응용)</a>
+  <a href="project3_advanced.html" class="lv-advanced active">상 (심화)</a>
+</nav>
+
+<div class="container">
+
+<span class="badge">상 (심화)</span>
+<h1>프로젝트 3 &mdash; 입사 1일차 비밀 무기: 나만의 엔지니어 AI 툴킷</h1>
+<p class="subtitle">렛유인 AI + 바이브코딩 강의 | 최종 프로젝트 (2일) &mdash; 스마트 팩토리 통합 대시보드 (포트폴리오 수준)</p>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+<h2>1. 프로젝트 개요</h2>
+<p>이 강의에서 배운 모든 기술을 <span class="highlight">3가지 이상 조합</span>하여 실제 첨단산업 현장에서 <strong>입사 1일차부터 바로 쓸 수 있는</strong> AI 업무 자동화 도구를 만드는 최종 프로젝트입니다.</p>
+<p style="margin-top:10px">P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로, 자유 주제로 <strong>나만의 엔지니어링 솔루션</strong>을 완성합니다.</p>
+<ul style="margin-top:12px">
+  <li><strong>수행 기간</strong>: 최종 프로젝트 주말 2일 (토~일)</li>
+  <li><strong>사용 도구</strong>: Gemini API + Streamlit + Telegram Bot + <span class="highlight">GitHub + Streamlit Cloud 배포 + 자유 조합</span></li>
+  <li><strong>결과물</strong>: 입사 면접에서 시연할 수 있는 수준의 통합 엔지니어링 솔루션</li>
+  <li><strong>소요 시간</strong>: 10~12시간 (2일)</li>
+</ul>
+<div class="challenge-box">
+<strong>도전 수준:</strong> 이 난이도에서는 <strong>주제 아이디어 목록만</strong> 제공됩니다. 힌트 없이 스스로 설계하고 구현해야 합니다.
+</div>
+</div>
+
+<!-- 2. P1+P2 통합 복습 -->
+<div class="card">
+<h2>2. P1 + P2 통합 복습</h2>
+<p>P3는 P1과 P2에서 쌓은 모든 역량을 통합하는 최종 프로젝트입니다. 시작 전에 아래를 점검하세요:</p>
+<table>
+<tr><th>역량 (출처)</th><th>핵심 내용</th><th>P3에서의 활용</th></tr>
+<tr><td>프롬프트 엔지니어링 (P1)</td><td>Gemini에게 명확하고 구체적으로 요청</td><td>복합 시스템 설계 시 단계별 프롬프트</td></tr>
+<tr><td>데이터 시각화 (P1)</td><td>Plotly 인터랙티브 차트, SPC 관리도</td><td>모니터링 대시보드의 핵심 UI</td></tr>
+<tr><td>API 연동 (P2)</td><td>Gemini API로 자동 분석/인사이트</td><td>AI 분석 모듈 구현</td></tr>
+<tr><td>보고서 자동화 (P2)</td><td>Markdown/HTML 보고서 생성</td><td>텔레그램으로 자동 전송</td></tr>
+<tr><td>에러 대응 (P1+P2)</td><td>디버깅 워크플로우</td><td>복잡한 시스템 통합 시 문제 해결</td></tr>
+</table>
+
+<h3>P1 &rarr; P2 &rarr; P3 성장 여정</h3>
+<pre><code>P1: 데이터 분석기        → 차트 시각화 (Streamlit + Plotly)
+P2: 자동 보고서 앱       → AI 인사이트 + 보고서 자동화 (+ Gemini API)
+P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+ Telegram + 자유)</code></pre>
+<table>
+<tr><th>역량</th><th>P1</th><th>P2</th><th>P3 (이번)</th></tr>
+<tr><td>시각화</td><td>기초</td><td>심화</td><td class="highlight">자유 (6종 이상)</td></tr>
+<tr><td>AI API</td><td>-</td><td>Gemini</td><td class="highlight">Gemini + 자동 분석</td></tr>
+<tr><td>보고서</td><td>-</td><td>자동 생성</td><td class="highlight">HTML + 자동 전송</td></tr>
+<tr><td>알림/자동화</td><td>-</td><td>-</td><td class="highlight">알림 + 일일/주간 리포트</td></tr>
+<tr><td>배포</td><td>-</td><td>선택</td><td class="highlight">필수 (Streamlit Cloud)</td></tr>
+<tr><td>설계</td><td>가이드 따라</td><td>프롬프트 직접</td><td class="highlight">전체 직접 설계</td></tr>
+</table>
+</div>
+
+<!-- 3. 학습 목표 -->
+<div class="card">
+<h2>3. 학습 목표 (상)</h2>
+<ol>
+  <li>배운 기술 3가지 이상을 조합하여 <strong>통합 솔루션</strong>을 설계한다</li>
+  <li>Telegram Bot으로 <strong>이상 알림 + 일일/주간 리포트</strong> 시스템을 구현한다</li>
+  <li>설계부터 <strong>Streamlit Cloud 배포</strong>까지 엔드-투-엔드 경험을 완성한다</li>
+  <li><strong>GitHub README.md</strong>(영문 권장)를 포함한 포트폴리오 수준의 코드를 만든다</li>
+  <li>결과물을 발표하고 실무적 가치를 설명하는 역량을 기른다</li>
+  <li><strong>이상 감지 알고리즘</strong>(Z-score, IQR 등)을 적용한다</li>
+</ol>
+</div>
+
+<!-- 4. 사용 도구 설명 -->
+<div class="card">
+<h2>4. 사용 도구</h2>
+<h3>Gemini (대화)</h3>
+<p>코드 생성 및 디버깅. 상 난이도에서는 복잡한 멀티 모듈 시스템을 설계합니다.</p>
+
+<h3>Streamlit</h3>
+<p>멀티 페이지 구성 (4페이지 이상). <code>pages/</code> 폴더를 활용합니다.</p>
+
+<h3>Telegram Bot</h3>
+<p>이상 알림 + 일일/주간 리포트 자동 발송. 마크다운 서식 활용.</p>
+
+<h3>Gemini API</h3>
+<p>데이터 자동 분석 + 자연어 인사이트 생성. 이상 감지 결과 해석.</p>
+
+<h3 class="highlight">GitHub (상 난이도 추가)</h3>
+<p>코드 관리 + README.md (영문 권장). 깔끔한 커밋 히스토리. 모듈 분리된 코드 구조.</p>
+
+<h3 class="highlight">Streamlit Cloud 배포 (상 난이도 추가)</h3>
+<p>실제 URL로 접속 가능한 웹앱 배포. Secrets 관리를 통한 API 키 보호.</p>
+
+<h3>기술 스택 (자유 조합, 3가지 이상 필수)</h3>
+<pre><code>Gemini (대화)        — 코드 생성/디버깅
+Gemini API           — AI 분석/텍스트 생성
+Streamlit            — 웹 UI 대시보드
+Telegram Bot         — 알림/자동화/리포트 전송
+Plotly               — 인터랙티브 시각화
+Pandas               — 데이터 처리
+GitHub               — 코드 관리
+Streamlit Cloud      — 웹앱 배포</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>AI Tool 활용 비중</h3>
+<pre><code>AI Tool 활용 (70%)
+ - Gemini로 전체 앱 설계/구현
+ - Gemini API로 분석/추천/요약
+ - Telegram Bot 연동
+ - 배포 자동화
+
+도메인 지식 (30%)
+ - 문제 정의 및 주제 선정
+ - 알림 기준/임계값 설계
+ - 결과 해석 및 발표</code></pre>
+</div>
+
+<!-- 5. 텔레그램 봇 생성 가이드 -->
+<div class="card">
+<h2>5. 텔레그램 봇 생성 가이드 (Step by Step)</h2>
+
+<h3><span class="step-num">1</span>봇 생성 - BotFather 찾기</h3>
+<p>Telegram 앱을 열고 상단 검색창에 <code>@BotFather</code>를 검색합니다. 파란색 체크 마크가 있는 공식 계정을 선택합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem;margin-top:4px">[화면: Telegram 검색창에 "BotFather" 입력 &rarr; 공식 봇 선택]</p>
+
+<h3><span class="step-num">2</span>/newbot 명령어 입력</h3>
+<p>BotFather 채팅창에 <code>/newbot</code>을 입력하고 전송합니다.</p>
+
+<h3><span class="step-num">3</span>봇 이름 및 username 입력</h3>
+<pre><code>이름 예시: SmartFactoryDashboard
+username 예시: smart_factory_dash_bot  (반드시 _bot으로 끝남)</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">4</span>BOT_TOKEN 복사</h3>
+<p>발급된 토큰을 안전한 곳에 저장합니다. <span class="danger">절대 GitHub에 직접 커밋하지 마세요!</span></p>
+
+<h3><span class="step-num">5</span>봇에게 /start 메시지 보내기</h3>
+<p>생성한 봇을 검색 &rarr; 채팅 시작 &rarr; <code>/start</code> 전송</p>
+
+<h3><span class="step-num">6</span>Chat ID 확인</h3>
+<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>JSON에서 <code>"chat":{"id": 숫자}</code> 값을 복사합니다.</p>
+
+<h3><span class="step-num">7</span>Python으로 테스트</h3>
+<pre><code>import requests
+
+def send_telegram(token, chat_id, message):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    requests.post(url, json={
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "Markdown"
+    })</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+</div>
+
+<!-- 6. 단계별 수행 방법 -->
+<div class="card">
+<h2>6. 단계별 수행 방법</h2>
+
+<h3><span class="step-num">1</span>Step 1: 주제 선정 및 문제 정의</h3>
+<p>자신의 관심 산업에서 <strong>실제로 반복되는 불편함</strong>을 해결하는 도구를 정합니다.</p>
+<div class="challenge-box">
+<strong>스스로 답하세요:</strong>
+<ul style="margin-top:6px">
+  <li>어떤 문제를 해결하는가?</li>
+  <li>누가 사용하는가?</li>
+  <li>어떤 데이터를 다루는가?</li>
+  <li>어떤 기술을 조합하는가? (3가지 이상)</li>
+</ul>
+</div>
+
+<h3><span class="step-num">2</span>Step 2: 텔레그램 봇 + Gemini API 키 확보</h3>
+<p>위 섹션 5의 가이드로 봇을 생성하고, <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>에서 API 키를 발급받습니다.</p>
+
+<h3><span class="step-num">3</span>Step 3: 프로젝트 구조 설계</h3>
+<p>모듈을 분리한 폴더 구조를 먼저 설계합니다.</p>
+<pre><code>my_project/
+├── app.py              ← 메인 앱
+├── pages/
+│   ├── 01_실시간_모니터링.py
+│   ├── 02_이상_감지.py
+│   ├── 03_AI_분석.py
+│   └── 04_보고서.py
+├── utils/
+│   ├── data_generator.py
+│   ├── analyzer.py
+│   └── telegram_alert.py
+├── requirements.txt
+└── README.md</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">4</span>Step 4: 핵심 모듈 구현</h3>
+<p>Gemini에게 각 모듈을 개별적으로 요청합니다. 한 번에 전체를 요청하는 것보다 모듈 단위로 나누는 것이 효과적입니다.</p>
+<ol>
+  <li><strong>데이터 생성/로드 모듈</strong>: 시뮬레이션 데이터 or CSV 업로드</li>
+  <li><strong>시각화 모듈</strong>: 6종 이상 차트 (게이지, 라인, 히트맵, 박스플롯, SPC, 산점도 등)</li>
+  <li><strong>이상 감지 모듈</strong>: Z-score, IQR, 또는 커스텀 규칙</li>
+  <li><strong>AI 분석 모듈</strong>: Gemini API로 데이터 패턴 분석 + 자연어 인사이트</li>
+  <li><strong>텔레그램 모듈</strong>: 이상 알림 + 일일/주간 리포트</li>
+  <li><strong>보고서 모듈</strong>: HTML 보고서 자동 생성 + 다운로드</li>
+</ol>
+
+<h3><span class="step-num">5</span>Step 5: Streamlit 멀티 페이지 구성 (4페이지 이상)</h3>
+<p><code>pages/</code> 폴더에 각 기능별 페이지를 만듭니다.</p>
+<pre><code>pages/
+├── 01_실시간_모니터링.py    ← 게이지 + 라인 차트 + 상태 표시
+├── 02_이상_감지.py          ← Z-score/IQR 기반 이상치 탐지
+├── 03_AI_분석.py            ← Gemini API 인사이트
+└── 04_보고서.py             ← HTML 보고서 생성 + 텔레그램 전송</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">6</span>Step 6: 이상 감지 알고리즘 구현</h3>
+<p>Z-score 또는 IQR 방법을 사용하여 이상치를 탐지합니다.</p>
+<pre><code># Z-score 예시
+import numpy as np
+z_scores = np.abs((data - data.mean()) / data.std())
+anomalies = z_scores > 3
+
+# IQR 예시
+Q1 = data.quantile(0.25)
+Q3 = data.quantile(0.75)
+IQR = Q3 - Q1
+anomalies = (data < Q1 - 1.5*IQR) | (data > Q3 + 1.5*IQR)</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">7</span>Step 7: 로컬 테스트</h3>
+<pre><code>pip install streamlit plotly requests pandas google-generativeai
+streamlit run app.py</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>모든 페이지, 시각화, AI 분석, 텔레그램 알림이 정상 동작하는지 확인합니다.</p>
+
+<h3><span class="step-num">8</span>Step 8: GitHub 리포지토리 생성 + Push</h3>
+<pre><code>git init
+git add .
+git commit -m "feat: 스마트 팩토리 통합 대시보드 v1.0"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">9</span>Step 9: README.md 작성 (영문 권장)</h3>
+<p>포트폴리오 수준의 README를 작성합니다:</p>
+<ul>
+  <li>프로젝트 제목 + 한 줄 설명</li>
+  <li>스크린샷 / GIF 데모</li>
+  <li>기술 스택 (Tech Stack)</li>
+  <li>실행 방법 (Getting Started)</li>
+  <li>주요 기능 (Features)</li>
+  <li>프로젝트 구조 (Project Structure)</li>
+  <li>배포 URL (Deploy URL)</li>
+</ul>
+
+<h3><span class="step-num">10</span>Step 10: Streamlit Cloud 배포</h3>
+<ol>
+  <li><a href="https://share.streamlit.io" target="_blank">share.streamlit.io</a>에 GitHub 계정으로 로그인</li>
+  <li>"New app" 클릭 &rarr; 리포지토리 선택</li>
+  <li>Main file path: <code>app.py</code></li>
+  <li><strong>Secrets 설정</strong>: Advanced settings &rarr; Secrets에 아래 형식으로 입력</li>
+</ol>
+<pre><code>GEMINI_API_KEY = "your-api-key-here"
+BOT_TOKEN = "your-bot-token-here"
+CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>코드에서는 <code>st.secrets["BOT_TOKEN"]</code>으로 접근합니다.</p>
+
+<h3><span class="step-num">11</span>Step 11: (선택) 커스텀 CSS 테마</h3>
+<p>Streamlit 앱에 커스텀 테마를 적용하여 전문적인 느낌을 추가합니다.</p>
+
+<h3><span class="step-num">12</span>Step 12: 발표 자료 준비</h3>
+<p>PPT 또는 PDF 발표 자료를 준비합니다. (선택) 2분 데모 영상을 녹화합니다.</p>
+</div>
+
+<!-- 7. 프롬프트 예시 -->
+<div class="card">
+<h2>7. 프롬프트 예시 (주제만 제공)</h2>
+<p>상 난이도에서는 프롬프트를 <strong>완전히 직접 설계</strong>합니다. 아래는 주제 아이디어만 제공합니다.</p>
+
+<div class="challenge-box">
+<strong>주제 아이디어:</strong>
+<ul style="margin-top:6px">
+  <li>스마트 팩토리 통합 모니터링 + AI 이상 감지</li>
+  <li>배터리 충방전 사이클 분석 + 수명 예측</li>
+  <li>태양광 발전량 예측 + 기상 연동 대시보드</li>
+  <li>기술 동향 자동 센싱 + 모닝 리포트</li>
+  <li>특허 키워드 트렌드 분석 + 경쟁사 비교</li>
+  <li>자유 주제 (직접 정의)</li>
+</ul>
+</div>
+
+<p style="margin-top:14px">프롬프트는 모듈별로 나누어 작성하는 것을 권장합니다:</p>
+<ol>
+  <li>전체 아키텍처 설계 프롬프트</li>
+  <li>각 페이지별 구현 프롬프트</li>
+  <li>이상 감지 알고리즘 프롬프트</li>
+  <li>텔레그램 연동 프롬프트</li>
+  <li>배포 설정 프롬프트</li>
+</ol>
+</div>
+
+<!-- 8. 주제 선택 가이드 -->
+<div class="card">
+<h2>8. 주제 선택 가이드</h2>
+<p>자신의 관심 산업에서 <strong>실제로 반복되는 불편함</strong>을 해결하는 도구를 만드세요.</p>
+<table>
+<tr><th>산업</th><th>주제 예시</th><th>핵심 기능</th></tr>
+<tr><td>반도체</td><td>웨이퍼 맵 불량 패턴 분류기</td><td>히트맵 + AI 패턴 분석 + 알림</td></tr>
+<tr><td>디스플레이</td><td>설비 이상 감지 시스템</td><td>센서 모니터링 + OOC 탐지 + 텔레그램 리포트</td></tr>
+<tr><td>2차전지</td><td>배터리 수명 예측 도구</td><td>충방전 분석 + 열화 예측 + 최적 충전 가이드</td></tr>
+<tr><td>바이오</td><td>임상시험 데이터 AI 요약</td><td>논문 파싱 + 핵심 수치 추출 + 보고서</td></tr>
+<tr><td>에너지</td><td>태양광 발전량 예측 대시보드</td><td>기상 데이터 연동 + 예측 + 알림</td></tr>
+<tr><td>범용</td><td>기술 동향 자동 센싱</td><td>학회/논문 크롤링 + AI 요약 + 모닝 리포트</td></tr>
+<tr><td>범용</td><td>특허 키워드 트렌드 분석기</td><td>키워드 추출 + 시각화 + 경쟁사 비교</td></tr>
+<tr><td>범용</td><td>견적서 비교 분석 도구</td><td>비정형 문서 파싱 + 가중치 스코어링 + 추천</td></tr>
+</table>
+<p style="margin-top:8px;color:#9898a8">위 예시는 참고용입니다. 자신만의 주제를 직접 정해도 됩니다.</p>
+</div>
+
+<!-- 9. 평가 채점 기준 -->
+<div class="card">
+<h2>9. 평가 채점 기준 (상)</h2>
+<table>
+<tr><th>항목</th><th>배점</th><th>설명</th></tr>
+<tr><td>문제 정의의 현실성</td><td>20%</td><td>실무에서 실제로 필요한 문제를 정의했는가</td></tr>
+<tr><td>기술 구현 완성도</td><td>30%</td><td>기술 3종 이상 조합, 멀티 페이지 4+, 이상 감지 알고리즘</td></tr>
+<tr><td>AI 활용 수준</td><td>20%</td><td>Gemini API 연동 깊이, 자연어 인사이트 품질</td></tr>
+<tr><td>배포 및 사용성</td><td>15%</td><td>Streamlit Cloud 배포 + 텔레그램 알림/리포트</td></tr>
+<tr><td>GitHub 품질</td><td>15%</td><td>README + 코드 구조 + 커밋 히스토리</td></tr>
+</table>
+
+<h3>전체 난이도별 평가 비교</h3>
+<table>
+<tr><th>항목</th><th>하</th><th>중</th><th>상</th></tr>
+<tr><td>앱 실행</td><td>필수</td><td>필수</td><td>필수</td></tr>
+<tr><td>기술 조합</td><td>2가지</td><td>3가지</td><td class="highlight">3가지 이상</td></tr>
+<tr><td>Gemini API</td><td>불필요</td><td>연동</td><td class="highlight">자동 분석</td></tr>
+<tr><td>텔레그램</td><td>알림만</td><td>요약 전송</td><td class="highlight">알림 + 리포트</td></tr>
+<tr><td>시각화</td><td>게이지 + 라인</td><td>4종 이상</td><td class="highlight">6종 이상</td></tr>
+<tr><td>보고서</td><td>불필요</td><td>Markdown</td><td class="highlight">HTML</td></tr>
+<tr><td>코드 구조</td><td>단일 파일</td><td>2~3 파일</td><td class="highlight">모듈 분리</td></tr>
+<tr><td>배포</td><td>불필요</td><td>선택</td><td class="highlight">필수</td></tr>
+<tr><td>발표</td><td>스크린샷</td><td>시연</td><td class="highlight">시연 + 발표</td></tr>
+</table>
+</div>
+
+<!-- 10. 제출물 체크리스트 -->
+<div class="card">
+<h2>10. 제출물 체크리스트 (상)</h2>
+<ul class="check-list">
+  <li>GitHub Repository URL + README.md (영문 권장)</li>
+  <li>Streamlit Cloud 배포 URL</li>
+  <li>실행 스크린샷 3장 이상</li>
+  <li>발표 자료 (PPT 또는 PDF)</li>
+  <li>(권장) 2분 데모 영상</li>
+</ul>
+
+<h3>제출 방법</h3>
+<p>GitHub Repository URL + <strong>배포 URL</strong> + README + 스크린샷 3장 + 발표 자료</p>
+</div>
+
+<!-- 11. 발표 안내 -->
+<div class="card">
+<h2>11. 발표 안내 (3분)</h2>
+<p><strong>발표 시간</strong>: 개인당 3분</p>
+<table>
+<tr><th>순서</th><th>시간</th><th>내용</th></tr>
+<tr><td>1. 시연</td><td>1분</td><td>배포 URL로 접속 &rarr; 전체 기능 데모 (4페이지 순회)</td></tr>
+<tr><td>2. 기술 설명</td><td>1분</td><td>아키텍처, 기술 스택 조합, 이상 감지 알고리즘, 해결한 문제</td></tr>
+<tr><td>3. 실무 가치</td><td>30초</td><td>이 도구가 현업에서 어떤 문제를 해결하는지</td></tr>
+<tr><td>4. 배운 점</td><td>30초</td><td>이 프로젝트를 통해 성장한 점</td></tr>
+</table>
+<p style="margin-top:10px"><strong>발표 후</strong>: 상호 피드백 교환</p>
+<p style="margin-top:8px;color:#9898a8">Tip: 배포된 URL로 시연하면 별도 환경 설정 없이 바로 보여줄 수 있어 효과적입니다.</p>
+</div>
+
+<!-- 12. 트러블슈팅 -->
+<div class="card">
+<h2>12. 트러블슈팅</h2>
+
+<h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
+<ul>
+  <li>@BotFather에서 봇을 만든 후, 봇에게 먼저 <code>/start</code> 또는 아무 메시지를 보내야 합니다</li>
+  <li><code>https://api.telegram.org/bot{TOKEN}/getUpdates</code>에서 chat_id 재확인</li>
+  <li>TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인</li>
+</ul>
+
+<h3 class="danger">requests.post 호출 시 ConnectionError</h3>
+<ul>
+  <li>인터넷 연결 확인</li>
+  <li>회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)</li>
+</ul>
+
+<h3 class="danger">Streamlit Cloud에서 텔레그램이 안 됨</h3>
+<ul>
+  <li>Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID를 등록했는지 확인</li>
+  <li>코드에서 <code>st.secrets["BOT_TOKEN"]</code>으로 접근</li>
+</ul>
+
+<h3 class="danger">Gemini API 호출 횟수 초과</h3>
+<ul>
+  <li>무료 티어는 분당 15회 제한</li>
+  <li><code>time.sleep(4)</code> 등으로 호출 간격 조절</li>
+  <li>데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화</li>
+</ul>
+
+<h3 class="danger">GitHub Actions 워크플로우 실패</h3>
+<ul>
+  <li><code>.github/workflows/</code> 폴더에 YAML 파일 확인</li>
+  <li>secrets 설정: Repository Settings &rarr; Secrets and variables &rarr; Actions</li>
+</ul>
+
+<h3 class="danger">멀티 페이지 Streamlit이 안 됨</h3>
+<ul>
+  <li><code>pages/</code> 폴더명은 정확히 <code>pages</code>여야 합니다 (대소문자 주의)</li>
+  <li>파일명 앞에 숫자를 붙여 순서 지정: <code>01_모니터링.py</code>, <code>02_분석.py</code></li>
+</ul>
+
+<h3 class="danger">Streamlit Cloud 배포 실패</h3>
+<ul>
+  <li><code>requirements.txt</code>에 모든 라이브러리가 명시되어 있는지 확인</li>
+  <li>Python 버전 호환성 확인 (3.8~3.11 권장)</li>
+  <li>Secrets 설정 누락 확인</li>
+</ul>
+</div>
+
+<!-- 13. FAQ -->
+<div class="card">
+<h2>13. FAQ</h2>
+<dl class="faq">
+  <dt>Q. 주제를 못 정하겠어요.</dt>
+  <dd>A. 가장 쉬운 방법: "내가 매일/매주 반복하는 귀찮은 일"을 떠올려보세요. 그것을 자동화하세요.</dd>
+
+  <dt>Q. P1, P2 코드를 재활용해도 되나요?</dt>
+  <dd>A. 적극 권장합니다! P1의 app.py + P2의 ai_analyzer.py를 기반으로 P3를 시작하면 효율적입니다.</dd>
+
+  <dt>Q. 텔레그램 봇이 작동하지 않아요.</dt>
+  <dd>A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를 보낼 수 없습니다. Chat ID를 다시 확인하세요.</dd>
+
+  <dt>Q. 발표가 부담스러워요.</dt>
+  <dd>A. 3분이면 충분합니다. 배포 URL로 시연하면 환경 설정 없이 바로 보여줄 수 있습니다.</dd>
+
+  <dt>Q. 기술 3가지 조합이 어려워요.</dt>
+  <dd>A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)입니다. 여기에 Plotly(시각화), GitHub(코드 관리), Streamlit Cloud(배포)를 추가하면 됩니다.</dd>
+
+  <dt>Q. 배포가 처음이에요.</dt>
+  <dd>A. Streamlit Cloud는 GitHub 리포지토리만 있으면 3분 안에 배포 가능합니다. share.streamlit.io에서 "New app" &rarr; 리포지토리 선택하면 됩니다.</dd>
+
+  <dt>Q. README를 영문으로 써야 하나요?</dt>
+  <dd>A. 영문 권장이지만 필수는 아닙니다. 영문 README는 포트폴리오 가치를 높여줍니다. Gemini에게 한국어 README를 영어로 번역해달라고 요청하면 됩니다.</dd>
+</dl>
+</div>
+
+<!-- 14. 모범 답안 폴더 구조 -->
+<div class="card">
+<h2>14. 모범 답안 폴더 구조 (상)</h2>
+<pre><code>examples/상/
+├── app.py              ← 메인 앱
+├── pages/
+│   ├── 01_실시간_모니터링.py
+│   ├── 02_이상_감지.py
+│   ├── 03_AI_분석.py
+│   └── 04_보고서.py
+├── utils/
+│   ├── data_generator.py
+│   ├── analyzer.py
+│   └── telegram_alert.py
+├── requirements.txt
+└── README.md</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="margin-top:10px;color:#f0c000">주의: 모범 답안을 먼저 보는 것보다 <strong>스스로 시도한 후 비교</strong>하는 것을 강력히 권장합니다.</p>
+
+<h3>requirements.txt 예시</h3>
+<pre><code>streamlit
+plotly
+requests
+pandas
+numpy
+google-generativeai</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>선수 학습 확인</h3>
+<ul class="check-list">
+  <li>P1, P2 프로젝트를 모두 완료했다</li>
+  <li>Streamlit + Plotly + Gemini API 사용 경험이 있다</li>
+  <li>GitHub에 코드를 push해본 경험이 있다</li>
+  <li>Streamlit Cloud 배포를 해본 적이 있다 (P2에서)</li>
+  <li>(권장) 텔레그램 앱이 설치되어 있다</li>
+</ul>
+</div>
+
+</div><!-- /container -->
+
+<script>
+function copyCode(btn){
+  const pre=btn.parentElement;
+  const code=pre.querySelector('code');
+  const text=code?code.textContent:pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='완료!';
+    setTimeout(()=>{btn.textContent='복사'},1500);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로젝트 1 — 고급 (Advanced) | 반도체 CVD 박막 두께 Wafer Map 데이터 분석</title>
+<style>
+  :root {
+    --bg: #0a0a14;
+    --card-bg: #12121f;
+    --card-border: #1e1e30;
+    --text: #e8e8f0;
+    --text-muted: #9090a8;
+    --green: #3fb950;
+    --yellow: #f0c000;
+    --accent: #f85149;
+    --accent-dim: rgba(248,81,73,0.12);
+    --code-bg: #1a1a2e;
+    --link: #58a6ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 0;
+    text-align: center;
+  }
+  .nav a {
+    display: inline-block;
+    padding: 6px 22px;
+    margin: 0 6px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .nav a.green { background: transparent; border: 1px solid var(--green); color: var(--green); }
+  .nav a.green:hover { background: var(--green); color: #000; }
+  .nav a.yellow { background: transparent; border: 1px solid var(--yellow); color: var(--yellow); }
+  .nav a.yellow:hover { background: var(--yellow); color: #000; }
+  .nav a.red { background: var(--accent); color: #fff; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  .badge-wrap { text-align: center; margin: 30px 0 10px; }
+  .badge {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 800;
+    padding: 14px 36px;
+    border-radius: 16px;
+    background: var(--accent-dim);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 12px 0 32px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    margin-bottom: 24px;
+  }
+  .card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--accent);
+  }
+  .card h3 { font-size: 1.05rem; margin: 18px 0 8px; color: var(--text); }
+  .card p { margin-bottom: 10px; }
+  .card ul, .card ol { padding-left: 22px; margin-bottom: 12px; }
+  .card li { margin-bottom: 6px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 10px 12px;
+    border: 1px solid var(--card-border);
+    text-align: left;
+  }
+  th { background: #1a1a30; color: var(--accent); font-weight: 600; }
+
+  .code-wrap {
+    position: relative;
+    margin: 12px 0;
+  }
+  .code-wrap pre {
+    background: var(--code-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #c8c8e0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+  .copy-btn:hover { opacity: 1; }
+
+  .highlight { background: var(--accent-dim); border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+  .warn { background: rgba(240,192,0,0.1); border-left: 4px solid var(--yellow); padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+  .info { background: rgba(88,166,255,0.08); border-left: 4px solid var(--link); padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+
+  .step-num {
+    display: inline-block;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .step { display: flex; align-items: flex-start; margin-bottom: 18px; }
+  .step-content { flex: 1; }
+  .step-content strong { color: var(--accent); }
+
+  .score-table th:first-child { width: 50%; }
+  .score-table td:last-child { text-align: center; font-weight: 700; color: var(--accent); }
+
+  .checklist li { list-style: none; padding-left: 0; }
+  .checklist li::before { content: "[ ] "; font-family: monospace; color: var(--accent); }
+
+  footer {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--card-border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 12px 10px 40px; }
+    .card { padding: 18px 14px 16px; }
+    .badge { font-size: 1.2rem; padding: 10px 22px; }
+    h1 { font-size: 1.15rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="project1_beginner.html" class="green">초급 (하)</a>
+  <a href="project1_intermediate.html" class="yellow">중급 (중)</a>
+  <a href="project1_advanced.html" class="red">고급 (상)</a>
+</nav>
+
+<div class="container">
+
+<div class="badge-wrap">
+  <div class="badge">&#x1F534; 고급 (Advanced)</div>
+</div>
+<h1>프로젝트 1 &mdash; 반도체 CVD 박막 두께 Wafer Map 데이터 분석</h1>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+  <h2>1. 프로젝트 개요</h2>
+  <p>실제 반도체 양산 공정에서 널리 쓰이는 <strong>PECVD 실리콘 산화막(SiOx) 박막 증착 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
+  <p>엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.</p>
+  <div class="highlight">
+    <strong>수행 기간:</strong> CH.1 이후 주말 2일 (토~일)<br>
+    <strong>핵심 목표:</strong> 어떤 실험 파일을 넣어도 동작하는 <strong>재현 가능한(Reproducible) Streamlit 대시보드 파이프라인</strong> 구축
+  </div>
+</div>
+
+<!-- 2. 학습 목표 -->
+<div class="card">
+  <h2>2. 고급 학습 목표</h2>
+  <ol>
+    <li><strong>Streamlit 대시보드 설계</strong> &mdash; Python 기반 데이터 대시보드 프레임워크를 사용하여 전문적인 분석 도구를 구축합니다.</li>
+    <li><strong>동적 전처리 파이프라인</strong> &mdash; 파일 업로더로 어떤 CSV를 넣어도 자동으로 Lot/설비를 식별하고 정제하는 범용 파이프라인을 설계합니다.</li>
+    <li><strong>Plotly Express 고급 시각화</strong> &mdash; 300mm 원형 웨이퍼 산점도 맵을 반응형으로 구현하고, Uniformity 추이를 인터랙티브 차트로 표현합니다.</li>
+    <li><strong>재현성 검증</strong> &mdash; <code>data_1</code>(오목형)과 <code>data_2</code>(볼록형) 두 파일 모두 정상적으로 분석되는지 검증합니다.</li>
+    <li><strong>Antigravity + Streamlit 워크플로우</strong> &mdash; AI 에이전트를 활용하여 Python 코드를 점진적으로 완성하고 디버깅하는 실무 능력을 기릅니다.</li>
+  </ol>
+</div>
+
+<!-- 3. 사용 데이터셋 -->
+<div class="card">
+  <h2>3. 사용 데이터셋</h2>
+  <p>고급에서는 <strong>두 가지 데이터셋 모두</strong>를 사용하여 재현성을 검증해야 합니다.</p>
+
+  <h3>CSV 다운로드 링크</h3>
+  <ul>
+    <li><a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project1/public/data/siox_thickness_data_1.csv" target="_blank">siox_thickness_data_1.csv</a> &mdash; CVD_M02 설비 <strong>오목형(Edge-High)</strong> 이상 데이터</li>
+    <li><a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project1/public/data/siox_thickness_data_2.csv" target="_blank">siox_thickness_data_2.csv</a> &mdash; CVD_M03 설비 <strong>볼록형(Center-High)</strong> 이상 데이터</li>
+  </ul>
+
+  <div class="warn">
+    <strong>재현성 필수 조건:</strong> 완성된 대시보드에 data_1을 업로드하면 CVD_M02 오목형 이상이, data_2를 업로드하면 CVD_M03 볼록형 이상이 자동으로 감지/시각화되어야 합니다.
+  </div>
+
+  <h3>데이터 컬럼 설명</h3>
+  <table>
+    <tr><th>컬럼명</th><th>타입</th><th>설명</th><th>분석 관점</th></tr>
+    <tr><td><code>lot_id</code></td><td>Object</td><td>생산 Lot 번호 (LOT-001~040)</td><td>시간 경과에 따른 품질 비교</td></tr>
+    <tr><td><code>cvd_machine</code></td><td>Object</td><td>CVD 설비 번호 (M01~M03)</td><td>결함 설비 식별</td></tr>
+    <tr><td><code>meas_time</code></td><td>Object</td><td>측정 완료 시간</td><td>오작동 타임윈도우 추적</td></tr>
+    <tr><td><code>position_x</code></td><td>Float</td><td>X 좌표 (mm)</td><td>-145mm ~ +145mm</td></tr>
+    <tr><td><code>position_y</code></td><td>Float</td><td>Y 좌표 (mm)</td><td>300mm 웨이퍼 동심원</td></tr>
+    <tr><td><code>thickness_value</code></td><td>Float</td><td>SiOx 두께 (nm)</td><td>결함 검출 핵심 지표</td></tr>
+  </table>
+</div>
+
+<!-- 4. 단계별 수행 방법 -->
+<div class="card">
+  <h2>4. 단계별 수행 방법</h2>
+  <p><strong>Antigravity</strong>를 활용하여 Python 기반 <strong>Streamlit</strong> 애플리케이션을 완성합니다.</p>
+
+  <div class="step">
+    <span class="step-num">1</span>
+    <div class="step-content">
+      <strong>개발 환경 설정</strong>
+      <p>Python 가상 환경을 생성하고 필요한 패키지를 설치합니다. <code>requirements.txt</code>를 작성합니다.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        <pre># 가상 환경 생성 및 활성화
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 패키지 설치
+pip install streamlit pandas numpy plotly scipy</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">2</span>
+    <div class="step-content">
+      <strong>Streamlit 대시보드 골격 설계</strong>
+      <p>Antigravity에게 <code>app.py</code>의 기본 구조를 제안받습니다. 사이드바, 파일 업로더, 메인 영역의 레이아웃을 설계합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">3</span>
+    <div class="step-content">
+      <strong>범용 파일 업로더 및 자동 식별</strong>
+      <p><code>st.file_uploader</code>로 CSV를 업로드하면 자동으로 Lot 데이터, 설비 목록, 계측점 수를 식별하여 대시보드가 리프레시되는 코드를 작성합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">4</span>
+    <div class="step-content">
+      <strong>이상치 필터링 및 결측치 보간 옵션</strong>
+      <p>사이드바에 체크박스/슬라이더 위젯을 배치하여 사용자가 직접 전처리 옵션을 조절할 수 있게 합니다.</p>
+      <ul>
+        <li><code>st.checkbox</code>: 이상치 필터링 ON/OFF</li>
+        <li><code>st.multiselect</code>: 이상치 값 선택 (-999.0, 999.9, 0.0, 250.3)</li>
+        <li><code>st.radio</code>: 보간 방법 선택 (그룹 평균 / 중앙값 / 보간 없음)</li>
+        <li><code>st.slider</code>: 정상 두께 범위 필터 (예: 800~1200nm)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">5</span>
+    <div class="step-content">
+      <strong>Plotly 2D 원형 웨이퍼 산점도 맵</strong>
+      <p>Plotly Express의 <code>px.scatter</code>를 활용하여 동심원 측정 좌표(X, Y) 기반의 2D 원형 웨이퍼 산점도 맵을 반응형으로 구현합니다.</p>
+      <ul>
+        <li>300mm 웨이퍼 외곽 원형 표시 (shape annotation)</li>
+        <li>두께 값에 따른 연속 색상 매핑 (Viridis 또는 RdYlBu)</li>
+        <li>Lot 선택에 따른 실시간 맵 업데이트</li>
+        <li>호버 툴팁: 좌표, 두께, Lot, 설비 정보 표시</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">6</span>
+    <div class="step-content">
+      <strong>Uniformity 계산 및 설비별 트렌드 차트</strong>
+      <p>Uniformity 공식을 적용한 계산 로직과 함께, 설비별/Lot별 추이를 Plotly line chart로 구현합니다. 이상 구간을 자동 감지하여 하이라이트합니다.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">7</span>
+    <div class="step-content">
+      <strong>재현성 검증</strong>
+      <p>2개의 상이한 데이터를 대입하여 검증합니다:</p>
+      <ul>
+        <li><code>data_1</code> 업로드 &rarr; <strong>CVD_M02 오목형(Edge-High)</strong> 패턴이 감지되는지 확인</li>
+        <li><code>data_2</code> 업로드 &rarr; <strong>CVD_M03 볼록형(Center-High)</strong> 패턴이 감지되는지 확인</li>
+        <li>두 경우 모두 대시보드가 정상 동작하고, 이상 설비가 자동 식별되는지 최종 검증</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">8</span>
+    <div class="step-content">
+      <strong>requirements.txt 작성 및 실행 가이드</strong>
+      <p>프로젝트를 다른 환경에서도 재현할 수 있도록 <code>requirements.txt</code>와 실행 명령을 문서화합니다.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        <pre># requirements.txt
+streamlit>=1.30.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.18.0
+scipy>=1.11.0</pre>
+      </div>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        <pre># 실행 명령
+streamlit run app.py</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 핵심 도구 설명 -->
+<div class="card">
+  <h2>5. 핵심 도구: Antigravity + Streamlit</h2>
+
+  <h3>Streamlit이란?</h3>
+  <p><strong>Streamlit</strong>은 Python으로 데이터 대시보드와 웹 애플리케이션을 빠르게 만들 수 있는 오픈소스 프레임워크입니다. HTML/CSS/JS 없이 Python 코드만으로 인터랙티브 UI를 구현합니다.</p>
+
+  <h3>Streamlit 핵심 위젯</h3>
+  <table>
+    <tr><th>위젯</th><th>용도</th><th>코드</th></tr>
+    <tr><td><code>st.file_uploader</code></td><td>CSV 파일 업로드</td><td><code>st.file_uploader("CSV 업로드", type="csv")</code></td></tr>
+    <tr><td><code>st.sidebar</code></td><td>사이드바 영역</td><td><code>st.sidebar.checkbox("이상치 필터링")</code></td></tr>
+    <tr><td><code>st.columns</code></td><td>레이아웃 분할</td><td><code>col1, col2 = st.columns(2)</code></td></tr>
+    <tr><td><code>st.metric</code></td><td>KPI 카드</td><td><code>st.metric("평균 두께", "1002.3 nm")</code></td></tr>
+    <tr><td><code>st.plotly_chart</code></td><td>Plotly 차트 표시</td><td><code>st.plotly_chart(fig, use_container_width=True)</code></td></tr>
+    <tr><td><code>st.selectbox</code></td><td>드롭다운 선택</td><td><code>st.selectbox("Lot 선택", lot_list)</code></td></tr>
+    <tr><td><code>st.checkbox</code></td><td>체크박스</td><td><code>st.checkbox("이상치 제거")</code></td></tr>
+    <tr><td><code>st.dataframe</code></td><td>데이터프레임 표시</td><td><code>st.dataframe(df.head(20))</code></td></tr>
+  </table>
+
+  <h3>Antigravity 활용</h3>
+  <p>Antigravity 에이전트에게 app.py 코드를 점진적으로 요청합니다. 에러 발생 시 터미널 에러 메시지를 복사하여 에이전트에게 공유하면 빠르게 디버깅할 수 있습니다.</p>
+
+  <h3>Plotly Express 핵심 함수</h3>
+  <table>
+    <tr><th>함수</th><th>용도</th></tr>
+    <tr><td><code>px.scatter</code></td><td>웨이퍼 2D 산점도 맵</td></tr>
+    <tr><td><code>px.line</code></td><td>Lot별 두께/Uniformity 추이</td></tr>
+    <tr><td><code>px.box</code></td><td>설비별 두께 분포 비교</td></tr>
+    <tr><td><code>px.bar</code></td><td>이상치/결측치 건수 바 차트</td></tr>
+    <tr><td><code>px.histogram</code></td><td>두께 히스토그램</td></tr>
+  </table>
+</div>
+
+<!-- 6. 프롬프트 예시 -->
+<div class="card">
+  <h2>6. 프롬프트 예시 (Antigravity용)</h2>
+  <p>아래 프롬프트들을 Antigravity 에이전트에게 순서대로 전달하세요.</p>
+
+  <h3>Step 2: Streamlit 골격 설계</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>Streamlit 대시보드 app.py를 만들어줘.
+
+프로젝트: 반도체 CVD 박막 두께 Wafer Map 데이터 분석
+데이터: 엘립소메터 49점 계측 CSV (lot_id, cvd_machine, meas_time, position_x, position_y, thickness_value)
+
+기본 구조:
+1. 페이지 설정: 와이드 레이아웃, 다크 테마, 제목 "CVD 박막 두께 분석 대시보드"
+2. 사이드바: 파일 업로더(CSV), 전처리 옵션 (이상치 필터링 체크박스, 보간 방법 라디오)
+3. 메인 영역 상단: KPI 메트릭 카드 4개 (총 Lot수, 설비수, 평균 두께, 평균 Uniformity)
+4. 메인 영역 중단: 2열 레이아웃 (좌: Wafer Map, 우: 설비별 박스플롯)
+5. 메인 영역 하단: Lot별 트렌드 라인 차트 (전체 너비)
+
+일단 빈 플레이스홀더로 구조만 잡아줘.</pre>
+  </div>
+
+  <h3>Step 3: 범용 파일 업로더</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>st.file_uploader로 CSV를 업로드하면 자동으로 데이터를 식별하는 코드를 만들어줘.
+
+요구사항:
+- pd.read_csv로 파싱
+- lot_id 고유값 목록과 개수 자동 추출
+- cvd_machine 고유값 목록 자동 추출
+- thickness_value 기초 통계 자동 계산
+- 데이터가 없으면 안내 메시지 표시
+- 어떤 CSV를 넣어도 동작하도록 컬럼명 검증 로직 포함
+  (필수 컬럼 누락 시 에러 메시지)</pre>
+  </div>
+
+  <h3>Step 4: 전처리 옵션 위젯</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>사이드바에 전처리 옵션 위젯을 추가해줘.
+
+위젯 목록:
+1. st.checkbox("이상치 필터링 적용") - 기본값 True
+2. st.multiselect("제거할 이상치 값", [-999.0, 999.9, 0.0, 250.3], default=[-999.0, 999.9, 0.0, 250.3])
+3. st.radio("결측치 보간 방법", ["그룹 평균", "그룹 중앙값", "보간 없음(NaN 유지)"])
+4. st.slider("정상 두께 범위 (nm)", min_value=0, max_value=2000, value=(800, 1200))
+
+위젯 값에 따라 데이터프레임을 동적으로 필터링/보간하는 함수를 만들어줘.
+그룹은 같은 lot_id + cvd_machine 조합이야.</pre>
+  </div>
+
+  <h3>Step 5: Plotly 웨이퍼 맵</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>Plotly Express로 300mm 웨이퍼 2D 산점도 맵을 그려줘.
+
+요구사항:
+- px.scatter(x=position_x, y=position_y, color=thickness_value)
+- 색상 스케일: "RdYlBu_r" (빨강=두꺼움, 파랑=얇음)
+- 마커 크기: 12~15
+- 300mm 웨이퍼 외곽 원형 표시 (fig.add_shape으로 반경 150mm 원)
+- X/Y축 범위: -160 ~ 160
+- 축 비율 1:1 (scaleanchor)
+- 호버 툴팁: position_x, position_y, thickness_value, lot_id, cvd_machine
+- 다크 테마 (template="plotly_dark")
+- Lot 선택 st.selectbox 연동: 선택한 Lot만 표시
+- st.plotly_chart(fig, use_container_width=True)</pre>
+  </div>
+
+  <h3>Step 6: Uniformity 트렌드 차트</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>Lot별 + 설비별 Uniformity 추이를 Plotly line chart로 그려줘.
+
+Uniformity 공식: (Max - Min) / (2 * Mean) * 100
+각 Lot + cvd_machine 조합별로 계산
+
+요구사항:
+- X축: lot_id
+- Y축: Uniformity (%)
+- 색상: cvd_machine별 구분 (M01=파랑, M02=빨강, M03=초록)
+- 마커 + 라인 (mode="lines+markers")
+- 이상 Uniformity 기준선 표시 (2% 수평선, 빨간 점선)
+- 다크 테마
+- 하단에 평균 두께 트렌드도 서브플롯으로 추가</pre>
+  </div>
+
+  <h3>Step 7: 재현성 검증</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>재현성 검증을 위한 자동 진단 섹션을 추가해줘.
+
+데이터를 업로드하면 자동으로:
+1. 가장 Uniformity가 높은(불균일한) 설비를 식별
+2. 해당 설비의 웨이퍼 맵 패턴을 분석
+   - Center vs Edge 두께 평균 비교 (반경 50mm 이내 vs 100mm 이상)
+   - 패턴 판정: "오목형(Edge-High)" 또는 "볼록형(Center-High)"
+3. 진단 결과를 st.success 또는 st.warning 박스로 표시
+4. 예: "CVD_M02 설비에서 오목형(Edge-High) 이상 패턴이 감지되었습니다.
+   Center 평균: 998.5nm, Edge 평균: 1005.2nm, 차이: +6.7nm"
+
+data_1 -> CVD_M02 오목형, data_2 -> CVD_M03 볼록형이 나와야 해.</pre>
+  </div>
+</div>
+
+<!-- 7. 평가 채점 기준 -->
+<div class="card">
+  <h2>7. 평가 채점 기준</h2>
+  <table class="score-table">
+    <tr><th>평가 항목</th><th>배점</th></tr>
+    <tr><td>Streamlit 앱 정상 실행 (streamlit run app.py)</td><td>5점</td></tr>
+    <tr><td>파일 업로더로 CSV 로드 및 자동 식별</td><td>10점</td></tr>
+    <tr><td>사이드바 전처리 옵션 위젯 동작 (필터링/보간)</td><td>10점</td></tr>
+    <tr><td>이상치 마스킹 + 결측치 보간 로직 정확성</td><td>10점</td></tr>
+    <tr><td>Plotly 2D 원형 웨이퍼 산점도 맵 (300mm, 색상 매핑)</td><td>15점</td></tr>
+    <tr><td>Lot별 Uniformity 트렌드 차트 (설비별 구분)</td><td>10점</td></tr>
+    <tr><td>KPI 메트릭 카드 및 통계 요약</td><td>5점</td></tr>
+    <tr><td>자동 이상 패턴 진단 기능 (오목형/볼록형 판정)</td><td>10점</td></tr>
+    <tr><td><strong>재현성 검증: data_1 정상 동작 (CVD_M02 오목형)</strong></td><td>10점</td></tr>
+    <tr><td><strong>재현성 검증: data_2 정상 동작 (CVD_M03 볼록형)</strong></td><td>10점</td></tr>
+    <tr><td>requirements.txt 포함 및 설치 가이드</td><td>5점</td></tr>
+  </table>
+  <p style="text-align:right; margin-top:8px; font-weight:700; color:var(--accent);">합계: 100점</p>
+</div>
+
+<!-- 8. 제출물 체크리스트 -->
+<div class="card">
+  <h2>8. 제출물 체크리스트</h2>
+  <ul class="checklist">
+    <li><code>app.py</code> &mdash; Streamlit 메인 소스 파일</li>
+    <li><code>requirements.txt</code> &mdash; Python 패키지 의존성 목록</li>
+    <li><code>streamlit run app.py</code> 명령으로 대시보드가 정상 실행되는가</li>
+    <li><code>siox_thickness_data_1.csv</code> 업로드 시 CVD_M02 오목형 패턴이 감지되는가</li>
+    <li><code>siox_thickness_data_2.csv</code> 업로드 시 CVD_M03 볼록형 패턴이 감지되는가</li>
+    <li>사이드바 전처리 옵션(이상치 필터링, 보간 방법)이 동작하는가</li>
+    <li>Plotly 웨이퍼 맵이 300mm 원형으로 정상 렌더링되는가</li>
+    <li>Lot별 Uniformity 트렌드 차트가 설비별로 구분되어 표시되는가</li>
+    <li>자동 이상 패턴 진단 결과가 표시되는가</li>
+    <li>Antigravity 대화 기록 스크린샷 또는 텍스트 파일</li>
+  </ul>
+</div>
+
+<!-- 9. 트러블슈팅 -->
+<div class="card">
+  <h2>9. 트러블슈팅 (FAQ)</h2>
+
+  <h3>Q. Streamlit 설치가 안 돼요</h3>
+  <p>A. Python 3.8 이상이 필요합니다. <code>python --version</code>으로 확인하세요. pip가 오래된 경우 <code>pip install --upgrade pip</code> 후 재시도합니다.</p>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre># Python 버전 확인
+python --version
+
+# pip 업그레이드 후 설치
+pip install --upgrade pip
+pip install streamlit pandas numpy plotly</pre>
+  </div>
+
+  <h3>Q. st.file_uploader가 파일을 읽지 못해요</h3>
+  <p>A. <code>st.file_uploader</code>는 UploadedFile 객체를 반환합니다. <code>pd.read_csv(uploaded_file)</code>로 직접 읽을 수 있습니다.</p>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>uploaded_file = st.file_uploader("CSV 업로드", type="csv")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df.head())</pre>
+  </div>
+
+  <h3>Q. Plotly 웨이퍼 맵에서 원이 타원형으로 나와요</h3>
+  <p>A. X/Y축 비율을 1:1로 맞춰야 합니다. <code>fig.update_yaxes(scaleanchor="x", scaleratio=1)</code>을 추가하세요.</p>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre>fig = px.scatter(df, x="position_x", y="position_y",
+                 color="thickness_value", color_continuous_scale="RdYlBu_r")
+fig.update_yaxes(scaleanchor="x", scaleratio=1)
+fig.update_layout(
+    xaxis_range=[-160, 160],
+    yaxis_range=[-160, 160],
+    template="plotly_dark"
+)
+# 웨이퍼 외곽 원 추가
+fig.add_shape(type="circle", x0=-150, y0=-150, x1=150, y1=150,
+              line=dict(color="gray", width=2))</pre>
+  </div>
+
+  <h3>Q. 재현성 검증에서 오목/볼록 판정이 안 맞아요</h3>
+  <p>A. Center(반경 50mm 이내)와 Edge(반경 100mm 이상) 영역을 정확히 구분해야 합니다. 이상치 제거 후의 정제 데이터로 판정하세요.</p>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre># 반경 계산
+df['radius'] = np.sqrt(df['position_x']**2 + df['position_y']**2)
+
+# Center vs Edge 영역 평균
+center_mean = df[df['radius'] <= 50]['thickness_value'].mean()
+edge_mean = df[df['radius'] >= 100]['thickness_value'].mean()
+
+# 판정
+if edge_mean > center_mean:
+    pattern = "오목형(Edge-High)"  # 가장자리가 더 두꺼움
+else:
+    pattern = "볼록형(Center-High)"  # 중심이 더 두꺼움</pre>
+  </div>
+
+  <h3>Q. Streamlit 앱이 자꾸 새로고침돼요</h3>
+  <p>A. Streamlit은 코드 변경 시 자동 새로고침됩니다. <code>@st.cache_data</code> 데코레이터를 사용하면 데이터 로딩을 캐싱하여 불필요한 재로딩을 방지할 수 있습니다.</p>
+
+  <h3>Q. requirements.txt에 뭘 넣어야 하나요?</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre># requirements.txt
+streamlit>=1.30.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.18.0
+scipy>=1.11.0</pre>
+  </div>
+</div>
+
+<!-- 10. 예시 결과물 -->
+<div class="card">
+  <h2>10. 예시 결과물 이미지 설명</h2>
+  <p>완성된 Streamlit 대시보드는 아래와 같은 구성을 가집니다:</p>
+  <ul>
+    <li><strong>사이드바</strong>: CSV 파일 업로더, 이상치 필터링 체크박스, 보간 방법 라디오 버튼, 두께 범위 슬라이더가 세로로 나열</li>
+    <li><strong>상단 KPI 카드</strong>: 총 Lot 수 (40), 설비 수 (3), 정제 후 평균 두께 (1001.5 nm), 평균 Uniformity (1.23%) 4개 메트릭이 가로로 배치</li>
+    <li><strong>중단 좌측: 웨이퍼 맵</strong>: 300mm 원형 안에 49개 점이 빨강~파랑 그라데이션으로 표시. Lot 드롭다운으로 전환 가능</li>
+    <li><strong>중단 우측: 설비별 박스플롯</strong>: CVD_M01/M02/M03의 두께 분포를 박스플롯으로 비교. M02에서 분산이 큰 것이 시각적으로 확인</li>
+    <li><strong>하단: 트렌드 차트</strong>: X축 Lot-001~040, Y축 Uniformity(%). 3개 설비 라인이 색상으로 구분되고, 2% 기준선이 빨간 점선으로 표시</li>
+    <li><strong>진단 결과</strong>: 초록색(st.success) 또는 노란색(st.warning) 박스에 "CVD_M02 설비에서 오목형(Edge-High) 이상 패턴 감지" 메시지 표시</li>
+  </ul>
+  <div class="info">
+    <strong>고급의 차별점:</strong> 초급/중급과 달리 <strong>어떤 CSV를 업로드해도 자동으로 분석</strong>이 수행되는 재현 가능한 파이프라인입니다. 두 데이터 모두 정상 동작해야 합니다.
+  </div>
+</div>
+
+</div><!-- container -->
+
+<footer>
+  렛유인 AI + 바이브코딩 강의 | CH.1 수료 후 프로젝트 1 &mdash; 고급 (Advanced)
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '복사됨!';
+    setTimeout(() => { btn.textContent = '복사'; }, 1500);
+  });
+}
+</script>
+</body>
+</html>
