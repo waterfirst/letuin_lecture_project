@@ -1,177 +1,183 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>P2 OLED Deposition — 하 (기본)</title>
+<title>Project 2 Beginner — OLED Deposition</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a14;--card:#13131f;--border:#1e1e2e;--text:#e8e8f0;--muted:#8888a0;--accent:#3fb950;--accent-mid:#f0c000;--accent-hard:#f85149;--code-bg:#1a1a2a}
-body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:80px}
-a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-
-/* NAV */
-.top-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:6px;padding:10px 16px}
-.top-nav a{padding:8px 20px;border-radius:8px;font-weight:700;font-size:.95rem;transition:.2s}
-.nav-beginner{background:var(--accent);color:#000}
-.nav-intermediate{background:transparent;border:1px solid var(--accent-mid);color:var(--accent-mid)}
-.nav-advanced{background:transparent;border:1px solid var(--accent-hard);color:var(--accent-hard)}
-.nav-intermediate:hover{background:var(--accent-mid);color:#000;text-decoration:none}
-.nav-advanced:hover{background:var(--accent-hard);color:#fff;text-decoration:none}
-.nav-beginner:hover{text-decoration:none}
-
-.container{max-width:860px;margin:0 auto;padding:0 16px}
-
-/* BADGE */
-.badge-area{text-align:center;margin:36px 0 24px}
-.badge{display:inline-block;background:var(--accent);color:#000;font-size:1.3rem;font-weight:800;padding:10px 36px;border-radius:40px;letter-spacing:.04em}
-.subtitle{color:var(--muted);margin-top:10px;font-size:.95rem}
-
-/* CARD */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin:20px 0}
-.card h2{font-size:1.25rem;margin-bottom:14px;color:var(--accent);border-left:4px solid var(--accent);padding-left:12px}
-.card h3{font-size:1.05rem;margin:18px 0 8px;color:var(--text)}
-
-/* TABLE */
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
-th,td{border:1px solid var(--border);padding:8px 10px;text-align:left}
-th{background:var(--code-bg);color:var(--accent);font-weight:700}
-tr:nth-child(even){background:rgba(255,255,255,.02)}
-
-/* CODE */
-.code-wrap{position:relative;margin:12px 0}
-.code-wrap pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:.88rem;line-height:1.6;color:#c8c8e0;font-family:'Fira Code','Consolas',monospace}
-.copy-btn{position:absolute;top:8px;right:10px;background:var(--accent);color:#000;border:none;border-radius:6px;padding:4px 12px;font-size:.78rem;font-weight:700;cursor:pointer;opacity:.8;transition:.2s}
-.copy-btn:hover{opacity:1}
-
-/* CHECKLIST */
-.checklist{list-style:none;padding:0}
-.checklist li{padding:6px 0 6px 30px;position:relative}
-.checklist li::before{content:"\2610";position:absolute;left:4px;font-size:1.1rem;color:var(--accent)}
-
-ul:not(.checklist){padding-left:22px;margin:8px 0}
-ul:not(.checklist) li{margin:4px 0}
-ol{padding-left:22px;margin:8px 0}
-ol li{margin:6px 0}
-
-.highlight{background:rgba(63,185,80,.1);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.92rem}
-
-.footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:48px;padding:20px}
-
-@media(max-width:600px){
-  .card{padding:18px 14px}
-  .badge{font-size:1.05rem;padding:8px 24px}
-  .top-nav a{padding:6px 12px;font-size:.82rem}
-  table{font-size:.8rem}
-  th,td{padding:6px}
+:root{
+  --accent:#3fb950;--accent-light:#3fb95022;
+  --bg:#ffffff;--bg2:#f6f8fa;--card:#ffffff;
+  --tx:#1f2328;--tx2:#656d76;--bd:#d0d7de;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--code:#f0f3f6;
 }
+[data-theme="dark"]{
+  --bg:#0d1117;--bg2:#161b22;--card:#161b22;
+  --tx:#e6edf3;--tx2:#8b949e;--bd:#30363d;
+  --shadow:0 1px 3px rgba(0,0,0,.3);--code:#1c2128;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);line-height:1.72;transition:background .3s,color .3s;}
+[data-lang="ko"] .en{display:none;}
+[data-lang="en"] .ko{display:none;}
+/* top-bar */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:flex-end;gap:8px;padding:10px 24px;background:var(--bg2);border-bottom:1px solid var(--bd);backdrop-filter:blur(8px);}
+.top-bar button{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px;color:var(--tx);transition:.2s;}
+.top-bar button:hover{border-color:var(--accent);}
+/* hero */
+.hero{margin-top:52px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:320px;background:linear-gradient(135deg,var(--accent-light),var(--bg2));}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22;}
+.hero-c{position:relative;text-align:center;padding:48px 24px;}
+.badge{display:inline-block;background:var(--accent);color:#fff;padding:4px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:12px;}
+.hero-c h1{font-size:clamp(1.5rem,4vw,2.3rem);margin-bottom:8px;}
+.hero-c p{color:var(--tx2);font-size:1.05rem;}
+/* layout */
+.wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px;}
+section{margin-bottom:48px;}
+h2{font-size:1.35rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--accent);}
+h3{font-size:1.08rem;margin:20px 0 10px;color:var(--accent);}
+p,li{margin-bottom:8px;}
+ul,ol{padding-left:1.4em;}
+a{color:var(--accent);}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow);}
+/* table */
+.tw{overflow-x:auto;margin-bottom:16px;}
+table{width:100%;border-collapse:collapse;font-size:.92rem;}
+th,td{padding:10px 14px;border:1px solid var(--bd);text-align:left;}
+th{background:var(--accent);color:#fff;font-weight:600;}
+/* prompt */
+.pb{position:relative;background:var(--code);border:1px solid var(--bd);border-radius:10px;padding:16px 50px 16px 20px;margin:12px 0 16px;font-family:'Fira Code','Courier New',monospace;font-size:.87rem;white-space:pre-wrap;word-break:break-word;line-height:1.6;}
+.cb{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;}
+.cb:hover{opacity:.85;}
+/* checklist */
+.cl{list-style:none;padding-left:0;}
+.cl li::before{content:"\2610 ";color:var(--accent);font-weight:700;}
+/* download */
+.dl{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 22px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .2s;}
+.dl:hover{opacity:.85;}
+.dl svg{flex-shrink:0;}
+/* step */
+.sn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;margin-right:8px;flex-shrink:0;}
+.sr{display:flex;align-items:flex-start;margin-bottom:14px;}
+.sr>div{flex:1;}
+/* footer */
+footer{text-align:center;padding:32px 20px;font-size:.85rem;color:var(--tx2);border-top:1px solid var(--bd);}
+@media(max-width:640px){.wrap{padding:20px 14px 48px;}.hero{min-height:220px;}.card{padding:16px;}th,td{padding:8px 10px;}}
 </style>
 </head>
-<body>
+<body data-lang="ko">
 
-<!-- NAVIGATION -->
-<nav class="top-nav">
-  <a href="project2_beginner.html" class="nav-beginner">하 (기본)</a>
-  <a href="project2_intermediate.html" class="nav-intermediate">중 (응용)</a>
-  <a href="project2_advanced.html" class="nav-advanced">상 (심화)</a>
-</nav>
-
-<div class="container">
-
-<!-- BADGE -->
-<div class="badge-area">
-  <span class="badge">하 — 기본 난이도</span>
-  <p class="subtitle">프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서</p>
+<div class="top-bar">
+  <button id="langBtn" onclick="toggleLang()">EN</button>
+  <button id="themeBtn" onclick="toggleTheme()">&#127769;</button>
 </div>
 
-<!-- 1. 프로젝트 개요 -->
+<!-- HERO -->
+<section class="hero">
+  <img src="p2_beginner.png" alt="hero">
+  <div class="hero-c">
+    <span class="badge">BEGINNER</span>
+    <h1><span class="ko">OLED Deposition 데이터 시각화 &amp; HTML 보고서</span><span class="en">OLED Deposition Data Visualization &amp; HTML Report</span></h1>
+    <p><span class="ko">프로젝트 2 &mdash; CSV 읽기 + Seaborn 그래프 3종</span><span class="en">Project 2 &mdash; CSV Loading + 3 Seaborn Charts</span></p>
+  </div>
+</section>
+
+<div class="wrap">
+
+<!-- 1 개요 -->
+<section>
+<h2><span class="ko">1. 프로젝트 개요</span><span class="en">1. Project Overview</span></h2>
 <div class="card">
-  <h2>1. 프로젝트 개요</h2>
-  <p>OLED deposition 공정 데이터를 읽고 <strong>그래프와 통계 분석으로 공정 인사이트를 찾은 뒤 HTML 보고서로 문서화</strong>하는 프로젝트입니다. P1에서 익힌 CSV 분석 경험을 바탕으로, 이번에는 Seaborn 시각화를 활용해 더 보고서다운 결과물을 만듭니다.</p>
+  <p><span class="ko">OLED deposition 공정 데이터를 읽고 <b>그래프와 통계 분석으로 공정 인사이트를 찾은 뒤 HTML 보고서로 문서화</b>하는 프로젝트입니다. P1에서 익힌 CSV 분석 경험을 바탕으로, Seaborn 시각화를 활용해 보고서다운 결과물을 만듭니다.</span><span class="en">Read OLED deposition process data, <b>discover process insights via charts &amp; statistics, then document them as an HTML report</b>. Building on P1 CSV skills, create report-quality outputs with Seaborn.</span></p>
   <ul>
-    <li><strong>수행 기간</strong>: CH.2 이후 주말 2일 (토~일)</li>
-    <li><strong>사용 도구</strong>: Gemini AI + Python + pandas + seaborn</li>
-    <li><strong>결과물</strong>: CSV 분석 코드 + 그래프 이미지 + HTML 보고서</li>
-    <li><strong>참고 사이트</strong>: <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></li>
+    <li><span class="ko"><b>수행 기간:</b> CH.2 이후 주말 2일</span><span class="en"><b>Duration:</b> 2 weekend days after CH.2</span></li>
+    <li><span class="ko"><b>소요 시간:</b> 3~4 시간</span><span class="en"><b>Time:</b> 3-4 hours</span></li>
+    <li><span class="ko"><b>사용 도구:</b> Gemini AI + Python + pandas + seaborn + matplotlib</span><span class="en"><b>Tools:</b> Gemini AI + Python + pandas + seaborn + matplotlib</span></li>
+    <li><span class="ko"><b>결과물:</b> 분석 코드 + 그래프 PNG 3개 + HTML 보고서</span><span class="en"><b>Deliverables:</b> Analysis code + 3 chart PNGs + HTML report</span></li>
+    <li><span class="ko"><b>참고:</b> <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></span><span class="en"><b>Reference:</b> <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></span></li>
   </ul>
-  <div class="highlight">P1의 핵심이 "CSV를 읽고 그래프를 만든다"였다면, P2의 핵심은 "그래프를 근거로 원인 후보를 좁히고 보고서로 설명한다"입니다.</div>
 </div>
 
-<!-- 2. P1 복습 체크리스트 -->
+<h3><span class="ko">P1 복습 체크리스트</span><span class="en">P1 Review Checklist</span></h3>
 <div class="card">
-  <h2>2. P1에서 배운 것 복습 체크리스트</h2>
-  <p>P2를 시작하기 전에 P1에서 익힌 핵심 역량을 점검하세요.</p>
-  <ul class="checklist">
-    <li>Gemini에게 코드 생성/수정을 요청하는 프롬프트 작성</li>
-    <li>CSV 파일을 pandas로 읽고 기본 통계를 확인</li>
-    <li>그래프를 보고 이상치나 패턴을 설명</li>
-    <li>분석 결과를 간단한 문서로 정리</li>
-    <li>에러 발생 시 AI에게 디버깅 요청</li>
-  </ul>
-  <h3>P1에서 P2로의 성장</h3>
-  <table>
-    <tr><th>구분</th><th>P1</th><th>P2 (이번 프로젝트)</th></tr>
-    <tr><td>데이터</td><td>간단한 공정 CSV</td><td>OLED deposition x/y map CSV</td></tr>
-    <tr><td>시각화</td><td>기본 차트</td><td>boxplot, scatter, heatmap</td></tr>
-    <tr><td>분석</td><td>그래프 확인</td><td>그래프 기반 인사이트 도출</td></tr>
-    <tr><td>보고서</td><td>간단 요약</td><td>HTML 보고서</td></tr>
-    <tr><td>목표</td><td>분석 경험</td><td>원인 가설과 개선 제안</td></tr>
-  </table>
+<ul class="cl">
+  <li><span class="ko">Gemini에게 코드 생성/수정 프롬프트 작성</span><span class="en">Write prompts for code generation/modification in Gemini</span></li>
+  <li><span class="ko">CSV를 pandas로 읽고 기본 통계 확인</span><span class="en">Load CSV with pandas and check basic stats</span></li>
+  <li><span class="ko">그래프를 보고 이상치/패턴 설명</span><span class="en">Identify outliers/patterns from charts</span></li>
+  <li><span class="ko">분석 결과를 간단한 문서로 정리</span><span class="en">Organize results into a simple document</span></li>
+  <li><span class="ko">에러 발생 시 AI에게 디버깅 요청</span><span class="en">Ask AI for debugging when errors occur</span></li>
+</ul>
 </div>
 
-<!-- 3. 학습 목표 -->
+<div class="card" style="border-left:4px solid var(--accent);">
+  <p><span class="ko"><b>P1 &rarr; P2 성장:</b> P1의 핵심이 "CSV를 읽고 그래프를 만든다"였다면, P2의 핵심은 "그래프를 근거로 원인 후보를 좁히고 보고서로 설명한다"입니다.</span><span class="en"><b>P1 &rarr; P2 Growth:</b> If P1 was "load CSV and create charts," P2 is "narrow down root-cause candidates from charts and explain in a report."</span></p>
+</div>
+</section>
+
+<!-- 2 학습 목표 -->
+<section>
+<h2><span class="ko">2. 학습 목표</span><span class="en">2. Learning Objectives</span></h2>
 <div class="card">
-  <h2>3. 학습 목표 (하 난이도)</h2>
-  <ol>
-    <li>OLED deposition CSV 데이터를 pandas로 <strong>정상 로드</strong>한다</li>
-    <li>Seaborn으로 <strong>boxplot, scatter plot, heatmap</strong>을 각각 1개 이상 생성한다</li>
-    <li>그래프를 PNG로 저장하고 <strong>HTML 보고서</strong>에 포함한다</li>
-    <li>각 그래프 아래에 <strong>한 줄 해석</strong>을 작성한다</li>
-    <li>Gemini가 생성한 코드를 실행하고 결과를 확인한다</li>
-  </ol>
-  <p><strong>소요 시간</strong>: 약 3~4시간</p>
+<ol>
+  <li><span class="ko">OLED deposition 데이터를 읽고 주요 품질 지표를 이해한다</span><span class="en">Read OLED deposition data and understand key quality metrics</span></li>
+  <li><span class="ko">boxplot, scatter plot, heatmap을 Seaborn으로 생성한다</span><span class="en">Create boxplot, scatter plot, heatmap with Seaborn</span></li>
+  <li><span class="ko">각 그래프에서 공정 인사이트를 한 줄로 해석한다</span><span class="en">Write a one-line insight for each chart</span></li>
+  <li><span class="ko">분석 결과를 HTML 보고서로 문서화한다</span><span class="en">Document analysis as an HTML report</span></li>
+</ol>
+</div>
+</section>
+
+<!-- 3 데이터셋 -->
+<section>
+<h2><span class="ko">3. 데이터셋 설명</span><span class="en">3. Dataset Description</span></h2>
+<div class="card">
+  <p><span class="ko"><b>oled_deposition_xymap.csv</b> &mdash; 4개 panel, 96&times;64 좌표, 총 24,576행의 OLED deposition 합성 데이터</span><span class="en"><b>oled_deposition_xymap.csv</b> &mdash; Synthetic OLED deposition data: 4 panels, 96&times;64 coords, 24,576 rows</span></p>
 </div>
 
-<!-- 4. 사용 데이터셋 -->
+<h3><span class="ko">컬럼 딕셔너리</span><span class="en">Column Dictionary</span></h3>
+<div class="tw"><table>
+<thead><tr><th><span class="ko">컬럼</span><span class="en">Column</span></th><th><span class="ko">의미</span><span class="en">Description</span></th><th><span class="ko">활용 예</span><span class="en">Usage</span></th></tr></thead>
+<tbody>
+<tr><td>panel_id, x_index, y_index</td><td><span class="ko">panel과 x/y 측정 좌표</span><span class="en">Panel &amp; x/y coords</span></td><td>x/y map, heatmap</td></tr>
+<tr><td>chamber, zone</td><td><span class="ko">증착 chamber와 panel 영역</span><span class="en">Deposition chamber &amp; zone</span></td><td><span class="ko">chamber별 boxplot</span><span class="en">Boxplot by chamber</span></td></tr>
+<tr><td>source_temp_c, substrate_temp_c</td><td><span class="ko">공정 온도</span><span class="en">Process temperature</span></td><td><span class="ko">산점도</span><span class="en">Scatter plot</span></td></tr>
+<tr><td>pressure_mTorr, oxygen_flow_sccm</td><td><span class="ko">압력/가스 조건</span><span class="en">Pressure/gas conditions</span></td><td><span class="ko">상관관계</span><span class="en">Correlation</span></td></tr>
+<tr><td>thickness_nm, thickness_error_nm</td><td><span class="ko">목표 두께 대비 편차</span><span class="en">Thickness deviation</span></td><td>boxplot, heatmap</td></tr>
+<tr><td>particle_count, dark_spot_count</td><td><span class="ko">결함 측정값</span><span class="en">Defect measurements</span></td><td>Pareto</td></tr>
+<tr><td>defect_type, pass_fail</td><td><span class="ko">결함 유형/판정</span><span class="en">Defect type/judgment</span></td><td>Pareto chart</td></tr>
+<tr><td>yield_score</td><td><span class="ko">좌표 단위 품질 점수</span><span class="en">Quality score per coord</span></td><td>scatter, regression</td></tr>
+</tbody>
+</table></div>
+
+<a class="dl" href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/project_02/public/oled_deposition_xymap.csv" download>
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <span class="ko">oled_deposition_xymap.csv 다운로드</span><span class="en">Download oled_deposition_xymap.csv</span>
+</a>
+</section>
+
+<!-- 4 단계별 수행 -->
+<section>
+<h2><span class="ko">4. 단계별 수행 방법</span><span class="en">4. Step-by-Step Guide</span></h2>
 <div class="card">
-  <h2>4. 사용 데이터셋</h2>
-  <p>이번 프로젝트에는 확장된 OLED deposition 합성 CSV가 제공됩니다.</p>
-  <table>
-    <tr><th>파일</th><th>설명</th></tr>
-    <tr><td><code>oled_deposition_xymap.csv</code></td><td>4개 panel, 96 x 64 좌표, 총 24,576행</td></tr>
-  </table>
-  <p style="margin-top:14px"><strong>CSV 다운로드:</strong></p>
-  <a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project2/public/oled_deposition_xymap.csv" target="_blank" style="display:inline-block;background:var(--accent);color:#000;padding:10px 22px;border-radius:8px;font-weight:700;margin:8px 0">oled_deposition_xymap.csv 다운로드</a>
+  <div class="sr"><span class="sn">1</span><div><b><span class="ko">Gemini 접속</span><span class="en">Access Gemini</span></b><p><span class="ko"><a href="https://gemini.google.com" target="_blank">gemini.google.com</a>에 접속합니다.</span><span class="en">Go to <a href="https://gemini.google.com" target="_blank">gemini.google.com</a>.</span></p></div></div>
+  <div class="sr"><span class="sn">2</span><div><b><span class="ko">프롬프트 입력</span><span class="en">Enter Prompt</span></b><p><span class="ko">아래 프롬프트 예시를 복사하여 Gemini에 붙여넣으세요.</span><span class="en">Copy the prompt example below and paste it into Gemini.</span></p></div></div>
+  <div class="sr"><span class="sn">3</span><div><b><span class="ko">코드 저장</span><span class="en">Save Code</span></b><p><span class="ko">Gemini가 생성한 코드를 <code>analysis.py</code>로 저장합니다.</span><span class="en">Save Gemini's generated code as <code>analysis.py</code>.</span></p></div></div>
+  <div class="sr"><span class="sn">4</span><div><b><span class="ko">패키지 설치 &amp; 실행</span><span class="en">Install &amp; Run</span></b>
+    <div class="pb">pip install pandas seaborn matplotlib
+python analysis.py</div>
+  </div></div>
+  <div class="sr"><span class="sn">5</span><div><b><span class="ko">결과 확인</span><span class="en">Check Results</span></b><p><span class="ko">생성된 <code>report.html</code>과 그래프 PNG를 확인합니다. 그래프가 올바르게 표시되는지, 해석 문장이 포함되어 있는지 점검합니다.</span><span class="en">Verify the generated <code>report.html</code> and chart PNGs. Check that charts render correctly and include interpretation text.</span></p></div></div>
+  <div class="sr"><span class="sn">6</span><div><b><span class="ko">에러 수정</span><span class="en">Fix Errors</span></b><p><span class="ko">에러가 발생하면 에러 메시지를 Gemini에게 보여주고 수정을 요청하세요.</span><span class="en">Show error messages to Gemini and request fixes.</span></p></div></div>
+  <div class="sr"><span class="sn">7</span><div><b><span class="ko">보고서 마무리</span><span class="en">Finalize Report</span></b><p><span class="ko">HTML 보고서에 각 그래프에 대한 한 줄 해석을 추가합니다. 브라우저에서 최종 확인 후 캡처합니다.</span><span class="en">Add one-line interpretations for each chart. Verify in browser and capture a screenshot.</span></p></div></div>
 </div>
+</section>
 
-<!-- 5. 컬럼 딕셔너리 -->
-<div class="card">
-  <h2>5. 주요 컬럼 딕셔너리</h2>
-  <table>
-    <tr><th>컬럼</th><th>의미</th><th>활용 예</th></tr>
-    <tr><td><code>panel_id</code>, <code>x_index</code>, <code>y_index</code></td><td>panel과 x/y 측정 좌표</td><td>x/y map, heatmap</td></tr>
-    <tr><td><code>chamber</code>, <code>zone</code></td><td>증착 chamber와 panel 영역</td><td>chamber별 boxplot</td></tr>
-    <tr><td><code>source_temp_c</code>, <code>substrate_temp_c</code></td><td>공정 온도</td><td>산점도, 회귀분석</td></tr>
-    <tr><td><code>pressure_mTorr</code>, <code>oxygen_flow_sccm</code></td><td>공정 압력/가스 조건</td><td>상관관계, 회귀분석</td></tr>
-    <tr><td><code>thickness_nm</code>, <code>thickness_error_nm</code></td><td>목표 두께 대비 편차</td><td>boxplot, heatmap</td></tr>
-    <tr><td><code>particle_count</code>, <code>dark_spot_count</code></td><td>결함 관련 측정값</td><td>Pareto, 원인 후보</td></tr>
-    <tr><td><code>defect_type</code>, <code>pass_fail</code></td><td>결함 유형과 판정</td><td>Pareto chart</td></tr>
-    <tr><td><code>yield_score</code></td><td>좌표 단위 품질 점수</td><td>scatter, regression</td></tr>
-  </table>
-</div>
+<!-- 5 프롬프트 -->
+<section>
+<h2><span class="ko">5. 프롬프트 예시</span><span class="en">5. Prompt Examples</span></h2>
 
-<!-- 6. 단계별 수행 방법 -->
-<div class="card">
-  <h2>6. 단계별 수행 방법</h2>
-
-  <h3>Step 1. Gemini 접속</h3>
-  <p><a href="https://gemini.google.com" target="_blank">gemini.google.com</a>에 접속합니다. Google 계정으로 로그인하세요.</p>
-
-  <h3>Step 2. 프롬프트 입력</h3>
-  <p>아래 프롬프트를 <strong>그대로 복사</strong>하여 Gemini에 붙여넣으세요.</p>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>OLED deposition CSV를 분석하는 Python 예제를 만들어줘.
+<h3><span class="ko">기본 분석 프롬프트</span><span class="en">Basic Analysis Prompt</span></h3>
+<div class="pb" id="p1">OLED deposition CSV를 분석하는 Python 예제를 만들어줘.
 
 조건:
 1. pandas로 oled_deposition_xymap.csv를 읽기
@@ -181,228 +187,133 @@ ol li{margin:6px 0}
 5. 초보자도 실행할 수 있도록 requirements.txt와 실행 명령어도 함께 설명하기
 
 사용 컬럼:
-panel_id, x_index, y_index, chamber, zone, substrate_temp_c, pressure_mTorr,
-thickness_nm, thickness_error_nm, particle_count, defect_type, yield_score</code></pre>
-  </div>
+panel_id, x_index, y_index, chamber, zone, substrate_temp_c,
+pressure_mTorr, thickness_nm, thickness_error_nm,
+particle_count, defect_type, yield_score<button class="cb" onclick="copyP('p1')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
 
-  <h3>Step 3. 코드 저장</h3>
-  <p>Gemini가 생성한 코드를 복사하여 <code>analysis.py</code> 파일로 저장합니다. CSV 파일과 같은 폴더에 저장하세요.</p>
+<h3><span class="ko">에러 수정 프롬프트</span><span class="en">Error Fix Prompt</span></h3>
+<div class="pb" id="p2">이 에러 메시지를 보고 코드를 고쳐줘:
+[여기에 에러 메시지를 붙여넣기]<button class="cb" onclick="copyP('p2')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
 
-  <h3>Step 4. 필수 라이브러리 설치 및 실행</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>pip install pandas seaborn matplotlib
-python analysis.py</code></pre>
-  </div>
-  <p>에러가 발생하면 에러 메시지를 Gemini에 복사해서 "이 에러를 고쳐줘"라고 요청하세요.</p>
+<h3><span class="ko">Seaborn 스타일 적용</span><span class="en">Apply Seaborn Style</span></h3>
+<div class="pb" id="p3">Seaborn Gallery의 이 예제 스타일을 내 데이터의 chamber별 boxplot으로 바꿔줘.
+참고: https://seaborn.pydata.org/examples/index.html<button class="cb" onclick="copyP('p3')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
+</section>
 
-  <h3>Step 5. 결과 확인</h3>
-  <p>실행이 끝나면 다음 파일들이 생성됩니다:</p>
-  <ul>
-    <li>boxplot PNG 이미지</li>
-    <li>scatter plot PNG 이미지</li>
-    <li>heatmap PNG 이미지</li>
-    <li><code>report.html</code> — 브라우저에서 열어보세요</li>
-  </ul>
+<!-- 6 채점 -->
+<section>
+<h2><span class="ko">6. 평가 채점 기준 (100점)</span><span class="en">6. Grading Criteria (100 pts)</span></h2>
+<div class="tw"><table>
+<thead><tr><th><span class="ko">항목</span><span class="en">Category</span></th><th><span class="ko">세부 기준</span><span class="en">Details</span></th><th><span class="ko">배점</span><span class="en">Pts</span></th></tr></thead>
+<tbody>
+<tr><td><span class="ko">데이터 처리와 재현성</span><span class="en">Data Processing &amp; Reproducibility</span></td><td><span class="ko">CSV 정상 로드, 코드가 에러 없이 실행됨</span><span class="en">CSV loads correctly, code runs without error</span></td><td>25</td></tr>
+<tr><td><span class="ko">시각화 완성도</span><span class="en">Visualization Quality</span></td><td><span class="ko">boxplot, scatter, heatmap 각 1개 이상</span><span class="en">At least 1 boxplot, scatter, heatmap each</span></td><td>25</td></tr>
+<tr><td><span class="ko">분석 해석</span><span class="en">Interpretation</span></td><td><span class="ko">각 그래프에 한 줄 이상 해석 포함</span><span class="en">One-line+ interpretation per chart</span></td><td>25</td></tr>
+<tr><td><span class="ko">보고서 문서화</span><span class="en">Report Documentation</span></td><td><span class="ko">HTML 보고서에 그래프와 해석이 포함됨</span><span class="en">HTML report includes charts &amp; interpretations</span></td><td>25</td></tr>
+</tbody>
+</table></div>
+</section>
 
-  <h3>Step 6. 해석 문장 추가</h3>
-  <p>보고서에 그래프별 해석 한 줄을 추가합니다. 예를 들면:</p>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>report.html에 각 그래프 아래에 한 줄 해석을 넣어줘.
-예시:
-- boxplot: "chamber B의 thickness_error_nm 중앙값이 가장 높아 편차가 큰 것으로 보인다."
-- scatter: "substrate_temp_c가 높을수록 yield_score가 낮아지는 경향이 있다."
-- heatmap: "좌측 하단 영역에 thickness_error가 집중되어 있다."</code></pre>
-  </div>
+<!-- 7 제출물 -->
+<section>
+<h2><span class="ko">7. 제출물 체크리스트</span><span class="en">7. Submission Checklist</span></h2>
+<div class="card">
+<ul class="cl">
+  <li><code>analysis.py</code></li>
+  <li><span class="ko">그래프 PNG 3개 이상 (boxplot, scatter, heatmap)</span><span class="en">3+ chart PNGs (boxplot, scatter, heatmap)</span></li>
+  <li><code>report.html</code></li>
+  <li><span class="ko">실행 화면 또는 보고서 캡처 1장</span><span class="en">1 screenshot of execution or report</span></li>
+</ul>
+</div>
+</section>
 
-  <h3>Step 7. 캡처 및 제출 준비</h3>
-  <p>완성된 <code>report.html</code>을 브라우저에서 열고 스크린샷을 1장 캡처합니다.</p>
+<!-- 8 추천 구조 -->
+<section>
+<h2><span class="ko">8. 추천 보고서 구조</span><span class="en">8. Recommended Report Structure</span></h2>
+<div class="card">
+<ol>
+  <li><span class="ko">분석 목적</span><span class="en">Analysis Purpose</span></li>
+  <li><span class="ko">데이터 설명</span><span class="en">Data Description</span></li>
+  <li><span class="ko">결측치 / 기초 통계 확인</span><span class="en">Missing Values / Basic Statistics</span></li>
+  <li><span class="ko">시각화 결과</span><span class="en">Visualization Results</span>
+    <ul>
+      <li><span class="ko">분포: boxplot</span><span class="en">Distribution: boxplot</span></li>
+      <li><span class="ko">관계: scatter plot</span><span class="en">Relationship: scatter plot</span></li>
+      <li><span class="ko">위치: heatmap</span><span class="en">Spatial: heatmap</span></li>
+    </ul>
+  </li>
+  <li><span class="ko">각 그래프에 대한 한 줄 해석</span><span class="en">One-line interpretation per chart</span></li>
+  <li><span class="ko">결론 및 정리</span><span class="en">Conclusion &amp; Summary</span></li>
+</ol>
+</div>
+</section>
+
+<!-- 9 트러블슈팅 -->
+<section>
+<h2><span class="ko">9. 트러블슈팅 / FAQ</span><span class="en">9. Troubleshooting / FAQ</span></h2>
+
+<div class="card">
+<h3>ModuleNotFoundError: No module named 'seaborn'</h3>
+<div class="pb">pip install seaborn matplotlib pandas</div>
 </div>
 
-<!-- 7. 프롬프트 예시 -->
 <div class="card">
-  <h2>7. Gemini 프롬프트 예시 (전문 제공)</h2>
-  <p>하 난이도에서는 프롬프트를 그대로 복사해서 사용하면 됩니다.</p>
-
-  <h3>프롬프트 1: 기본 분석 코드 생성</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>OLED deposition CSV를 분석하는 Python 예제를 만들어줘.
-
-조건:
-1. pandas로 oled_deposition_xymap.csv를 읽기
-2. seaborn으로 boxplot, scatter plot, heatmap을 각각 그리기
-3. heatmap은 x_index, y_index 좌표별 thickness_error_nm 평균으로 만들기
-4. 그래프는 PNG로 저장하고, 결과 해석을 HTML 보고서(report.html)에 넣기
-5. 초보자도 실행할 수 있도록 requirements.txt와 실행 명령어도 함께 설명하기
-
-사용 컬럼:
-panel_id, x_index, y_index, chamber, zone, substrate_temp_c, pressure_mTorr,
-thickness_nm, thickness_error_nm, particle_count, defect_type, yield_score</code></pre>
-  </div>
-
-  <h3>프롬프트 2: 에러 발생 시</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>아래 에러가 발생했어. 코드를 고쳐줘:
-
-[여기에 에러 메시지를 붙여넣기]</code></pre>
-  </div>
-
-  <h3>프롬프트 3: 보고서에 해석 추가</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>report.html의 각 그래프 아래에 공정 엔지니어가 이해할 수 있는
-한 줄 해석을 추가해줘. boxplot, scatter, heatmap 각각에 대해 작성해줘.</code></pre>
-  </div>
-
-  <h3>프롬프트 4: Seaborn 스타일 개선</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>Seaborn Gallery의 이 예제 스타일을 내 데이터의 chamber별 boxplot으로 바꿔줘.
-https://seaborn.pydata.org/examples/grouped_boxplot.html</code></pre>
-  </div>
-</div>
-
-<!-- 8. 평가 채점 기준 -->
-<div class="card">
-  <h2>8. 평가 채점 기준</h2>
-  <table>
-    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
-    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>CSV가 정상 로드되는가, 코드가 오류 없이 실행되는가</td></tr>
-    <tr><td>시각화 완성도</td><td>25%</td><td>boxplot, scatter plot, heatmap이 각각 1개 이상 생성되는가</td></tr>
-    <tr><td>통계 분석과 해석</td><td>25%</td><td>기초 통계(평균, 표준편차 등)와 그래프 해석이 있는가</td></tr>
-    <tr><td>보고서 문서화</td><td>25%</td><td>HTML 보고서에 그래프와 한 줄 해석이 포함되는가</td></tr>
-  </table>
-  <h3>난이도별 요구 수준</h3>
-  <table>
-    <tr><th>항목</th><th>하 (이 레벨)</th></tr>
-    <tr><td>CSV 로드</td><td>필수</td></tr>
-    <tr><td>시각화</td><td>3종</td></tr>
-    <tr><td>Pareto chart</td><td>선택</td></tr>
-    <tr><td>x/y map</td><td>heatmap으로 대체 가능</td></tr>
-    <tr><td>통계 분석</td><td>기초 통계</td></tr>
-    <tr><td>보고서</td><td>HTML</td></tr>
-    <tr><td>README</td><td>선택</td></tr>
-  </table>
-</div>
-
-<!-- 9. 제출물 체크리스트 -->
-<div class="card">
-  <h2>9. 제출물 체크리스트</h2>
-  <ul class="checklist">
-    <li><code>analysis.py</code> — 분석 코드 파일</li>
-    <li>그래프 PNG 3개 이상 (boxplot, scatter, heatmap)</li>
-    <li><code>report.html</code> — 그래프와 해석이 포함된 HTML 보고서</li>
-    <li>실행 또는 보고서 캡처 1장</li>
-  </ul>
-</div>
-
-<!-- 10. 트러블슈팅 -->
-<div class="card">
-  <h2>10. 트러블슈팅</h2>
-
-  <h3>ModuleNotFoundError: No module named 'seaborn'</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>pip install seaborn matplotlib pandas</code></pre>
-  </div>
-
-  <h3>한글이 그래프에서 깨짐</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>import matplotlib.pyplot as plt
+<h3><span class="ko">한글이 그래프에서 깨짐</span><span class="en">Korean characters broken in charts</span></h3>
+<div class="pb">import matplotlib.pyplot as plt
 plt.rcParams["font.family"] = "Malgun Gothic"
-plt.rcParams["axes.unicode_minus"] = False</code></pre>
-  </div>
-  <p>Mac 사용자는 <code>"Malgun Gothic"</code> 대신 <code>"AppleGothic"</code>을 사용하세요.</p>
-
-  <h3>heatmap이 너무 느림</h3>
-  <ul>
-    <li>전체 데이터를 그대로 그리지 말고 <code>pivot_table</code>로 x/y 평균값을 만든 뒤 그리세요.</li>
-    <li>panel 하나를 선택해서 먼저 분석하세요.</li>
-  </ul>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code># panel 하나만 선택
-df_p1 = df[df['panel_id'] == 'P1']
-
-# pivot_table로 heatmap용 데이터 생성
-heatmap_data = df_p1.pivot_table(
-    values='thickness_error_nm',
-    index='y_index',
-    columns='x_index',
-    aggfunc='mean'
-)</code></pre>
-  </div>
-
-  <h3>FileNotFoundError: CSV 파일을 찾을 수 없음</h3>
-  <ul>
-    <li>CSV 파일과 <code>analysis.py</code>가 같은 폴더에 있는지 확인하세요.</li>
-    <li>또는 절대 경로를 사용하세요: <code>pd.read_csv('/full/path/to/oled_deposition_xymap.csv')</code></li>
-  </ul>
-
-  <h3>그래프가 화면에 표시되지 않음</h3>
-  <p>파일로 저장하는 <code>plt.savefig()</code>를 <code>plt.show()</code> 앞에 호출하세요. 순서가 바뀌면 빈 이미지가 저장됩니다.</p>
+plt.rcParams["axes.unicode_minus"] = False</div>
 </div>
 
-<!-- 11. 추천 보고서 구조 -->
 <div class="card">
-  <h2>11. 추천 보고서 구조</h2>
-  <ol>
-    <li><strong>분석 목적</strong> — 왜 이 분석을 하는지 간단히 설명</li>
-    <li><strong>데이터 설명</strong> — CSV 파일명, 행 수, 주요 컬럼 소개</li>
-    <li><strong>결측치/기초 통계 확인</strong> — describe() 결과 요약</li>
-    <li><strong>시각화 결과</strong>
-      <ul>
-        <li>분포: boxplot</li>
-        <li>관계: scatter plot</li>
-        <li>위치: heatmap</li>
-      </ul>
-    </li>
-    <li><strong>각 그래프 해석</strong> — 한 줄씩 요약</li>
-    <li><strong>결론</strong> — 발견한 패턴 정리</li>
-  </ol>
+<h3><span class="ko">heatmap이 너무 느림</span><span class="en">Heatmap too slow</span></h3>
+<p><span class="ko">전체 데이터를 그대로 그리지 말고 <code>pivot_table</code>로 x/y 평균값을 먼저 만드세요. panel 하나만 선택해 분석하세요.</span><span class="en">Don't plot raw data. Create x/y averages with <code>pivot_table</code> first. Select one panel to start.</span></p>
 </div>
 
-<!-- 12. FAQ -->
 <div class="card">
-  <h2>12. FAQ</h2>
-
-  <h3>Q. Streamlit 앱을 만들어도 되나요?</h3>
-  <p>A. 이번 프로젝트의 기준 산출물은 HTML 보고서입니다. Streamlit은 추가 산출물로는 좋지만 필수는 아닙니다.</p>
-
-  <h3>Q. 그래프를 많이 넣으면 높은 점수를 받나요?</h3>
-  <p>A. 그래프 개수보다 "왜 이 그래프를 선택했고 무엇을 알게 되었는지"가 더 중요합니다.</p>
-
-  <h3>Q. p-value가 뭔지 잘 모르겠어요.</h3>
-  <p>A. 하 난이도에서는 p-value를 몰라도 괜찮습니다. 기초 통계(평균, 표준편차)와 그래프 해석에 집중하세요.</p>
-
-  <h3>Q. 실제 회사 데이터를 써도 되나요?</h3>
-  <p>A. 공개 저장소에는 절대 올리면 안 됩니다. 회사 내부 데이터, 장비명, lot 정보, 고객 정보는 모두 제외하세요. 제공된 합성 CSV만 사용하세요.</p>
-
-  <h3>Q. Gemini가 생성한 코드가 바로 실행되지 않아요.</h3>
-  <p>A. 에러 메시지를 그대로 복사해서 Gemini에게 "이 에러를 고쳐줘"라고 요청하세요. 2~3번 반복하면 대부분 해결됩니다.</p>
-
-  <h3>Q. heatmap 색상이 잘 안 보여요.</h3>
-  <p>A. Gemini에게 "heatmap의 colormap을 'RdYlBu_r'로 바꾸고 colorbar를 추가해줘"라고 요청하세요.</p>
+<h3><span class="ko">Q. 그래프를 많이 넣으면 높은 점수를 받나요?</span><span class="en">Q. Do more charts mean higher scores?</span></h3>
+<p><span class="ko">A. 그래프 개수보다 "왜 이 그래프를 선택했고 무엇을 알게 되었는지"가 더 중요합니다.</span><span class="en">A. "Why you chose this chart and what you learned" matters more than count.</span></p>
 </div>
 
-<div class="footer">
-  렛유인 AI + 바이브코딩 강의 | 프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서
+<div class="card">
+<h3><span class="ko">Q. Streamlit 앱을 만들어도 되나요?</span><span class="en">Q. Can I build a Streamlit app?</span></h3>
+<p><span class="ko">A. 기준 산출물은 HTML 보고서입니다. Streamlit은 추가 산출물로 좋지만 필수는 아닙니다.</span><span class="en">A. The standard deliverable is an HTML report. Streamlit is a nice extra but not required.</span></p>
 </div>
 
-</div><!-- /container -->
+<div class="card">
+<h3><span class="ko">Q. 실제 회사 데이터를 써도 되나요?</span><span class="en">Q. Can I use real company data?</span></h3>
+<p><span class="ko">A. 공개 저장소에는 절대 올리면 안 됩니다. 제공된 합성 CSV만 사용하세요.</span><span class="en">A. Never upload to public repos. Use only the provided synthetic CSV.</span></p>
+</div>
+</section>
+
+</div>
+
+<footer>
+  <span class="ko">렛유인 AI + 바이브코딩 강의 | 데이터 시각화와 분석 보고서 자동화</span>
+  <span class="en">LetUIn AI + Vibe Coding | Data Visualization &amp; Report Automation</span>
+</footer>
 
 <script>
-function copyCode(btn){
-  const code=btn.nextElementSibling.querySelector('code');
-  navigator.clipboard.writeText(code.textContent).then(()=>{
-    btn.textContent='복사됨!';
-    setTimeout(()=>btn.textContent='복사',1500);
-  });
-}
+function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n);document.getElementById('themeBtn').textContent=n==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}
+function toggleLang(){const b=document.body,n=b.getAttribute('data-lang')==='ko'?'en':'ko';b.setAttribute('data-lang',n);localStorage.setItem('lang',n);document.getElementById('langBtn').textContent=n==='ko'?'EN':'KO';}
+function copyP(id){const el=document.getElementById(id);const t=el.innerText.replace(/복사|Copy/g,'').trim();navigator.clipboard.writeText(t).then(()=>{const b=el.querySelector('.cb');const o=b.textContent;b.textContent='\u2713';setTimeout(()=>b.textContent=o,1200);});}
+(function(){const t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);document.getElementById('themeBtn').textContent=t==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}const l=localStorage.getItem('lang');if(l){document.body.setAttribute('data-lang',l);document.getElementById('langBtn').textContent=l==='ko'?'EN':'KO';}})();
 </script>
+<section class="section">
+<h3>📋 성과물 제출 방법</h3>
+<div class='card'>
+<p><strong>필수 제출물:</strong></p>
+<ul>
+<li>📄 <strong>HTML 보고서</strong> 파일 (report_beginner.html)</li>
+<li>📸 <strong>실행 화면 캡처</strong> 1장 (PNG/JPG)</li>
+<li>📝 <strong>사용한 AI 프롬프트 기록</strong> (텍스트 파일 또는 스크린샷)</li>
+</ul>
+<p style='margin-top:12px'><strong>제출 방식 (택 1):</strong></p>
+<ul>
+<li>🎬 <strong>[권장] 1~2분 화면녹화 영상</strong> — 보고서를 열어 핵심 결과를 설명하며 스크롤. 별도 편집 불필요. 핸드폰 화면녹화도 OK</li>
+<li>📦 <strong>파일 압축 제출</strong> — HTML + 캡처 + 프롬프트를 ZIP으로 묶어서 제출</li>
+</ul>
+<p style='margin-top:12px;color:var(--text-muted)'>💡 영상이 어려우면 캡처 + 프롬프트 기록으로도 충분합니다</p>
+</div>
+</section>
 </body>
 </html>

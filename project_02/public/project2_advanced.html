@@ -1,246 +1,195 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>P2 OLED Deposition — 상 (심화)</title>
+<title>Project 2 Advanced — OLED Deposition</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a14;--card:#13131f;--border:#1e1e2e;--text:#e8e8f0;--muted:#8888a0;--accent:#f85149;--accent-easy:#3fb950;--accent-mid:#f0c000;--code-bg:#1a1a2a}
-body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:80px}
-a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-
-.top-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:6px;padding:10px 16px}
-.top-nav a{padding:8px 20px;border-radius:8px;font-weight:700;font-size:.95rem;transition:.2s}
-.nav-beginner{background:transparent;border:1px solid var(--accent-easy);color:var(--accent-easy)}
-.nav-intermediate{background:transparent;border:1px solid var(--accent-mid);color:var(--accent-mid)}
-.nav-advanced{background:var(--accent);color:#fff}
-.nav-beginner:hover{background:var(--accent-easy);color:#000;text-decoration:none}
-.nav-intermediate:hover{background:var(--accent-mid);color:#000;text-decoration:none}
-.nav-advanced:hover{text-decoration:none}
-
-.container{max-width:860px;margin:0 auto;padding:0 16px}
-
-.badge-area{text-align:center;margin:36px 0 24px}
-.badge{display:inline-block;background:var(--accent);color:#fff;font-size:1.3rem;font-weight:800;padding:10px 36px;border-radius:40px;letter-spacing:.04em}
-.subtitle{color:var(--muted);margin-top:10px;font-size:.95rem}
-
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin:20px 0}
-.card h2{font-size:1.25rem;margin-bottom:14px;color:var(--accent);border-left:4px solid var(--accent);padding-left:12px}
-.card h3{font-size:1.05rem;margin:18px 0 8px;color:var(--text)}
-
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
-th,td{border:1px solid var(--border);padding:8px 10px;text-align:left}
-th{background:var(--code-bg);color:var(--accent);font-weight:700}
-tr:nth-child(even){background:rgba(255,255,255,.02)}
-
-.code-wrap{position:relative;margin:12px 0}
-.code-wrap pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:.88rem;line-height:1.6;color:#c8c8e0;font-family:'Fira Code','Consolas',monospace}
-.copy-btn{position:absolute;top:8px;right:10px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.78rem;font-weight:700;cursor:pointer;opacity:.8;transition:.2s}
-.copy-btn:hover{opacity:1}
-
-.checklist{list-style:none;padding:0}
-.checklist li{padding:6px 0 6px 30px;position:relative}
-.checklist li::before{content:"\2610";position:absolute;left:4px;font-size:1.1rem;color:var(--accent)}
-
-ul:not(.checklist){padding-left:22px;margin:8px 0}
-ul:not(.checklist) li{margin:4px 0}
-ol{padding-left:22px;margin:8px 0}
-ol li{margin:6px 0}
-
-.highlight{background:rgba(248,81,73,.1);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.92rem}
-
-.footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:48px;padding:20px}
-
-@media(max-width:600px){
-  .card{padding:18px 14px}
-  .badge{font-size:1.05rem;padding:8px 24px}
-  .top-nav a{padding:6px 12px;font-size:.82rem}
-  table{font-size:.8rem}
-  th,td{padding:6px}
+:root{
+  --accent:#f85149;--accent-light:#f8514922;
+  --bg:#ffffff;--bg2:#f6f8fa;--card:#ffffff;
+  --tx:#1f2328;--tx2:#656d76;--bd:#d0d7de;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--code:#f0f3f6;
 }
+[data-theme="dark"]{
+  --bg:#0d1117;--bg2:#161b22;--card:#161b22;
+  --tx:#e6edf3;--tx2:#8b949e;--bd:#30363d;
+  --shadow:0 1px 3px rgba(0,0,0,.3);--code:#1c2128;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);line-height:1.72;transition:background .3s,color .3s;}
+[data-lang="ko"] .en{display:none;}
+[data-lang="en"] .ko{display:none;}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:flex-end;gap:8px;padding:10px 24px;background:var(--bg2);border-bottom:1px solid var(--bd);backdrop-filter:blur(8px);}
+.top-bar button{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px;color:var(--tx);transition:.2s;}
+.top-bar button:hover{border-color:var(--accent);}
+.hero{margin-top:52px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:320px;background:linear-gradient(135deg,var(--accent-light),var(--bg2));}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22;}
+.hero-c{position:relative;text-align:center;padding:48px 24px;}
+.badge{display:inline-block;background:var(--accent);color:#fff;padding:4px 18px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:12px;}
+.hero-c h1{font-size:clamp(1.5rem,4vw,2.3rem);margin-bottom:8px;}
+.hero-c p{color:var(--tx2);font-size:1.05rem;}
+.wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px;}
+section{margin-bottom:48px;}
+h2{font-size:1.35rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--accent);}
+h3{font-size:1.08rem;margin:20px 0 10px;color:var(--accent);}
+p,li{margin-bottom:8px;}
+ul,ol{padding-left:1.4em;}
+a{color:var(--accent);}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow);}
+.tw{overflow-x:auto;margin-bottom:16px;}
+table{width:100%;border-collapse:collapse;font-size:.92rem;}
+th,td{padding:10px 14px;border:1px solid var(--bd);text-align:left;}
+th{background:var(--accent);color:#fff;font-weight:600;}
+.pb{position:relative;background:var(--code);border:1px solid var(--bd);border-radius:10px;padding:16px 50px 16px 20px;margin:12px 0 16px;font-family:'Fira Code','Courier New',monospace;font-size:.87rem;white-space:pre-wrap;word-break:break-word;line-height:1.6;}
+.cb{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;}
+.cb:hover{opacity:.85;}
+.cl{list-style:none;padding-left:0;}
+.cl li::before{content:"\2610 ";color:var(--accent);font-weight:700;}
+.dl{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 22px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .2s;}
+.dl:hover{opacity:.85;}
+.dl svg{flex-shrink:0;}
+.sn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;margin-right:8px;flex-shrink:0;}
+.sr{display:flex;align-items:flex-start;margin-bottom:14px;}
+.sr>div{flex:1;}
+footer{text-align:center;padding:32px 20px;font-size:.85rem;color:var(--tx2);border-top:1px solid var(--bd);}
+@media(max-width:640px){.wrap{padding:20px 14px 48px;}.hero{min-height:220px;}.card{padding:16px;}th,td{padding:8px 10px;}}
 </style>
 </head>
-<body>
+<body data-lang="ko">
 
-<nav class="top-nav">
-  <a href="project2_beginner.html" class="nav-beginner">하 (기본)</a>
-  <a href="project2_intermediate.html" class="nav-intermediate">중 (응용)</a>
-  <a href="project2_advanced.html" class="nav-advanced">상 (심화)</a>
-</nav>
-
-<div class="container">
-
-<div class="badge-area">
-  <span class="badge">상 — 심화 난이도</span>
-  <p class="subtitle">프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서</p>
+<div class="top-bar">
+  <button id="langBtn" onclick="toggleLang()">EN</button>
+  <button id="themeBtn" onclick="toggleTheme()">&#127769;</button>
 </div>
 
-<!-- 1. 프로젝트 개요 -->
+<!-- HERO -->
+<section class="hero">
+  <img src="p2_advanced.png" alt="hero">
+  <div class="hero-c">
+    <span class="badge">ADVANCED</span>
+    <h1><span class="ko">OLED Deposition 데이터 시각화 &amp; HTML 보고서</span><span class="en">OLED Deposition Data Visualization &amp; HTML Report</span></h1>
+    <p><span class="ko">프로젝트 2 &mdash; Quarto 기반 원인 분석 보고서</span><span class="en">Project 2 &mdash; Quarto-based Root Cause Analysis Report</span></p>
+  </div>
+</section>
+
+<div class="wrap">
+
+<!-- 1 개요 -->
+<section>
+<h2><span class="ko">1. 프로젝트 개요</span><span class="en">1. Project Overview</span></h2>
 <div class="card">
-  <h2>1. 프로젝트 개요</h2>
-  <p>OLED deposition 공정 데이터를 읽고 <strong>그래프와 통계 분석으로 공정 인사이트를 찾은 뒤 HTML 보고서로 문서화</strong>하는 프로젝트입니다. 상 난이도에서는 <strong>Quarto 문서(.qmd)</strong> 하나로 코드, 그래프, 통계표, 해석, 결론이 모두 재현되는 HTML 보고서를 만듭니다.</p>
+  <p><span class="ko">OLED deposition 공정 데이터를 읽고 <b>그래프와 통계 분석으로 공정 인사이트를 찾은 뒤 Quarto HTML 보고서로 문서화</b>하는 프로젝트입니다. 상급에서는 <code>.qmd</code> 문서 하나로 <b>코드, 그래프, 통계표, 해석, 결론이 모두 재현</b>되는 보고서를 만듭니다.</span><span class="en">Read OLED deposition data, <b>discover insights via charts &amp; statistics, then document as a Quarto HTML report</b>. At advanced level, produce a single <code>.qmd</code> document where <b>code, charts, stats tables, interpretation, and conclusions are all reproducible</b>.</span></p>
   <ul>
-    <li><strong>수행 기간</strong>: CH.2 이후 주말 2일 (토~일)</li>
-    <li><strong>사용 도구</strong>: Gemini AI + Python + pandas + seaborn + statsmodels + Quarto</li>
-    <li><strong>결과물</strong>: .qmd 원본 + Quarto HTML 보고서 + GitHub Repository</li>
-    <li><strong>참고 사이트</strong>: <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a>, <a href="https://quarto.org/docs/get-started/" target="_blank">Quarto Docs</a></li>
+    <li><span class="ko"><b>수행 기간:</b> CH.2 이후 주말 2일</span><span class="en"><b>Duration:</b> 2 weekend days after CH.2</span></li>
+    <li><span class="ko"><b>소요 시간:</b> 10~12 시간</span><span class="en"><b>Time:</b> 10-12 hours</span></li>
+    <li><span class="ko"><b>사용 도구:</b> Gemini AI + Python + pandas + seaborn + statsmodels + Quarto</span><span class="en"><b>Tools:</b> Gemini AI + Python + pandas + seaborn + statsmodels + Quarto</span></li>
+    <li><span class="ko"><b>결과물:</b> .qmd + 렌더링 HTML + GitHub 레포 + README.md</span><span class="en"><b>Deliverables:</b> .qmd + rendered HTML + GitHub repo + README.md</span></li>
+    <li><span class="ko"><b>참고:</b> <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></span><span class="en"><b>Reference:</b> <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></span></li>
   </ul>
-  <div class="highlight">P1의 핵심이 "CSV를 읽고 그래프를 만든다"였다면, P2의 핵심은 "그래프를 근거로 원인 후보를 좁히고 보고서로 설명한다"입니다. 상 난이도는 여기서 한 걸음 더 나아가 <strong>재현 가능한 분석 보고서</strong>를 만드는 것이 목표입니다.</div>
 </div>
 
-<!-- 2. P1 복습 -->
+<h3><span class="ko">P1 복습 체크리스트</span><span class="en">P1 Review Checklist</span></h3>
 <div class="card">
-  <h2>2. P1에서 배운 것 복습 체크리스트</h2>
-  <p>P2를 시작하기 전에 P1에서 익힌 핵심 역량을 점검하세요.</p>
-  <ul class="checklist">
-    <li>Gemini에게 코드 생성/수정을 요청하는 프롬프트 작성</li>
-    <li>CSV 파일을 pandas로 읽고 기본 통계를 확인</li>
-    <li>그래프를 보고 이상치나 패턴을 설명</li>
-    <li>분석 결과를 간단한 문서로 정리</li>
-    <li>에러 발생 시 AI에게 디버깅 요청</li>
-  </ul>
-  <h3>선수 학습 확인 (상 난이도 추가)</h3>
-  <ul class="checklist">
-    <li>P1 프로젝트를 완료했다</li>
-    <li>boxplot, scatter plot, heatmap의 용도를 설명할 수 있다</li>
-    <li>Quarto 설치 또는 사용 환경을 준비했다</li>
-    <li>GitHub 저장소를 만들고 push할 수 있다</li>
-  </ul>
-  <h3>P1에서 P2로의 성장</h3>
-  <table>
-    <tr><th>구분</th><th>P1</th><th>P2 (이번 프로젝트)</th></tr>
-    <tr><td>데이터</td><td>간단한 공정 CSV</td><td>OLED deposition x/y map CSV</td></tr>
-    <tr><td>시각화</td><td>기본 차트</td><td>boxplot, scatter, heatmap, Pareto, x/y map, correlation</td></tr>
-    <tr><td>분석</td><td>그래프 확인</td><td>상관관계, 회귀분석, p-value 기반 원인 분석</td></tr>
-    <tr><td>보고서</td><td>간단 요약</td><td>Quarto HTML 보고서</td></tr>
-    <tr><td>목표</td><td>분석 경험</td><td>재현 가능한 원인 분석 + GitHub 공유</td></tr>
-  </table>
+<ul class="cl">
+  <li><span class="ko">Gemini에게 코드 생성/수정 프롬프트 작성</span><span class="en">Write prompts for Gemini code generation/modification</span></li>
+  <li><span class="ko">CSV를 pandas로 읽고 기본 통계 확인</span><span class="en">Load CSV with pandas and check basic stats</span></li>
+  <li><span class="ko">그래프를 보고 이상치/패턴 설명</span><span class="en">Identify outliers/patterns from charts</span></li>
+  <li><span class="ko">분석 결과를 간단한 문서로 정리</span><span class="en">Organize results into a simple document</span></li>
+  <li><span class="ko">에러 발생 시 AI에게 디버깅 요청</span><span class="en">Request AI debugging when errors occur</span></li>
+</ul>
 </div>
 
-<!-- 3. 학습 목표 -->
+<div class="card" style="border-left:4px solid var(--accent);">
+  <p><span class="ko"><b>P1 &rarr; P2 성장:</b> P1이 "CSV 읽기 &rarr; 기본 통계 &rarr; 차트"였다면, P2 상급은 "CSV 읽기 &rarr; 최적 시각화 선택 &rarr; 통계 검증 &rarr; p-value 기반 원인 분석 &rarr; Quarto HTML 보고서"입니다.</span><span class="en"><b>P1 &rarr; P2 Growth:</b> If P1 was "CSV &rarr; stats &rarr; chart," P2 Advanced is "CSV &rarr; optimal visualization &rarr; statistical validation &rarr; p-value root cause analysis &rarr; Quarto HTML report."</span></p>
+</div>
+</section>
+
+<!-- 2 학습 목표 -->
+<section>
+<h2><span class="ko">2. 학습 목표</span><span class="en">2. Learning Objectives</span></h2>
 <div class="card">
-  <h2>3. 학습 목표 (상 난이도)</h2>
-  <ol>
-    <li>OLED deposition 데이터를 읽고 주요 품질 지표를 이해한다</li>
-    <li>문제 유형에 맞는 시각화 방법을 선택하고 <strong>6종 이상</strong>의 그래프를 생성한다</li>
-    <li>x/y map 또는 heatmap으로 <strong>위치 기반 이상 패턴</strong>을 분석한다</li>
-    <li>statsmodels 회귀분석과 <strong>p-value 기반 원인 후보</strong>를 해석한다</li>
-    <li>Quarto 문서(.qmd) 하나로 <strong>코드, 그래프, 통계표, 해석, 결론</strong>이 모두 재현되는 HTML 보고서를 만든다</li>
-    <li>결론에 <strong>"가장 먼저 확인할 공정 조건/장비/위치" 3개 이상</strong>을 제안한다</li>
-    <li>GitHub Repository에 코드와 README를 포함하여 공유한다</li>
-  </ol>
-  <p><strong>소요 시간</strong>: 약 10~12시간 (2일)</p>
+<ol>
+  <li><span class="ko">OLED deposition 데이터를 읽고 주요 품질 지표를 이해한다</span><span class="en">Read OLED deposition data and understand key quality metrics</span></li>
+  <li><span class="ko">문제 유형에 맞는 시각화 방법을 선택한다</span><span class="en">Select visualization methods matching the problem type</span></li>
+  <li><span class="ko">6종 이상 시각화(boxplot, scatter, heatmap, x/y map, Pareto, correlation)로 인사이트를 도출한다</span><span class="en">Extract insights with 6+ visualizations (boxplot, scatter, heatmap, x/y map, Pareto, correlation)</span></li>
+  <li><span class="ko">회귀분석과 p-value를 이용해 원인 후보를 통계적으로 검증한다</span><span class="en">Statistically validate root-cause candidates via regression &amp; p-value</span></li>
+  <li><span class="ko">Quarto(.qmd)로 재현 가능한 HTML 보고서를 작성한다</span><span class="en">Write a reproducible HTML report with Quarto (.qmd)</span></li>
+  <li><span class="ko">GitHub 레포지토리와 README.md를 작성한다</span><span class="en">Create a GitHub repository with README.md</span></li>
+</ol>
+</div>
+</section>
+
+<!-- 3 데이터셋 -->
+<section>
+<h2><span class="ko">3. 데이터셋 설명</span><span class="en">3. Dataset Description</span></h2>
+<div class="card">
+  <p><span class="ko"><b>oled_deposition_xymap.csv</b> &mdash; 4개 panel, 96&times;64 좌표, 총 24,576행의 확장 OLED deposition 합성 데이터</span><span class="en"><b>oled_deposition_xymap.csv</b> &mdash; Extended synthetic OLED deposition data: 4 panels, 96&times;64 coords, 24,576 rows</span></p>
 </div>
 
-<!-- 4. 사용 데이터셋 -->
+<h3><span class="ko">컬럼 딕셔너리</span><span class="en">Column Dictionary</span></h3>
+<div class="tw"><table>
+<thead><tr><th><span class="ko">컬럼</span><span class="en">Column</span></th><th><span class="ko">의미</span><span class="en">Description</span></th><th><span class="ko">활용 예</span><span class="en">Usage</span></th></tr></thead>
+<tbody>
+<tr><td>panel_id, x_index, y_index</td><td><span class="ko">panel과 x/y 좌표</span><span class="en">Panel &amp; x/y coords</span></td><td>x/y map, heatmap</td></tr>
+<tr><td>chamber, zone</td><td><span class="ko">증착 chamber와 영역</span><span class="en">Deposition chamber &amp; zone</span></td><td><span class="ko">chamber별 boxplot</span><span class="en">Boxplot by chamber</span></td></tr>
+<tr><td>source_temp_c, substrate_temp_c</td><td><span class="ko">공정 온도</span><span class="en">Process temperature</span></td><td><span class="ko">산점도, 회귀분석</span><span class="en">Scatter, regression</span></td></tr>
+<tr><td>pressure_mTorr, oxygen_flow_sccm</td><td><span class="ko">압력/가스 조건</span><span class="en">Pressure/gas conditions</span></td><td><span class="ko">상관관계, 회귀분석</span><span class="en">Correlation, regression</span></td></tr>
+<tr><td>thickness_nm, thickness_error_nm</td><td><span class="ko">목표 두께 대비 편차</span><span class="en">Thickness deviation</span></td><td>boxplot, heatmap, x/y map</td></tr>
+<tr><td>particle_count, dark_spot_count</td><td><span class="ko">결함 측정값</span><span class="en">Defect measurements</span></td><td><span class="ko">Pareto, x/y map 원인 연결</span><span class="en">Pareto, x/y map cause linking</span></td></tr>
+<tr><td>defect_type, pass_fail</td><td><span class="ko">결함 유형/판정</span><span class="en">Defect type/judgment</span></td><td>Pareto chart</td></tr>
+<tr><td>yield_score</td><td><span class="ko">좌표 단위 품질 점수</span><span class="en">Quality score per coord</span></td><td>regression, scatter</td></tr>
+</tbody>
+</table></div>
+
+<a class="dl" href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/project_02/public/oled_deposition_xymap.csv" download>
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <span class="ko">oled_deposition_xymap.csv 다운로드</span><span class="en">Download oled_deposition_xymap.csv</span>
+</a>
+</section>
+
+<!-- 4 단계별 수행 -->
+<section>
+<h2><span class="ko">4. 단계별 수행 방법</span><span class="en">4. Step-by-Step Guide</span></h2>
 <div class="card">
-  <h2>4. 사용 데이터셋</h2>
-  <p>이번 프로젝트에는 확장된 OLED deposition 합성 CSV가 제공됩니다.</p>
-  <table>
-    <tr><th>파일</th><th>설명</th></tr>
-    <tr><td><code>oled_deposition_xymap.csv</code></td><td>4개 panel, 96 x 64 좌표, 총 24,576행</td></tr>
-  </table>
-  <p style="margin-top:14px"><strong>CSV 다운로드:</strong></p>
-  <a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project2/public/oled_deposition_xymap.csv" target="_blank" style="display:inline-block;background:var(--accent);color:#fff;padding:10px 22px;border-radius:8px;font-weight:700;margin:8px 0">oled_deposition_xymap.csv 다운로드</a>
+  <div class="sr"><span class="sn">1</span><div><b><span class="ko">Quarto 환경 준비</span><span class="en">Prepare Quarto Environment</span></b><p><span class="ko"><a href="https://quarto.org/docs/get-started/" target="_blank">Quarto</a>를 설치하고, Python 패키지를 설치합니다.</span><span class="en">Install <a href="https://quarto.org/docs/get-started/" target="_blank">Quarto</a> and Python packages.</span></p>
+    <div class="pb">pip install pandas seaborn matplotlib statsmodels
+quarto check</div>
+  </div></div>
+
+  <div class="sr"><span class="sn">2</span><div><b><span class="ko">데이터 탐색 &amp; 분석 질문 설정</span><span class="en">Explore Data &amp; Define Questions</span></b><p><span class="ko">CSV를 로드하고 구조를 파악한 뒤, 분석 질문을 설정합니다. 어떤 공정 조건이 yield에 가장 영향을 미치는지, 위치 기반 이상 패턴은 있는지 등을 질문합니다.</span><span class="en">Load CSV, understand structure, then set analysis questions: which conditions most impact yield, are there position-based anomaly patterns, etc.</span></p></div></div>
+
+  <div class="sr"><span class="sn">3</span><div><b><span class="ko">시각화 6종+ 생성</span><span class="en">Create 6+ Visualizations</span></b>
+    <ul>
+      <li>boxplot &mdash; <span class="ko">chamber/zone별 thickness_error_nm</span><span class="en">thickness_error_nm by chamber/zone</span></li>
+      <li>scatter plot &mdash; <span class="ko">공정 조건 vs yield_score</span><span class="en">Process conditions vs yield_score</span></li>
+      <li>heatmap &mdash; <span class="ko">좌표별 thickness_error_nm</span><span class="en">thickness_error_nm by coordinate</span></li>
+      <li>x/y map &mdash; <span class="ko">위치 기반 이상 패턴 분석</span><span class="en">Position-based anomaly pattern analysis</span></li>
+      <li>Pareto chart &mdash; <span class="ko">defect_type별 누적 비율</span><span class="en">Cumulative ratio by defect_type</span></li>
+      <li>correlation heatmap &mdash; <span class="ko">수치 컬럼 상관관계</span><span class="en">Numeric column correlations</span></li>
+    </ul>
+  </div></div>
+
+  <div class="sr"><span class="sn">4</span><div><b><span class="ko">통계 분석 &amp; p-value 해석</span><span class="en">Statistical Analysis &amp; p-value Interpretation</span></b><p><span class="ko">statsmodels OLS로 yield_score 회귀분석을 수행합니다. p-value 기반으로 유의한 원인 후보를 정리하고, x/y map hotspot과 defect_type Pareto를 연결하여 원인 가설을 수립합니다.</span><span class="en">Run OLS regression on yield_score. Identify significant factors via p-value, connect x/y map hotspots with defect_type Pareto to formulate root-cause hypotheses.</span></p></div></div>
+
+  <div class="sr"><span class="sn">5</span><div><b><span class="ko">Quarto 문서 작성</span><span class="en">Write Quarto Document</span></b><p><span class="ko"><code>oled_deposition_report.qmd</code>에 코드, 그래프, 통계표, 해석, 결론을 모두 담습니다.</span><span class="en">Put all code, charts, stats tables, interpretations, and conclusions in <code>oled_deposition_report.qmd</code>.</span></p></div></div>
+
+  <div class="sr"><span class="sn">6</span><div><b><span class="ko">HTML 렌더링</span><span class="en">Render to HTML</span></b>
+    <div class="pb">quarto render oled_deposition_report.qmd --to html</div>
+  </div></div>
+
+  <div class="sr"><span class="sn">7</span><div><b><span class="ko">최종 권고안 작성</span><span class="en">Write Final Recommendations</span></b><p><span class="ko">결론 섹션에 "가장 먼저 확인할 공정 조건/장비/위치" 3개 이상을 그래프 근거와 함께 제안합니다.</span><span class="en">In the conclusion section, suggest 3+ "first-check process conditions/equipment/positions" with chart-based evidence.</span></p></div></div>
+
+  <div class="sr"><span class="sn">8</span><div><b><span class="ko">GitHub 업로드</span><span class="en">Upload to GitHub</span></b><p><span class="ko">GitHub 레포지토리를 만들고 .qmd, HTML, CSV, README.md를 업로드합니다.</span><span class="en">Create a GitHub repo and upload .qmd, HTML, CSV, and README.md.</span></p></div></div>
 </div>
+</section>
 
-<!-- 5. 컬럼 딕셔너리 -->
-<div class="card">
-  <h2>5. 주요 컬럼 딕셔너리</h2>
-  <table>
-    <tr><th>컬럼</th><th>의미</th><th>활용 예</th></tr>
-    <tr><td><code>panel_id</code>, <code>x_index</code>, <code>y_index</code></td><td>panel과 x/y 측정 좌표</td><td>x/y map, heatmap</td></tr>
-    <tr><td><code>chamber</code>, <code>zone</code></td><td>증착 chamber와 panel 영역</td><td>chamber별 boxplot</td></tr>
-    <tr><td><code>source_temp_c</code>, <code>substrate_temp_c</code></td><td>공정 온도</td><td>산점도, 회귀분석</td></tr>
-    <tr><td><code>pressure_mTorr</code>, <code>oxygen_flow_sccm</code></td><td>공정 압력/가스 조건</td><td>상관관계, 회귀분석</td></tr>
-    <tr><td><code>thickness_nm</code>, <code>thickness_error_nm</code></td><td>목표 두께 대비 편차</td><td>boxplot, heatmap</td></tr>
-    <tr><td><code>particle_count</code>, <code>dark_spot_count</code></td><td>결함 관련 측정값</td><td>Pareto, 원인 후보</td></tr>
-    <tr><td><code>defect_type</code>, <code>pass_fail</code></td><td>결함 유형과 판정</td><td>Pareto chart</td></tr>
-    <tr><td><code>yield_score</code></td><td>좌표 단위 품질 점수</td><td>scatter, regression</td></tr>
-  </table>
-</div>
+<!-- 5 프롬프트 -->
+<section>
+<h2><span class="ko">5. 프롬프트 예시</span><span class="en">5. Prompt Examples</span></h2>
 
-<!-- 6. 단계별 수행 방법 -->
-<div class="card">
-  <h2>6. 단계별 수행 방법</h2>
-
-  <h3>Step 1. 환경 준비</h3>
-  <p>Python 패키지와 Quarto를 설치합니다.</p>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>pip install pandas seaborn matplotlib statsmodels scipy jupyter
-# Quarto 설치: https://quarto.org/docs/get-started/
-quarto check</code></pre>
-  </div>
-
-  <h3>Step 2. 프로젝트 구조 설계</h3>
-  <p>GitHub 저장소를 기준으로 프로젝트 폴더 구조를 설계합니다.</p>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>oled-deposition-analysis/
-  oled_deposition_report.qmd    # Quarto 문서
-  oled_deposition_xymap.csv     # 데이터
-  images/                        # 생성된 그래프
-  README.md                      # 프로젝트 설명
-  requirements.txt               # Python 패키지 목록</code></pre>
-  </div>
-
-  <h3>Step 3. 데이터 탐색 및 EDA</h3>
-  <p>CSV를 로드하고 기초 통계, 결측치, 데이터 분포를 확인합니다. 이 단계의 코드와 결과를 .qmd 첫 섹션에 포함하세요.</p>
-
-  <h3>Step 4. 시각화 6종 이상 생성</h3>
-  <p>아래 그래프를 최소 6종 이상 .qmd에 포함합니다:</p>
-  <ol>
-    <li><strong>boxplot</strong> — chamber별/zone별 thickness_error_nm 분포</li>
-    <li><strong>scatter plot</strong> — 공정 온도/압력 vs yield_score</li>
-    <li><strong>heatmap (x/y map)</strong> — panel별 위치 기반 thickness_error 패턴</li>
-    <li><strong>Pareto chart</strong> — defect_type별 빈도 및 누적비율</li>
-    <li><strong>correlation heatmap</strong> — 수치형 컬럼 상관관계</li>
-    <li><strong>추가 그래프</strong> — 자유 선택 (pairplot, violin plot, facet grid 등)</li>
-  </ol>
-
-  <h3>Step 5. 통계 분석 — OLS 회귀분석</h3>
-  <p>yield_score를 종속변수로 하는 다중 회귀분석을 수행합니다. 결과표를 .qmd에 포함하고 p-value를 해석합니다.</p>
-
-  <h3>Step 6. 원인 가설 수립</h3>
-  <p>x/y map hotspot과 defect_type Pareto를 연결하여 원인 가설을 세웁니다. 통계 분석의 p-value 결과와 그래프 패턴을 근거로 사용하세요.</p>
-
-  <h3>Step 7. 결론 및 최종 권고안</h3>
-  <p>"가장 먼저 확인할 공정 조건/장비/위치" 3가지 이상을 구체적으로 제안합니다. 각 권고안에는 데이터 근거(어떤 그래프, 어떤 p-value)를 명시하세요.</p>
-
-  <h3>Step 8. Quarto 렌더링</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>quarto render oled_deposition_report.qmd --to html</code></pre>
-  </div>
-  <p>생성된 HTML 파일을 브라우저에서 열어 코드, 그래프, 텍스트가 모두 올바르게 표시되는지 확인합니다.</p>
-
-  <h3>Step 9. GitHub 업로드</h3>
-  <p>GitHub Repository를 생성하고 .qmd, CSV, HTML, README.md를 push합니다.</p>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>git init
-git add .
-git commit -m "P2: OLED deposition analysis report"
-git remote add origin https://github.com/your-username/oled-deposition-analysis.git
-git push -u origin main</code></pre>
-  </div>
-
-  <h3>Step 10. README.md 작성</h3>
-  <p>프로젝트 제목, 분석 목적, 사용 데이터, 실행 방법, 주요 발견을 간결하게 정리합니다.</p>
-</div>
-
-<!-- 7. 프롬프트 예시 -->
-<div class="card">
-  <h2>7. Gemini 프롬프트 예시 (최소화)</h2>
-  <p>상 난이도에서는 프롬프트가 최소한으로 제공됩니다. <strong>직접 설계</strong>하세요.</p>
-
-  <h3>Quarto 문서 생성 참고</h3>
-  <div class="highlight">상 난이도에서는 아래 프롬프트를 참고만 하고, 자신의 분석 흐름에 맞게 수정하여 사용하세요.</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>Quarto 문서 oled_deposition_report.qmd를 만들어줘.
+<h3><span class="ko">Quarto 문서 생성 프롬프트</span><span class="en">Quarto Document Generation Prompt</span></h3>
+<div class="pb" id="p1">Quarto 문서 oled_deposition_report.qmd를 만들어줘.
 
 목표:
 - oled_deposition_xymap.csv를 읽고 OLED deposition 공정 문제 원인을 찾는 HTML 보고서 작성
@@ -255,197 +204,187 @@ git push -u origin main</code></pre>
 6. 최종 권고안 3개
 
 렌더링:
-quarto render oled_deposition_report.qmd --to html</code></pre>
-  </div>
+quarto render oled_deposition_report.qmd --to html<button class="cb" onclick="copyP('p1')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
 
-  <h3>프롬프트 설계 원칙</h3>
-  <ul>
-    <li>분석의 <strong>목적과 맥락</strong>을 먼저 명시하세요</li>
-    <li>원하는 <strong>출력 형식</strong>(.qmd, 특정 섹션 구조)을 구체적으로 요청하세요</li>
-    <li>한 번의 프롬프트로 완벽한 결과를 기대하지 말고, <strong>반복 개선</strong>하세요</li>
-    <li>AI가 생성한 해석을 <strong>도메인 지식으로 검증</strong>하세요</li>
-  </ul>
-</div>
+<h3><span class="ko">x/y map 심화 프롬프트</span><span class="en">Advanced x/y Map Prompt</span></h3>
+<div class="pb" id="p2">panel별로 x_index, y_index 좌표 기반 heatmap을 2x2 subplot으로 그려줘.
+- 값: thickness_error_nm 평균 (pivot_table)
+- colormap: RdYlGn_r
+- 각 subplot 제목에 panel_id 표시
+- hotspot(상위 5% error) 좌표를 텍스트로 출력
+- 해당 좌표의 defect_type 분포도 함께 보여줘<button class="cb" onclick="copyP('p2')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
 
-<!-- 8. 평가 채점 기준 -->
+<h3><span class="ko">회귀분석 + 원인 가설 프롬프트</span><span class="en">Regression + Hypothesis Prompt</span></h3>
+<div class="pb" id="p3">statsmodels OLS로 yield_score 회귀분석을 해줘.
+
+독립변수: source_temp_c, substrate_temp_c, pressure_mTorr,
+         oxygen_flow_sccm, thickness_error_nm, particle_count
+
+요구:
+- 회귀분석 결과 summary 출력
+- p-value < 0.05인 변수를 "유의한 원인 후보"로 정리
+- R-squared와 F-statistic 해석
+- 공정 엔지니어 관점의 원인 가설 3개 제시
+- 가설마다 "확인할 그래프"를 함께 제안<button class="cb" onclick="copyP('p3')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
+
+<h3><span class="ko">GitHub README 프롬프트</span><span class="en">GitHub README Prompt</span></h3>
+<div class="pb" id="p4">이 OLED deposition 분석 프로젝트의 GitHub README.md를 만들어줘.
+
+포함:
+- 프로젝트 제목과 한 줄 설명
+- 사용 데이터와 컬럼 설명
+- 실행 방법 (requirements, Quarto render 명령어)
+- 주요 분석 결과 요약 (그래프 캡처 2~3장)
+- 폴더 구조
+- 라이선스<button class="cb" onclick="copyP('p4')"><span class="ko">복사</span><span class="en">Copy</span></button></div>
+</section>
+
+<!-- 6 채점 -->
+<section>
+<h2><span class="ko">6. 평가 채점 기준 (100점)</span><span class="en">6. Grading Criteria (100 pts)</span></h2>
+<div class="tw"><table>
+<thead><tr><th><span class="ko">항목</span><span class="en">Category</span></th><th><span class="ko">세부 기준</span><span class="en">Details</span></th><th><span class="ko">배점</span><span class="en">Pts</span></th></tr></thead>
+<tbody>
+<tr><td><span class="ko">데이터 처리와 재현성</span><span class="en">Data Processing &amp; Reproducibility</span></td><td><span class="ko">.qmd에서 quarto render로 HTML 재현 가능, 결측치 처리</span><span class="en">HTML reproducible via quarto render from .qmd, missing values handled</span></td><td>25</td></tr>
+<tr><td><span class="ko">시각화 완성도</span><span class="en">Visualization Quality</span></td><td><span class="ko">6종 이상, x/y map 필수, Pareto 필수</span><span class="en">6+ types, x/y map required, Pareto required</span></td><td>25</td></tr>
+<tr><td><span class="ko">통계 분석과 해석</span><span class="en">Statistical Analysis &amp; Interpretation</span></td><td><span class="ko">회귀분석, p-value 해석, 원인 가설이 그래프 근거와 연결됨</span><span class="en">Regression, p-value interpretation, hypotheses linked to chart evidence</span></td><td>25</td></tr>
+<tr><td><span class="ko">보고서 문서화</span><span class="en">Report Documentation</span></td><td><span class="ko">Quarto HTML 보고서, 개선 제안 3개+, GitHub README</span><span class="en">Quarto HTML report, 3+ suggestions, GitHub README</span></td><td>25</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<!-- 7 제출물 -->
+<section>
+<h2><span class="ko">7. 제출물 체크리스트</span><span class="en">7. Submission Checklist</span></h2>
 <div class="card">
-  <h2>8. 평가 채점 기준</h2>
-  <table>
-    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
-    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>.qmd 원본으로 HTML이 재현되는가, 코드 품질, GitHub 구조</td></tr>
-    <tr><td>시각화 완성도</td><td>25%</td><td>6종 이상 그래프, x/y map 필수, 그래프 선택 이유 설명</td></tr>
-    <tr><td>통계 분석과 해석</td><td>25%</td><td>회귀분석 결과표, p-value 해석, 원인 가설이 그래프 근거와 연결</td></tr>
-    <tr><td>보고서 문서화</td><td>25%</td><td>Quarto HTML 완성도, README 작성, 최종 권고안의 구체성</td></tr>
-  </table>
-  <h3>난이도별 요구 수준</h3>
-  <table>
-    <tr><th>항목</th><th>상 (이 레벨)</th></tr>
-    <tr><td>CSV 로드</td><td>필수</td></tr>
-    <tr><td>시각화</td><td>6종 이상</td></tr>
-    <tr><td>Pareto chart</td><td>필수</td></tr>
-    <tr><td>x/y map</td><td>필수</td></tr>
-    <tr><td>통계 분석</td><td>p-value 기반 원인 분석</td></tr>
-    <tr><td>보고서</td><td>Quarto HTML</td></tr>
-    <tr><td>README</td><td>필수</td></tr>
-  </table>
+<ul class="cl">
+  <li><code>oled_deposition_report.qmd</code></li>
+  <li><span class="ko">렌더링된 HTML 보고서</span><span class="en">Rendered HTML report</span></li>
+  <li><span class="ko">그래프 6종 이상 (boxplot, scatter, heatmap, x/y map, Pareto, correlation)</span><span class="en">6+ chart types (boxplot, scatter, heatmap, x/y map, Pareto, correlation)</span></li>
+  <li><span class="ko">회귀분석 결과표와 p-value 해석</span><span class="en">Regression results table with p-value interpretation</span></li>
+  <li><span class="ko">원인 가설과 개선 제안 3개+</span><span class="en">Root-cause hypotheses and 3+ improvement suggestions</span></li>
+  <li>GitHub Repository URL</li>
+  <li>README.md</li>
+  <li><span class="ko">사용한 Gemini 프롬프트 기록</span><span class="en">Record of Gemini prompts used</span></li>
+</ul>
 </div>
+</section>
 
-<!-- 9. 제출물 체크리스트 -->
+<!-- 8 추천 구조 -->
+<section>
+<h2><span class="ko">8. 추천 보고서 구조</span><span class="en">8. Recommended Report Structure</span></h2>
 <div class="card">
-  <h2>9. 제출물 체크리스트</h2>
-  <ul class="checklist">
-    <li><code>oled_deposition_report.qmd</code> — Quarto 문서 원본</li>
-    <li>렌더링된 HTML 보고서</li>
-    <li>GitHub Repository URL</li>
-    <li><code>README.md</code> — 프로젝트 설명, 실행 방법, 주요 발견</li>
-    <li>사용한 Gemini 프롬프트 기록</li>
-    <li>그래프 6종 이상 포함 확인</li>
-    <li>회귀분석 결과표 + p-value 해석 포함 확인</li>
-    <li>최종 권고안 3개 이상 포함 확인</li>
-  </ul>
+<ol>
+  <li><span class="ko">분석 목적</span><span class="en">Analysis Purpose</span></li>
+  <li><span class="ko">데이터 설명</span><span class="en">Data Description</span></li>
+  <li><span class="ko">결측치 / 기초 통계 확인</span><span class="en">Missing Values / Basic Statistics</span></li>
+  <li><span class="ko">시각화 결과</span><span class="en">Visualization Results</span>
+    <ul>
+      <li><span class="ko">분포: boxplot</span><span class="en">Distribution: boxplot</span></li>
+      <li><span class="ko">관계: scatter plot</span><span class="en">Relationship: scatter plot</span></li>
+      <li><span class="ko">위치: heatmap / x/y map</span><span class="en">Spatial: heatmap / x/y map</span></li>
+      <li><span class="ko">우선순위: Pareto chart</span><span class="en">Priority: Pareto chart</span></li>
+    </ul>
+  </li>
+  <li><span class="ko">통계 분석</span><span class="en">Statistical Analysis</span>
+    <ul>
+      <li>correlation heatmap</li>
+      <li>regression model (OLS)</li>
+      <li><span class="ko">p-value 해석</span><span class="en">p-value interpretation</span></li>
+    </ul>
+  </li>
+  <li><span class="ko">원인 후보 정리 (x/y map + Pareto 연결)</span><span class="en">Root-cause Summary (x/y map + Pareto linked)</span></li>
+  <li><span class="ko">개선 제안 (최우선 확인 조건/장비/위치 3개+)</span><span class="en">Improvement Suggestions (3+ top-priority conditions/equipment/positions)</span></li>
+  <li><span class="ko">한계와 다음 분석 방향</span><span class="en">Limitations &amp; Next Steps</span></li>
+</ol>
 </div>
+</section>
 
-<!-- 10. 트러블슈팅 -->
+<!-- 9 트러블슈팅 -->
+<section>
+<h2><span class="ko">9. 트러블슈팅 / FAQ</span><span class="en">9. Troubleshooting / FAQ</span></h2>
+
 <div class="card">
-  <h2>10. 트러블슈팅</h2>
-
-  <h3>ModuleNotFoundError: No module named 'seaborn'</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>pip install seaborn matplotlib pandas statsmodels scipy</code></pre>
-  </div>
-
-  <h3>한글이 그래프에서 깨짐</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>import matplotlib.pyplot as plt
-plt.rcParams["font.family"] = "Malgun Gothic"   # Mac: "AppleGothic"
-plt.rcParams["axes.unicode_minus"] = False</code></pre>
-  </div>
-
-  <h3>heatmap이 너무 느림</h3>
-  <ul>
-    <li><code>pivot_table</code>로 x/y 평균값을 만든 뒤 그리세요.</li>
-    <li>panel 하나를 선택해서 먼저 분석하세요.</li>
-  </ul>
-
-  <h3>Quarto 렌더링 실패</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code># Quarto 설치 상태 확인
-quarto check
-
-# 렌더링 실행
-quarto render oled_deposition_report.qmd --to html</code></pre>
-  </div>
-  <ul>
-    <li><code>quarto check</code>에서 Python/Jupyter 환경이 정상인지 확인하세요.</li>
-    <li>.qmd 파일 상단의 YAML 헤더가 올바른지 확인하세요.</li>
-    <li>Python 코드 블록에서 에러가 나면 해당 블록만 Jupyter로 먼저 실행해보세요.</li>
-  </ul>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code># .qmd YAML 헤더 예시
----
-title: "OLED Deposition 공정 분석 보고서"
-author: "이름"
-date: today
-format:
-  html:
-    theme: cosmo
-    toc: true
-    code-fold: true
-jupyter: python3
----</code></pre>
-  </div>
-
-  <h3>p-value 결과가 이상함</h3>
-  <ul>
-    <li>결측치와 문자열 컬럼이 모델에 들어갔는지 확인하세요.</li>
-    <li>독립변수끼리 너무 강하게 상관되어 있으면 회귀계수가 불안정할 수 있습니다 (다중공선성).</li>
-    <li>VIF(Variance Inflation Factor)를 확인해서 10 이상인 변수는 제거를 고려하세요.</li>
-  </ul>
-
-  <h3>statsmodels OLS에서 ValueError</h3>
-  <ul>
-    <li>문자열 컬럼이 독립변수에 포함되지 않았는지 확인하세요.</li>
-    <li>결측치를 <code>dropna()</code>로 제거한 뒤 모델에 넣으세요.</li>
-  </ul>
-
-  <h3>GitHub push 실패</h3>
-  <ul>
-    <li>CSV 파일 크기가 100MB를 초과하면 Git LFS를 사용하거나 .gitignore에 추가하세요.</li>
-    <li>HTML 파일이 너무 크면 그래프를 별도 이미지로 분리하세요.</li>
-  </ul>
+<h3>ModuleNotFoundError: No module named 'seaborn'</h3>
+<div class="pb">pip install seaborn matplotlib pandas statsmodels</div>
 </div>
 
-<!-- 11. 추천 보고서 구조 -->
 <div class="card">
-  <h2>11. 추천 보고서 구조</h2>
-  <ol>
-    <li><strong>분석 목적</strong> — 프로젝트 배경, 핵심 질문 정의</li>
-    <li><strong>데이터 설명</strong> — CSV 구조, 컬럼 의미, 데이터 크기</li>
-    <li><strong>결측치/기초 통계 확인</strong> — describe(), info(), 결측치 현황</li>
-    <li><strong>시각화 결과</strong>
-      <ul>
-        <li>분포: boxplot (chamber별, zone별)</li>
-        <li>관계: scatter plot (공정 조건 vs yield)</li>
-        <li>위치: heatmap 또는 x/y map (panel별)</li>
-        <li>우선순위: Pareto chart (결함 유형별)</li>
-        <li>상관: correlation heatmap</li>
-        <li>추가: 자유 선택 그래프</li>
-      </ul>
-    </li>
-    <li><strong>통계 분석</strong>
-      <ul>
-        <li>OLS regression model</li>
-        <li>결과표 (coefficients, p-values, R-squared)</li>
-        <li>p-value 해석 (유의한 인자 식별)</li>
-      </ul>
-    </li>
-    <li><strong>원인 가설</strong> — x/y map hotspot + Pareto + regression 결과 연결</li>
-    <li><strong>최종 권고안 3가지 이상</strong> — 공정 조건/장비/위치 기반 구체적 제안</li>
-    <li><strong>한계와 다음 분석 방향</strong> — 데이터 한계, 추가 분석 계획</li>
-  </ol>
+<h3><span class="ko">한글이 그래프에서 깨짐</span><span class="en">Korean characters broken in charts</span></h3>
+<div class="pb">import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "Malgun Gothic"
+plt.rcParams["axes.unicode_minus"] = False</div>
 </div>
 
-<!-- 12. FAQ -->
 <div class="card">
-  <h2>12. FAQ</h2>
-
-  <h3>Q. Quarto가 꼭 필요한가요?</h3>
-  <p>A. 상 난이도에서는 필수입니다. Quarto는 코드, 그래프, 텍스트를 하나의 문서에서 관리하고 재현 가능한 보고서를 만드는 도구입니다. <a href="https://quarto.org/docs/get-started/" target="_blank">Quarto 공식 문서</a>에서 설치 방법을 확인하세요.</p>
-
-  <h3>Q. Streamlit 앱을 만들어도 되나요?</h3>
-  <p>A. 이번 프로젝트의 기준 산출물은 Quarto HTML 보고서입니다. Streamlit은 추가 산출물로는 좋지만 필수가 아닙니다.</p>
-
-  <h3>Q. 그래프를 많이 넣으면 높은 점수를 받나요?</h3>
-  <p>A. 6종은 최소 기준이며, 각 그래프의 선택 이유와 해석이 핵심입니다. "왜 이 그래프를 선택했고, 무엇을 발견했으며, 이것이 원인 가설에 어떻게 연결되는지"를 설명하세요.</p>
-
-  <h3>Q. 실제 회사 데이터를 써도 되나요?</h3>
-  <p>A. 공개 저장소에는 절대 올리면 안 됩니다. 제공된 합성 CSV만 사용하세요.</p>
-
-  <h3>Q. README.md에는 무엇을 넣어야 하나요?</h3>
-  <p>A. 프로젝트 제목, 분석 목적, 사용 데이터, 실행 방법(<code>quarto render</code> 명령어), 주요 발견 요약, 폴더 구조를 포함하세요.</p>
-
-  <h3>Q. 원인 가설은 어느 수준까지 작성하나요?</h3>
-  <p>A. "chamber B의 압력 변동이 커서 thickness 균일성이 낮다 (boxplot + regression p-value 근거)" 수준으로, 그래프와 통계 결과를 구체적으로 인용하세요. 가설 3개 이상을 제시하고 각각의 데이터 근거를 명시하세요.</p>
+<h3><span class="ko">heatmap이 너무 느림</span><span class="en">Heatmap too slow</span></h3>
+<p><span class="ko"><code>pivot_table</code>로 x/y 평균값을 만든 뒤 그리세요. panel 하나만 먼저 분석하세요.</span><span class="en">Create x/y averages with <code>pivot_table</code> first. Start with one panel.</span></p>
 </div>
 
-<div class="footer">
-  렛유인 AI + 바이브코딩 강의 | 프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서
+<div class="card">
+<h3><span class="ko">Quarto 렌더링 실패</span><span class="en">Quarto render fails</span></h3>
+<div class="pb">quarto check
+quarto render oled_deposition_report.qmd --to html</div>
+<p><span class="ko"><code>quarto check</code>로 설치 상태를 먼저 확인하세요. Python 경로가 올바른지, 필요한 패키지가 설치되어 있는지 점검합니다.</span><span class="en">Run <code>quarto check</code> first to verify installation. Check that the Python path is correct and required packages are installed.</span></p>
 </div>
 
+<div class="card">
+<h3><span class="ko">p-value 결과가 이상함</span><span class="en">p-value results look wrong</span></h3>
+<p><span class="ko">결측치와 문자열 컬럼이 모델에 들어갔는지 확인하세요. 독립변수끼리 강한 상관(다중공선성)이 있으면 회귀계수가 불안정합니다. VIF(분산팽창계수)를 확인해 보세요.</span><span class="en">Check if missing values or string columns entered the model. High correlation between independent variables (multicollinearity) destabilizes coefficients. Check VIF (Variance Inflation Factor).</span></p>
 </div>
+
+<div class="card">
+<h3><span class="ko">Q. p-value가 뭔지 잘 모르겠어요</span><span class="en">Q. I don't understand p-values</span></h3>
+<p><span class="ko">A. Gemini에게 "p-value를 공정 엔지니어가 이해할 수 있게 해석해줘"라고 요청하세요. 단, AI 답변을 그대로 믿지 말고 그래프와 도메인 상식으로 다시 확인하세요.</span><span class="en">A. Ask Gemini to "explain p-value so a process engineer can understand." But verify with charts and domain knowledge.</span></p>
+</div>
+
+<div class="card">
+<h3><span class="ko">Q. Quarto가 꼭 필요한가요?</span><span class="en">Q. Is Quarto required?</span></h3>
+<p><span class="ko">A. 상급 난이도에서는 필요합니다. Quarto를 사용하면 코드-그래프-해석이 하나의 문서에서 재현됩니다.</span><span class="en">A. Yes, for advanced level. Quarto lets you reproduce code, charts, and analysis in a single document.</span></p>
+</div>
+
+<div class="card">
+<h3><span class="ko">Q. 실제 회사 데이터를 써도 되나요?</span><span class="en">Q. Can I use real company data?</span></h3>
+<p><span class="ko">A. 공개 저장소에는 절대 올리면 안 됩니다. 회사 데이터, 장비명, lot 정보, 고객 정보는 모두 제외하세요. 제공된 합성 CSV만 사용하세요.</span><span class="en">A. Never upload to public repos. Exclude all company data, equipment names, lot info, and customer info. Use only the provided synthetic CSV.</span></p>
+</div>
+</section>
+
+</div>
+
+<footer>
+  <span class="ko">렛유인 AI + 바이브코딩 강의 | 데이터 시각화와 분석 보고서 자동화</span>
+  <span class="en">LetUIn AI + Vibe Coding | Data Visualization &amp; Report Automation</span>
+</footer>
 
 <script>
-function copyCode(btn){
-  const code=btn.nextElementSibling.querySelector('code');
-  navigator.clipboard.writeText(code.textContent).then(()=>{
-    btn.textContent='복사됨!';
-    setTimeout(()=>btn.textContent='복사',1500);
-  });
-}
+function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n);document.getElementById('themeBtn').textContent=n==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}
+function toggleLang(){const b=document.body,n=b.getAttribute('data-lang')==='ko'?'en':'ko';b.setAttribute('data-lang',n);localStorage.setItem('lang',n);document.getElementById('langBtn').textContent=n==='ko'?'EN':'KO';}
+function copyP(id){const el=document.getElementById(id);const t=el.innerText.replace(/복사|Copy/g,'').trim();navigator.clipboard.writeText(t).then(()=>{const b=el.querySelector('.cb');const o=b.textContent;b.textContent='\u2713';setTimeout(()=>b.textContent=o,1200);});}
+(function(){const t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);document.getElementById('themeBtn').textContent=t==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}const l=localStorage.getItem('lang');if(l){document.body.setAttribute('data-lang',l);document.getElementById('langBtn').textContent=l==='ko'?'EN':'KO';}})();
 </script>
+<section class="section">
+<h3>📋 성과물 제출 방법</h3>
+<div class='card'>
+<p><strong>필수 제출물:</strong></p>
+<ul>
+<li>🔗 <strong>GitHub Repository URL</strong> (README.md 포함)</li>
+<li>📊 <strong>결과물</strong> (Streamlit 앱 / Quarto HTML / 배포 URL)</li>
+<li>📝 <strong>사용한 AI 프롬프트 기록</strong></li>
+</ul>
+<p style='margin-top:12px'><strong>제출 방식 (필수):</strong></p>
+<ul>
+<li>🎬 <strong>[필수] 3분 시연 영상</strong> — 아래 구조로 촬영:
+<br>① 시연 (1분): 앱 실행 → 핵심 기능 데모
+<br>② 기술 설명 (1분): 사용한 기술, 어려웠던 점, 해결 방법
+<br>③ 실무 가치 (30초): 현업에서 어떤 문제를 해결하는지
+<br>④ 배운 점 (30초): 성장한 점</li>
+</ul>
+<p style='margin-top:12px'><strong>추가 제출 (선택):</strong></p>
+<ul>
+<li>🌐 <strong>Streamlit Cloud 배포 URL</strong></li>
+<li>📱 <strong>텔레그램 알림 수신 스크린샷</strong></li>
+</ul>
+</div>
+</section>
 </body>
 </html>
