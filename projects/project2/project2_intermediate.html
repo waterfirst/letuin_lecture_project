@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2 OLED Deposition — 중 (응용)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a14;--card:#13131f;--border:#1e1e2e;--text:#e8e8f0;--muted:#8888a0;--accent:#f0c000;--accent-easy:#3fb950;--accent-hard:#f85149;--code-bg:#1a1a2a}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:80px}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+.top-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;justify-content:center;gap:6px;padding:10px 16px}
+.top-nav a{padding:8px 20px;border-radius:8px;font-weight:700;font-size:.95rem;transition:.2s}
+.nav-beginner{background:transparent;border:1px solid var(--accent-easy);color:var(--accent-easy)}
+.nav-intermediate{background:var(--accent);color:#000}
+.nav-advanced{background:transparent;border:1px solid var(--accent-hard);color:var(--accent-hard)}
+.nav-beginner:hover{background:var(--accent-easy);color:#000;text-decoration:none}
+.nav-advanced:hover{background:var(--accent-hard);color:#fff;text-decoration:none}
+.nav-intermediate:hover{text-decoration:none}
+
+.container{max-width:860px;margin:0 auto;padding:0 16px}
+
+.badge-area{text-align:center;margin:36px 0 24px}
+.badge{display:inline-block;background:var(--accent);color:#000;font-size:1.3rem;font-weight:800;padding:10px 36px;border-radius:40px;letter-spacing:.04em}
+.subtitle{color:var(--muted);margin-top:10px;font-size:.95rem}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 26px;margin:20px 0}
+.card h2{font-size:1.25rem;margin-bottom:14px;color:var(--accent);border-left:4px solid var(--accent);padding-left:12px}
+.card h3{font-size:1.05rem;margin:18px 0 8px;color:var(--text)}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left}
+th{background:var(--code-bg);color:var(--accent);font-weight:700}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+
+.code-wrap{position:relative;margin:12px 0}
+.code-wrap pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:.88rem;line-height:1.6;color:#c8c8e0;font-family:'Fira Code','Consolas',monospace}
+.copy-btn{position:absolute;top:8px;right:10px;background:var(--accent);color:#000;border:none;border-radius:6px;padding:4px 12px;font-size:.78rem;font-weight:700;cursor:pointer;opacity:.8;transition:.2s}
+.copy-btn:hover{opacity:1}
+
+.checklist{list-style:none;padding:0}
+.checklist li{padding:6px 0 6px 30px;position:relative}
+.checklist li::before{content:"\2610";position:absolute;left:4px;font-size:1.1rem;color:var(--accent)}
+
+ul:not(.checklist){padding-left:22px;margin:8px 0}
+ul:not(.checklist) li{margin:4px 0}
+ol{padding-left:22px;margin:8px 0}
+ol li{margin:6px 0}
+
+.highlight{background:rgba(240,192,0,.1);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.92rem}
+
+.footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:48px;padding:20px}
+
+@media(max-width:600px){
+  .card{padding:18px 14px}
+  .badge{font-size:1.05rem;padding:8px 24px}
+  .top-nav a{padding:6px 12px;font-size:.82rem}
+  table{font-size:.8rem}
+  th,td{padding:6px}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="project2_beginner.html" class="nav-beginner">하 (기본)</a>
+  <a href="project2_intermediate.html" class="nav-intermediate">중 (응용)</a>
+  <a href="project2_advanced.html" class="nav-advanced">상 (심화)</a>
+</nav>
+
+<div class="container">
+
+<div class="badge-area">
+  <span class="badge">중 — 응용 난이도</span>
+  <p class="subtitle">프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서</p>
+</div>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+  <h2>1. 프로젝트 개요</h2>
+  <p>OLED deposition 공정 데이터를 읽고 <strong>그래프와 통계 분석으로 공정 인사이트를 찾은 뒤 HTML 보고서로 문서화</strong>하는 프로젝트입니다. P1에서 익힌 CSV 분석 경험을 바탕으로, 이번에는 Seaborn 시각화와 통계 분석을 활용해 더 보고서다운 결과물을 만듭니다.</p>
+  <ul>
+    <li><strong>수행 기간</strong>: CH.2 이후 주말 2일 (토~일)</li>
+    <li><strong>사용 도구</strong>: Gemini AI + Python + pandas + seaborn + statsmodels</li>
+    <li><strong>결과물</strong>: CSV 분석 코드 + 그래프 이미지 + 통계 분석 포함 HTML 보고서</li>
+    <li><strong>참고 사이트</strong>: <a href="https://seaborn.pydata.org/examples/index.html" target="_blank">Seaborn Gallery</a></li>
+  </ul>
+  <div class="highlight">P1의 핵심이 "CSV를 읽고 그래프를 만든다"였다면, P2의 핵심은 "그래프를 근거로 원인 후보를 좁히고 보고서로 설명한다"입니다.</div>
+</div>
+
+<!-- 2. P1 복습 -->
+<div class="card">
+  <h2>2. P1에서 배운 것 복습 체크리스트</h2>
+  <p>P2를 시작하기 전에 P1에서 익힌 핵심 역량을 점검하세요.</p>
+  <ul class="checklist">
+    <li>Gemini에게 코드 생성/수정을 요청하는 프롬프트 작성</li>
+    <li>CSV 파일을 pandas로 읽고 기본 통계를 확인</li>
+    <li>그래프를 보고 이상치나 패턴을 설명</li>
+    <li>분석 결과를 간단한 문서로 정리</li>
+    <li>에러 발생 시 AI에게 디버깅 요청</li>
+  </ul>
+  <h3>P1에서 P2로의 성장</h3>
+  <table>
+    <tr><th>구분</th><th>P1</th><th>P2 (이번 프로젝트)</th></tr>
+    <tr><td>데이터</td><td>간단한 공정 CSV</td><td>OLED deposition x/y map CSV</td></tr>
+    <tr><td>시각화</td><td>기본 차트</td><td>boxplot, scatter, heatmap, Pareto, correlation</td></tr>
+    <tr><td>분석</td><td>그래프 확인</td><td>상관관계, 회귀분석, p-value 해석</td></tr>
+    <tr><td>보고서</td><td>간단 요약</td><td>통계 분석 포함 HTML 보고서</td></tr>
+    <tr><td>목표</td><td>분석 경험</td><td>원인 가설과 개선 제안</td></tr>
+  </table>
+</div>
+
+<!-- 3. 학습 목표 -->
+<div class="card">
+  <h2>3. 학습 목표 (중 난이도)</h2>
+  <ol>
+    <li>OLED deposition 데이터를 읽고 주요 품질 지표를 이해한다</li>
+    <li>문제 유형에 맞는 시각화 방법을 <strong>스스로 선택</strong>한다</li>
+    <li>Seaborn/Matplotlib 그래프 <strong>5종 이상</strong>을 생성한다 (boxplot, scatter, heatmap/x-y map, Pareto, correlation heatmap)</li>
+    <li>결함 유형별 <strong>Pareto 분석</strong>으로 우선순위를 도출한다</li>
+    <li>회귀분석과 <strong>p-value</strong>를 이용해 원인 후보를 통계적으로 검토한다</li>
+    <li>분석 흐름을 HTML 보고서로 문서화하고 <strong>개선 제안 3개</strong>를 포함한다</li>
+  </ol>
+  <p><strong>소요 시간</strong>: 약 6~8시간</p>
+</div>
+
+<!-- 4. 사용 데이터셋 -->
+<div class="card">
+  <h2>4. 사용 데이터셋</h2>
+  <p>이번 프로젝트에는 확장된 OLED deposition 합성 CSV가 제공됩니다.</p>
+  <table>
+    <tr><th>파일</th><th>설명</th></tr>
+    <tr><td><code>oled_deposition_xymap.csv</code></td><td>4개 panel, 96 x 64 좌표, 총 24,576행</td></tr>
+  </table>
+  <p style="margin-top:14px"><strong>CSV 다운로드:</strong></p>
+  <a href="https://raw.githubusercontent.com/waterfirst/letuin_lecture_project/main/projects/project2/public/oled_deposition_xymap.csv" target="_blank" style="display:inline-block;background:var(--accent);color:#000;padding:10px 22px;border-radius:8px;font-weight:700;margin:8px 0">oled_deposition_xymap.csv 다운로드</a>
+</div>
+
+<!-- 5. 컬럼 딕셔너리 -->
+<div class="card">
+  <h2>5. 주요 컬럼 딕셔너리</h2>
+  <table>
+    <tr><th>컬럼</th><th>의미</th><th>활용 예</th></tr>
+    <tr><td><code>panel_id</code>, <code>x_index</code>, <code>y_index</code></td><td>panel과 x/y 측정 좌표</td><td>x/y map, heatmap</td></tr>
+    <tr><td><code>chamber</code>, <code>zone</code></td><td>증착 chamber와 panel 영역</td><td>chamber별 boxplot</td></tr>
+    <tr><td><code>source_temp_c</code>, <code>substrate_temp_c</code></td><td>공정 온도</td><td>산점도, 회귀분석</td></tr>
+    <tr><td><code>pressure_mTorr</code>, <code>oxygen_flow_sccm</code></td><td>공정 압력/가스 조건</td><td>상관관계, 회귀분석</td></tr>
+    <tr><td><code>thickness_nm</code>, <code>thickness_error_nm</code></td><td>목표 두께 대비 편차</td><td>boxplot, heatmap</td></tr>
+    <tr><td><code>particle_count</code>, <code>dark_spot_count</code></td><td>결함 관련 측정값</td><td>Pareto, 원인 후보</td></tr>
+    <tr><td><code>defect_type</code>, <code>pass_fail</code></td><td>결함 유형과 판정</td><td>Pareto chart</td></tr>
+    <tr><td><code>yield_score</code></td><td>좌표 단위 품질 점수</td><td>scatter, regression</td></tr>
+  </table>
+</div>
+
+<!-- 6. 단계별 수행 방법 -->
+<div class="card">
+  <h2>6. 단계별 수행 방법</h2>
+
+  <h3>Step 1. 환경 준비</h3>
+  <p>필요한 라이브러리를 설치합니다.</p>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code>pip install pandas seaborn matplotlib statsmodels scipy</code></pre>
+  </div>
+
+  <h3>Step 2. 데이터 로드 및 탐색</h3>
+  <p>CSV를 로드하고 기초 통계를 확인합니다. 이 단계에서 결측치와 데이터 크기를 파악하세요.</p>
+  <div class="highlight">힌트: <code>df.info()</code>, <code>df.describe()</code>, <code>df.isnull().sum()</code>을 실행하면 데이터 구조를 빠르게 파악할 수 있습니다.</div>
+
+  <h3>Step 3. 시각화 1 — boxplot</h3>
+  <p>chamber별, zone별 thickness_error_nm 분포를 boxplot으로 비교합니다.</p>
+  <div class="highlight">힌트: <code>seaborn.boxplot()</code>에서 <code>x='chamber'</code>, <code>y='thickness_error_nm'</code>을 설정하고, <code>hue='zone'</code>을 추가하면 그룹별 비교가 됩니다.</div>
+
+  <h3>Step 4. 시각화 2 — scatter plot</h3>
+  <p>공정 조건(온도, 압력)과 yield_score의 관계를 산점도로 확인합니다.</p>
+  <div class="highlight">힌트: substrate_temp_c vs yield_score, pressure_mTorr vs yield_score를 그려보고 어느 변수가 더 강한 관계를 보이는지 비교하세요.</div>
+
+  <h3>Step 5. 시각화 3 — heatmap 또는 x/y map</h3>
+  <p>x_index, y_index별 thickness_error_nm 평균을 pivot_table로 만들어 heatmap을 그립니다.</p>
+  <div class="highlight">힌트: panel별로 따로 그려야 패턴이 잘 보입니다. 특정 위치에 불량이 집중되면 장비 원인(source 정렬 등)을 의심할 수 있습니다.</div>
+
+  <h3>Step 6. 시각화 4 — Pareto chart</h3>
+  <p>defect_type별 발생 건수를 세고, 누적 비율 80%를 차지하는 상위 결함을 찾습니다.</p>
+  <div class="highlight">힌트: <code>value_counts()</code>로 빈도를 구하고, <code>cumsum()</code>으로 누적비율을 계산합니다. 막대 그래프 + 누적 선 그래프 조합이 Pareto chart입니다.</div>
+
+  <h3>Step 7. 시각화 5 — correlation heatmap</h3>
+  <p>수치형 컬럼들의 상관계수를 heatmap으로 표현합니다.</p>
+  <div class="highlight">힌트: <code>df[numeric_cols].corr()</code>로 상관행렬을 구하고 <code>seaborn.heatmap(annot=True)</code>로 그립니다.</div>
+
+  <h3>Step 8. 통계 분석 — 회귀분석</h3>
+  <p>yield_score를 종속변수로, 공정 조건 변수를 독립변수로 넣어 OLS 회귀분석을 수행합니다.</p>
+  <div class="highlight">힌트: statsmodels의 <code>OLS</code>를 사용합니다. p-value &lt; 0.05인 변수가 "통계적으로 유의한 인자"입니다. 단, R-squared 값도 함께 확인하여 모델 설명력을 판단하세요.</div>
+
+  <h3>Step 9. HTML 보고서 작성</h3>
+  <p>모든 그래프와 분석 결과를 하나의 HTML 파일로 정리합니다. 각 그래프 아래에 해석과 공정 개선 관점의 제안을 추가하세요.</p>
+  <div class="highlight">힌트: 보고서 말미에 "개선 제안 3가지"를 반드시 포함하세요. 데이터 근거(그래프, p-value)와 연결지어 작성하면 좋은 점수를 받습니다.</div>
+
+  <h3>Step 10. 프롬프트 기록 및 제출</h3>
+  <p>Gemini에게 사용한 주요 프롬프트를 기록하고, 최종 산출물을 정리하여 제출합니다.</p>
+</div>
+
+<!-- 7. 프롬프트 예시 -->
+<div class="card">
+  <h2>7. Gemini 프롬프트 예시 (방향 힌트)</h2>
+  <p>중 난이도에서는 전체 프롬프트가 주어지지 않습니다. 아래 방향 힌트를 참고하여 <strong>직접 프롬프트를 설계</strong>하세요.</p>
+
+  <h3>힌트 1: 기본 분석 시작</h3>
+  <div class="highlight">방향: CSV 로드 후 기초 통계 + Seaborn 그래프 5종을 한 번에 요청하되, 각 그래프의 목적(분포 확인, 관계 확인, 위치 패턴 등)을 명시하세요.</div>
+
+  <h3>힌트 2: Pareto 분석 추가</h3>
+  <div class="highlight">방향: defect_type별 빈도와 누적 비율을 계산하는 Pareto chart를 요청하세요. "상위 80%를 차지하는 결함 유형"을 결과에 표시하도록 지시하면 좋습니다.</div>
+
+  <h3>힌트 3: 통계 분석</h3>
+  <div class="highlight">방향: statsmodels OLS로 yield_score를 종속변수로 한 회귀분석을 요청하세요. "p-value가 0.05보다 작은 변수를 유의한 인자로 표시"하도록 지시합니다.</div>
+
+  <h3>참고용 프롬프트 구조</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code>이 분석 코드에 통계 분석을 추가해줘.
+
+추가 요구사항:
+- defect_type Pareto chart 생성
+- 수치 컬럼 correlation heatmap 생성
+- statsmodels OLS로 yield_score 회귀분석
+- p-value가 0.05보다 작은 변수를 "유의한 인자"로 표시
+- HTML 보고서에 그래프별 해석과 개선 제안 3개 포함</code></pre>
+  </div>
+
+  <h3>프롬프트 설계 팁</h3>
+  <ul>
+    <li>한 번에 모든 것을 요청하지 말고, 단계별로 나누어 요청하세요</li>
+    <li>에러가 나면 에러 메시지를 그대로 전달하세요</li>
+    <li>생성된 그래프를 보고 "이 그래프에서 보이는 패턴을 해석해줘"라고 추가 질문하세요</li>
+    <li>Seaborn Gallery에서 마음에 드는 예제를 찾아 "이 스타일을 내 데이터에 적용해줘"라고 요청하면 효과적입니다</li>
+  </ul>
+</div>
+
+<!-- 8. 평가 채점 기준 -->
+<div class="card">
+  <h2>8. 평가 채점 기준</h2>
+  <table>
+    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
+    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>CSV 정상 로드, 결측치 처리, 코드 재실행 가능</td></tr>
+    <tr><td>시각화 완성도</td><td>25%</td><td>5종 이상 그래프, Pareto 필수 포함, 그래프 가독성</td></tr>
+    <tr><td>통계 분석과 해석</td><td>25%</td><td>상관분석 또는 회귀분석 포함, p-value/상관계수 해석</td></tr>
+    <tr><td>보고서 문서화</td><td>25%</td><td>HTML 보고서에 인사이트와 개선 제안 3개 포함</td></tr>
+  </table>
+  <h3>난이도별 요구 수준</h3>
+  <table>
+    <tr><th>항목</th><th>중 (이 레벨)</th></tr>
+    <tr><td>CSV 로드</td><td>필수</td></tr>
+    <tr><td>시각화</td><td>5종 이상</td></tr>
+    <tr><td>Pareto chart</td><td>필수</td></tr>
+    <tr><td>x/y map</td><td>권장</td></tr>
+    <tr><td>통계 분석</td><td>상관/회귀 분석</td></tr>
+    <tr><td>보고서</td><td>HTML</td></tr>
+    <tr><td>README</td><td>권장</td></tr>
+  </table>
+</div>
+
+<!-- 9. 제출물 체크리스트 -->
+<div class="card">
+  <h2>9. 제출물 체크리스트</h2>
+  <ul class="checklist">
+    <li><code>analysis.py</code> — 분석 코드 파일</li>
+    <li>그래프 PNG 5개 이상 (boxplot, scatter, heatmap, Pareto, correlation)</li>
+    <li>통계 분석 결과가 포함된 <code>report.html</code></li>
+    <li>사용한 Gemini 프롬프트 기록 (텍스트 파일 또는 보고서 내 포함)</li>
+    <li>해석 및 개선 제안 포함</li>
+  </ul>
+</div>
+
+<!-- 10. 트러블슈팅 -->
+<div class="card">
+  <h2>10. 트러블슈팅</h2>
+
+  <h3>ModuleNotFoundError: No module named 'seaborn'</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code>pip install seaborn matplotlib pandas statsmodels scipy</code></pre>
+  </div>
+
+  <h3>한글이 그래프에서 깨짐</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code>import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "Malgun Gothic"   # Mac: "AppleGothic"
+plt.rcParams["axes.unicode_minus"] = False</code></pre>
+  </div>
+
+  <h3>heatmap이 너무 느림</h3>
+  <ul>
+    <li><code>pivot_table</code>로 x/y 평균값을 만든 뒤 그리세요.</li>
+    <li>panel 하나를 선택해서 먼저 분석하세요.</li>
+  </ul>
+
+  <h3>statsmodels OLS에서 ValueError</h3>
+  <ul>
+    <li>문자열 컬럼(defect_type, pass_fail 등)이 독립변수에 포함되지 않았는지 확인하세요.</li>
+    <li>결측치가 있으면 <code>dropna()</code>로 제거한 뒤 모델에 넣으세요.</li>
+  </ul>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code>import statsmodels.api as sm
+
+# 수치형 컬럼만 선택
+numeric_cols = ['source_temp_c', 'substrate_temp_c', 'pressure_mTorr',
+                'oxygen_flow_sccm', 'thickness_error_nm', 'particle_count']
+X = df[numeric_cols].dropna()
+y = df.loc[X.index, 'yield_score']
+
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())</code></pre>
+  </div>
+
+  <h3>Pareto chart에서 누적비율이 안 나옴</h3>
+  <div class="code-wrap">
+    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+    <pre><code># Pareto chart 핵심 코드
+counts = df['defect_type'].value_counts()
+cum_pct = counts.cumsum() / counts.sum() * 100
+
+fig, ax1 = plt.subplots()
+ax1.bar(counts.index, counts.values)
+ax2 = ax1.twinx()
+ax2.plot(counts.index, cum_pct.values, 'ro-')
+ax2.axhline(y=80, color='gray', linestyle='--')
+ax2.set_ylabel('누적 비율 (%)')</code></pre>
+  </div>
+
+  <h3>p-value 결과가 이상함</h3>
+  <ul>
+    <li>독립변수끼리 너무 강하게 상관되어 있으면 회귀계수가 불안정할 수 있습니다 (다중공선성).</li>
+    <li>correlation heatmap에서 0.9 이상으로 높은 상관 쌍이 있으면 하나를 제거해보세요.</li>
+    <li>AI 답변을 그대로 믿지 말고 그래프와 도메인 상식으로 다시 확인하세요.</li>
+  </ul>
+</div>
+
+<!-- 11. 추천 보고서 구조 -->
+<div class="card">
+  <h2>11. 추천 보고서 구조</h2>
+  <ol>
+    <li><strong>분석 목적</strong> — 왜 이 분석을 하는지, 어떤 질문에 답하려는지</li>
+    <li><strong>데이터 설명</strong> — CSV 파일명, 행/열 수, 주요 컬럼 소개</li>
+    <li><strong>결측치/기초 통계 확인</strong> — describe() 결과, 결측치 현황</li>
+    <li><strong>시각화 결과</strong>
+      <ul>
+        <li>분포: boxplot (chamber별, zone별)</li>
+        <li>관계: scatter plot (공정 조건 vs yield)</li>
+        <li>위치: heatmap 또는 x/y map</li>
+        <li>우선순위: Pareto chart (결함 유형별)</li>
+      </ul>
+    </li>
+    <li><strong>통계 분석</strong>
+      <ul>
+        <li>correlation heatmap</li>
+        <li>regression model (OLS)</li>
+        <li>p-value 해석</li>
+      </ul>
+    </li>
+    <li><strong>원인 후보 정리</strong> — 그래프와 통계 근거 연결</li>
+    <li><strong>개선 제안 3가지</strong> — 구체적인 공정 조건/장비/위치 기반</li>
+    <li><strong>한계와 다음 분석 방향</strong></li>
+  </ol>
+</div>
+
+<!-- 12. FAQ -->
+<div class="card">
+  <h2>12. FAQ</h2>
+
+  <h3>Q. Streamlit 앱을 만들어도 되나요?</h3>
+  <p>A. 이번 프로젝트의 기준 산출물은 HTML 보고서입니다. Streamlit은 추가 산출물로는 좋지만 필수는 아닙니다.</p>
+
+  <h3>Q. 그래프를 많이 넣으면 높은 점수를 받나요?</h3>
+  <p>A. 그래프 개수보다 "왜 이 그래프를 선택했고 무엇을 알게 되었는지"가 더 중요합니다. 5종은 최소 기준이며, 각 그래프의 해석이 핵심입니다.</p>
+
+  <h3>Q. p-value가 뭔지 잘 모르겠어요.</h3>
+  <p>A. Gemini에게 "p-value를 공정 엔지니어가 이해할 수 있게 해석해줘"라고 요청하세요. 간단히 말하면, p-value가 0.05보다 작으면 "이 변수가 yield에 영향을 준다고 볼 수 있다"는 뜻입니다. 단, AI 답변을 그대로 믿지 말고 그래프와 도메인 상식으로 재확인하세요.</p>
+
+  <h3>Q. 실제 회사 데이터를 써도 되나요?</h3>
+  <p>A. 공개 저장소에는 절대 올리면 안 됩니다. 제공된 합성 CSV만 사용하세요.</p>
+
+  <h3>Q. 회귀분석 결과를 어떻게 해석하나요?</h3>
+  <p>A. OLS summary에서 (1) R-squared: 모델 설명력, (2) 각 변수의 coef: 영향 방향과 크기, (3) P>|t|: p-value를 확인하세요. p-value &lt; 0.05인 변수가 유의한 인자입니다.</p>
+
+  <h3>Q. 개선 제안은 어떤 수준으로 작성하나요?</h3>
+  <p>A. "chamber B의 압력 편차를 줄인다", "x/y map 좌측 하단 영역의 source 정렬을 점검한다"처럼 데이터 근거가 있는 구체적 제안을 작성하세요.</p>
+</div>
+
+<div class="footer">
+  렛유인 AI + 바이브코딩 강의 | 프로젝트 2 — OLED Deposition 데이터 시각화 &amp; HTML 보고서
+</div>
+
+</div>
+
+<script>
+function copyCode(btn){
+  const code=btn.nextElementSibling.querySelector('code');
+  navigator.clipboard.writeText(code.textContent).then(()=>{
+    btn.textContent='복사됨!';
+    setTimeout(()=>btn.textContent='복사',1500);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P3 중 - 나만의 엔지니어 AI 툴킷</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a14;color:#e8e8f0;font-family:'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:60px}
+a{color:#f0c000;text-decoration:none}a:hover{text-decoration:underline}
+.nav{position:sticky;top:0;z-index:100;background:#12121e;border-bottom:1px solid #2a2a3a;display:flex;justify-content:center;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.nav a{padding:8px 24px;border-radius:8px;font-weight:700;font-size:0.95rem;transition:all .2s}
+.nav .active{background:#f0c000;color:#0a0a14}
+.nav a:not(.active):hover{background:#1a1a2e}
+.nav .lv-beginner{border:2px solid #3fb950;color:#3fb950}
+.nav .lv-intermediate{border:2px solid #f0c000;color:#f0c000}
+.nav .lv-advanced{border:2px solid #f85149;color:#f85149}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+.badge{display:inline-block;background:#f0c000;color:#0a0a14;font-size:1.6rem;font-weight:900;padding:12px 36px;border-radius:16px;margin:28px 0 10px 0;letter-spacing:1px}
+h1{font-size:1.8rem;margin:10px 0 6px;color:#e8e8f0}
+.subtitle{color:#9898a8;font-size:1rem;margin-bottom:30px}
+.card{background:#14142a;border:1px solid #2a2a3a;border-radius:16px;padding:28px 24px;margin-bottom:24px}
+.card h2{font-size:1.25rem;color:#f0c000;margin-bottom:14px;border-bottom:1px solid #2a2a3a;padding-bottom:10px}
+.card h3{font-size:1.08rem;color:#c0c0d0;margin:18px 0 8px}
+.card ul,.card ol{padding-left:22px;margin:8px 0}
+.card li{margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.92rem}
+th,td{border:1px solid #2a2a3a;padding:10px 12px;text-align:left}
+th{background:#1a1a30;color:#f0c000;font-weight:700}
+tr:nth-child(even){background:#11112a}
+pre{position:relative;background:#0d0d1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px;overflow-x:auto;margin:10px 0;font-size:0.9rem;line-height:1.6}
+code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
+.copy-btn{position:absolute;top:8px;right:8px;background:#f0c000;color:#0a0a14;border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:0.8rem;font-weight:700;opacity:0.85}
+.copy-btn:hover{opacity:1}
+.highlight{color:#f0c000;font-weight:700}
+.warn{color:#f0c000}
+.danger{color:#f85149}
+.check-list li{list-style:none;padding-left:4px}
+.check-list li::before{content:'\\2610 ';color:#f0c000}
+.faq dt{font-weight:700;color:#f0c000;margin-top:14px}
+.faq dd{margin:4px 0 10px 0;color:#c8c8d8}
+.step-num{display:inline-block;background:#f0c000;color:#0a0a14;width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%;font-weight:900;font-size:0.9rem;margin-right:8px}
+.hint-box{background:#1a1a10;border:1px solid #f0c000;border-radius:10px;padding:16px;margin:12px 0}
+.hint-box strong{color:#f0c000}
+@media(max-width:640px){.container{padding:12px 8px}.card{padding:18px 14px}.badge{font-size:1.2rem;padding:10px 24px}h1{font-size:1.4rem}pre{font-size:0.8rem;padding:12px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="project3_beginner.html" class="lv-beginner">하 (기본)</a>
+  <a href="project3_intermediate.html" class="lv-intermediate active">중 (응용)</a>
+  <a href="project3_advanced.html" class="lv-advanced">상 (심화)</a>
+</nav>
+
+<div class="container">
+
+<span class="badge">중 (응용)</span>
+<h1>프로젝트 3 &mdash; 입사 1일차 비밀 무기: 나만의 엔지니어 AI 툴킷</h1>
+<p class="subtitle">렛유인 AI + 바이브코딩 강의 | 최종 프로젝트 (2일) &mdash; AI 공정 어드바이저 + 텔레그램 리포트</p>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+<h2>1. 프로젝트 개요</h2>
+<p>이 강의에서 배운 모든 기술을 <span class="highlight">3가지 이상 조합</span>하여 실제 첨단산업 현장에서 <strong>입사 1일차부터 바로 쓸 수 있는</strong> AI 업무 자동화 도구를 만드는 최종 프로젝트입니다.</p>
+<p style="margin-top:10px">P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로, 자유 주제로 <strong>나만의 엔지니어링 솔루션</strong>을 완성합니다.</p>
+<ul style="margin-top:12px">
+  <li><strong>수행 기간</strong>: 최종 프로젝트 주말 2일 (토~일)</li>
+  <li><strong>사용 도구</strong>: Gemini + Streamlit + Telegram Bot + <span class="highlight">Gemini API</span></li>
+  <li><strong>결과물</strong>: 데이터 업로드 &rarr; AI 분석 &rarr; 보고서 생성 &rarr; 텔레그램 전송 자동화</li>
+  <li><strong>소요 시간</strong>: 6~8시간</li>
+</ul>
+</div>
+
+<!-- 2. P1+P2 통합 복습 -->
+<div class="card">
+<h2>2. P1 + P2 통합 복습</h2>
+<p>P3는 P1과 P2에서 쌓은 모든 역량을 통합하는 최종 프로젝트입니다. 시작 전에 아래를 점검하세요:</p>
+<table>
+<tr><th>역량 (출처)</th><th>핵심 내용</th><th>P3에서의 활용</th></tr>
+<tr><td>프롬프트 엔지니어링 (P1)</td><td>Gemini에게 명확하고 구체적으로 요청</td><td>복합 시스템 설계 시 단계별 프롬프트</td></tr>
+<tr><td>데이터 시각화 (P1)</td><td>Plotly 인터랙티브 차트, SPC 관리도</td><td>모니터링 대시보드의 핵심 UI</td></tr>
+<tr><td>API 연동 (P2)</td><td>Gemini API로 자동 분석/인사이트</td><td>AI 분석 모듈 구현</td></tr>
+<tr><td>보고서 자동화 (P2)</td><td>Markdown/HTML 보고서 생성</td><td>텔레그램으로 자동 전송</td></tr>
+<tr><td>에러 대응 (P1+P2)</td><td>디버깅 워크플로우</td><td>복잡한 시스템 통합 시 문제 해결</td></tr>
+</table>
+
+<h3>P1 &rarr; P2 &rarr; P3 성장 여정</h3>
+<pre><code>P1: 데이터 분석기        → 차트 시각화 (Streamlit + Plotly)
+P2: 자동 보고서 앱       → AI 인사이트 + 보고서 자동화 (+ Gemini API)
+P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+ Telegram + 자유)</code></pre>
+<table>
+<tr><th>역량</th><th>P1</th><th>P2</th><th>P3 (이번)</th></tr>
+<tr><td>시각화</td><td>기초</td><td>심화</td><td>자유 (4종 이상)</td></tr>
+<tr><td>AI API</td><td>-</td><td>Gemini</td><td class="highlight">Gemini + 확장</td></tr>
+<tr><td>보고서</td><td>-</td><td>자동 생성</td><td>자동 + 전송</td></tr>
+<tr><td>알림/자동화</td><td>-</td><td>-</td><td class="highlight">텔레그램 요약 전송</td></tr>
+<tr><td>배포</td><td>-</td><td>선택</td><td>선택</td></tr>
+<tr><td>설계</td><td>가이드 따라</td><td>프롬프트 직접</td><td class="highlight">방향 힌트만 제공</td></tr>
+</table>
+</div>
+
+<!-- 3. 학습 목표 -->
+<div class="card">
+<h2>3. 학습 목표 (중)</h2>
+<ol>
+  <li><strong>Gemini API</strong>를 연동하여 데이터 패턴 분석 + 한국어 인사이트를 생성한다</li>
+  <li>CSV/Excel 업로드 &rarr; 자동 시각화 &rarr; AI 분석 &rarr; 보고서 생성 <strong>파이프라인</strong>을 구축한다</li>
+  <li>분석 결과를 <strong>Markdown 보고서</strong>로 자동 생성한다</li>
+  <li>텔레그램으로 <strong>보고서 요약을 자동 전송</strong>한다</li>
+  <li>프롬프트를 <strong>직접 설계</strong>하는 역량을 기른다</li>
+</ol>
+</div>
+
+<!-- 4. 사용 도구 설명 -->
+<div class="card">
+<h2>4. 사용 도구</h2>
+<h3>Gemini (대화)</h3>
+<p>코드 생성 및 디버깅. 중 난이도에서는 프롬프트를 <strong>직접 작성</strong>합니다.</p>
+
+<h3>Streamlit</h3>
+<p>Python 웹 대시보드. 멀티 페이지 또는 멀티 탭 구성을 권장합니다.</p>
+
+<h3>Telegram Bot</h3>
+<p>분석 결과 요약을 자동으로 전송. <code>parse_mode="Markdown"</code>으로 꾸밀 수 있습니다.</p>
+
+<h3 class="highlight">Gemini API (중 난이도 추가)</h3>
+<p>P2에서 사용했던 Gemini API를 다시 활용합니다. 데이터를 분석하고 한국어 인사이트를 생성하는 AI 분석 모듈을 구현합니다.</p>
+<pre><code>import google.generativeai as genai
+
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel("gemini-2.0-flash")
+response = model.generate_content("이 데이터를 분석해줘: ...")</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>AI Tool 활용 비중</h3>
+<pre><code>AI Tool 활용 (70%)
+ - Gemini로 전체 앱 설계/구현
+ - Gemini API로 분석/텍스트 생성
+ - Telegram Bot 연동
+
+도메인 지식 (30%)
+ - 문제 정의 및 주제 선정
+ - 알림 기준/임계값 설계
+ - 결과 해석 및 발표</code></pre>
+</div>
+
+<!-- 5. 텔레그램 봇 생성 가이드 -->
+<div class="card">
+<h2>5. 텔레그램 봇 생성 가이드 (Step by Step)</h2>
+
+<h3><span class="step-num">1</span>봇 생성 - BotFather 찾기</h3>
+<p>Telegram 앱을 열고 상단 검색창에 <code>@BotFather</code>를 검색합니다. 파란색 체크 마크가 있는 공식 계정을 선택합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem;margin-top:4px">[화면: Telegram 검색창에 "BotFather" 입력 &rarr; 공식 봇 선택]</p>
+
+<h3><span class="step-num">2</span>/newbot 명령어 입력</h3>
+<p>BotFather 채팅창에 <code>/newbot</code>을 입력하고 전송합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem;margin-top:4px">[화면: 채팅창에 /newbot 입력 후 전송 버튼 클릭]</p>
+
+<h3><span class="step-num">3</span>봇 이름 입력</h3>
+<p>BotFather가 이름을 물어봅니다. 원하는 이름을 입력합니다.</p>
+<pre><code>예시: MyAIAdvisorBot</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">4</span>봇 username 입력 (<span class="warn">반드시 _bot으로 끝남</span>)</h3>
+<pre><code>예시: my_ai_advisor_bot</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">5</span>BOT_TOKEN 복사</h3>
+<p>BotFather가 발급한 토큰을 복사합니다. <span class="danger">토큰은 절대 공개하지 마세요!</span></p>
+
+<h3><span class="step-num">6</span>봇에게 /start 메시지 보내기</h3>
+<p>생성한 봇을 검색 &rarr; 채팅 시작 &rarr; <code>/start</code> 전송</p>
+
+<h3><span class="step-num">7</span>Chat ID 확인</h3>
+<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>JSON에서 <code>"chat":{"id": 숫자}</code> 값을 복사합니다.</p>
+</div>
+
+<!-- 6. 단계별 수행 방법 -->
+<div class="card">
+<h2>6. 단계별 수행 방법</h2>
+
+<h3><span class="step-num">1</span>Step 1: 텔레그램 봇 생성</h3>
+<p>위 섹션 5의 가이드를 따라 <strong>BOT_TOKEN</strong>과 <strong>CHAT_ID</strong>를 확보합니다.</p>
+
+<h3><span class="step-num">2</span>Step 2: Gemini API 키 확보</h3>
+<p><a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>에서 API 키를 발급받습니다. P2에서 사용한 키가 있으면 재사용합니다.</p>
+
+<h3><span class="step-num">3</span>Step 3: 프로젝트 구조 설계</h3>
+<div class="hint-box">
+<strong>힌트:</strong> 파일을 기능별로 분리하세요.
+<ul style="margin-top:6px">
+  <li><code>app.py</code> &mdash; Streamlit 메인 앱 (멀티 탭 or 멀티 페이지)</li>
+  <li><code>ai_advisor.py</code> &mdash; Gemini API 분석 모듈</li>
+  <li><code>report_generator.py</code> &mdash; 보고서 생성 모듈</li>
+</ul>
+</div>
+
+<h3><span class="step-num">4</span>Step 4: Gemini에 프롬프트 작성 (직접!)</h3>
+<div class="hint-box">
+<strong>방향 힌트:</strong> 아래 요소를 포함하는 프롬프트를 <strong>직접 작성</strong>하세요.
+<ul style="margin-top:6px">
+  <li>CSV/Excel 파일 업로드 기능</li>
+  <li>자동 시각화 4종 이상 (히스토그램, 박스플롯, 산점도, 히트맵 등)</li>
+  <li>Gemini API로 데이터 패턴 분석 + 한국어 인사이트 생성</li>
+  <li>Markdown 보고서 자동 생성 + 다운로드 버튼</li>
+  <li>텔레그램으로 보고서 요약 3줄 자동 전송</li>
+  <li>사이드바에 API 키, BOT_TOKEN, CHAT_ID 입력</li>
+</ul>
+</div>
+
+<h3><span class="step-num">5</span>Step 5: 코드 저장 및 라이브러리 설치</h3>
+<pre><code>pip install streamlit plotly requests pandas google-generativeai</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">6</span>Step 6: 앱 실행 및 테스트</h3>
+<pre><code>streamlit run app.py</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>CSV 파일을 업로드하고 전체 파이프라인이 동작하는지 확인합니다:</p>
+<ol>
+  <li>파일 업로드 &rarr; 시각화 자동 생성</li>
+  <li>Gemini API 분석 버튼 &rarr; AI 인사이트 표시</li>
+  <li>보고서 생성 &rarr; 다운로드</li>
+  <li>텔레그램 전송 버튼 &rarr; 요약 수신 확인</li>
+</ol>
+
+<h3><span class="step-num">7</span>Step 7: 텔레그램 마크다운 메시지 구현</h3>
+<div class="hint-box">
+<strong>힌트:</strong> 텔레그램 메시지에 마크다운 형식을 사용할 수 있습니다.
+<ul style="margin-top:6px">
+  <li><code>parse_mode="Markdown"</code> 파라미터 사용</li>
+  <li>보고서를 생성한 후 핵심 3줄 요약만 텔레그램으로 전송</li>
+  <li>Gemini에게 "이 통계를 3줄로 요약해줘"라고 요청</li>
+</ul>
+</div>
+
+<h3><span class="step-num">8</span>Step 8: 프롬프트 기록 정리</h3>
+<p>Gemini에 입력한 모든 프롬프트를 텍스트 파일로 정리합니다. <strong>제출 필수!</strong></p>
+
+<h3><span class="step-num">9</span>Step 9: GitHub에 업로드</h3>
+<pre><code>git init
+git add .
+git commit -m "P3: AI 공정 어드바이저 + 텔레그램 리포트"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">10</span>Step 10: README.md 작성</h3>
+<p>GitHub 리포지토리에 프로젝트 설명, 실행 방법, 스크린샷을 포함한 README를 작성합니다.</p>
+</div>
+
+<!-- 7. 프롬프트 예시 -->
+<div class="card">
+<h2>7. 프롬프트 예시 (방향 힌트)</h2>
+<p>중 난이도에서는 프롬프트를 <strong>직접 작성</strong>합니다. 아래는 방향을 잡기 위한 힌트입니다.</p>
+
+<div class="hint-box">
+<strong>힌트 1: 앱 전체 구조</strong>
+<p style="margin-top:6px">"Streamlit 앱을 만들어줘"로 시작하되, CSV 업로드 &rarr; 시각화 &rarr; AI 분석 &rarr; 보고서 &rarr; 텔레그램 전송의 <strong>전체 흐름</strong>을 한 프롬프트에 설명하세요.</p>
+</div>
+
+<div class="hint-box">
+<strong>힌트 2: Gemini API 분석 모듈</strong>
+<p style="margin-top:6px">데이터의 통계 요약(평균, 표준편차, 이상치 비율)을 Gemini에게 전달하고 "한국어로 패턴 분석해줘"라고 요청하는 구조를 설계하세요.</p>
+</div>
+
+<div class="hint-box">
+<strong>힌트 3: 텔레그램 요약 전송</strong>
+<p style="margin-top:6px">Gemini에게 "분석 결과를 3줄로 요약해줘"라고 요청한 결과를 텔레그램으로 보내는 흐름입니다.</p>
+</div>
+
+<div class="hint-box">
+<strong>힌트 4: 에러 해결</strong>
+<p style="margin-top:6px">에러가 발생하면 에러 메시지 전체를 Gemini에게 보여주고 "이 에러를 수정해줘"라고 요청하세요.</p>
+</div>
+</div>
+
+<!-- 8. 주제 선택 가이드 -->
+<div class="card">
+<h2>8. 주제 선택 가이드</h2>
+<p>중 난이도는 <strong>"AI 공정 어드바이저 + 텔레그램 리포트"</strong>가 기본 주제이지만, 자신의 관심 산업으로 변경할 수 있습니다.</p>
+<table>
+<tr><th>산업</th><th>주제 예시</th><th>핵심 기능</th></tr>
+<tr><td>반도체</td><td>웨이퍼 맵 불량 패턴 분류기</td><td>히트맵 + AI 패턴 분석 + 알림</td></tr>
+<tr><td>디스플레이</td><td>설비 이상 감지 시스템</td><td>센서 모니터링 + OOC 탐지 + 텔레그램 리포트</td></tr>
+<tr><td>2차전지</td><td>배터리 수명 예측 도구</td><td>충방전 분석 + 열화 예측 + 최적 충전 가이드</td></tr>
+<tr><td>바이오</td><td>임상시험 데이터 AI 요약</td><td>논문 파싱 + 핵심 수치 추출 + 보고서</td></tr>
+<tr><td>에너지</td><td>태양광 발전량 예측 대시보드</td><td>기상 데이터 연동 + 예측 + 알림</td></tr>
+<tr><td>범용</td><td>기술 동향 자동 센싱</td><td>학회/논문 크롤링 + AI 요약 + 모닝 리포트</td></tr>
+<tr><td>범용</td><td>특허 키워드 트렌드 분석기</td><td>키워드 추출 + 시각화 + 경쟁사 비교</td></tr>
+<tr><td>범용</td><td>견적서 비교 분석 도구</td><td>비정형 문서 파싱 + 가중치 스코어링 + 추천</td></tr>
+</table>
+<p style="margin-top:8px;color:#9898a8">"내가 매일/매주 반복하는 귀찮은 일"을 떠올려보세요. 그것을 자동화하세요.</p>
+</div>
+
+<!-- 9. 평가 채점 기준 -->
+<div class="card">
+<h2>9. 평가 채점 기준 (중)</h2>
+<table>
+<tr><th>항목</th><th>배점</th><th>설명</th></tr>
+<tr><td>시각화 4종 이상</td><td>20%</td><td>히스토그램, 박스플롯, 산점도, 히트맵 등</td></tr>
+<tr><td>Gemini API 인사이트</td><td>25%</td><td>데이터 기반 AI 분석 + 한국어 인사이트 생성</td></tr>
+<tr><td>보고서 다운로드</td><td>15%</td><td>Markdown 보고서 자동 생성 및 다운로드</td></tr>
+<tr><td>텔레그램 요약 전송</td><td>20%</td><td>분석 요약을 텔레그램으로 자동 전송</td></tr>
+<tr><td>프롬프트 기록 제출</td><td>10%</td><td>Gemini에 입력한 프롬프트 전체 기록</td></tr>
+<tr><td>스크린샷 2장</td><td>10%</td><td>앱 화면 + 텔레그램 수신 화면</td></tr>
+</table>
+
+<h3>전체 난이도별 평가 비교</h3>
+<table>
+<tr><th>항목</th><th>하</th><th>중</th><th>상</th></tr>
+<tr><td>앱 실행</td><td>필수</td><td>필수</td><td>필수</td></tr>
+<tr><td>기술 조합</td><td>2가지</td><td class="highlight">3가지</td><td>3가지 이상</td></tr>
+<tr><td>Gemini API</td><td>불필요</td><td class="highlight">연동</td><td>자동 분석</td></tr>
+<tr><td>텔레그램</td><td>알림만</td><td class="highlight">요약 전송</td><td>알림 + 리포트</td></tr>
+<tr><td>시각화</td><td>게이지 + 라인</td><td class="highlight">4종 이상</td><td>6종 이상</td></tr>
+<tr><td>보고서</td><td>불필요</td><td class="highlight">Markdown</td><td>HTML</td></tr>
+<tr><td>코드 구조</td><td>단일 파일</td><td class="highlight">2~3 파일</td><td>모듈 분리</td></tr>
+<tr><td>배포</td><td>불필요</td><td>선택</td><td>필수</td></tr>
+</table>
+</div>
+
+<!-- 10. 제출물 체크리스트 -->
+<div class="card">
+<h2>10. 제출물 체크리스트 (중)</h2>
+<ul class="check-list">
+  <li>GitHub Repository URL + README.md</li>
+  <li>실행 스크린샷 2장 (앱 화면 + 텔레그램 수신)</li>
+  <li>Gemini 프롬프트 기록</li>
+  <li>보고서 다운로드 파일 샘플</li>
+</ul>
+
+<h3>제출 방법</h3>
+<p>GitHub Repository URL + README + 스크린샷 2장 + 프롬프트 기록</p>
+</div>
+
+<!-- 11. 발표 안내 -->
+<div class="card">
+<h2>11. 발표 안내 (3분)</h2>
+<p><strong>발표 시간</strong>: 개인당 3분</p>
+<table>
+<tr><th>순서</th><th>시간</th><th>내용</th></tr>
+<tr><td>1. 시연</td><td>1분</td><td>앱 실행 &rarr; CSV 업로드 &rarr; AI 분석 &rarr; 텔레그램 수신 데모</td></tr>
+<tr><td>2. 기술 설명</td><td>1분</td><td>사용한 기술 스택, 프롬프트 설계 전략, 어려웠던 점</td></tr>
+<tr><td>3. 실무 가치</td><td>30초</td><td>이 도구가 현업에서 어떤 문제를 해결하는지</td></tr>
+<tr><td>4. 배운 점</td><td>30초</td><td>이 프로젝트를 통해 성장한 점</td></tr>
+</table>
+<p style="margin-top:10px"><strong>발표 후</strong>: 상호 피드백 교환</p>
+</div>
+
+<!-- 12. 트러블슈팅 -->
+<div class="card">
+<h2>12. 트러블슈팅</h2>
+
+<h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
+<ul>
+  <li>@BotFather에서 봇을 만든 후, 봇에게 먼저 <code>/start</code> 또는 아무 메시지를 보내야 합니다</li>
+  <li><code>https://api.telegram.org/bot{TOKEN}/getUpdates</code>에서 chat_id 재확인</li>
+  <li>TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인</li>
+</ul>
+
+<h3 class="danger">requests.post 호출 시 ConnectionError</h3>
+<ul>
+  <li>인터넷 연결 확인</li>
+  <li>회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)</li>
+</ul>
+
+<h3 class="danger">Gemini API 호출 횟수 초과</h3>
+<ul>
+  <li>무료 티어는 분당 15회 제한</li>
+  <li><code>time.sleep(4)</code> 등으로 호출 간격 조절</li>
+  <li>데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화</li>
+</ul>
+
+<h3 class="danger">Streamlit Cloud에서 텔레그램이 안 됨</h3>
+<ul>
+  <li>Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID를 등록했는지 확인</li>
+  <li>코드에서 <code>st.secrets["BOT_TOKEN"]</code>으로 접근</li>
+</ul>
+
+<h3 class="danger">멀티 페이지 Streamlit이 안 됨</h3>
+<ul>
+  <li><code>pages/</code> 폴더명은 정확히 <code>pages</code>여야 합니다 (대소문자 주의)</li>
+  <li>파일명 앞에 숫자를 붙여 순서 지정: <code>01_모니터링.py</code>, <code>02_분석.py</code></li>
+</ul>
+</div>
+
+<!-- 13. FAQ -->
+<div class="card">
+<h2>13. FAQ</h2>
+<dl class="faq">
+  <dt>Q. 주제를 못 정하겠어요.</dt>
+  <dd>A. 가장 쉬운 방법: "내가 매일/매주 반복하는 귀찮은 일"을 떠올려보세요. 그것을 자동화하세요.</dd>
+
+  <dt>Q. P1, P2 코드를 재활용해도 되나요?</dt>
+  <dd>A. 적극 권장합니다! P1의 시각화 + P2의 보고서 + P3의 텔레그램을 합치면 강력한 도구가 됩니다.</dd>
+
+  <dt>Q. 텔레그램 봇이 작동하지 않아요.</dt>
+  <dd>A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를 보낼 수 없습니다. Chat ID를 다시 확인하세요.</dd>
+
+  <dt>Q. 발표가 부담스러워요.</dt>
+  <dd>A. 3분이면 충분합니다. 화면을 보여주면서 "이 버튼을 누르면 이렇게 됩니다"만 해도 됩니다.</dd>
+
+  <dt>Q. 기술 3가지 조합이 어려워요.</dt>
+  <dd>A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)입니다. P1, P2에서 이미 2가지를 해봤으니 텔레그램만 추가하면 됩니다.</dd>
+
+  <dt>Q. 프롬프트를 어떻게 작성하나요?</dt>
+  <dd>A. P1에서 배운 프롬프트 엔지니어링을 활용하세요. 기능 목록을 구체적으로 나열하고, 한국어 응답을 요청하세요.</dd>
+</dl>
+</div>
+
+<!-- 14. 모범 답안 폴더 구조 -->
+<div class="card">
+<h2>14. 모범 답안 폴더 구조 (중)</h2>
+<pre><code>examples/중/
+├── app.py              ← 멀티페이지 Streamlit
+├── ai_advisor.py       ← Gemini API 분석
+├── report_generator.py ← 보고서 자동 생성
+└── requirements.txt</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="margin-top:10px;color:#f0c000">주의: 모범 답안을 먼저 보는 것보다 <strong>스스로 시도한 후 비교</strong>하는 것을 강력히 권장합니다.</p>
+
+<h3>requirements.txt 예시</h3>
+<pre><code>streamlit
+plotly
+requests
+pandas
+google-generativeai</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>텔레그램 마크다운 메시지 전송 예시</h3>
+<pre><code>import requests
+
+def send_telegram(token, chat_id, message):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    requests.post(url, json={
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "Markdown"
+    })</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+</div>
+
+</div><!-- /container -->
+
+<script>
+function copyCode(btn){
+  const pre=btn.parentElement;
+  const code=pre.querySelector('code');
+  const text=code?code.textContent:pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='완료!';
+    setTimeout(()=>{btn.textContent='복사'},1500);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P3 하 - 나만의 엔지니어 AI 툴킷</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a14;color:#e8e8f0;font-family:'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.7;padding-bottom:60px}
+a{color:#3fb950;text-decoration:none}a:hover{text-decoration:underline}
+.nav{position:sticky;top:0;z-index:100;background:#12121e;border-bottom:1px solid #2a2a3a;display:flex;justify-content:center;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.nav a{padding:8px 24px;border-radius:8px;font-weight:700;font-size:0.95rem;transition:all .2s}
+.nav .active{background:#3fb950;color:#0a0a14}
+.nav a:not(.active):hover{background:#1a1a2e}
+.nav .lv-beginner{border:2px solid #3fb950;color:#3fb950}
+.nav .lv-intermediate{border:2px solid #f0c000;color:#f0c000}
+.nav .lv-advanced{border:2px solid #f85149;color:#f85149}
+.container{max-width:900px;margin:0 auto;padding:20px 16px}
+.badge{display:inline-block;background:#3fb950;color:#0a0a14;font-size:1.6rem;font-weight:900;padding:12px 36px;border-radius:16px;margin:28px 0 10px 0;letter-spacing:1px}
+h1{font-size:1.8rem;margin:10px 0 6px;color:#e8e8f0}
+.subtitle{color:#9898a8;font-size:1rem;margin-bottom:30px}
+.card{background:#14142a;border:1px solid #2a2a3a;border-radius:16px;padding:28px 24px;margin-bottom:24px}
+.card h2{font-size:1.25rem;color:#3fb950;margin-bottom:14px;border-bottom:1px solid #2a2a3a;padding-bottom:10px}
+.card h3{font-size:1.08rem;color:#c0c0d0;margin:18px 0 8px}
+.card ul,.card ol{padding-left:22px;margin:8px 0}
+.card li{margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.92rem}
+th,td{border:1px solid #2a2a3a;padding:10px 12px;text-align:left}
+th{background:#1a1a30;color:#3fb950;font-weight:700}
+tr:nth-child(even){background:#11112a}
+pre{position:relative;background:#0d0d1a;border:1px solid #2a2a3a;border-radius:10px;padding:16px;overflow-x:auto;margin:10px 0;font-size:0.9rem;line-height:1.6}
+code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
+.copy-btn{position:absolute;top:8px;right:8px;background:#3fb950;color:#0a0a14;border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:0.8rem;font-weight:700;opacity:0.85}
+.copy-btn:hover{opacity:1}
+.highlight{color:#3fb950;font-weight:700}
+.warn{color:#f0c000}
+.danger{color:#f85149}
+.check-list li{list-style:none;padding-left:4px}
+.check-list li::before{content:'\\2610 ';color:#3fb950}
+.growth-table td:nth-child(1){font-weight:700;color:#c0c0d0}
+.faq dt{font-weight:700;color:#3fb950;margin-top:14px}
+.faq dd{margin:4px 0 10px 0;color:#c8c8d8}
+.step-num{display:inline-block;background:#3fb950;color:#0a0a14;width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%;font-weight:900;font-size:0.9rem;margin-right:8px}
+@media(max-width:640px){.container{padding:12px 8px}.card{padding:18px 14px}.badge{font-size:1.2rem;padding:10px 24px}h1{font-size:1.4rem}pre{font-size:0.8rem;padding:12px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="project3_beginner.html" class="lv-beginner active">하 (기본)</a>
+  <a href="project3_intermediate.html" class="lv-intermediate">중 (응용)</a>
+  <a href="project3_advanced.html" class="lv-advanced">상 (심화)</a>
+</nav>
+
+<div class="container">
+
+<span class="badge">하 (기본)</span>
+<h1>프로젝트 3 &mdash; 입사 1일차 비밀 무기: 나만의 엔지니어 AI 툴킷</h1>
+<p class="subtitle">렛유인 AI + 바이브코딩 강의 | 최종 프로젝트 (2일) &mdash; 공정 모니터링 알림 시스템</p>
+
+<!-- 1. 프로젝트 개요 -->
+<div class="card">
+<h2>1. 프로젝트 개요</h2>
+<p>이 강의에서 배운 모든 기술을 <span class="highlight">3가지 이상 조합</span>하여 실제 첨단산업 현장에서 <strong>입사 1일차부터 바로 쓸 수 있는</strong> AI 업무 자동화 도구를 만드는 최종 프로젝트입니다.</p>
+<p style="margin-top:10px">P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로, 자유 주제로 <strong>나만의 엔지니어링 솔루션</strong>을 완성합니다.</p>
+<ul style="margin-top:12px">
+  <li><strong>수행 기간</strong>: 최종 프로젝트 주말 2일 (토~일)</li>
+  <li><strong>사용 도구</strong>: Gemini + Streamlit + Telegram Bot</li>
+  <li><strong>결과물</strong>: 센서 데이터 대시보드 + 임계값 초과 시 텔레그램 알림</li>
+  <li><strong>소요 시간</strong>: 3~4시간</li>
+</ul>
+</div>
+
+<!-- 2. P1+P2 통합 복습 -->
+<div class="card">
+<h2>2. P1 + P2 통합 복습</h2>
+<p>P3는 P1과 P2에서 쌓은 모든 역량을 통합하는 최종 프로젝트입니다. 시작 전에 아래를 점검하세요:</p>
+<table>
+<tr><th>역량 (출처)</th><th>핵심 내용</th><th>P3에서의 활용</th></tr>
+<tr><td>프롬프트 엔지니어링 (P1)</td><td>Gemini에게 명확하고 구체적으로 요청</td><td>복합 시스템 설계 시 단계별 프롬프트</td></tr>
+<tr><td>데이터 시각화 (P1)</td><td>Plotly 인터랙티브 차트, SPC 관리도</td><td>모니터링 대시보드의 핵심 UI</td></tr>
+<tr><td>API 연동 (P2)</td><td>Gemini API로 자동 분석/인사이트</td><td>AI 분석 모듈 구현</td></tr>
+<tr><td>보고서 자동화 (P2)</td><td>Markdown/HTML 보고서 생성</td><td>텔레그램으로 자동 전송</td></tr>
+<tr><td>에러 대응 (P1+P2)</td><td>디버깅 워크플로우</td><td>복잡한 시스템 통합 시 문제 해결</td></tr>
+</table>
+
+<h3>P1 &rarr; P2 &rarr; P3 성장 여정</h3>
+<pre><code>P1: 데이터 분석기        → 차트 시각화 (Streamlit + Plotly)
+P2: 자동 보고서 앱       → AI 인사이트 + 보고서 자동화 (+ Gemini API)
+P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+ Telegram + 자유)</code></pre>
+<table class="growth-table">
+<tr><th>역량</th><th>P1</th><th>P2</th><th>P3 (이번)</th></tr>
+<tr><td>시각화</td><td>기초</td><td>심화</td><td>자유</td></tr>
+<tr><td>AI API</td><td>-</td><td>Gemini</td><td>Gemini + 확장</td></tr>
+<tr><td>보고서</td><td>-</td><td>자동 생성</td><td>자동 + 전송</td></tr>
+<tr><td>알림/자동화</td><td>-</td><td>-</td><td class="highlight">텔레그램 봇</td></tr>
+<tr><td>배포</td><td>-</td><td>선택</td><td>불필요</td></tr>
+<tr><td>설계</td><td>가이드 따라</td><td>프롬프트 직접</td><td>프롬프트 전문 제공</td></tr>
+</table>
+</div>
+
+<!-- 3. 학습 목표 -->
+<div class="card">
+<h2>3. 학습 목표 (하)</h2>
+<ol>
+  <li>Gemini 대화를 통해 <strong>Streamlit 대시보드</strong>를 구현한다</li>
+  <li>Telegram Bot으로 <strong>실시간 알림</strong> 시스템을 구현한다</li>
+  <li>센서 데이터의 <strong>임계값 기반 상태 판단</strong> 로직을 이해한다</li>
+  <li>게이지 차트 + 라인 차트로 <strong>실시간 모니터링 UI</strong>를 구성한다</li>
+</ol>
+</div>
+
+<!-- 4. 사용 도구 설명 -->
+<div class="card">
+<h2>4. 사용 도구</h2>
+<h3>Gemini (대화)</h3>
+<p>코드 생성 및 디버깅을 위한 AI 어시스턴트. 프롬프트를 붙여넣으면 전체 앱 코드를 생성해줍니다.</p>
+
+<h3>Streamlit</h3>
+<p>Python으로 웹 대시보드를 빠르게 만드는 프레임워크. <code>streamlit run app.py</code> 한 줄로 실행합니다.</p>
+
+<h3>Telegram Bot</h3>
+<p>실시간 알림을 보내는 메신저 봇. <code>requests</code> 라이브러리의 POST 요청으로 메시지를 전송합니다.</p>
+
+<h3>AI Tool 활용 비중</h3>
+<pre><code>AI Tool 활용 (70%)
+ - Gemini로 전체 앱 설계/구현
+ - Telegram Bot 연동
+
+도메인 지식 (30%)
+ - 알림 기준/임계값 설계
+ - 결과 해석</code></pre>
+</div>
+
+<!-- 5. 텔레그램 봇 생성 가이드 -->
+<div class="card">
+<h2>5. 텔레그램 봇 생성 가이드 (Step by Step)</h2>
+
+<h3><span class="step-num">1</span>봇 생성 - BotFather 찾기</h3>
+<p>Telegram 앱을 열고 상단 검색창에 <code>@BotFather</code>를 검색합니다. 파란색 체크 마크가 있는 공식 계정을 선택합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem;margin-top:4px">[화면: Telegram 검색창에 "BotFather" 입력 &rarr; 공식 봇 선택]</p>
+
+<h3><span class="step-num">2</span>/newbot 명령어 입력</h3>
+<p>BotFather 채팅창에 <code>/newbot</code>을 입력하고 전송합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem;margin-top:4px">[화면: 채팅창에 /newbot 입력 후 전송 버튼 클릭]</p>
+
+<h3><span class="step-num">3</span>봇 이름 입력</h3>
+<p>BotFather가 "Alright, a new bot. How are we going to call it?"라고 묻습니다. 원하는 이름을 입력합니다.</p>
+<pre><code>예시: MyProcessBot</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="color:#9898a8;font-size:0.9rem">[화면: 봇 이름 입력 &rarr; 전송]</p>
+
+<h3><span class="step-num">4</span>봇 username 입력</h3>
+<p>BotFather가 username을 묻습니다. <span class="warn">반드시 _bot으로 끝나야 합니다.</span></p>
+<pre><code>예시: my_process_monitor_bot</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="color:#9898a8;font-size:0.9rem">[화면: username 입력 &rarr; 전송 &rarr; 성공 메시지 수신]</p>
+
+<h3><span class="step-num">5</span>BOT_TOKEN 복사</h3>
+<p>BotFather가 "Done! Congratulations..."과 함께 토큰을 발급합니다. <code>Use this token to access the HTTP API:</code> 아래의 긴 문자열을 복사합니다.</p>
+<pre><code>예시: 7123456789:AAF1234abcd5678efgh9012ijkl3456mnop</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="color:#f85149;font-size:0.9rem">주의: 토큰은 절대 공개하지 마세요!</p>
+
+<h3><span class="step-num">6</span>봇에게 메시지 보내기</h3>
+<p>Telegram 검색창에서 방금 만든 봇의 username을 검색하고, 채팅을 시작합니다. <code>/start</code> 또는 아무 메시지를 보냅니다.</p>
+<p style="color:#9898a8;font-size:0.9rem">[화면: 봇 검색 &rarr; 채팅 시작 &rarr; /start 입력]</p>
+
+<h3><span class="step-num">7</span>Chat ID 확인</h3>
+<p>브라우저에서 아래 URL을 엽니다 (BOT_TOKEN 부분을 실제 토큰으로 교체):</p>
+<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>JSON 결과에서 <code>"chat":{"id": 숫자}</code> 부분의 숫자가 Chat ID입니다. 이것을 복사합니다.</p>
+<p style="color:#9898a8;font-size:0.9rem">[화면: 브라우저에 URL 입력 &rarr; JSON에서 chat &rarr; id 값 확인]</p>
+</div>
+
+<!-- 6. 단계별 수행 방법 -->
+<div class="card">
+<h2>6. 단계별 수행 방법</h2>
+
+<h3><span class="step-num">1</span>Step 1: 텔레그램 봇 만들기</h3>
+<p>위 섹션 5의 가이드를 따라 봇을 생성하고 <strong>BOT_TOKEN</strong>과 <strong>CHAT_ID</strong>를 메모장에 저장합니다.</p>
+
+<h3><span class="step-num">2</span>Step 2: Gemini에 프롬프트 붙여넣기</h3>
+<p><a href="https://gemini.google.com" target="_blank">gemini.google.com</a>에 접속하여 아래 프롬프트를 <strong>그대로</strong> 붙여넣으세요:</p>
+<pre><code>Streamlit으로 공정 모니터링 대시보드를 만들어줘.
+
+기능:
+1. 가상 센서 데이터 시뮬레이션 (온도, 압력, 두께)
+   - 1초마다 새 데이터 생성 (정상 범위 + 가끔 이상치)
+2. 실시간 게이지 차트 3개 (현재 온도, 압력, 두께)
+3. 최근 50개 데이터 라인 차트
+4. 상태 표시: 정상(🟢), 주의(🟡), 위험(🔴)
+   - 온도 > 370: 위험, > 360: 주의
+   - 압력 > 2.8: 위험, > 2.7: 주의
+5. 위험 상태일 때 텔레그램으로 알림 전송
+   - requests 라이브러리로 Telegram Bot API 직접 호출
+   - 메시지: "⚠️ [위험] 온도 380°C 감지 — 즉시 점검 필요"
+6. 사이드바: BOT_TOKEN, CHAT_ID 입력 필드
+7. 모든 텍스트 한국어
+
+telegram 알림은 requests 라이브러리의 POST로 구현해줘:
+url = f"https://api.telegram.org/bot{token}/sendMessage"</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">3</span>Step 3: 코드 저장</h3>
+<p>Gemini가 생성한 코드를 <code>app.py</code> 파일로 저장합니다.</p>
+
+<h3><span class="step-num">4</span>Step 4: 필요 라이브러리 설치</h3>
+<pre><code>pip install streamlit plotly requests pandas</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">5</span>Step 5: 앱 실행</h3>
+<pre><code>streamlit run app.py</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3><span class="step-num">6</span>Step 6: 사이드바에 토큰 입력</h3>
+<p>실행된 웹 앱의 사이드바에 <strong>BOT_TOKEN</strong>과 <strong>CHAT_ID</strong>를 입력합니다.</p>
+
+<h3><span class="step-num">7</span>Step 7: 모니터링 & 알림 확인</h3>
+<p>대시보드가 작동하면서 센서 데이터가 위험 수준을 넘을 때 텔레그램으로 알림이 옵니다. 알림이 오면 <strong>스크린샷을 캡처</strong>합니다.</p>
+
+<h3><span class="step-num">8</span>Step 8: GitHub에 업로드</h3>
+<p>GitHub에 새 리포지토리를 만들고 <code>app.py</code>와 <code>requirements.txt</code>를 push합니다.</p>
+<pre><code>git init
+git add app.py requirements.txt
+git commit -m "P3: 공정 모니터링 대시보드 + 텔레그램 알림"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+</div>
+
+<!-- 7. 프롬프트 예시 -->
+<div class="card">
+<h2>7. 프롬프트 예시 (전문 제공)</h2>
+<p>하 난이도에서는 프롬프트를 <strong>그대로 복사해서</strong> 사용합니다. Step 2의 프롬프트가 메인 프롬프트입니다.</p>
+
+<h3>추가 프롬프트: 에러 발생 시</h3>
+<pre><code>위 코드를 실행했더니 아래 에러가 발생해:
+[에러 메시지 붙여넣기]
+이 에러를 수정해줘.</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>추가 프롬프트: 디자인 개선</h3>
+<pre><code>이 대시보드에 다크 테마를 적용하고,
+게이지 차트 색상을 정상=초록, 주의=노랑, 위험=빨강으로 바꿔줘.</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>추가 프롬프트: 텔레그램 메시지 꾸미기</h3>
+<pre><code>텔레그램 알림 메시지에 마크다운을 적용해줘.
+- 제목은 볼드체
+- 수치는 코드블록
+- 시간 정보 포함</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+</div>
+
+<!-- 8. 주제 선택 가이드 -->
+<div class="card">
+<h2>8. 주제 선택 가이드</h2>
+<p>하 난이도는 <strong>"공정 모니터링 알림 시스템"</strong>으로 고정 주제입니다. 하지만 센서 종류나 산업을 바꿔 응용할 수 있습니다:</p>
+<table>
+<tr><th>산업</th><th>주제 예시</th><th>핵심 기능</th></tr>
+<tr><td>반도체</td><td>웨이퍼 맵 불량 패턴 분류기</td><td>히트맵 + AI 패턴 분석 + 알림</td></tr>
+<tr><td>디스플레이</td><td>설비 이상 감지 시스템</td><td>센서 모니터링 + OOC 탐지 + 텔레그램 리포트</td></tr>
+<tr><td>2차전지</td><td>배터리 수명 예측 도구</td><td>충방전 분석 + 열화 예측 + 최적 충전 가이드</td></tr>
+<tr><td>바이오</td><td>임상시험 데이터 AI 요약</td><td>논문 파싱 + 핵심 수치 추출 + 보고서</td></tr>
+<tr><td>에너지</td><td>태양광 발전량 예측 대시보드</td><td>기상 데이터 연동 + 예측 + 알림</td></tr>
+<tr><td>범용</td><td>기술 동향 자동 센싱</td><td>학회/논문 크롤링 + AI 요약 + 모닝 리포트</td></tr>
+<tr><td>범용</td><td>특허 키워드 트렌드 분석기</td><td>키워드 추출 + 시각화 + 경쟁사 비교</td></tr>
+<tr><td>범용</td><td>견적서 비교 분석 도구</td><td>비정형 문서 파싱 + 가중치 스코어링 + 추천</td></tr>
+</table>
+<p style="margin-top:8px;color:#9898a8">위 예시는 참고용입니다. 자신만의 주제를 직접 정해도 됩니다.</p>
+</div>
+
+<!-- 9. 평가 채점 기준 -->
+<div class="card">
+<h2>9. 평가 채점 기준 (하)</h2>
+<table>
+<tr><th>항목</th><th>배점</th><th>설명</th></tr>
+<tr><td>대시보드 실행</td><td>30%</td><td>Streamlit 앱이 정상 실행되고 게이지가 표시됨</td></tr>
+<tr><td>상태 판단 로직</td><td>25%</td><td>정상/주의/위험 상태 판단이 올바르게 동작</td></tr>
+<tr><td>텔레그램 알림</td><td>30%</td><td>위험 상태 시 텔레그램으로 알림 수신 확인</td></tr>
+<tr><td>스크린샷 제출</td><td>15%</td><td>앱 스크린샷 1장 + 텔레그램 알림 스크린샷 1장</td></tr>
+</table>
+
+<h3>전체 난이도별 평가 비교</h3>
+<table>
+<tr><th>항목</th><th>하</th><th>중</th><th>상</th></tr>
+<tr><td>앱 실행</td><td>필수</td><td>필수</td><td>필수</td></tr>
+<tr><td>기술 조합</td><td>2가지</td><td>3가지</td><td>3가지 이상</td></tr>
+<tr><td>Gemini API</td><td>불필요</td><td>연동</td><td>자동 분석</td></tr>
+<tr><td>텔레그램</td><td>알림만</td><td>요약 전송</td><td>알림 + 리포트</td></tr>
+<tr><td>시각화</td><td>게이지 + 라인</td><td>4종 이상</td><td>6종 이상</td></tr>
+<tr><td>보고서</td><td>불필요</td><td>Markdown</td><td>HTML</td></tr>
+<tr><td>코드 구조</td><td>단일 파일</td><td>2~3 파일</td><td>모듈 분리</td></tr>
+<tr><td>배포</td><td>불필요</td><td>선택</td><td>필수</td></tr>
+</table>
+</div>
+
+<!-- 10. 제출물 체크리스트 -->
+<div class="card">
+<h2>10. 제출물 체크리스트 (하)</h2>
+<ul class="check-list">
+  <li>GitHub Repository URL</li>
+  <li>실행 스크린샷 1장 (대시보드)</li>
+  <li>텔레그램 알림 수신 스크린샷 1장</li>
+  <li>(선택) 사용한 프롬프트 기록</li>
+</ul>
+
+<h3>제출 방법</h3>
+<p>GitHub Repository URL + 스크린샷 2장 (앱 + 텔레그램)</p>
+</div>
+
+<!-- 11. 발표 안내 -->
+<div class="card">
+<h2>11. 발표 안내 (3분)</h2>
+<p><strong>발표 시간</strong>: 개인당 3분</p>
+<table>
+<tr><th>순서</th><th>시간</th><th>내용</th></tr>
+<tr><td>1. 시연</td><td>1분</td><td>앱 실행 &rarr; 핵심 기능 데모 (게이지 차트, 알림 수신)</td></tr>
+<tr><td>2. 기술 설명</td><td>1분</td><td>사용한 기술 스택, 어려웠던 점, 해결 방법</td></tr>
+<tr><td>3. 실무 가치</td><td>30초</td><td>이 도구가 현업에서 어떤 문제를 해결하는지</td></tr>
+<tr><td>4. 배운 점</td><td>30초</td><td>이 프로젝트를 통해 성장한 점</td></tr>
+</table>
+<p style="margin-top:10px"><strong>발표 후</strong>: 상호 피드백 교환</p>
+<p style="color:#9898a8;margin-top:8px">Tip: 화면을 보여주면서 "이 버튼을 누르면 이렇게 됩니다"만 해도 충분합니다.</p>
+</div>
+
+<!-- 12. 트러블슈팅 -->
+<div class="card">
+<h2>12. 트러블슈팅</h2>
+
+<h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
+<ul>
+  <li>@BotFather에서 봇을 만든 후, 봇에게 먼저 <code>/start</code> 또는 아무 메시지를 보내야 합니다</li>
+  <li><code>https://api.telegram.org/bot{TOKEN}/getUpdates</code>에서 chat_id 재확인</li>
+  <li>TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인</li>
+</ul>
+
+<h3 class="danger">requests.post 호출 시 ConnectionError</h3>
+<ul>
+  <li>인터넷 연결 확인</li>
+  <li>회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)</li>
+</ul>
+
+<h3 class="danger">Streamlit 앱이 실행되지 않음</h3>
+<ul>
+  <li><code>pip install streamlit plotly requests pandas</code> 확인</li>
+  <li>Python 3.8 이상인지 확인</li>
+  <li>파일 이름이 <code>app.py</code>인지 확인</li>
+</ul>
+
+<h3 class="danger">Gemini API 호출 횟수 초과</h3>
+<ul>
+  <li>무료 티어는 분당 15회 제한</li>
+  <li><code>time.sleep(4)</code> 등으로 호출 간격 조절</li>
+  <li>데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화</li>
+</ul>
+</div>
+
+<!-- 13. FAQ -->
+<div class="card">
+<h2>13. FAQ</h2>
+<dl class="faq">
+  <dt>Q. 주제를 못 정하겠어요.</dt>
+  <dd>A. 하 난이도는 "공정 모니터링 알림 시스템"으로 주제가 정해져 있습니다. 프롬프트를 그대로 사용하세요.</dd>
+
+  <dt>Q. P1, P2 코드를 재활용해도 되나요?</dt>
+  <dd>A. 적극 권장합니다! P1의 시각화 + P2의 보고서 + P3의 텔레그램을 합치면 강력한 도구가 됩니다.</dd>
+
+  <dt>Q. 텔레그램 봇이 작동하지 않아요.</dt>
+  <dd>A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를 보낼 수 없습니다. Chat ID를 다시 확인하세요.</dd>
+
+  <dt>Q. 발표가 부담스러워요.</dt>
+  <dd>A. 3분이면 충분합니다. 화면을 보여주면서 "이 버튼을 누르면 이렇게 됩니다"만 해도 됩니다.</dd>
+
+  <dt>Q. 기술 3가지 조합이 어려워요.</dt>
+  <dd>A. 하 난이도는 2가지 조합 (Streamlit + Telegram)이면 충분합니다.</dd>
+</dl>
+</div>
+
+<!-- 14. 모범 답안 폴더 구조 -->
+<div class="card">
+<h2>14. 모범 답안 폴더 구조 (하)</h2>
+<pre><code>examples/하/
+├── app.py              ← Streamlit 모니터링 대시보드
+├── telegram_bot.py     ← 텔레그램 알림 모듈
+└── requirements.txt</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p style="margin-top:10px;color:#f0c000">주의: 모범 답안을 먼저 보는 것보다 <strong>스스로 시도한 후 비교</strong>하는 것을 강력히 권장합니다.</p>
+
+<h3>requirements.txt 예시</h3>
+<pre><code>streamlit
+plotly
+requests
+pandas</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+
+<h3>텔레그램 메시지 전송 핵심 코드</h3>
+<pre><code>import requests
+
+def send_telegram(token, chat_id, message):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    requests.post(url, json={
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "Markdown"
+    })</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+</div>
+
+</div><!-- /container -->
+
+<script>
+function copyCode(btn){
+  const pre=btn.parentElement;
+  const code=pre.querySelector('code');
+  const text=code?code.textContent:pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='완료!';
+    setTimeout(()=>{btn.textContent='복사'},1500);
+  });
+}
+</script>
+</body>
+</html>
