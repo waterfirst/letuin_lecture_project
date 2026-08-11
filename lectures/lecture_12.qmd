@@ -404,7 +404,7 @@ library(ggplot2)
 
 packages <- data.frame(
   Package  = c("streamlit","pandas","numpy",
-               "google-generativeai","anthropic",
+               "google-genai","anthropic",
                "python-telegram-bot","plotly"),
   Size_MB  = c(45, 28, 18, 12, 8, 15, 35),
   Type     = c("웹 프레임워크","데이터 처리","수치 계산",
@@ -446,7 +446,7 @@ pandas==2.0.3
 numpy==1.24.4
 plotly==5.18.0
 python-dotenv==1.0.0
-google-generativeai==0.4.0
+google-genai>=1.0.0
 ```
 
 ### 가상 환경 사용 (권장)

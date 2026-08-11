@@ -287,11 +287,11 @@ library(ggplot2)
     {
         "num": 8,
         "title": "Google AI Studio + Gemini API 챗봇",
-        "subtitle": "하루 1,500회 무료 AI API — 디스플레이 Q&A 챗봇 만들기",
+        "subtitle": "Gemini 3.6 Flash API — 디스플레이 Q&A 챗봇 만들기",
         "part": "PART 4 — AI API + 시뮬레이션",
         "duration": "30분",
         "content": """
-오프닝 훅: "Google이 Gemini API를 무료로 쏜다. 하루 1500번까지. 이걸 이용하면 당신의 앱에 AI를 무료로 넣을 수 있다."
+오프닝 훅: "Gemini 3.6 Flash를 공식 SDK로 연결하고 활성 한도·비용·품질을 직접 측정한다."
 
 이론 (12분):
 - Google AI Studio 소개 & Gemini API 구조
@@ -299,8 +299,8 @@ library(ggplot2)
 - Gemini의 멀티모달 능력 (텍스트 + 이미지 + 영상)
 - Claude API vs Gemini API 비교:
   항목 | Claude API | Gemini API
-  무료한도 | API 유료 | 하루 1,500회 무료
-  최강모델 | Claude Sonnet 4.6 | Gemini 1.5 Pro
+  무료한도 | API 유료 | 무료 티어 제공(활성 한도 확인)
+  기본모델 | 사용 시점에 확인 | Gemini 3.6 Flash (stable)
   맥락창 | 200K 토큰 | 1M 토큰
   장점 | 코딩/분석 정확도 | 무료, Google 통합
   이 강의 활용 | 텔레그램 봇(13~14강) | 챗봇·시뮬레이션(8~9강)
@@ -312,10 +312,11 @@ library(ggplot2)
 - 대화 히스토리 유지
 
 핵심 코드:
-import google.generativeai as genai
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash')
-response = model.generate_content("OLED 포토공정 설명해줘")
+from google import genai
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+response = client.models.generate_content(
+    model='gemini-3.6-flash', contents="OLED 포토공정 설명해줘"
+)
 print(response.text)
 
 학습 목표: 외부 AI API 활용, Claude vs Gemini 비교 이해

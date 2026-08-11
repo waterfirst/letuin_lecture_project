@@ -295,15 +295,15 @@ LECTURES = [
 • Fragment: Quarto 작성 → render → 배포 단계 순차 등장
 """),
   (8,  "Google AI Studio + Gemini API 챗봇",
-       "하루 1,500회 무료 AI API",
+       "Gemini 3.6 Flash와 공식 GenAI SDK",
        """
 강의 내용: PART 4 (30분)
-오프닝: "Google이 Gemini API를 무료로 쏜다. 하루 1500번까지."
+오프닝: "Gemini 3.6 Flash를 공식 SDK로 연결하고 활성 한도와 품질을 직접 확인한다."
 
 이론 (12분):
 • Gemini API 구조: API Key → Model → generate_content()
 • .env 보안 관리: dotenv 패턴
-• Claude API vs Gemini API 상세 비교 (무료한도/모델/맥락창/특기)
+• Claude API vs Gemini API 비교 (현재 모델/가격/맥락창/데이터 정책/평가셋)
 • 멀티모달: 텍스트+이미지+영상 입력 가능
 
 실습: 디스플레이 기술 Q&A 챗봇
@@ -312,7 +312,7 @@ LECTURES = [
 • 대화 히스토리 유지
 
 시각화:
-• R ggplot2: AI API 무료 한도 비교 bar chart (Gemini/GPT/Claude/Together)
+• R ggplot2: 같은 홀드아웃에서 지연·비용·정확도 비교 (실측값만 사용)
 • R kable: Claude vs Gemini 상세 비교표
 • Panel tabset: API Key 발급 / 코드 / 실행 결과
 """),

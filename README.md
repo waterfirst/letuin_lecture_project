@@ -119,29 +119,27 @@ fig.show()
 
 ---
 
-### 📌 Lecture 14: 이미지 분석 자동화 (Gemini Vision API)
+### 📌 Lecture 14: Google AI Studio OLED 공진 시뮬레이터
 
 **핵심 개념**
-- Gemini Vision API로 이미지 자동 분류
-- PIL로 이미지 전처리
-- asyncio로 배치 처리
+- Gemini 3.6 Flash를 안정 기본 모델로 선택
+- Fabry–Perot 공진식과 Snell 법칙을 코드로 구현
+- 기준값·단위·경계조건으로 AI 생성 코드를 검증
 
 **주요 기술**
-- Gemini Vision API
-- PIL (Pillow)
-- asyncio (병렬 처리)
-- SQLite (결과 저장)
+- Google AI Studio / Gemini API
+- React / Recharts
+- 광학 지배방정식과 Quality Gate
 
 **학습 결과물**
-- 단일 이미지 불량 판정
-- 수백 장 이미지 배치 분석
-- 불량 유형별 통계 리포트
+- R/G/B ITO 두께 조건 탐색
+- 시야각별 공진 파장 변화 시각화
+- 검증 체크리스트와 공유 가능한 프로토타입
 
 **적용 사례**
-- Wafer 표면 결함 검사 (반도체)
-- Panel 불량 자동 검출 (디스플레이)
-- 전극 코팅 불량 검사 (배터리)
-- 세포 이미지 분석 (바이오)
+- OLED 시야각 색변화 탐색
+- 광학 파라미터 민감도 비교
+- AI 생성 물리 코드의 오류 탐지
 
 ---
 
@@ -190,7 +188,7 @@ fig.show()
 
 **통합 기능**
 - 📊 데이터 분석: CSV 자동 분석 + AI 인사이트
-- 🖼️ 이미지 검사: Gemini Vision 불량 판정
+- 🧮 물리 모델: Gemini 보조 코드 생성 + 기준 계산 검증
 - 📈 센서 예측: Prophet 시계열 예측 + 알림
 
 ---
@@ -338,10 +336,10 @@ fig.show()
 - **시각화**: plotly, matplotlib
 - **AI**: Gemini API, Prophet
 
-### 이미지 분석
-- **Vision AI**: Gemini Vision API
-- **이미지 처리**: PIL, OpenCV
-- **ML**: PyTorch, scikit-learn
+### 멀티모달·물리 모델링
+- **Gemini**: Gemini 3.6 Flash (stable, 2026-08-11 기준)
+- **이미지 이해**: 별도 Vision 모델이 아닌 Gemini 멀티모달 입력
+- **물리 검증**: 지배방정식, 단위, 경계조건, 홀드아웃 사례
 
 ### 웹 대시보드
 - **프레임워크**: Streamlit
@@ -460,7 +458,7 @@ Letuin_AI_Lecture/
 python --version
 
 # 필수 패키지 설치
-pip install pandas plotly streamlit google-generativeai
+pip install pandas plotly streamlit google-genai
 pip install python-dotenv pillow opencv-python
 pip install scikit-learn prophet
 ```

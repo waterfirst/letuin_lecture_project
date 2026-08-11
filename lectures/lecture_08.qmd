@@ -1,6 +1,6 @@
 ---
 title: "Google AI Studio + Gemini API 챗봇"
-subtitle: "하루 1,500회 무료 — AI API를 내 앱에 심는 방법"
+subtitle: "Gemini 3.6 Flash와 공식 Google GenAI SDK로 AI를 내 앱에 연결"
 author: "렛유인 KDC"
 date: today
 engine: knitr
@@ -31,15 +31,17 @@ format:
     margin: 0.1
 ---
 
-## 하루 1,500회 무료 {background="#1F4E79"}
+## 2026년형 Gemini API 시작하기 {background="#1F4E79"}
 
 <br>
 
-**Gemini 1.5 Flash.**
+**Gemini 3.6 Flash (stable).**
 
 Google AI Studio에서 발급한 API Key 하나로
 
-**하루 1,500번 무료 호출.**
+무료 티어로 시작할 수 있지만 **활성 한도는 프로젝트·모델·요금제별로 다릅니다.**
+
+[AI Studio의 활성 한도](https://aistudio.google.com/rate-limit)에서 실습 직전에 확인합니다.
 
 <br>
 
@@ -86,16 +88,15 @@ AI 서버 (Google/Anthropic/OpenAI)
 
 | 회사 | 모델 | 특징 |
 |------|------|------|
-| Google | Gemini 1.5 Flash | **무료 1500회/일** |
+| Google | Gemini 3.6 Flash | 안정 버전·멀티모달·구조화 출력 |
 | Anthropic | Claude 3.5 Sonnet | 코딩 최강 |
 | OpenAI | GPT-4o | 가장 유명 |
 | Meta | Llama 3.1 | 오픈소스 |
 
 :::{.fragment}
-**오늘 쓸 것**: Gemini 1.5 Flash
+**오늘 쓸 것**: `gemini-3.6-flash`
 
-이유: 무료 한도가 가장 넉넉하고 속도가 빠름.
-학습용으로 최적.
+이유: 2026-08-11 기준 안정 버전이며 텍스트·이미지·영상·오디오·PDF 입력과 JSON Schema 출력을 지원합니다.
 :::
 :::
 :::
@@ -118,10 +119,10 @@ comparison <- data.frame(
     "코딩·분석·긴 문서 처리"
   ),
   Gemini = c(
-    "1,500회/일 무료",
+    "무료 티어 제공\n(활성 한도 확인)",
     "1M 토큰",
-    "Google 생태계 연동\n무료 한도 큼",
-    "한국어 다소 약함",
+    "멀티모달·구조화 출력\nGoogle 생태계 연동",
+    "모델·한도 변경 가능",
     "챗봇·빠른 응답·학습용"
   )
 )
@@ -136,8 +137,8 @@ knitr::kable(
 <br>
 
 :::{.callout-note}
-**컨텍스트 창이란?** AI가 한 번에 처리할 수 있는 텍스트의 양.
-Gemini 1.5 Pro는 1M 토큰 = 소설 약 4권 분량을 한 번에 처리 가능.
+**컨텍스트 창이란?** AI가 한 번에 처리할 수 있는 입력의 상한입니다.
+Gemini 3.6 Flash의 공식 입력 한도는 1,048,576 토큰이지만, 실제 투입량은 비용·지연·관련성을 함께 고려해 줄여야 합니다.
 :::
 
 ---
@@ -200,20 +201,18 @@ pip install python-dotenv
 ## Gemini API 기본 사용법
 
 ```python
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 import os
 
 # 환경변수에서 API Key 로드
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# 모델 초기화
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # 단순 질문-응답
-response = model.generate_content(
-    "OLED 디스플레이에서 번인 현상이 발생하는 원리를 설명해줘"
+response = client.models.generate_content(
+    model="gemini-3.6-flash",
+    contents="OLED 디스플레이에서 번인 현상이 발생하는 원리를 설명해줘",
 )
 
 print(response.text)
@@ -234,13 +233,12 @@ OLED는 유기 발광 소자가 스스로 빛을 냅니다. 특정 픽셀에 오
 
 ```python
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 st.title("🖥️ 디스플레이 기술 Q&A 챗봇")
 
@@ -260,7 +258,9 @@ if prompt := st.chat_input("디스플레이 기술 질문을 입력하세요..."
     with st.chat_message("user"):
         st.write(prompt)
     full_prompt = f"{SYSTEM_PROMPT}\n\n질문: {prompt}"
-    response = model.generate_content(full_prompt)
+    response = client.models.generate_content(
+        model="gemini-3.6-flash", contents=full_prompt
+    )
     with st.chat_message("assistant"):
         st.write(response.text)
     st.session_state.messages.append(
@@ -270,39 +270,27 @@ if prompt := st.chat_input("디스플레이 기술 질문을 입력하세요..."
 
 ---
 
-## API 응답 시간 분포 시뮬레이션
+## API 응답 시간은 직접 측정한다
 
-Flash vs Pro — 속도 차이를 데이터로:
+모델 이름만으로 속도를 단정하지 않습니다. 같은 입력을 반복 호출해 p50·p95 지연과 실패율을 기록합니다.
 
-```{r}
-#| echo: false
-library(ggplot2)
+```python
+import time
+from statistics import median
+from google import genai
 
-set.seed(42)
-response_times <- data.frame(
-  ms = c(rnorm(100, mean = 800, sd = 200), rnorm(50, mean = 2000, sd = 400)),
-  Model = c(rep("Gemini 1.5 Flash", 100), rep("Gemini 1.5 Pro", 50))
-)
+client = genai.Client()
+latency = []
+for _ in range(10):
+    started = time.perf_counter()
+    client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents="OLED 번인의 원인을 세 문장으로 설명해줘",
+    )
+    latency.append(time.perf_counter() - started)
 
-ggplot(response_times, aes(x = ms, fill = Model)) +
-  geom_histogram(bins = 30, alpha = 0.7, position = "identity") +
-  scale_fill_manual(
-    values = c("Gemini 1.5 Flash" = "#4285F4", "Gemini 1.5 Pro" = "#34A853")
-  ) +
-  geom_vline(xintercept = 800, linetype = "dashed",
-             color = "#4285F4", linewidth = 1) +
-  geom_vline(xintercept = 2000, linetype = "dashed",
-             color = "#34A853", linewidth = 1) +
-  annotate("text", x = 830, y = 18, label = "Flash 평균\n800ms",
-           color = "#4285F4", size = 3.5, hjust = 0) +
-  annotate("text", x = 2030, y = 10, label = "Pro 평균\n2000ms",
-           color = "#34A853", size = 3.5, hjust = 0) +
-  theme_minimal(base_size = 13) +
-  labs(
-    title = "Gemini API 응답 시간 분포 (시뮬레이션)",
-    subtitle = "Flash는 빠른 대화형 앱에, Pro는 정확한 분석이 필요할 때",
-    x = "응답 시간 (ms)", y = "빈도", fill = "모델"
-  )
+print("p50:", median(latency))
+print("p95:", sorted(latency)[int(len(latency) * 0.95) - 1])
 ```
 
 ---
@@ -316,26 +304,20 @@ ggplot(response_times, aes(x = ms, fill = Model)) +
 library(ggplot2)
 
 pricing <- data.frame(
-  Model = c("Gemini 1.5 Flash\n(유료)", "Gemini 1.5 Pro", "Claude 3.5 Sonnet", "GPT-4o"),
-  CostPer1M = c(0.075, 3.5, 15.0, 15.0)
+  Scenario = c("입력 1M", "출력 1M", "입력 100K + 출력 20K"),
+  CostUSD = c(1.50, 7.50, 0.30)
 )
 
-ggplot(pricing, aes(x = reorder(Model, CostPer1M), y = CostPer1M, fill = Model)) +
+ggplot(pricing, aes(x = reorder(Scenario, CostUSD), y = CostUSD, fill = Scenario)) +
   geom_bar(stat = "identity", width = 0.6) +
-  scale_fill_manual(values = c(
-    "Gemini 1.5 Flash\n(유료)" = "#4285F4",
-    "Gemini 1.5 Pro"          = "#34A853",
-    "Claude 3.5 Sonnet"       = "#D4A843",
-    "GPT-4o"                  = "#E74C3C"
-  )) +
-  geom_text(aes(label = paste0("$", CostPer1M)), hjust = -0.15, size = 4) +
+  geom_text(aes(label = paste0("$", CostUSD)), hjust = -0.15, size = 4) +
   coord_flip() +
   theme_minimal(base_size = 12) +
   theme(legend.position = "none") +
-  scale_y_continuous(limits = c(0, 18)) +
+  scale_y_continuous(limits = c(0, 8.5)) +
   labs(
-    title = "AI API 가격 비교 — 입력 토큰 100만 개당 비용 (USD)",
-    subtitle = "Gemini 1.5 Flash 무료 티어: 하루 1,500회 / 분당 15회 / 완전 무료",
+    title = "Gemini 3.6 Flash Standard 비용 예시 (USD)",
+    subtitle = "2026-08-11 공식표 기준. 실행 전 최신 가격과 실제 토큰 사용량을 다시 확인",
     x = "", y = "비용 (USD / 1M 토큰)"
   )
 ```
@@ -347,12 +329,12 @@ ggplot(pricing, aes(x = reorder(Model, CostPer1M), y = CostPer1M, fill = Model))
 단순 Q&A에서 **진짜 대화**로 발전시키기:
 
 ```python
-import google.generativeai as genai
+from google import genai
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client()
 
 # 대화 세션 시작 (이전 대화를 자동으로 기억)
-chat = model.start_chat(history=[])
+chat = client.chats.create(model="gemini-3.6-flash")
 
 # 첫 번째 질문
 response1 = chat.send_message("OLED와 LCD의 차이를 설명해줘")
@@ -413,9 +395,9 @@ ChatGPT처럼 글자가 하나씩 나타나는 효과:
 
 ```python
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client()
 
 if prompt := st.chat_input("질문을 입력하세요"):
     with st.chat_message("assistant"):
@@ -424,7 +406,9 @@ if prompt := st.chat_input("질문을 입력하세요"):
         full_response = ""
 
         # 스트리밍으로 응답 받기
-        for chunk in model.generate_content(prompt, stream=True):
+        for chunk in client.models.generate_content_stream(
+            model="gemini-3.6-flash", contents=prompt
+        ):
             if chunk.text:
                 full_response += chunk.text
                 # 글자가 쌓이는 효과

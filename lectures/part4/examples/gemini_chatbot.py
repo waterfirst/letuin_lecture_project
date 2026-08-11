@@ -12,7 +12,8 @@ Gemini API Key 발급: https://aistudio.google.com
 
 import os
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,16 +25,12 @@ OLED, LCD, TFT, 포토리소그래피, 드라이에치, 잉크젯 공정 등
 답변은 한국어로 작성하되, 전문 용어는 영어 원어도 병기하세요."""
 
 # ------- 초기화 -------
-def get_gemini_model():
+def get_gemini_client():
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         st.error("GEMINI_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.")
         st.stop()
-    genai.configure(api_key=api_key)
-    return genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        system_instruction=SYSTEM_PROMPT,
-    )
+    return genai.Client(api_key=api_key)
 
 
 # ------- UI -------
@@ -57,14 +54,23 @@ if prompt := st.chat_input("예: OLED 잉크젯 공정에서 커피링 효과란
 
     with st.chat_message("assistant"):
         with st.spinner("Gemini가 답변 생성 중..."):
-            model = get_gemini_model()
-            # 이전 대화 히스토리 포함
-            history = [
-                {"role": m["role"], "parts": [m["content"]]}
-                for m in st.session_state.messages[:-1]
+            client = get_gemini_client()
+            # SDK 형식에 맞춰 이전 대화와 현재 질문을 함께 전달
+            contents = [
+                types.Content(
+                    role="model" if m["role"] == "assistant" else "user",
+                    parts=[types.Part(text=m["content"])],
+                )
+                for m in st.session_state.messages
             ]
-            chat = model.start_chat(history=history)
-            response = chat.send_message(prompt)
+            response = client.models.generate_content(
+                model="gemini-3.6-flash",
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    temperature=0.2,
+                ),
+            )
             answer = response.text
         st.write(answer)
 

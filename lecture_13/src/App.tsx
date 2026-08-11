@@ -800,8 +800,8 @@ function NextLecturePreview() {
     <div className="next-lecture-card">
       <div className="nlc-header">
         <span>14강 미리보기</span>
-        <h3>이미지 분석 자동화: Gemini Vision API</h3>
-        <p>AOI 불량 이미지를 Gemini Vision API로 자동 분류하고 통계 리포트를 생성합니다. 수백 장 이미지를 몇 초만에 분석.</p>
+        <h3>다음 실습: AI Studio 물리 시뮬레이터</h3>
+        <p>Gemini 3.6 Flash 기반 코딩 보조로 OLED 공진 모델을 구현하고, 기준값·단위·경계조건을 검증합니다.</p>
       </div>
     </div>
   );
@@ -1136,7 +1136,7 @@ export default function App() {
           </div>
 
           <p style={{ textAlign: 'center', fontSize: '0.95rem', color: '#888', marginBottom: '1rem' }}>
-            다음 강의: 이미지 분석 자동화 (Gemini Vision API) -- 14강
+            다음 강의: AI Studio OLED 공진 시뮬레이터 -- 14강
           </p>
           <NextLecturePreview />
         </section>

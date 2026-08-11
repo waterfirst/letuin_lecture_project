@@ -387,11 +387,10 @@ ggplot(alarm_stats, aes(x = Cause, y = Count, fill = Count)) +
 ```{python}
 #| eval: false
 #| code-line-numbers: "1-3|5-18|20-32"
-import google.generativeai as genai
+from google import genai
 import os
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def generate_analysis(yield_data: dict) -> str:
     """수율 저하 원인 분석 및 조치 제안"""
@@ -405,7 +404,10 @@ def generate_analysis(yield_data: dict) -> str:
 
     간결하게 (3줄 이내) 답변하세요. 불필요한 인사말은 생략하세요.
     """
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=prompt,
+    )
     return response.text
 
 def check_and_analyze():

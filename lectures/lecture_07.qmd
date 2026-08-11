@@ -464,6 +464,6 @@ YAML 헤더 → RevealJS 테마 설정
 
 Google AI Studio + Gemini API 챗봇
 
-"하루 1,500회 무료 — AI를 내 앱에 심는 방법"
+"활성 한도와 비용을 확인하며 Gemini API를 내 앱에 연결하는 방법"
 :::
 :::

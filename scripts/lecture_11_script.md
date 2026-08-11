@@ -75,8 +75,8 @@
 ### [화면] Antigravity IDE 설정 창 (Gemini API Key 입력)
 
 **나레이션**:
-> "여기서 아주 중요한 팁이 있습니다! 발급받은 API Key를 여러분이 코딩할 때 사용하는 Antigravity IDE에 직접 연동할 수 있습니다. Antigravity IDE에서는 두 가지 연동 방식을 제공합니다."
-> "첫째는 '요금제 연결' 방식입니다. 요금제를 결제해서 제공되는 통합 크레딧을 소모해 원클릭으로 가볍게 쓰는 방법입니다. 둘째는 'API 연결' 즉 BYOK 방식입니다. Google AI Studio에서 방금 발급한 무료 API Key를 Antigravity 설정 창에 직접 입력하는 것입니다. 이 경우 AI Studio가 제공하는 무료 할당량(분당 15회에서 60회 호출)을 그대로 가져다 쓰기 때문에, Antigravity 크레딧을 단 1원도 소모하지 않고 에이전트 자동화 코딩을 마음껏 무제한으로 누릴 수 있습니다! 대량의 코드 수정이나 논문 수십 편을 로딩할 때는 반드시 직접 API Key를 연결해서 사용하는 것을 강력하게 권장합니다."
+> "Antigravity에서 Gemini를 사용할 때는 현재 설정 화면이 지원하는 인증 방식과 과금 주체를 직접 확인합니다. 구독 크레딧과 Gemini Developer API 키는 서로 다른 한도·정책을 가질 수 있습니다."
+> "API 키를 연결하더라도 무제한이 아닙니다. Gemini 한도는 모델·프로젝트·요금제별 RPM·TPM·RPD로 적용됩니다. AI Studio의 활성 한도와 가격표를 확인하고, 키는 저장소나 화면 공유에 노출하지 않습니다."
 
 ---
 
@@ -85,7 +85,7 @@
 ### [화면] VSCode 터미널
 
 **나레이션**:
-> "필요한 패키지를 설치합니다. pip install google-generativeai python-dotenv를 실행합니다."
+> "필요한 패키지를 설치합니다. pip install google-genai python-dotenv를 실행합니다."
 
 ### [화면 조작] 터미널에 명령어 입력 및 실행
 
@@ -95,9 +95,9 @@
 ### [화면] 코드 편집기 - api_test.py 파일 생성
 
 **나레이션**:
-> "import google dot generativeai as genai, import os, from dotenv import load_dotenv를 입력합니다. load_dotenv를 호출해서 dot env 파일을 로드합니다. genai dot configure에 api_key equals os dot getenv GEMINI_API_KEY를 전달합니다."
+> "from google import genai, import os, from dotenv import load_dotenv를 입력합니다. load_dotenv를 호출하고 genai dot Client에 환경변수 GEMINI_API_KEY를 전달합니다."
 
-> "model equals genai dot GenerativeModel gemini-1.5-pro로 모델을 초기화합니다. response equals model dot generate_content Hello comma Gemini exclamation mark로 첫 API 호출을 합니다. print response dot text로 결과를 출력합니다."
+> "client dot models dot generate_content를 호출하고 안정 모델 ID gemini-3.6-flash와 Hello Gemini를 전달합니다. print response dot text로 결과를 출력합니다."
 
 ### [화면 조작] python api_test.py 실행
 
@@ -228,7 +228,7 @@
 ### [화면] 시뮬레이션 JSON 결과 출력
 
 **나레이션**:
-> "우측 결과 창을 보시죠! AI가 즉시 시뮬레이션 분석 보고서를 JSON 구조로 완벽히 반환했습니다. 'status: CRITICAL_DANGER', '열폭주 임계 도달 시간: 142.5초', 그리고 'SEI 피막 열적 파괴에 따른 음극 활물질과 전해액의 급격한 발열 반응이 원인'이라고 물리 법칙에 기반해 정확히 분석해 줍니다."
+> "우측 결과 창에서 JSON 구조가 맞는지 먼저 확인합니다. 그러나 'CRITICAL_DANGER'나 임계 도달 시간은 모델이 생성한 가설일 뿐입니다. 입력값의 단위, 지배방정식, 기준 계산, 실험 데이터와 대조해 통과한 항목만 보고서에 채택합니다."
 
 > "여기에 그치지 않고, 충전 전류 밀도를 1.2C로 긴급 강하하고 냉각 유속을 20% 늘리라는 BMS 최적 냉각 추천안까지 명확하게 도출해 주네요. AI Studio는 60 RPM, 즉 분당 60회의 엄청난 무료 호출 한도를 제공하므로, 수많은 공정 시나리오를 한 비용도 들지 않고 마음껏 테스트할 수 있어 실무 난제 해결에 매우 강력한 도구가 됩니다."
 
@@ -241,7 +241,7 @@
 **나레이션**:
 > "완성 체크리스트입니다. Google AI Studio 접속 완료, API Key 발급 완료, dot env 파일에 GEMINI_API_KEY 저장, dot gitignore에 dot env 추가를 확인하세요."
 
-> "Gemini API는 google-generativeai 패키지 설치, Hello Gemini 코드 실행 성공, 분야별 프롬프트 예제 테스트를 확인하세요."
+> "Gemini API는 google-genai 설치, gemini-3.6-flash 호출 성공, 활성 한도 확인, 분야별 프롬프트의 홀드아웃 테스트를 확인하세요."
 
 > "NotebookLM은 notebooklm dot google dot com 접속, 논문 또는 보고서 1개 업로드, 질문하고 출처 기반 답변 받기, 출처 패널에서 참조 페이지 확인을 체크하세요."
 
@@ -250,7 +250,7 @@
 ### [화면] Gemini 생태계 워크플로우
 
 **나레이션**:
-> "완성된 워크플로우입니다. Google AI Studio에서 API Key를 발급받고 프롬프트를 테스트합니다. Gemini API로 Python 스크립트를 작성해 데이터를 분석하고 네 분야 프롬프트를 실행합니다. NotebookLM에 논문과 보고서를 업로드하고 출처 기반 답변을 받으며 팟캐스트를 생성합니다. Antigravity IDE에 직접 발급받은 API Key를 BYOK 연동하여 요금 차감 없이 무제한으로 고속 개발을 진행하고, AI Studio로 고도화된 공정 시뮬레이터를 완벽하게 구동합니다. Telegram Bot으로 Gemini API를 연동하고 이상 발생 시 자동 알림을 보내며 모바일 대시보드를 구축합니다."
+> "완성된 워크플로우입니다. Google AI Studio에서 안정 모델과 활성 한도를 확인하고 프롬프트를 테스트합니다. Gemini API는 공식 Google GenAI SDK로 호출하고 모델 ID·프롬프트·비용·평가 결과를 기록합니다. NotebookLM의 인용은 원문과 대조합니다. Antigravity의 인증 방식과 과금 주체는 현재 설정에서 확인하며, AI가 만든 공정 시뮬레이터는 기준 계산과 홀드아웃 사례를 통과한 뒤 공유합니다. Telegram 알림에도 원자료가 아니라 승인된 요약만 전송합니다."
 
 ### [화면] 보안 체크리스트
 

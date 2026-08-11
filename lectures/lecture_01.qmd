@@ -221,13 +221,13 @@ Claude Pro 1개월
 
 ### Gemini
 
-**Google Gemini 1.5 Pro**
+**Google Gemini 3.6 Flash (stable, 2026-08-11 기준)**
 
-- **무료 1500회/일** (가장 관대한 무료 티어)
-- Google Workspace 완벽 연동 (Gmail, Docs, Sheets)
-- Google Colab 네이티브 지원 — R/Python 분석에 강함
-- 컨텍스트: 1M tokens (대용량 문서 분석 최강)
-- 디스플레이 공정 데이터 분석에 특히 유용
+- 무료 티어 제공, 활성 RPM·TPM·RPD는 AI Studio에서 확인
+- 공식 `google-genai` SDK와 중앙 Client 사용
+- 텍스트·이미지·영상·오디오·PDF 입력 지원
+- 입력 한도 1,048,576 토큰, 구조화 출력·도구 호출 지원
+- 제조 데이터에는 공개범위 확인과 홀드아웃 검증 필수
 
 :::
 

@@ -34,7 +34,7 @@ format:
 # PART 7: Gemini 생태계 완전 정복 {background="#1F4E79"}
 
 ::: {.notes}
-자, 여러분 안녕하세요. 11강 시작하겠습니다. 오늘은 Google의 AI 생태계, 그중에서도 Gemini를 중심으로 한 전체 생태계를 깊이 있게 다뤄볼 거예요. 이전 강의까지는 ChatGPT나 Claude 같은 AI 서비스를 주로 다뤘는데요, 오늘부터는 Google이 제공하는 무료 AI 도구들을 활용하는 법을 배우게 됩니다. 왜 Gemini가 중요하냐면요, 제조업 현장에서 쓰기에 엄청나게 실용적이거든요. 일단 무료 티어가 넉넉하고, Google Drive나 Docs 같은 업무 도구와 자연스럽게 연결되니까 별도 설정 없이 바로 업무에 적용할 수 있어요. 특히 NotebookLM이라는 도구는 설비 매뉴얼이나 품질 기준서 같은 문서를 올려놓으면 할루시네이션 없이 정확한 답변을 해주기 때문에 제조업 신입사원한테 정말 유용합니다. 오늘 수업이 끝나면 여러분은 Gemini API Key를 직접 발급받고, Python으로 Gemini를 호출하고, NotebookLM에 문서를 올려서 질문하는 것까지 전부 할 수 있게 될 거예요. 자 그럼 본격적으로 시작해볼까요.
+자, 여러분 안녕하세요. 11강에서는 2026년 기준 Gemini 개발 흐름을 배웁니다. AI Studio에서 모델과 프롬프트를 시험하고, 공식 Google GenAI SDK로 호출하며, NotebookLM의 인용을 원문과 대조합니다. 무료 티어가 있어도 한도는 모델·프로젝트·요금제에 따라 달라지고, 출처 기반 답변도 오류가 없다는 뜻은 아닙니다. 오늘의 목표는 도구 소개가 아니라 모델 버전, API 키, 데이터 경계, 평가 기준을 기록하는 재현 가능한 실습입니다.
 :::
 
 ## 강의 개요 {background-image="lecture_11_files/figure-revealjs/hero_gemini_ecosystem.png" background-size="cover" background-opacity="0.3"}
@@ -53,14 +53,14 @@ format:
 ### 왜 Gemini인가?
 
 - 100만 토큰 컨텍스트 윈도우
-- 무료 티어 제공 (15 req/min)
+- 무료 티어 제공 (한도는 모델·프로젝트별 실시간 확인)
 - Google 생태계 통합 (Drive, Docs, Sheets)
-- 멀티모달 (텍스트 + 이미지 + 영상)
+- 멀티모달 (텍스트·이미지·영상·오디오·PDF)
 :::
 :::
 
 ::: {.notes}
-오늘 배울 내용을 먼저 정리해볼게요. 크게 네 가지입니다. 첫째, Gemini API Key를 발급받는 거예요. 이게 Gemini 생태계의 출발점이거든요. 열쇠를 먼저 받아야 문을 열 수 있잖아요. 둘째, AI Studio에서 프롬프트를 직접 설계해볼 거예요. AI Studio는 Gemini의 놀이터 같은 곳인데, 여기서 다양한 파라미터를 조절하면서 최적의 프롬프트를 찾을 수 있어요. 셋째, NotebookLM을 활용해서 문서 기반 Q&A를 해볼 거예요. 이게 오늘의 하이라이트입니다. 넷째, Firebase 프로젝트를 생성해서 나중에 배포할 준비를 할 거예요. 오른쪽을 보시면 Gemini가 왜 좋은지 정리해놨는데요. 100만 토큰 컨텍스트 윈도우는 정말 놀라운 거예요. 이게 뭐냐면요, 한 번에 엄청나게 긴 문서를 통째로 넣을 수 있다는 뜻이에요. 예를 들어 설비 매뉴얼이 200페이지짜리라도 Gemini한테 한 번에 줄 수 있어요. ChatGPT는 이게 안 되거든요. 그리고 무료 티어가 분당 15번 요청까지 가능해요. 학습하거나 프로토타입 만들기에는 충분한 양이죠. Google Drive, Docs, Sheets랑 자연스럽게 통합되니까 제조업 현장에서 이미 Google Workspace를 쓰고 있다면 시너지가 엄청납니다.
+오늘은 네 가지를 확인합니다. 첫째, API 키를 서버 환경변수로 관리합니다. 둘째, AI Studio에서 안정 모델과 Preview 모델을 구분합니다. 셋째, NotebookLM 답변의 인용 위치를 원문에서 다시 확인합니다. 넷째, Firebase 또는 다른 배포 환경에서 키가 브라우저에 노출되지 않게 백엔드 경계를 둡니다. Gemini 3.6 Flash는 1,048,576 입력 토큰과 텍스트·이미지·영상·오디오·PDF 입력을 지원하지만, 긴 컨텍스트를 무조건 채우는 것이 품질을 보장하지는 않습니다.
 :::
 
 ---
@@ -96,31 +96,31 @@ graph LR
 ```
 
 ::: {.fragment}
-> 핵심: **하나의 API Key**로 전체 생태계를 연결할 수 있다
+> 핵심: **AI Studio에서 Gemini API를 실험하고, 운영 환경은 별도 인증·권한 경계를 설계한다**
 :::
 
 ::: {.notes}
-이 다이어그램이 오늘 강의의 큰 그림이에요. Gemini 생태계 전체 지도라고 보시면 됩니다. 가운데 Google AI Studio가 있고, 여기서 Gemini API가 나와요. 이 API 하나로 NotebookLM, Firebase, Vertex AI까지 전부 연결돼요. 비유를 하나 들어볼게요. 여러분이 제조 공장에 출입할 때 사원증 하나면 공장 문, 사무실 문, 식당 문 다 열 수 있잖아요? Gemini API Key가 바로 그 사원증이에요. 이거 하나만 발급받으면 Google의 모든 AI 서비스를 사용할 수 있어요. AI Studio에서는 프롬프트를 설계하고 테스트할 수 있고요, NotebookLM에서는 문서를 올려서 지식 베이스를 만들 수 있어요. Firebase에서는 우리가 만든 AI 앱을 웹에 배포할 수 있고요. Vertex AI는 기업용 고급 기능인데, 오늘은 다루지 않을 거예요. 나중에 회사에 들어가면 쓸 일이 생길 수도 있어요. 아래쪽에 적혀 있는 게 핵심이에요. 하나의 API Key로 전체 생태계를 연결할 수 있다. 이게 Gemini의 최대 장점입니다. ChatGPT는 OpenAI API만 쓸 수 있고, Claude는 Anthropic API만 쓸 수 있는데, Gemini는 Google의 모든 서비스와 연결되니까요.
+이 그림은 제품 관계를 단순화한 학습 지도입니다. AI Studio는 Gemini Developer API의 키 발급과 실험 환경이고, NotebookLM은 별도의 문서 학습 제품이며, Firebase는 앱 배포 플랫폼, Vertex AI는 Google Cloud의 기업용 AI 플랫폼입니다. 하나의 키로 모든 제품이 자동 연결된다고 이해하면 안 됩니다. 서비스별 약관·인증·권한·데이터 사용 설정을 따로 확인하는 것이 실무의 핵심입니다.
 :::
 
 ---
 
-## Gemini Pro vs NotebookLM vs AI Studio
+## Gemini 앱 vs NotebookLM vs AI Studio
 
-| 구분 | Gemini Pro | NotebookLM | AI Studio |
+| 구분 | Gemini 앱 | NotebookLM | AI Studio |
 |------|-----------|------------|-----------|
 | 용도 | 범용 AI 대화 | 문서 기반 Q&A | 프롬프트 개발 |
-| 강점 | 100만 토큰 | 할루시네이션 방지 | 파라미터 튜닝 |
-| 비용 | $20/월 (Pro) | 무료 | 무료 |
-| API | 지원 | 미지원 | 지원 |
-| 멀티모달 | O | X | O |
+| 강점 | 범용 대화·멀티모달 | 업로드 자료의 인용·추적 | 모델·프롬프트·구조화 출력 실험 |
+| 비용 | 요금제별 상이 | 요금제별 상이 | 무료/유료 API 티어 |
+| API Key 발급 | X | X | O |
+| 주의 | 답변 검증 필요 | 출처가 있어도 원문 대조 필요 | 키·할당량·데이터 정책 확인 |
 
 ::: {.fragment}
 **제조업 활용 팁**: NotebookLM에 설비 매뉴얼 업로드 → 고장 시 즉시 참조
 :::
 
 ::: {.notes}
-Gemini 생태계 안에서도 서비스별로 용도가 다르거든요. 이 표를 보면 딱 정리가 됩니다. Gemini Pro는 범용 AI 대화용이에요. ChatGPT처럼 아무 질문이나 할 수 있고, 100만 토큰까지 넣을 수 있어요. 단점은 유료라는 거예요. 월 20달러 정도 하는데, 무료 버전도 있어요. NotebookLM은 진짜 특별한 서비스예요. 문서를 올려놓으면 그 문서 안에서만 답변을 해주거든요. 그래서 할루시네이션이 거의 없어요. 할루시네이션이 뭐냐면요, AI가 없는 내용을 지어내는 거예요. 예를 들어 "CMP 장비 PM 주기가 어떻게 되나요?" 물어보면 일반 AI는 "보통 3개월입니다"라고 대충 답하거든요. 이게 맞는지 틀린지 모르잖아요. 근데 NotebookLM은 여러분이 올린 매뉴얼에서 찾아서 "매뉴얼 42페이지에 따르면 월 1회 패드 교체, 분기 1회 컨디셔너 교체입니다"라고 출처까지 알려줘요. 이게 제조업에서 엄청 중요한 거예요. 잘못된 정보로 설비를 다루면 큰 사고가 나니까요. AI Studio는 프롬프트를 개발하고 테스트하는 곳이에요. Temperature, Top-P 같은 파라미터를 조절하면서 최적의 프롬프트를 찾을 수 있어요. 개발자 도구라고 보시면 됩니다. 제조업 활용 팁 하나 드리자면요, NotebookLM에 설비 매뉴얼을 올려두세요. 신입사원이 현장에서 설비 고장 났을 때 바로 참조할 수 있어요.
+세 도구는 목적이 다릅니다. Gemini 앱은 범용 대화, NotebookLM은 업로드 자료를 중심으로 한 인용 기반 탐색, AI Studio는 API 실험과 코드 생성에 사용합니다. NotebookLM이 출처를 표시해도 인용이 질문을 실제로 뒷받침하는지, 문서의 버전과 승인 상태가 맞는지는 사람이 확인해야 합니다. 사내 매뉴얼은 회사 정책상 외부 서비스 업로드가 허용된 자료만 사용합니다.
 :::
 
 ---
@@ -141,7 +141,7 @@ GEMINI_API_KEY=AIzaSy...여기에_본인_키_붙여넣기
 ```
 
 ::: {.callout-warning}
-API Key는 절대 GitHub에 올리지 마세요! (12강에서 다룰 보안 사고 참고)
+API Key는 절대 GitHub·브라우저 프런트엔드·화면 캡처에 넣지 마세요. 서버 환경변수나 배포 플랫폼의 Secrets를 사용하고, 노출 시 즉시 폐기·재발급합니다.
 :::
 
 ::: {.notes}
@@ -153,18 +153,19 @@ API Key는 절대 GitHub에 올리지 마세요! (12강에서 다룰 보안 사�
 ## 실습 2: Python으로 Gemini 첫 호출
 
 ```python
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-response = model.generate_content(
-    "반도체 공정에서 수율(Yield)이란 무엇인지 "
-    "제조업 신입사원에게 설명해줘."
+response = client.models.generate_content(
+    model="gemini-3.6-flash",
+    contents=(
+        "반도체 공정에서 수율(Yield)이란 무엇인지 "
+        "제조업 신입사원에게 설명해줘."
+    ),
 )
 
 print(response.text)
@@ -176,9 +177,9 @@ print(response.text)
 :::
 
 ::: {.notes}
-API Key를 발급받았으니 이제 Python으로 Gemini를 호출해볼게요. 코드를 같이 보시죠. 먼저 google.generativeai 패키지를 import합니다. 이 패키지는 pip install google-generativeai로 설치할 수 있어요. 그다음 dotenv에서 load_dotenv를 가져와서 .env 파일을 로드해요. 아까 저장한 API Key를 os.getenv로 읽어오는 거예요. genai.configure에 API Key를 넣어주면 설정 끝이에요. 모델은 gemini-1.5-flash를 사용할 건데요, 이게 빠르면서도 품질이 좋은 모델이에요. 무료 티어에서 분당 15번까지 호출할 수 있어서 실습하기에 딱이에요.
+Python에서는 `pip install google-genai python-dotenv`로 공식 SDK를 설치합니다. `from google import genai`와 중앙 `Client` 객체를 사용하고, 안정 모델 ID `gemini-3.6-flash`를 명시합니다. 한도는 수업 자료의 숫자를 외우지 말고 AI Studio에서 활성 RPM·TPM·RPD를 확인합니다. 429에는 재시도 간격을 늘리는 지수 백오프를 적용합니다.
 
-자 여기서 Before-Prompt-After 패턴을 한번 보여드릴게요. 기존에 여러분이 반도체 수율에 대해 알고 싶으면 어떻게 했어요? 구글에 "반도체 수율이란"이라고 검색해서 블로그 글이나 위키피디아를 읽었을 거예요. 영어 논문이 나오면 번역기 돌리고, 여러 글을 비교해가면서 정리했겠죠. 이게 30분은 걸리는 작업이에요. 근데 지금 보시는 것처럼 AI에게 "반도체 공정에서 수율이란 무엇인지 제조업 신입사원에게 설명해줘"라고 요청하면요, 5초 만에 쉽고 정확한 설명이 나와요. "수율은 전체 생산량 중 양품의 비율입니다. 웨이퍼 100장을 만들었는데 95장이 정상이면 수율은 95%"라고 바로 답해주거든요. 이게 AI 시대의 학습 방식이에요. 검색해서 읽는 게 아니라, AI한테 물어보고 확인하는 거예요. 코드를 실행해보시면 실제로 답변이 출력될 거예요. 실행이 안 되시는 분은 API Key가 제대로 설정됐는지 확인해보세요.
+Before-Prompt-After를 직접 측정해봅니다. 기존 검색·정리 시간과 Gemini 초안 생성 시간을 각각 기록하고, 초안의 핵심 주장 세 개를 교재나 논문 원문과 대조합니다. 빠른 응답이 곧 정확한 답변은 아닙니다. 실행이 안 되면 API 키, 모델 ID, 활성 한도와 429 로그를 순서대로 확인합니다.
 :::
 
 ---
@@ -186,24 +187,59 @@ API Key를 발급받았으니 이제 Python으로 Gemini를 호출해볼게요. 
 ## Gemini 모델 선택 가이드
 
 ```python
-# 빠른 응답 (일상 질문, 간단한 요약)
-model_flash = genai.GenerativeModel("gemini-1.5-flash")
+# 안정 기본값: 멀티모달·코딩·구조화 출력
+DEFAULT_MODEL = "gemini-3.6-flash"
 
-# 깊은 분석 (논문 분석, 복잡한 코드 생성)
-model_pro = genai.GenerativeModel("gemini-1.5-pro")
+# 대량의 가벼운 작업: 비용·지연을 직접 벤치마크한 뒤 선택
+HIGH_THROUGHPUT_MODEL = "gemini-3.5-flash-lite"
 
-# 최신 모델 (2024년 최고 성능)
-model_latest = genai.GenerativeModel("gemini-2.0-flash")
+# 복잡한 추론 실험: Preview이므로 교체 가능성과 더 엄격한 한도에 주의
+REASONING_PREVIEW_MODEL = "gemini-3.1-pro-preview"
 ```
 
-| 모델 | 속도 | 품질 | 무료 한도 |
-|------|------|------|-----------|
-| Flash | 빠름 | 좋음 | 15 req/min |
-| Pro | 보통 | 최상 | 2 req/min |
-| 2.0 Flash | 빠름 | 최상 | 10 req/min |
+| 모델 | 상태 | 권장 용도 | 운영 원칙 |
+|------|------|-----------|-----------|
+| Gemini 3.6 Flash | Stable | 기본 멀티모달·코딩·에이전트 루프 | 버전 고정 후 홀드아웃 평가 |
+| Gemini 3.5 Flash-Lite | Stable | 고빈도 경량 분류·요약 | 비용·지연·정확도를 실제 측정 |
+| Gemini 3.1 Pro | Preview | 복잡한 추론 비교 실험 | 생산 기본값으로 고정하지 않음 |
+
+::: {.callout-important}
+2026-08-11 기준입니다. `gemini-2.0-flash`는 2026-06-01 종료되었습니다. 한도는 RPM·TPM·RPD 중 하나만 초과해도 429가 발생하며 API 키가 아니라 프로젝트 단위로 적용됩니다. 실습 전 [모델 목록](https://ai.google.dev/gemini-api/docs/models), [지원 종료](https://ai.google.dev/gemini-api/docs/deprecations), [활성 한도](https://aistudio.google.com/rate-limit)를 확인하세요.
+:::
 
 ::: {.notes}
-Gemini에는 여러 모델이 있어요. 어떤 걸 써야 할지 헷갈리실 수 있는데, 간단해요. Flash 모델은 빠르고 가벼워요. 일상적인 질문이나 간단한 요약에 적합해요. 예를 들어 "이 에러 메시지가 뭔 뜻이야?" 같은 짧은 질문에 쓰면 좋아요. 무료로 분당 15번까지 호출 가능해서 실습할 때 부담이 없어요. Pro 모델은 느리지만 품질이 최상이에요. 논문 분석이나 복잡한 코드 생성같이 깊은 사고가 필요한 작업에 적합해요. 대신 무료 한도가 분당 2번밖에 안 돼서 아껴 써야 해요. 2.0 Flash는 가장 최신 모델인데요, 빠르면서도 품질이 최상이에요. 이전 Flash보다 훨씬 똑똑해졌어요. 무료 한도는 분당 10번이에요. 제가 추천드리는 전략은요, 평소에는 Flash를 쓰다가, 중요한 분석이 필요할 때만 Pro를 쓰는 거예요. 제조업으로 치면 Flash는 일상 점검이고, Pro는 정밀 분석이라고 보시면 돼요. 코드에서 모델을 바꾸는 건 문자열 하나만 바꾸면 되니까 상황에 따라 유연하게 사용하시면 됩니다.
+모델은 이름의 인상으로 고르지 않습니다. 기본값은 안정 버전으로 고정하고, 같은 라벨 데이터에서 정확도·누락률·지연·토큰 비용을 측정합니다. Preview는 성능 비교 실험에는 쓸 수 있지만 더 제한적인 한도와 빠른 지원 종료 가능성을 기록해야 합니다. 모델을 바꿨다면 프롬프트·모델 ID·평가 결과를 함께 버전 관리합니다.
+:::
+
+---
+
+## 최신 핵심: 프롬프트 JSON이 아니라 JSON Schema
+
+```python
+from google import genai
+from google.genai import types
+from pydantic import BaseModel, Field
+
+class DefectReport(BaseModel):
+    defect_type: str
+    confidence: float = Field(ge=0, le=1)
+    evidence: list[str]
+    needs_human_review: bool
+
+client = genai.Client()
+response = client.models.generate_content(
+    model="gemini-3.6-flash",
+    contents="다음 검사 메모를 분류해줘: Edge 영역 반복성 얼룩, 재검 필요",
+    config=types.GenerateContentConfig(
+        response_mime_type="application/json",
+        response_json_schema=DefectReport.model_json_schema(),
+    ),
+)
+report = DefectReport.model_validate_json(response.text)
+```
+
+::: {.callout-warning}
+Schema 통과는 **형식 검증**일 뿐 정답 검증이 아닙니다. 라벨이 있는 홀드아웃 데이터로 정확도·재현율·오탐률을 측정하고, 낮은 신뢰도와 안전 관련 판정은 사람에게 넘깁니다.
 :::
 
 ---
@@ -367,7 +403,7 @@ firebase init hosting
 :::
 
 ::: {.notes}
-자 오늘 배운 내용을 정리해볼게요. 왼쪽에 있는 게 오늘 직접 해본 것들이에요. Gemini API Key를 발급받아서 Python으로 첫 호출을 했고요, AI Studio에서 설비 진단 프롬프트를 설계해봤고요, NotebookLM에서 문서 기반 Q&A를 체험했고요, Firebase 프로젝트 생성까지 했어요. 오른쪽은 제조업에서 이걸 어떻게 쓸 수 있는지 정리한 거예요. 설비 매뉴얼은 NotebookLM에 올려두면 언제든 정확한 답변을 받을 수 있고요, 품질 데이터 분석은 Gemini Pro한테 시키면 패턴을 찾아주고요, 보고서 자동화는 AI Studio에서 프롬프트를 만들어서 할 수 있고요, 최종 결과물은 Firebase에 배포해서 누구나 접근할 수 있게 만들 수 있어요. 여러분이 취업 면접에서 "Gemini 생태계를 활용해서 설비 매뉴얼 챗봇을 만들고 Firebase에 배포해봤습니다"라고 말할 수 있으면 정말 차별화가 되는 거예요. 대부분의 취준생은 ChatGPT만 써봤을 거거든요. 여러분은 Google의 전체 AI 생태계를 이해하고 활용할 수 있다는 걸 보여줄 수 있는 거예요.
+오늘은 Gemini 3.6 Flash를 공식 SDK로 호출하고, AI Studio에서 프롬프트와 구조화 출력을 시험했으며, NotebookLM 인용을 원문과 대조했습니다. 제조업에서는 설비 매뉴얼·품질 데이터·보고서마다 공개 범위와 승인 절차가 다릅니다. 면접에서는 “Gemini를 써봤다”보다 모델 버전, 데이터 경계, 평가셋, 실패 사례와 개선 결과를 설명하는 편이 더 강한 증거입니다.
 :::
 
 ---
@@ -399,5 +435,5 @@ firebase init hosting
 궁금한 점은 언제든 슬랙/카톡으로 물어보세요!
 
 ::: {.notes}
-네 여러분 수고하셨습니다. 질문 있으신 분 손 들어주세요. 자주 나오는 질문 몇 가지를 먼저 말씀드릴게요. "API Key가 유료인가요?"라는 질문이 많은데, 무료 티어 범위 안에서는 완전 무료예요. 분당 15번 호출이면 학습하기에 충분하고요, 실제로 과금되려면 엄청 많이 써야 해요. "NotebookLM은 한국어를 지원하나요?"도 많이 물어보시는데, 네 완벽하게 지원해요. 한국어 PDF를 올리면 한국어로 답변해줘요. 팟캐스트 기능도 한국어로 만들어줍니다. "Firebase 대신 다른 걸 써도 되나요?"라고도 물어보시는데, 물론이에요. Streamlit Cloud, Vercel, Netlify 같은 대안도 있어요. Firebase는 Google 생태계와의 통합이 장점인 거고, 다른 플랫폼을 더 잘 아시면 그걸 쓰셔도 됩니다. 더 궁금한 점은 슬랙이나 카카오톡으로 편하게 물어보세요. 다음 시간에 뵙겠습니다.
+마지막 질문입니다. 무료 티어는 시작점이지 무제한 약속이 아닙니다. 실습 전 활성 한도와 가격을 확인하고, 결제 프로젝트에는 예산 알림을 둡니다. NotebookLM의 한국어 결과와 오디오도 원문 충실도를 표본 검사합니다. Firebase 대신 Streamlit Cloud, Vercel, Netlify를 쓸 수 있지만 어느 플랫폼이든 비밀키는 클라이언트 번들에 포함하지 않습니다.
 :::

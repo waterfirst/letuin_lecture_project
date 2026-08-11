@@ -159,14 +159,16 @@ const qualityChecklist = [
   'GitHub에 새 저장소를 만들었는가?',
   '6개 파일을 드래그 앤 드롭으로 업로드했는가?',
   'GitHub Pages URL이 정상 작동하는가?',
+  'AI 초안의 수치·절차·출처를 원문과 대조하고 승인자를 기록했는가?',
+  '사내 비공개 정보와 API Key가 포함되지 않았는가?',
 ];
 
 const timeComparison = [
-  { task: 'SOP 작성', traditional: '2시간', gemini: '3분' },
-  { task: '불량 보고서', traditional: '3시간', gemini: '5분' },
-  { task: '점검 체크리스트', traditional: '1시간', gemini: '2분' },
-  { task: '공정 가이드', traditional: '2시간', gemini: '3분' },
-  { task: '배포', traditional: '별도 서버', gemini: 'GitHub Pages 무료' },
+  { task: 'SOP 작성', traditional: '직접 초안 작성', gemini: 'AI 초안 + 담당자 승인' },
+  { task: '불량 보고서', traditional: '직접 구성', gemini: 'AI 구조화 + 데이터 검증' },
+  { task: '점검 체크리스트', traditional: '항목 수기 정리', gemini: 'AI 초안 + 누락 감사' },
+  { task: '공정 가이드', traditional: '자료 수기 통합', gemini: 'AI 통합 + 출처 대조' },
+  { task: '배포', traditional: '파일 전달', gemini: '정적 Pages + 공개범위 검토' },
 ];
 
 // ============================================================================
@@ -243,7 +245,7 @@ function TimeComparisonTable() {
         </table>
       </div>
       <p style={{ marginTop: '1rem', color: '#666', fontSize: '0.9rem' }}>
-        총 소요 시간: 수작업 약 8시간 + 별도 서버 → Gemini + GitHub Pages 약 15분 (무료)
+        시간 절감률은 문서 난이도와 검수 수준에 따라 달라집니다. 시작·종료 시각, 수정 횟수, 발견 오류를 기록해 본인 프로젝트의 실제 효과를 계산하세요.
       </p>
     </div>
   );
@@ -298,7 +300,7 @@ function GeminiReportDeepDive() {
       <div className="yield-case-compare vertical-case-flow">
         <article className="yield-case-panel manual-panel">
           <span>Before: 수작업으로 문서 4종 작성</span>
-          <h4>Word/Excel로 8시간 이상 소요</h4>
+          <h4>Word/Excel 수작업은 반복 수정과 형식 통일에 시간이 듭니다</h4>
           <ul>
             <li>SOP: Word에서 표 그리고 절차 작성 — 2시간</li>
             <li>불량 보고서: Excel 차트 + Word 분석 — 3시간</li>
@@ -338,7 +340,7 @@ function GeminiReportDeepDive() {
             ))}
           </div>
           <div className="aoi-impact-strip">
-            <div><strong>작성 시간</strong><span>8시간 → 15분</span></div>
+            <div><strong>작성 시간</strong><span>프로젝트별 실측</span></div>
             <div><strong>문서 수</strong><span>4종 HTML</span></div>
             <div><strong>반응형</strong><span>모바일에서도 확인</span></div>
           </div>
@@ -463,7 +465,7 @@ GitHub Pages URL 자리표시자 포함.
           </div>
           <div className="aoi-impact-strip">
             <div><strong>파일 수</strong><span>6개</span></div>
-            <div><strong>생성 시간</strong><span>약 15분</span></div>
+            <div><strong>생성 시간</strong><span>시작·검수·승인 시간 기록</span></div>
             <div><strong>코딩 필요</strong><span>없음</span></div>
           </div>
         </article>
@@ -898,10 +900,9 @@ export default function App() {
           <div className="highlight-box" style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px' }}>
             <h3>Advanced Process Engineering Point</h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: '1rem', fontSize: '1.1rem' }}>
-              "SOP, 불량 보고서, 점검표, 공정 가이드 — 이 4종 문서에 8시간을 쓰면 그만큼 공정 개선에 쓸 시간이 줄어듭니다.
-              Gemini로 15분에 만들고, 남은 시간에 진짜 분석을 더 깊이 하세요.
-              GitHub Pages URL 하나면 부서 전체가 실시간으로 확인할 수 있습니다.
-              핸드폰으로 QR 찍으면 바로 열리는 웹사이트입니다."
+              "Gemini는 문서 초안을 빠르게 구조화하지만 승인 책임을 대신하지 않습니다.
+              작성 시간뿐 아니라 오류 발견 수, 원문 대조율, 승인까지 걸린 시간을 측정하세요.
+              GitHub Pages에는 공개 가능한 가상 데이터만 올리고, 사내 문서는 승인된 내부 배포 경로를 사용합니다."
             </p>
             <div className="point-strip">
               <span><Sparkles size={16} /> Gemini = 문서 4종 자동화</span>

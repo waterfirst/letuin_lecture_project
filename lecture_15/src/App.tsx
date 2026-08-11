@@ -257,7 +257,7 @@ const qualityChecklist = [
 const keyMessages = [
   {
     icon: Layers,
-    text: '3단계 프롬프트: UI 뼈대 → 물리 두뇌 → 시각화 피부 순서로 쌓으면 AI가 복잡한 공학 시뮬레이터도 정확하게 만듭니다.',
+    text: '3단계 프롬프트: UI 뼈대 → 물리 두뇌 → 시각화 피부 순서로 나누면 오류 위치를 추적하기 쉽습니다. 물리 정확도는 별도 검증합니다.',
     color: '#4285F4',
   },
   {
@@ -454,7 +454,11 @@ export default function App() {
       <section className="overview-section">
         <span className="section-label">01. 오프닝 및 학습목표</span>
         <h2>AI Studio로 3D 열응력 시뮬레이터 만들기</h2>
-        <p className="section-intro">반도체 패키징, 디스플레이, PCB 등 제조 현장에서 만나는 Warpage 문제를 AI로 시뮬레이션합니다.</p>
+        <p className="section-intro">반도체 패키징, 디스플레이, PCB의 Warpage 문제를 AI 보조로 모델링합니다. 결과는 설계 승인값이 아니라 검증할 프로토타입입니다.</p>
+        <div className="one-line-definition inline-definition">
+          <span>Gemini 최신 기준 · 2026-08-11</span>
+          <strong>안정 기본 모델은 gemini-3.6-flash입니다. API 연동 시 공식 google-genai SDK, 서버측 Secrets, 현재 할당량 확인, 429 지수 백오프를 적용합니다.</strong>
+        </div>
         <div className="learning-goals-grid">
           {learningGoals.map((item) => (
             <div className="learning-goal-card" key={item.step}>
@@ -472,7 +476,7 @@ export default function App() {
       <section className="definition-section">
         <span className="section-label">02. 전체 흐름 이해</span>
         <h2>UI 뼈대 → 물리 두뇌 → 3D 피부</h2>
-        <p className="section-intro">제조 엔지니어가 층 구성을 정의하면, AI가 UI → 물리 엔진 → 3D 시각화 순서로 시뮬레이터를 완성합니다.</p>
+        <p className="section-intro">제조 엔지니어가 층 구성과 합격 기준을 정의하면, AI가 UI → 물리 엔진 → 3D 시각화 초안을 만듭니다. 중립축·곡률·응력 부호와 극한조건 검증은 사람이 수행합니다.</p>
         <div className="one-line-definition inline-definition">
           <span>한 문장 정의</span>
           <strong>Google AI Studio에서 다층 박막 열응력(중립축, 곡률, 응력 분포) 계산과 3D 변형 시각화를 수행하는 Warpage 시뮬레이터를 구축하고 팀에 배포합니다.</strong>

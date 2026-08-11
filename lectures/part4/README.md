@@ -3,8 +3,8 @@
 ## 8강: Google AI Studio + Gemini API (30분)
 
 ### 오프닝 훅
-> *"Google이 Gemini API를 무료로 쏜다. 하루 1500번까지.
-> 이걸 이용하면 당신의 앱에 AI를 무료로 넣을 수 있다."*
+> *"Gemini 3.6 Flash를 공식 SDK로 연결하고,
+> 활성 한도·비용·품질을 직접 측정해 내 앱에 안전하게 넣어보자."*
 
 ### 이론 (12분)
 - Google AI Studio 소개 & Gemini API 구조
@@ -14,8 +14,8 @@
 
 | 항목 | Claude API | Gemini API |
 |------|-----------|-----------|
-| 무료 한도 | Claude.ai 기반 / API는 유료 | 하루 1,500회 / 분당 15회 무료 |
-| 가장 강한 모델 | Claude Sonnet 4.6 | Gemini 1.5 Pro |
+| 무료 한도 | 사용 시점의 공식 가격표 확인 | 무료 티어 제공, 활성 한도는 AI Studio에서 확인 |
+| 수업 기본 모델 | 사용 시점에 확인 | Gemini 3.6 Flash (stable) |
 | 맥락 창 | 200K 토큰 | 1M 토큰 |
 | 장점 | 코딩/분석 정확도 높음 | 무료 한도 넉넉, Google 통합 |
 | 단점 | 무료 API 없음 | 긴 추론 일관성 낮을 수 있음 |

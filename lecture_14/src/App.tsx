@@ -205,7 +205,7 @@ const qualityChecklist = [
 const keyMessages = [
   {
     icon: Layers,
-    text: '3단계 프롬프트 전략: 한 번에 다 요구하지 말고 UI→수식→분석 순서로 쌓으면 AI가 훨씬 정확한 코드를 생성합니다.',
+    text: '3단계 프롬프트 전략: UI→수식→분석 순서로 나누면 단계별 오류를 찾기 쉽습니다. 정확도는 기준 계산과 홀드아웃으로 별도 평가합니다.',
     color: '#4285F4',
   },
   {
@@ -429,8 +429,12 @@ export default function App() {
         <h2>AI Studio로 OLED 공진 시뮬레이터 만들기</h2>
         <p className="section-intro">
           14강에서 탠덤 OLED의 시야각 색변화 문제를 해결하는 ITO 두께 최적화 시뮬레이터를 Google AI Studio에서 만듭니다.
-          프롬프트만 잘 쓰면, 코드를 모르는 엔지니어도 시뮬레이터를 만들 수 있습니다.
+          프롬프트로 초안을 만들되, 엔지니어가 수식·단위·경계조건과 기준 계산을 검증해야 합니다.
         </p>
+        <div className="one-line-definition inline-definition">
+          <span>Gemini 최신 기준 · 2026-08-11</span>
+          <strong>안정 기본 모델은 gemini-3.6-flash, Python은 google-genai SDK를 사용합니다. 결과 필드는 JSON Schema로 고정하되, 형식 통과와 물리적 정답을 구분합니다. 한도는 프로젝트별 RPM·TPM·RPD를 확인합니다.</strong>
+        </div>
         <div className="learning-goals-grid">
           {learningGoals.map((item) => (
             <div className="learning-goal-card" key={item.step}>
@@ -452,7 +456,7 @@ export default function App() {
       <section className="definition-section">
         <span className="section-label">02. 전체 흐름 이해</span>
         <h2>3단계 프롬프트로 시뮬레이터 구축</h2>
-        <p className="section-intro">엔지니어가 문제를 정의하고, AI가 Phase 1(UI) → Phase 2(수식) → Phase 3(분석) 순서로 시뮬레이터를 완성합니다.</p>
+        <p className="section-intro">엔지니어가 문제와 합격 기준을 정의하고, AI가 Phase 1(UI) → Phase 2(수식) → Phase 3(분석) 초안을 만듭니다. 각 단계는 기준값과 단위 테스트를 통과해야 완료입니다.</p>
         <div className="one-line-definition inline-definition">
           <span>한 문장 정의</span>
           <strong>Google AI Studio에서 Fabry-Perot 공진 수식 기반 OLED ITO 두께 최적화 시뮬레이터를 만들고, 공유 링크로 팀 배포하는 과정입니다.</strong>

@@ -255,11 +255,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from data_simulator import simulate_yield
-import google.generativeai as genai
+from google import genai
 import os
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 st.set_page_config(
     page_title="수율 모니터링", page_icon="🏭", layout="wide"
@@ -299,7 +298,7 @@ st.plotly_chart(fig, use_container_width=True)
 ::: {.notes}
 두 번째 파일, app.py입니다. 이게 Streamlit 대시보드의 메인 코드예요. Claude Code한테 "KPI 카드와 차트를 포함해줘"라고 구체적으로 요청한 결과물입니다.
 
-코드를 네 부분으로 나눠서 볼게요. 첫 번째 부분은 import와 API 설정이에요. streamlit, pandas, plotly를 가져오고, 아까 만든 data_simulator에서 simulate_yield 함수를 가져옵니다. 그리고 google.generativeai 패키지로 Gemini API를 설정해요. os.getenv로 환경변수에서 API 키를 읽어오는데, 코드에 직접 키를 쓰지 않고 환경변수로 관리하는 게 보안의 기본입니다.
+코드를 네 부분으로 나눠서 볼게요. 첫 번째 부분은 import와 API 설정이에요. streamlit, pandas, plotly를 가져오고, 아까 만든 data_simulator에서 simulate_yield 함수를 가져옵니다. 그리고 공식 Google GenAI SDK의 Client로 Gemini API를 설정해요. os.getenv로 환경변수에서 API 키를 읽어오는데, 코드에 직접 키를 쓰지 않고 환경변수로 관리하는 게 보안의 기본입니다.
 
 두 번째 부분은 페이지 설정이에요. st.set_page_config로 제목, 아이콘, 레이아웃을 잡아줍니다. layout을 "wide"로 설정하면 화면을 넓게 쓸 수 있어요. 공장 대시보드는 보통 와이드 모니터에 띄워놓으니까 wide가 적합합니다.
 
@@ -451,7 +450,7 @@ pip freeze > requirements.txt
 
 # 필수 패키지만 남기기 (용량 절약)
 # streamlit, plotly, pandas,
-# google-generativeai, python-dotenv
+# google-genai, python-dotenv
 
 # 2. GitHub push
 git add .
@@ -673,8 +672,8 @@ URL 하나로 모든 것을 보여주세요.
 ::::
 
 ::: {.callout-note title="핵심 한 줄 요약"}
-Streamlit + Gemini + 텔레그램 = 60분 만에 완성되는 AI 공장 모니터링 시스템.
-코딩은 AI가, 아이디어는 당신이.
+Streamlit + Gemini + 텔레그램으로 모니터링 프로토타입을 구성합니다.
+AI 초안은 데이터 명세·알람 기준·회귀 테스트를 통과해야 합니다.
 :::
 
 ::: {.notes}
@@ -684,7 +683,7 @@ Streamlit + Gemini + 텔레그램 = 60분 만에 완성되는 AI 공장 모니�
 
 그리고 가장 중요한 건, 이 세 모듈을 하나의 시스템으로 통합했다는 겁니다. 따로따로 동작하는 모듈이 아니라, 데이터가 흐르면서 자동으로 분석하고 알림하는 파이프라인을 만든 거예요. 마지막으로 Streamlit Cloud에 배포해서 URL을 만들었습니다.
 
-다음 강의는 16강, 최신 AI 트렌드와 수료입니다. 2025년 AI 지형도가 어떻게 변하고 있는지, Claude Code나 Gemini 2.0 같은 최신 기술은 어디까지 왔는지 알아볼 거예요. 그리고 여러분의 취업 포트폴리오를 최종 점검하는 시간도 가질 겁니다. 수료증도 나옵니다. 기대해주세요.
+다음 강의는 16강, 최신 AI 트렌드와 수료입니다. 2026년 AI 도구의 모델 수명주기, 비용, 평가와 포트폴리오 검증 방법을 알아봅니다.
 
-핵심 한 줄 요약: Streamlit + Gemini + 텔레그램 = 60분 만에 완성되는 AI 공장 모니터링 시스템. 코딩은 AI가, 아이디어는 당신이. 감사합니다.
+핵심 한 줄 요약: Streamlit + Gemini + 텔레그램으로 프로토타입을 만들고, 검증과 운영 책임은 엔지니어가 맡습니다.
 :::

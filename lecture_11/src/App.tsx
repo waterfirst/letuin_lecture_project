@@ -613,7 +613,7 @@ export default function App() {
             num="방법 3"
             badge="AI Studio 공유 링크"
             title="AI로 공정 시뮬레이터를 만들고 링크 하나로 팀과 공유합니다"
-            subtitle="라이선스 수천만원짜리 시뮬레이터 → 무료. 결과만 보여주던 시뮬레이터 → 설명까지 해줌."
+            subtitle="전문 해석기를 대체하는 것이 아니라, 지배방정식과 검증 조건을 빠르게 구현하는 AI 보조 프로토타입입니다."
             color="#EA4335"
             bg="#fff0f0"
             icon={Sliders}
@@ -622,9 +622,9 @@ export default function App() {
           <SectionBadge label="04. 방법 3 — 이런 시뮬레이터들을 만들 수 있습니다" />
           <h2>AI에게 역할을 주면 그 순간부터 시뮬레이터가 됩니다</h2>
           <p className="section-intro">
-            Google AI Studio에 "너는 포토공정 CD 시뮬레이터야"라고 한 줄 쓰면 끝입니다.
-            공정 조건을 입력하면 결과를 예측하고, "왜 이 결과가 나왔어?"라고 물어볼 수 있습니다.
-            AI가 설명해줍니다. 공유 링크를 팀원에게 보내면 누구나 씁니다. 무료입니다.
+            Google AI Studio에서 문제·입력 범위·지배방정식·단위·검증 사례를 단계별로 지시합니다.
+            생성된 코드는 기준 계산과 경계조건으로 검증하고, 통과한 프로토타입만 공유합니다.
+            무료 티어와 호출 한도는 모델·프로젝트별로 달라 실습 직전에 확인합니다.
           </p>
 
           <div className="examples-grid examples-grid-wider">
@@ -642,27 +642,27 @@ export default function App() {
 
           <div className="compare-strip">
             <div className="compare-col before-col">
-              <strong>전통 시뮬레이터</strong>
-              <div className="compare-item">💰 라이선스: 연 수천만 원</div>
-              <div className="compare-item">🖥️ 설치: 전문가 필요</div>
-              <div className="compare-item">👥 팀 공유: 추가 라이선스</div>
-              <div className="compare-item">📚 학습 시간: 수십 시간</div>
-              <div className="compare-item">❓ 결과 설명: 없음</div>
+              <strong>검증된 해석 도구</strong>
+              <div className="compare-item">✅ 정밀 해석·설계 승인</div>
+              <div className="compare-item">📐 재료모델·경계조건 관리</div>
+              <div className="compare-item">🧪 실험값 교정 필요</div>
+              <div className="compare-item">📚 전문 학습 필요</div>
+              <div className="compare-item">🔒 조직의 검증 절차 적용</div>
             </div>
             <div className="compare-arrow"><ArrowRight size={32} /></div>
             <div className="compare-col after-col">
-              <strong>AI Studio</strong>
-              <div className="compare-item">🆓 라이선스: 무료</div>
-              <div className="compare-item">🌐 설치: 없음</div>
-              <div className="compare-item">🔗 팀 공유: 링크 하나</div>
-              <div className="compare-item">⚡ 학습 시간: 이 강의 1개</div>
-              <div className="compare-item">💬 결과 설명: AI가 해줌</div>
+              <strong>AI 보조 프로토타입</strong>
+              <div className="compare-item">⚡ 아이디어·UI 빠른 구현</div>
+              <div className="compare-item">🌐 브라우저 중심 실험</div>
+              <div className="compare-item">🔗 링크 기반 리뷰</div>
+              <div className="compare-item">🧮 기준값과 대조 필수</div>
+              <div className="compare-item">⚠️ 설계 승인 대체 불가</div>
             </div>
           </div>
 
           <div className="lecture-preview-box" style={{ borderColor: '#EA4335' }}>
             <Rocket size={20} color="#EA4335" />
-            <p><strong>14강에서 직접 실습합니다.</strong> Gemini API Key를 발급하고 AI Studio에서 공정 시뮬레이터를 만들어 공유 링크로 배포합니다.</p>
+            <p><strong>14강에서 직접 실습합니다.</strong> 2026-08-11 기준 안정 모델 Gemini 3.6 Flash를 확인하고, 물리 검증표와 함께 시뮬레이터를 공유합니다.</p>
           </div>
         </section>
 

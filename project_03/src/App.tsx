@@ -182,7 +182,7 @@ const TechStack = () => {
     { name: 'Python Streamlit', icon: Activity, desc: '웹 UI' },
     { name: 'pandas/plotly', icon: BarChart3, desc: '데이터 분석' },
     { name: 'Gemini API', icon: Sparkles, desc: 'AI 기능' },
-    { name: 'Gemini Vision', icon: Bot, desc: '이미지 분석' },
+    { name: 'Gemini Multimodal', icon: Bot, desc: '이미지 이해·분류 보조' },
     { name: 'Streamlit Cloud', icon: Globe, desc: '웹앱 플랫폼' },
     { name: 'Telegram Bot', icon: MessageSquare, desc: '알림/자동화' },
   ];

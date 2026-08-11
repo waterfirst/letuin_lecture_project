@@ -59,7 +59,7 @@ const projectMap = [
 ];
 
 const interviewStages = [
-  { icon: FileText, title: '서류 전형', desc: 'GitHub 포트폴리오 완성도, README, 커밋 히스토리가 핵심. 데모 URL이 있으면 통과율 대폭 상승.', color: '#4285F4' },
+  { icon: FileText, title: '서류 전형', desc: 'GitHub 포트폴리오의 문제 정의, README, 재현 절차, 검증 근거를 명확히 제시. 데모 URL은 확인 가능한 증거를 제공합니다.', color: '#4285F4' },
   { icon: Code, title: '기술 면접', desc: '"왜 그 기술을 선택했나?" "정확도는?" "한계는?" — 30초 답변 구조: 결론 → 숫자 → 한계.', color: '#34A853' },
   { icon: Users, title: '실무/인성 면접', desc: 'STAR 기법으로 협업 경험, 실패 극복, 갈등 해결 사례를 구조화. 데이터 근거가 핵심.', color: '#FBBC04' },
   { icon: Trophy, title: '최종 면접', desc: '지원 동기, 5년 후 계획, 회사 이해도. 회사별 맞춤 답변 1문단 필수.', color: '#EA4335' },
@@ -74,15 +74,15 @@ const techQuestions = [
 ];
 
 const pitchStructure = [
-  { phase: '문제 정의', time: '30초', content: '제조 현장에서 ITO 두께 최적화에 2~3일/회 × 수십 회 반복. Warpage 예측은 ANSYS 라이선스 수천만원 필요.', color: '#EA4335' },
-  { phase: '솔루션 제시', time: '60초', content: 'Google AI Studio + 3단계 프롬프트로 OLED 공진 시뮬레이터와 Warpage 시뮬레이터를 각각 40분 만에 구축. 무료, 코드 불필요.', color: '#4285F4' },
+  { phase: '문제 정의', time: '30초', content: 'ITO 두께와 Warpage 조건 탐색에는 반복 계산과 전문 도구가 필요합니다. 본인 프로젝트에서 측정한 시간·비용만 수치로 제시합니다.', color: '#EA4335' },
+  { phase: '솔루션 제시', time: '60초', content: 'Google AI Studio + 3단계 프롬프트로 OLED 공진·Warpage 프로토타입을 구현하고, 기준 계산·단위·경계조건으로 검증. 요금과 한도는 실행 시점에 확인.', color: '#4285F4' },
   { phase: '데모 시연', time: '60초', content: '실제 시뮬레이터 데모: ITO 슬라이더 → 시야각 그래프 실시간 변화. 층 물성치 입력 → 3D 변형 시각화. Streamlit 데이터 대시보드.', color: '#34A853' },
   { phase: '차별화 포인트', time: '30초', content: '단일 기능이 아닌 6개 프로젝트 통합 포트폴리오. 모두 실행 가능한 데모 URL 보유. AI 프롬프트 전략(3단계)을 체계적으로 적용.', color: '#9C27B0' },
 ];
 
 const starExamples = [
-  { type: '협업 경험', s: '13강에서 팀원과 Streamlit 앱을 함께 개발', t: '수율 계산 로직에서 yield_score vs pass_fail 정의 불일치 발생', a: '데이터 명세서를 작성하고 AI 프롬프트에 수율 정의를 명시적으로 포함', r: '계산 오류 0건, 팀 전체가 같은 기준으로 분석 가능' },
-  { type: '실패 극복', s: '14강에서 AI가 내부 굴절각을 무시한 코드를 생성', t: '시야각 60도에서 휘도 예측이 실제와 30% 이상 차이', a: 'Snell law 적용 여부를 검증하는 체크 루틴을 추가하고 AI에게 수정 지시', r: '예측 오차 5% 이내로 개선, AI 검증 습관을 모든 프로젝트에 적용' },
+  { type: '협업 경험', s: '13강에서 팀원과 Streamlit 앱을 함께 개발', t: '수율 계산 로직에서 yield_score vs pass_fail 정의 불일치 발생', a: '데이터 명세서를 작성하고 AI 프롬프트에 수율 정의를 명시적으로 포함', r: '공통 정의와 회귀 테스트를 마련해 팀 분석 기준을 통일' },
+  { type: '실패 극복', s: '14강에서 AI가 내부 굴절각을 무시한 코드를 생성', t: '기준 계산과 불일치해 모델을 그대로 사용할 수 없었음', a: 'Snell 법칙 적용 여부와 단위 테스트를 추가하고 AI에게 수정 지시', r: '검증 케이스를 통과한 버전만 채택하는 품질 게이트를 정립' },
   { type: '지원 동기', s: '제조업 현장에서 비싼 시뮬레이션 SW 대신 AI로 대안을 만든 경험', t: '이 역량을 귀사의 공정 최적화/품질 혁신에 적용하고 싶음', a: '11~16강 6개 프로젝트로 AI 활용 능력을 실증', r: '데모 URL로 즉시 검증 가능한 포트폴리오 완성' },
 ];
 

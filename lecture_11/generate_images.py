@@ -90,13 +90,13 @@ Comparison rows:
 - Price: $20/mo (all same)
 - Context: 1M tokens vs 200K vs 128K (bar chart visualization)
 - Deep Research: ✓ full vs ✗ none vs △ limited
-- Free API: ✓ 15 req/min vs ✗ none vs △ limited
+- API tier: free tier available; active limits must be checked at runtime
 - NotebookLM: ✓ yes vs ✗ no vs ✗ no
 - Firebase: ✓ yes vs ✗ no vs ✗ no
-- Overall Score: 95 vs 72 vs 68 (progress bar)
+- Evaluation: leave blank until the same holdout benchmark is run
 
 Highlight Gemini Pro column with blue background.
-Add insight box at bottom: "Same price, 5x longer context, free API, full ecosystem"
+Add insight box at bottom: "Compare current price, active quota, latency, and holdout quality before choosing"
 
 Style: Modern data visualization, card-based layout, clean typography.
 Colors: Google brand blue for Gemini, neutral gray for others.
@@ -203,15 +203,13 @@ def generate_with_openai():
 
 
 def generate_with_gemini():
-    """Gemini Imagen 3 사용하여 이미지 생성"""
+    """Google AI Studio용 이미지 프롬프트를 출력한다."""
     try:
-        import google.generativeai as genai
+        from google import genai
 
-        genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-
-        # Imagen 모델 (현재 Gemini API에서 이미지 생성 지원 여부 확인 필요)
-        print("⚠️  Gemini Imagen 3는 아직 Python SDK에서 공개되지 않았을 수 있습니다.")
-        print("    Google AI Studio에서 수동으로 생성하거나 DALL-E 3를 사용하세요.")
+        genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
+        print("ℹ️  2026-08-11 기준 이미지 생성 안정 모델은 공식 모델 목록에서 확인하세요.")
+        print("    이 함수는 호출 비용을 만들지 않고 프롬프트만 출력합니다.")
 
         # 대안: 프롬프트 출력
         print("\n📝 Google AI Studio에서 사용할 프롬프트:")
