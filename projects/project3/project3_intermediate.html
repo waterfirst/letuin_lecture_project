@@ -50,14 +50,16 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
 .hint-box{background:#1a1a10;border:1px solid #f0c000;border-radius:10px;padding:16px;margin:12px 0}
 .hint-box strong{color:#f0c000}
 @media(max-width:640px){.container{padding:12px 8px}.card{padding:18px 14px}.badge{font-size:1.2rem;padding:10px 24px}h1{font-size:1.4rem}pre{font-size:0.8rem;padding:12px}}
+/* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
+.nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a href="project3_beginner.html" class="lv-beginner">하 (기본)</a>
+  <a class="lv-beginner">하 (기본)</a>
   <a href="project3_intermediate.html" class="lv-intermediate active">중 (응용)</a>
-  <a href="project3_advanced.html" class="lv-advanced">상 (심화)</a>
+  <a class="lv-advanced">상 (심화)</a>
 </nav>
 
 <div class="container">

@@ -59,14 +59,16 @@ ol li{margin:6px 0}
   table{font-size:.8rem}
   th,td{padding:6px}
 }
+/* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
+.top-nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
 </head>
 <body>
 
 <nav class="top-nav">
-  <a href="project2_beginner.html" class="nav-beginner">하 (기본)</a>
+  <a class="nav-beginner">하 (기본)</a>
   <a href="project2_intermediate.html" class="nav-intermediate">중 (응용)</a>
-  <a href="project2_advanced.html" class="nav-advanced">상 (심화)</a>
+  <a class="nav-advanced">상 (심화)</a>
 </nav>
 
 <div class="container">

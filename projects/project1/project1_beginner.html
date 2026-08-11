@@ -184,6 +184,8 @@
     .badge { font-size: 1.2rem; padding: 10px 22px; }
     h1 { font-size: 1.15rem; }
   }
+/* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
+.nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
 </head>
 <body>
@@ -191,8 +193,8 @@
 <!-- NAVIGATION -->
 <nav class="nav">
   <a href="project1_beginner.html" class="green">초급 (하)</a>
-  <a href="project1_intermediate.html" class="yellow">중급 (중)</a>
-  <a href="project1_advanced.html" class="red">고급 (상)</a>
+  <a class="yellow">중급 (중)</a>
+  <a class="red">고급 (상)</a>
 </nav>
 
 <div class="container">
