@@ -116,6 +116,31 @@ P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+
 </table>
 </div>
 
+<!-- 2-1. 실습 데이터 -->
+<div class="card">
+<h2>2-1. 실습 데이터 다운로드</h2>
+<p>학습 데이터로 이상 기준을 설계하고, 라벨이 없는 홀드아웃에서 그 기준을 검증합니다.</p>
+<p style="margin-top:14px">
+  <a download href="data/smart_factory_sensor_training.csv" style="display:inline-block;background:#f0c000;color:#0a0a14;padding:10px 18px;border-radius:8px;font-weight:800;margin:4px">학습 데이터</a>
+  <a download href="data/smart_factory_sensor_holdout.csv" style="display:inline-block;background:#f0c000;color:#0a0a14;padding:10px 18px;border-radius:8px;font-weight:800;margin:4px">홀드아웃 데이터</a>
+  <a download href="data/smart_factory_sensor_data_dictionary.csv" style="display:inline-block;background:#25253a;color:#fff;padding:10px 18px;border-radius:8px;font-weight:700;margin:4px">데이터 사전</a>
+</p>
+<details style="margin-top:14px">
+  <summary style="cursor:pointer;font-weight:800;color:#f0c000">예측 완료 후 정답 파일 열기</summary>
+  <p style="margin-top:10px">홀드아웃 예측 CSV를 먼저 저장한 뒤 사용하세요.</p>
+  <a download href="data/smart_factory_sensor_holdout_answer.csv" style="display:inline-block;background:#7a6410;color:#fff;padding:9px 16px;border-radius:8px;font-weight:700">홀드아웃 정답 다운로드</a>
+</details>
+<div class="hint-box">
+  <strong>데이터 누수 방지 순서</strong>
+  <ol>
+    <li>학습 데이터만 보고 임계값·결측 처리·이상 감지 방법을 결정합니다.</li>
+    <li>홀드아웃의 <code>record_id</code>별 예측 결과를 CSV로 저장합니다.</li>
+    <li>그 다음 정답 파일을 열어 정확도와 DANGER 재현율을 계산합니다.</li>
+    <li>정답을 본 뒤 기준을 바꾸면 변경 전·후 결과를 모두 보고합니다.</li>
+  </ol>
+</div>
+</div>
+
 <!-- 3. 학습 목표 -->
 <div class="card">
 <h2>3. 학습 목표 (중)</h2>
@@ -235,12 +260,13 @@ print(data["result"][-1]["message"]["chat"]["id"])</code><button class="copy-btn
 
 <h3><span class="step-num">6</span>Step 6: 앱 실행 및 테스트</h3>
 <pre><code>streamlit run app.py</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
-<p>CSV 파일을 업로드하고 전체 파이프라인이 동작하는지 확인합니다:</p>
+<p>먼저 <code>smart_factory_sensor_training.csv</code>로 기준을 정한 뒤, <code>smart_factory_sensor_holdout.csv</code>에 같은 기준을 적용하여 전체 파이프라인을 확인합니다:</p>
 <ol>
   <li>파일 업로드 &rarr; 시각화 자동 생성</li>
   <li>Gemini API 분석 버튼 &rarr; AI 인사이트 표시</li>
   <li>보고서 생성 &rarr; 다운로드</li>
   <li>텔레그램 전송 버튼 &rarr; 요약 수신 확인</li>
+  <li>홀드아웃 예측 CSV 저장 &rarr; 정답 파일 공개 &rarr; 정확도와 DANGER 재현율 계산</li>
 </ol>
 
 <h3><span class="step-num">7</span>Step 7: 텔레그램 마크다운 메시지 구현</h3>

@@ -1,0 +1,11 @@
+column,type,unit,description,training_only
+record_id,string,,unique row identifier,false
+timestamp,datetime,KST,sensor collection time,false
+equipment_id,category,,CVD equipment identifier,false
+temperature_c,float,degC,chamber temperature,false
+pressure_bar,float,bar,chamber pressure,false
+thickness_nm,float,nm,measured film thickness,false
+rf_power_w,integer,W,RF power,false
+gas_flow_sccm,float,sccm,total process gas flow,false
+vibration_mm_s,float,mm/s,equipment vibration velocity,false
+alarm_state,category,,NORMAL WARNING DANGER or REVIEW,true
