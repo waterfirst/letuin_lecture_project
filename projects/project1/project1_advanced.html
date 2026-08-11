@@ -394,108 +394,35 @@ streamlit run app.py</pre>
 
 <!-- 6. 프롬프트 예시 -->
 <div class="card">
-  <h2>6. 프롬프트 예시 (Antigravity용)</h2>
-  <p>아래 프롬프트들을 Antigravity 에이전트에게 순서대로 전달하세요.</p>
+  <h2>6. 프롬프트 설계 (상 난이도 &mdash; 요구 항목만 제공)</h2>
+  <p>상 난이도에서는 <strong>프롬프트와 구현 방법을 완전히 직접 설계합니다.</strong>
+     아래는 결과물이 갖춰야 할 <strong>요구 항목의 제목</strong>이며, 라이브러리 선택·API·파라미터·수치는 모두 스스로 결정합니다.</p>
 
-  <h3>Step 2: Streamlit 골격 설계</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>Streamlit 대시보드 app.py를 만들어줘.
+  <h3>구현해야 할 항목</h3>
+  <ul>
+    <li>앱 골격 &mdash; 페이지 구성과 상태 관리 방식</li>
+    <li>범용 파일 업로더 &mdash; 임의의 CSV에도 동작하는 컬럼 검증 전략</li>
+    <li>전처리 옵션 위젯 &mdash; 사용자가 조정 가능해야 할 파라미터 선정</li>
+    <li>웨이퍼 맵 시각화 &mdash; 좌표계, 색상 매핑, 축 비율, 툴팁 설계</li>
+    <li>통계 요약 패널 &mdash; 어떤 지표를 노출할 것인가</li>
+    <li>보고서 내보내기 &mdash; 형식과 포함 범위</li>
+  </ul>
 
-프로젝트: 반도체 CVD 박막 두께 Wafer Map 데이터 분석
-데이터: 엘립소메터 49점 계측 CSV (lot_id, cvd_machine, meas_time, position_x, position_y, thickness_value)
+  <h3>프롬프트 작성 권장 순서</h3>
+  <ul>
+    <li>전체 아키텍처 설계 프롬프트</li>
+    <li>모듈별 구현 프롬프트</li>
+    <li>시각화 세부 조정 프롬프트</li>
+    <li>예외 처리 및 검증 프롬프트</li>
+  </ul>
 
-기본 구조:
-1. 페이지 설정: 와이드 레이아웃, 다크 테마, 제목 "CVD 박막 두께 분석 대시보드"
-2. 사이드바: 파일 업로더(CSV), 전처리 옵션 (이상치 필터링 체크박스, 보간 방법 라디오)
-3. 메인 영역 상단: KPI 메트릭 카드 4개 (총 Lot수, 설비수, 평균 두께, 평균 Uniformity)
-4. 메인 영역 중단: 2열 레이아웃 (좌: Wafer Map, 우: 설비별 박스플롯)
-5. 메인 영역 하단: Lot별 트렌드 라인 차트 (전체 너비)
-
-일단 빈 플레이스홀더로 구조만 잡아줘.</pre>
-  </div>
-
-  <h3>Step 3: 범용 파일 업로더</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>st.file_uploader로 CSV를 업로드하면 자동으로 데이터를 식별하는 코드를 만들어줘.
-
-요구사항:
-- pd.read_csv로 파싱
-- lot_id 고유값 목록과 개수 자동 추출
-- cvd_machine 고유값 목록 자동 추출
-- thickness_value 기초 통계 자동 계산
-- 데이터가 없으면 안내 메시지 표시
-- 어떤 CSV를 넣어도 동작하도록 컬럼명 검증 로직 포함
-  (필수 컬럼 누락 시 에러 메시지)</pre>
-  </div>
-
-  <h3>Step 4: 전처리 옵션 위젯</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>사이드바에 전처리 옵션 위젯을 추가해줘.
-
-위젯 목록:
-1. st.checkbox("이상치 필터링 적용") - 기본값 True
-2. st.multiselect("제거할 이상치 값", [-999.0, 999.9, 0.0, 250.3], default=[-999.0, 999.9, 0.0, 250.3])
-3. st.radio("결측치 보간 방법", ["그룹 평균", "그룹 중앙값", "보간 없음(NaN 유지)"])
-4. st.slider("정상 두께 범위 (nm)", min_value=0, max_value=2000, value=(800, 1200))
-
-위젯 값에 따라 데이터프레임을 동적으로 필터링/보간하는 함수를 만들어줘.
-그룹은 같은 lot_id + cvd_machine 조합이야.</pre>
-  </div>
-
-  <h3>Step 5: Plotly 웨이퍼 맵</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>Plotly Express로 300mm 웨이퍼 2D 산점도 맵을 그려줘.
-
-요구사항:
-- px.scatter(x=position_x, y=position_y, color=thickness_value)
-- 색상 스케일: "RdYlBu_r" (빨강=두꺼움, 파랑=얇음)
-- 마커 크기: 12~15
-- 300mm 웨이퍼 외곽 원형 표시 (fig.add_shape으로 반경 150mm 원)
-- X/Y축 범위: -160 ~ 160
-- 축 비율 1:1 (scaleanchor)
-- 호버 툴팁: position_x, position_y, thickness_value, lot_id, cvd_machine
-- 다크 테마 (template="plotly_dark")
-- Lot 선택 st.selectbox 연동: 선택한 Lot만 표시
-- st.plotly_chart(fig, use_container_width=True)</pre>
-  </div>
-
-  <h3>Step 6: Uniformity 트렌드 차트</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>Lot별 + 설비별 Uniformity 추이를 Plotly line chart로 그려줘.
-
-Uniformity 공식: (Max - Min) / (2 * Mean) * 100
-각 Lot + cvd_machine 조합별로 계산
-
-요구사항:
-- X축: lot_id
-- Y축: Uniformity (%)
-- 색상: cvd_machine별 구분 (M01=파랑, M02=빨강, M03=초록)
-- 마커 + 라인 (mode="lines+markers")
-- 이상 Uniformity 기준선 표시 (2% 수평선, 빨간 점선)
-- 다크 테마
-- 하단에 평균 두께 트렌드도 서브플롯으로 추가</pre>
-  </div>
-
-  <h3>Step 7: 재현성 검증</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre>재현성 검증을 위한 자동 진단 섹션을 추가해줘.
-
-데이터를 업로드하면 자동으로:
-1. 가장 Uniformity가 높은(불균일한) 설비를 식별
-2. 해당 설비의 웨이퍼 맵 패턴을 분석
-   - Center vs Edge 두께 평균 비교 (반경 50mm 이내 vs 100mm 이상)
-   - 패턴 판정: "오목형(Edge-High)" 또는 "볼록형(Center-High)"
-3. 진단 결과를 st.success 또는 st.warning 박스로 표시
-4. 예: "CVD_M02 설비에서 오목형(Edge-High) 이상 패턴이 감지되었습니다.
-   Center 평균: 998.5nm, Edge 평균: 1005.2nm, 차이: +6.7nm"
-
-data_1 -> CVD_M02 오목형, data_2 -> CVD_M03 볼록형이 나와야 해.</pre>
+  <div class="tip">
+    <strong>평가 관점</strong>
+    <ul>
+      <li>동작 여부보다 <strong>선택의 근거</strong>를 설명할 수 있는지가 상 난이도의 핵심입니다.</li>
+      <li>색상 스케일·마커 크기·축 범위를 왜 그렇게 정했는지 보고서에 남기세요.</li>
+      <li>한 번의 프롬프트로 완성을 기대하지 말고, 반복 개선 과정을 기록하세요.</li>
+    </ul>
   </div>
 </div>
 
@@ -503,19 +430,21 @@ data_1 -> CVD_M02 오목형, data_2 -> CVD_M03 볼록형이 나와야 해.</pre>
 <div class="card">
   <h2>7. 평가 채점 기준</h2>
   <table class="score-table">
-    <tr><th>평가 항목</th><th>배점</th></tr>
-    <tr><td>Streamlit 앱 정상 실행 (streamlit run app.py)</td><td>5점</td></tr>
-    <tr><td>파일 업로더로 CSV 로드 및 자동 식별</td><td>10점</td></tr>
-    <tr><td>사이드바 전처리 옵션 위젯 동작 (필터링/보간)</td><td>10점</td></tr>
-    <tr><td>이상치 마스킹 + 결측치 보간 로직 정확성</td><td>10점</td></tr>
-    <tr><td>Plotly 2D 원형 웨이퍼 산점도 맵 (300mm, 색상 매핑)</td><td>15점</td></tr>
-    <tr><td>Lot별 Uniformity 트렌드 차트 (설비별 구분)</td><td>10점</td></tr>
-    <tr><td>KPI 메트릭 카드 및 통계 요약</td><td>5점</td></tr>
-    <tr><td>자동 이상 패턴 진단 기능 (오목형/볼록형 판정)</td><td>10점</td></tr>
-    <tr><td><strong>재현성 검증: data_1 정상 동작 (CVD_M02 오목형)</strong></td><td>10점</td></tr>
-    <tr><td><strong>재현성 검증: data_2 정상 동작 (CVD_M03 볼록형)</strong></td><td>10점</td></tr>
-    <tr><td>requirements.txt 포함 및 설치 가이드</td><td>5점</td></tr>
+    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>30%</strong></td><td>프롬프트 설계 이력, 라이브러리·파라미터 선택의 근거 설명</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>20%</strong></td><td>앱 정상 실행, 임의 CSV 대응, 전처리 옵션 동작</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>25%</strong></td><td>웨이퍼 맵·트렌드·KPI, 이상 패턴 자동 진단</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>25%</strong></td><td>재현성 검증 결과와 보고서·README 완성도</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
   </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (상 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
   <p style="text-align:right; margin-top:8px; font-weight:700; color:var(--accent);">합계: 100점</p>
 </div>
 

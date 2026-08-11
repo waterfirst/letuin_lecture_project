@@ -356,13 +356,21 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 <div class="card">
 <h2>9. 평가 채점 기준 (상)</h2>
 <table>
-<tr><th>항목</th><th>배점</th><th>설명</th></tr>
-<tr><td>문제 정의의 현실성</td><td>20%</td><td>실무에서 실제로 필요한 문제를 정의했는가</td></tr>
-<tr><td>기술 구현 완성도</td><td>30%</td><td>기술 3종 이상 조합, 멀티 페이지 4+, 이상 감지 알고리즘</td></tr>
-<tr><td>AI 활용 수준</td><td>20%</td><td>Gemini API 연동 깊이, 자연어 인사이트 품질</td></tr>
-<tr><td>배포 및 사용성</td><td>15%</td><td>Streamlit Cloud 배포 + 텔레그램 알림/리포트</td></tr>
-<tr><td>GitHub 품질</td><td>15%</td><td>README + 코드 구조 + 커밋 히스토리</td></tr>
-</table>
+    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>30%</strong></td><td>프롬프트 설계 이력, 아키텍처 선택의 근거 설명</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>20%</strong></td><td>배포 동작, 저장소 품질, 커밋 이력</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>25%</strong></td><td>기술 3종 이상 조합, 멀티 페이지, 이상 감지 알고리즘</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>25%</strong></td><td>문제 정의의 현실성, AI 활용 깊이, 리포트 전달력</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
+  </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (상 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
 
 <h3>전체 난이도별 평가 비교</h3>
 <table>

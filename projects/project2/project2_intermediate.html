@@ -209,22 +209,24 @@ ol li{margin:6px 0}
   <div class="highlight">방향: CSV 로드 후 기초 통계 + Seaborn 그래프 5종을 한 번에 요청하되, 각 그래프의 목적(분포 확인, 관계 확인, 위치 패턴 등)을 명시하세요.</div>
 
   <h3>힌트 2: Pareto 분석 추가</h3>
-  <div class="highlight">방향: defect_type별 빈도와 누적 비율을 계산하는 Pareto chart를 요청하세요. "상위 80%를 차지하는 결함 유형"을 결과에 표시하도록 지시하면 좋습니다.</div>
+  <div class="highlight">방향: 결함 유형별 빈도와 누적 비율을 계산하는 Pareto chart를 요청하세요.
+     <strong>어느 누적 비율을 「주요 결함」의 경계로 삼을지는 직접 정해 프롬프트에 명시</strong>합니다.</div>
 
   <h3>힌트 3: 통계 분석</h3>
-  <div class="highlight">방향: statsmodels OLS로 yield_score를 종속변수로 한 회귀분석을 요청하세요. "p-value가 0.05보다 작은 변수를 유의한 인자로 표시"하도록 지시합니다.</div>
+  <div class="highlight">방향: 회귀분석으로 수율에 영향을 주는 인자를 찾도록 요청하세요.
+     <strong>종속변수 선정, 유의성 판단 기준, 유의 인자 표기 방식</strong>을 직접 결정해 지시해야 합니다.</div>
 
-  <h3>참고용 프롬프트 구조</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>이 분석 코드에 통계 분석을 추가해줘.
-
-추가 요구사항:
-- defect_type Pareto chart 생성
-- 수치 컬럼 correlation heatmap 생성
-- statsmodels OLS로 yield_score 회귀분석
-- p-value가 0.05보다 작은 변수를 "유의한 인자"로 표시
-- HTML 보고서에 그래프별 해석과 개선 제안 3개 포함</code></pre>
+  <h3>프롬프트 골격 (내용은 직접 채울 것)</h3>
+  <div class="highlight">
+    분석 코드에 통계 분석을 추가하는 프롬프트를 아래 <strong>항목 제목</strong>만 보고 직접 작성하세요.
+    <ul>
+      <li>추가할 시각화 종류</li>
+      <li>상관관계 확인 방법</li>
+      <li>회귀분석 대상과 모델</li>
+      <li>유의성 판단 기준과 표기 방식</li>
+      <li>보고서에 포함할 해석·제안의 범위</li>
+    </ul>
+    각 항목의 구체 기준을 비워둔 채 요청하면 AI가 임의로 정합니다. <strong>먼저 스스로 정한 뒤</strong> 넣으세요.
   </div>
 
   <h3>프롬프트 설계 팁</h3>
@@ -241,11 +243,20 @@ ol li{margin:6px 0}
   <h2>8. 평가 채점 기준</h2>
   <table>
     <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
-    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>CSV 정상 로드, 결측치 처리, 코드 재실행 가능</td></tr>
-    <tr><td>시각화 완성도</td><td>25%</td><td>5종 이상 그래프, Pareto 필수 포함, 그래프 가독성</td></tr>
-    <tr><td>통계 분석과 해석</td><td>25%</td><td>상관분석 또는 회귀분석 포함, p-value/상관계수 해석</td></tr>
-    <tr><td>보고서 문서화</td><td>25%</td><td>HTML 보고서에 인사이트와 개선 제안 3개 포함</td></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>25%</strong></td><td>프롬프트 설계 이력, Pareto 경계·유의성 기준을 정한 근거</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>25%</strong></td><td>결측치 처리, 코드 재실행 가능, 데이터 정합성</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>30%</strong></td><td>5종 이상 그래프, Pareto 필수, 상관 히트맵</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>20%</strong></td><td>회귀분석 해석과 개선 제안 3개의 구체성</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
   </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (중 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
   <h3>난이도별 요구 수준</h3>
   <table>
     <tr><th>항목</th><th>중 (이 레벨)</th></tr>

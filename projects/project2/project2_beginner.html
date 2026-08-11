@@ -222,24 +222,21 @@ python analysis.py</code></pre>
 
 <!-- 7. 프롬프트 예시 -->
 <div class="card">
-  <h2>7. Gemini 프롬프트 예시 (전문 제공)</h2>
-  <p>하 난이도에서는 프롬프트를 그대로 복사해서 사용하면 됩니다.</p>
+  <h2>7. 프롬프트 설계 가이드 (하 난이도 &mdash; 골격 제공)</h2>
+  <p>완성된 프롬프트를 복사해 쓰는 방식이 아닙니다. 아래 <strong>항목 제목</strong>과 방향 설명을 보고
+     구체적인 내용은 직접 채워 프롬프트를 완성하세요.</p>
 
   <h3>프롬프트 1: 기본 분석 코드 생성</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>OLED deposition CSV를 분석하는 Python 예제를 만들어줘.
-
-조건:
-1. pandas로 oled_deposition_xymap.csv를 읽기
-2. seaborn으로 boxplot, scatter plot, heatmap을 각각 그리기
-3. heatmap은 x_index, y_index 좌표별 thickness_error_nm 평균으로 만들기
-4. 그래프는 PNG로 저장하고, 결과 해석을 HTML 보고서(report.html)에 넣기
-5. 초보자도 실행할 수 있도록 requirements.txt와 실행 명령어도 함께 설명하기
-
-사용 컬럼:
-panel_id, x_index, y_index, chamber, zone, substrate_temp_c, pressure_mTorr,
-thickness_nm, thickness_error_nm, particle_count, defect_type, yield_score</code></pre>
+  <div class="highlight">
+    아래 항목을 각각 한 줄씩 채워 하나의 프롬프트로 만드세요.
+    <ul>
+      <li>데이터 로드 &mdash; 어떤 파일을, 무엇으로 읽을 것인가</li>
+      <li>시각화 종류 &mdash; 어떤 그래프가 필요한지, 각각 <strong>무엇을 확인하려는 목적</strong>인지 함께 적기</li>
+      <li>공간 패턴 표현 &mdash; 좌표별로 어떤 값을 집계해 볼 것인가</li>
+      <li>산출물 형식 &mdash; 그래프 저장 방식과 보고서 형태</li>
+      <li>재현 정보 &mdash; 다른 사람이 그대로 돌릴 수 있으려면 무엇이 더 필요한가</li>
+      <li>사용할 컬럼 &mdash; 데이터 사전을 보고 직접 선별 (전부 쓸 필요는 없습니다)</li>
+    </ul>
   </div>
 
   <h3>프롬프트 2: 에러 발생 시</h3>
@@ -247,34 +244,48 @@ thickness_nm, thickness_error_nm, particle_count, defect_type, yield_score</code
     <button class="copy-btn" onclick="copyCode(this)">복사</button>
     <pre><code>아래 에러가 발생했어. 코드를 고쳐줘:
 
-[여기에 에러 메시지를 붙여넣기]</code></pre>
+[여기에 에러 메시지 전문을 붙여넣기]</code></pre>
   </div>
+  <p class="muted">이 프롬프트는 과제 판단이 들어가지 않는 <strong>공통 습관</strong>이므로 전문을 제공합니다. 에러는 요약하지 말고 전문을 넣으세요.</p>
 
   <h3>프롬프트 3: 보고서에 해석 추가</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>report.html의 각 그래프 아래에 공정 엔지니어가 이해할 수 있는
-한 줄 해석을 추가해줘. boxplot, scatter, heatmap 각각에 대해 작성해줘.</code></pre>
-  </div>
+  <div class="highlight">방향: 각 그래프 아래에 해석을 붙이도록 요청하세요.
+     <strong>누가 읽을 보고서인지</strong>와 <strong>해석의 분량</strong>을 직접 정해 프롬프트에 명시해야 결과가 일정해집니다.</div>
 
-  <h3>프롬프트 4: Seaborn 스타일 개선</h3>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>Seaborn Gallery의 이 예제 스타일을 내 데이터의 chamber별 boxplot으로 바꿔줘.
-https://seaborn.pydata.org/examples/grouped_boxplot.html</code></pre>
+  <h3>프롬프트 4: 시각화 스타일 개선</h3>
+  <div class="highlight">방향: 참고할 예제 스타일을 직접 찾아 링크와 함께 제시하고, 자신의 데이터 축에 맞게 바꿔달라고 요청하세요.
+     어떤 축으로 그룹을 나눌지는 스스로 결정합니다.</div>
+
+  <div class="tip">
+    <strong>작성 요령</strong>
+    <ul>
+      <li>수치·파일명·색상을 지정하지 않으면 AI가 임의로 정합니다. 원하는 결과가 있으면 먼저 정한 뒤 넣으세요.</li>
+      <li>한 번에 전부 요청하지 말고 단계별로 나누어 요청하세요.</li>
+      <li>결과를 보고 &quot;이 그래프에서 보이는 패턴을 해석해줘&quot;라고 되물으면 분석이 깊어집니다.</li>
+    </ul>
   </div>
 </div>
+
 
 <!-- 8. 평가 채점 기준 -->
 <div class="card">
   <h2>8. 평가 채점 기준</h2>
   <table>
     <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
-    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>CSV가 정상 로드되는가, 코드가 오류 없이 실행되는가</td></tr>
-    <tr><td>시각화 완성도</td><td>25%</td><td>boxplot, scatter plot, heatmap이 각각 1개 이상 생성되는가</td></tr>
-    <tr><td>통계 분석과 해석</td><td>25%</td><td>기초 통계(평균, 표준편차 등)와 그래프 해석이 있는가</td></tr>
-    <tr><td>보고서 문서화</td><td>25%</td><td>HTML 보고서에 그래프와 한 줄 해석이 포함되는가</td></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>15%</strong></td><td>설계한 프롬프트 전문과 그래프별 목적을 정한 근거 제출</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>30%</strong></td><td>CSV 정상 로드, 코드 무오류 실행, 재현 가능</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>35%</strong></td><td>boxplot·scatter·heatmap 각 1개 이상, 가독성</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>20%</strong></td><td>HTML 보고서에 그래프별 한 줄 해석 포함</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
   </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (하 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
   <h3>난이도별 요구 수준</h3>
   <table>
     <tr><th>항목</th><th>하 (이 레벨)</th></tr>

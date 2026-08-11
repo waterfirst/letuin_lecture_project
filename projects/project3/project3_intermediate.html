@@ -292,14 +292,21 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 <div class="card">
 <h2>9. 평가 채점 기준 (중)</h2>
 <table>
-<tr><th>항목</th><th>배점</th><th>설명</th></tr>
-<tr><td>시각화 4종 이상</td><td>20%</td><td>히스토그램, 박스플롯, 산점도, 히트맵 등</td></tr>
-<tr><td>Gemini API 인사이트</td><td>25%</td><td>데이터 기반 AI 분석 + 한국어 인사이트 생성</td></tr>
-<tr><td>보고서 다운로드</td><td>15%</td><td>Markdown 보고서 자동 생성 및 다운로드</td></tr>
-<tr><td>텔레그램 요약 전송</td><td>20%</td><td>분석 요약을 텔레그램으로 자동 전송</td></tr>
-<tr><td>프롬프트 기록 제출</td><td>10%</td><td>Gemini에 입력한 프롬프트 전체 기록</td></tr>
-<tr><td>스크린샷 2장</td><td>10%</td><td>앱 화면 + 텔레그램 수신 화면</td></tr>
-</table>
+    <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>25%</strong></td><td>프롬프트 설계 이력, 임계값·색상 단계를 정한 근거</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>25%</strong></td><td>앱 실행과 데이터 파이프라인 안정성</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>30%</strong></td><td>시각화 4종 이상, AI 인사이트 품질</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>20%</strong></td><td>보고서 자동 생성과 알림 요약 전송</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
+  </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (중 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
 
 <h3>전체 난이도별 평가 비교</h3>
 <table>

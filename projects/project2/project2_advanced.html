@@ -236,28 +236,18 @@ git push -u origin main</code></pre>
   <h2>7. Gemini 프롬프트 예시 (최소화)</h2>
   <p>상 난이도에서는 프롬프트가 최소한으로 제공됩니다. <strong>직접 설계</strong>하세요.</p>
 
-  <h3>Quarto 문서 생성 참고</h3>
-  <div class="highlight">상 난이도에서는 아래 프롬프트를 참고만 하고, 자신의 분석 흐름에 맞게 수정하여 사용하세요.</div>
-  <div class="code-wrap">
-    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-    <pre><code>Quarto 문서 oled_deposition_report.qmd를 만들어줘.
-
-목표:
-- oled_deposition_xymap.csv를 읽고 OLED deposition 공정 문제 원인을 찾는 HTML 보고서 작성
-- 코드, 그래프, 통계 분석, p-value 해석, 개선 제안을 한 문서에 포함
-
-포함할 섹션:
-1. 분석 목적과 데이터 설명
-2. 품질 지표 요약: thickness_nm, thickness_error_nm, yield_score
-3. Seaborn boxplot, scatter plot, heatmap, Pareto chart
-4. statsmodels OLS 회귀분석: yield_score를 종속변수로 두고 공정 조건의 p-value 해석
-5. x/y map hotspot과 defect_type Pareto를 연결한 원인 가설
-6. 최종 권고안 3개
-
-렌더링:
-quarto render oled_deposition_report.qmd --to html</code></pre>
-  </div>
-
+  <h3>결과물이 갖춰야 할 요구 항목</h3>
+  <div class="highlight">상 난이도에서는 참고용 프롬프트를 제공하지 않습니다.
+     아래는 <strong>결과물에 포함되어야 할 항목의 제목</strong>이며, 구현 방법·라이브러리·판단 기준은 모두 직접 설계합니다.</div>
+  <ul>
+    <li>분석 목적과 데이터 설명</li>
+    <li>품질 지표 요약 &mdash; 어떤 지표를 대표로 삼을지 직접 선정</li>
+    <li>시각화 &mdash; 종류와 개수, 각 그래프의 목적을 스스로 정의</li>
+    <li>통계 분석 &mdash; 모델 선택과 유의성 판단 기준을 직접 결정</li>
+    <li>공간 패턴과 결함 유형을 연결한 원인 가설</li>
+    <li>최종 권고안 &mdash; 근거와 함께 제시</li>
+    <li>문서 형식과 렌더링 방법</li>
+  </ul>
   <h3>프롬프트 설계 원칙</h3>
   <ul>
     <li>분석의 <strong>목적과 맥락</strong>을 먼저 명시하세요</li>
@@ -272,11 +262,20 @@ quarto render oled_deposition_report.qmd --to html</code></pre>
   <h2>8. 평가 채점 기준</h2>
   <table>
     <tr><th>평가 항목</th><th>배점</th><th>세부 기준</th></tr>
-    <tr><td>데이터 처리와 재현성</td><td>25%</td><td>.qmd 원본으로 HTML이 재현되는가, 코드 품질, GitHub 구조</td></tr>
-    <tr><td>시각화 완성도</td><td>25%</td><td>6종 이상 그래프, x/y map 필수, 그래프 선택 이유 설명</td></tr>
-    <tr><td>통계 분석과 해석</td><td>25%</td><td>회귀분석 결과표, p-value 해석, 원인 가설이 그래프 근거와 연결</td></tr>
-    <tr><td>보고서 문서화</td><td>25%</td><td>Quarto HTML 완성도, README 작성, 최종 권고안의 구체성</td></tr>
+    <tr><td>A. 프롬프트 설계와 판단 근거</td><td><strong>30%</strong></td><td>프롬프트 설계 이력, 모델·지표 선택의 근거 설명</td></tr>
+    <tr><td>B. 데이터 처리와 재현성</td><td><strong>20%</strong></td><td>.qmd 원본으로 HTML 재현, 코드 품질, 저장소 구조</td></tr>
+    <tr><td>C. 분석·시각화 완성도</td><td><strong>25%</strong></td><td>6종 이상 그래프, 공간 패턴 분석, 그래프 선택 이유</td></tr>
+    <tr><td>D. 보고서와 전달력</td><td><strong>25%</strong></td><td>회귀 결과와 원인 가설의 연결, 최종 권고안의 구체성</td></tr>
+    <tr><td><strong>합계</strong></td><td><strong>100%</strong></td><td>&mdash;</td></tr>
   </table>
+  <div class="tip">
+    <strong>배점 설계 원칙 (상 난이도)</strong>
+    <ul>
+      <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
+      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
+      <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
+    </ul>
+  </div>
   <h3>난이도별 요구 수준</h3>
   <table>
     <tr><th>항목</th><th>상 (이 레벨)</th></tr>
