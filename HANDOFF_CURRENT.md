@@ -2,7 +2,7 @@
 
 작성일: 2026-08-11  
 저장소: `https://github.com/waterfirst/letuin_lecture_project`  
-현재 HEAD: `d8c5fda`
+기준 구현 커밋: `d8c5fda`
 
 ## 목표
 
