@@ -90,6 +90,14 @@ jobs:
             fi
           done
 
+          # Copy static assignment pages (projects/) as-is.
+          # These are hand-written HTML with no build step, so they must be
+          # copied verbatim or they never reach Pages.
+          if [ -d "projects" ]; then
+            cp -r projects public/projects
+            echo "✅ Copied projects (static assignment pages)"
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
