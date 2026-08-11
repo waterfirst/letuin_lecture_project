@@ -65,6 +65,13 @@ ol li{margin:6px 0}
   table{font-size:.8rem}
   th,td{padding:6px}
 }
+@media(max-width:640px){
+  .card{min-width:0}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{overflow-wrap:anywhere}
+  :not(pre)>code{overflow-wrap:anywhere;word-break:break-word}
+  pre{max-width:100%}
+}
 /* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
 .top-nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>

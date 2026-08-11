@@ -150,7 +150,10 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:var(--text-body
   <li><span class="lang-ko">봇에게 <code>/start</code> 메시지 보내기</span><span class="lang-en">Send <code>/start</code> to your bot</span></li>
   <li><span class="lang-ko">브라우저에서 열기:</span><span class="lang-en">Open in browser:</span></li>
 </ol>
-<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code></pre>
+<pre><code>import os, requests
+token = os.environ["BOT_TOKEN"]
+data = requests.get(f"https://api.telegram.org/bot{token}/getUpdates", timeout=10).json()
+print(data["result"][-1]["message"]["chat"]["id"])</code></pre>
 <ol start="3">
   <li><span class="lang-ko"><code>result &rarr; message &rarr; chat &rarr; id</code> 값 복사</span><span class="lang-en">Copy <code>result &rarr; message &rarr; chat &rarr; id</code></span></li>
 </ol>
@@ -303,10 +306,10 @@ then add a button to send that result via Telegram bot"</span></code><button cla
 <dd><span class="lang-ko">봇에게 먼저 <code>/start</code> 메시지를 보내세요. <code>getUpdates</code>에서 chat_id를 재확인하세요.</span><span class="lang-en">Send <code>/start</code> to the bot first. Re-check chat_id from <code>getUpdates</code>.</span></dd>
 
 <dt><span class="lang-ko"><code>ConnectionError</code> 발생</span><span class="lang-en"><code>ConnectionError</code></span></dt>
-<dd><span class="lang-ko">인터넷 연결 확인. 회사/학교 네트워크에서 Telegram API 차단 가능 (VPN 사용).</span><span class="lang-en">Check internet. Telegram API may be blocked on corporate networks (use VPN).</span></dd>
+<dd><span class="lang-ko">소속 기관의 보안 정책을 준수하고, 차단 시 승인된 개인 실습 환경 또는 대체 메시징 채널을 사용하세요.</span><span class="lang-en">Follow your organization's security policy; use an approved practice environment or messaging channel if blocked.</span></dd>
 
 <dt><span class="lang-ko">Gemini API 호출 횟수 초과</span><span class="lang-en">Gemini API rate limit exceeded</span></dt>
-<dd><span class="lang-ko">무료 티어 분당 15회 제한. <code>time.sleep(4)</code>로 호출 간격 조절. 데이터 전체가 아닌 요약만 API에 전송.</span><span class="lang-en">Free tier: 15 calls/min. Use <code>time.sleep(4)</code>. Send summary, not full data.</span></dd>
+<dd><span class="lang-ko">Google AI Studio에서 현재 할당량을 확인하고, 429 응답에는 지수 백오프를 적용하세요. 데이터 전체가 아닌 요약만 API에 전송합니다.</span><span class="lang-en">Check the current quota in Google AI Studio and apply exponential backoff to HTTP 429 responses. Send summaries rather than full datasets.</span></dd>
 
 <dt><span class="lang-ko">Streamlit Cloud에서 텔레그램이 안 됨</span><span class="lang-en">Telegram not working on Streamlit Cloud</span></dt>
 <dd><span class="lang-ko">Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID를 등록하고 <code>st.secrets["BOT_TOKEN"]</code>으로 접근하세요.</span><span class="lang-en">Register BOT_TOKEN, CHAT_ID in Streamlit Cloud Secrets. Access via <code>st.secrets["BOT_TOKEN"]</code>.</span></dd>

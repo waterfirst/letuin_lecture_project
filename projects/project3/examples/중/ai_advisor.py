@@ -1,14 +1,12 @@
 """
 AI 어드바이저 모듈
 ==================
-실제 Gemini API를 사용하는 구조와 동일하게 설계되어 있습니다.
-API 키가 설정되어 있으면 실제 Gemini를 호출하고,
-설정되지 않은 경우 현실적인 모킹 응답을 반환합니다.
+API 키가 설정되어 있으면 최신 Gemini SDK로 실제 API를 호출하고,
+설정되지 않은 경우 데모임을 명시한 예시 응답을 반환합니다.
 
 실제 Gemini 연동 방법:
-  1. pip install google-generativeai
+  1. pip install google-genai
   2. .env 파일에 GEMINI_API_KEY=AIza... 입력
-  3. _call_gemini() 함수의 주석 처리된 코드를 활성화
 """
 
 import os
@@ -27,17 +25,18 @@ def _call_gemini(prompt: str) -> str:
     API 키가 없으면 모킹 응답을 반환합니다.
     """
     if not GEMINI_API_KEY:
-        return _mock_gemini_response(prompt)
+        return "[데모 모드 — 실제 Gemini 응답이 아닙니다]\n\n" + _mock_gemini_response(prompt)
 
-    # ── 실제 Gemini API 호출 (API 키 설정 시 아래 주석 해제) ──────
-    # import google.generativeai as genai
-    # genai.configure(api_key=GEMINI_API_KEY)
-    # model = genai.GenerativeModel("gemini-1.5-flash")
-    # response = model.generate_content(prompt)
-    # return response.text
-    # ──────────────────────────────────────────────────────────────
+    from google import genai
 
-    return _mock_gemini_response(prompt)
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=prompt,
+    )
+    if not response.text:
+        raise RuntimeError("Gemini가 텍스트 응답을 반환하지 않았습니다.")
+    return response.text
 
 
 def _mock_gemini_response(prompt: str) -> str:

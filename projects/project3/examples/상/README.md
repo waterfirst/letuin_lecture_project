@@ -15,7 +15,7 @@ AI 기반 실시간 공장 모니터링 · 이상 감지 · 자동 보고서 생
 | 역할 | 기술 |
 |-----|------|
 | 웹 UI | Streamlit (멀티페이지) |
-| AI 분석 | Gemini API (google-generativeai) |
+| AI 분석 | Gemini API (google-genai, gemini-3.6-flash) |
 | 데이터 처리 | pandas, numpy |
 | 시각화 | Plotly |
 | 통계 분석 | scipy |

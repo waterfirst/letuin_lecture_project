@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
@@ -81,5 +82,6 @@ def clean_and_analyze(file_path):
         print(f"  Radius ~{row['ring']:3.0f}mm: {row['thickness_value']:.2f}nm")
 
 if __name__ == "__main__":
-    clean_and_analyze("d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data_1.csv")
-    clean_and_analyze("d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data_2.csv")
+    data_dir = Path(__file__).resolve().parent / "public" / "data"
+    clean_and_analyze(data_dir / "siox_thickness_data_1.csv")
+    clean_and_analyze(data_dir / "siox_thickness_data_2.csv")

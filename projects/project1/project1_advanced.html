@@ -181,6 +181,13 @@
     .badge { font-size: 1.2rem; padding: 10px 22px; }
     h1 { font-size: 1.15rem; }
   }
+@media(max-width:640px){
+  .card,.step-content{min-width:0}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{overflow-wrap:anywhere}
+  :not(pre)>code{overflow-wrap:anywhere;word-break:break-word}
+  pre{max-width:100%}
+}
 /* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
 .nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
@@ -203,7 +210,7 @@
 <!-- 1. 프로젝트 개요 -->
 <div class="card">
   <h2>1. 프로젝트 개요</h2>
-  <p>실제 반도체 양산 공정에서 널리 쓰이는 <strong>PECVD 실리콘 산화막(SiOx) 박막 증착 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
+  <p>실제 PECVD 공정과 계측 구조를 모사한 <strong>교육용 합성 SiOx 박막 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
   <p>엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.</p>
   <div class="highlight">
     <strong>수행 기간:</strong> CH.1 이후 주말 2일 (토~일)<br>

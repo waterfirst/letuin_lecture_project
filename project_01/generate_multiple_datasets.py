@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import math
 import random
 import pandas as pd
@@ -101,8 +102,8 @@ def generate_dataset_1():
     df = pd.DataFrame(data_rows)
     df = add_noise_and_dirty_data(df, 42)
     
-    out_dir = "d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data"
-    os.makedirs(out_dir, exist_ok=True)
+    out_dir = Path(__file__).resolve().parent / "public" / "data"
+    out_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(out_dir, "siox_thickness_data_1.csv"), index=False, na_rep="")
     # Also overwrite the default file to ensure backward compatibility
     df.to_csv(os.path.join(out_dir, "siox_thickness_data.csv"), index=False, na_rep="")
@@ -160,7 +161,8 @@ def generate_dataset_2():
     df = pd.DataFrame(data_rows)
     df = add_noise_and_dirty_data(df, 100)
     
-    out_dir = "d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data"
+    out_dir = Path(__file__).resolve().parent / "public" / "data"
+    out_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(out_dir, "siox_thickness_data_2.csv"), index=False, na_rep="")
     print("Dataset 2 generated successfully!")
 

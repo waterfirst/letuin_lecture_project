@@ -55,7 +55,7 @@ P2: CSV 읽기 → 최적 시각화 선택 → 통계 검증 → HTML 보고서 
 1. OLED deposition 데이터를 읽고 주요 품질 지표를 이해한다
 2. 문제 유형에 맞는 시각화 방법을 선택한다
 3. boxplot, scatter plot, heatmap, Pareto chart로 인사이트를 찾는다
-4. 회귀분석과 p-value를 이용해 원인 후보를 통계적으로 검토한다
+4. 회귀분석과 p-value를 이용해 연관성을 검토하고, panel/chamber 군집과 공간 패턴을 함께 보며 원인 후보를 축소한다
 5. 분석 흐름을 HTML 또는 Quarto HTML 보고서로 문서화한다
 
 ---

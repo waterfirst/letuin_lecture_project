@@ -136,8 +136,21 @@ P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+
 4. 봇 username 입력 (예: my_process_monitor_bot)
 5. 발급된 BOT_TOKEN 복사
 6. 봇에게 아무 메시지 보내기
-7. https://api.telegram.org/bot{BOT_TOKEN}/getUpdates 에서 chat_id 확인
+7. 로컬 Python 스크립트로 getUpdates를 호출해 chat_id 확인
 ```
+
+```python
+import os, requests
+
+token = os.environ["BOT_TOKEN"]
+data = requests.get(
+    f"https://api.telegram.org/bot{token}/getUpdates",
+    timeout=10,
+).json()
+print(data["result"][-1]["message"]["chat"]["id"])
+```
+
+> BOT_TOKEN을 브라우저 URL, 화면 공유, GitHub에 노출하지 마세요. 노출 시 BotFather에서 즉시 폐기·재발급합니다.
 
 **Step 2.** Gemini에 아래 프롬프트를 붙여넣으세요:
 
@@ -155,14 +168,14 @@ Streamlit으로 공정 모니터링 대시보드를 만들어줘.
 5. 위험 상태일 때 텔레그램으로 알림 전송
    - requests 라이브러리로 Telegram Bot API 직접 호출
    - 메시지: "⚠️ [위험] 온도 380°C 감지 — 즉시 점검 필요"
-6. 사이드바: BOT_TOKEN, CHAT_ID 입력 필드
+6. 로컬은 .env, 배포는 Streamlit Secrets에 BOT_TOKEN, CHAT_ID 저장
 7. 모든 텍스트 한국어
 
 telegram 알림은 requests 라이브러리의 POST로 구현해줘:
 url = f"https://api.telegram.org/bot{token}/sendMessage"
 ```
 
-**Step 3.** `streamlit run app.py` → 사이드바에 BOT_TOKEN, CHAT_ID 입력 → 모니터링 시작
+**Step 3.** `.env`에 BOT_TOKEN, CHAT_ID 설정 → `streamlit run app.py` → 모니터링 시작
 
 **평가 기준**:
 - [ ] 대시보드 실행 및 게이지 표시
@@ -281,7 +294,8 @@ examples/
 ### 2. Chat ID 확인
 ```
 봇에게 아무 메시지 보내기
-→ https://api.telegram.org/bot{TOKEN}/getUpdates
+→ BOT_TOKEN을 환경 변수로 저장
+→ 로컬 Python에서 getUpdates 호출
 → result → message → chat → id 값 복사
 ```
 
@@ -370,20 +384,20 @@ A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)
 
 **증상: 텔레그램 봇에서 메시지가 안 옴**
 - @BotFather에서 봇을 만든 후, 봇에게 먼저 `/start` 또는 아무 메시지를 보내야 합니다
-- `https://api.telegram.org/bot{TOKEN}/getUpdates`에서 chat_id 재확인
+- 로컬 Python 스크립트로 `getUpdates`를 호출해 chat_id 재확인
 - TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인
 
 **증상: `requests.post` 호출 시 `ConnectionError`**
 - 인터넷 연결 확인
-- 회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)
+- 회사/학교 보안 정책을 준수하고, 차단 시 승인된 개인 실습 환경 또는 대체 메시징 채널 사용
 
 **증상: Streamlit Cloud에서 텔레그램이 안 됨**
 - Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID를 등록했는지 확인
 - 코드에서 `st.secrets["BOT_TOKEN"]`으로 접근
 
 **증상: Gemini API 호출 횟수 초과**
-- 무료 티어는 분당 15회 제한
-- `time.sleep(4)` 등으로 호출 간격 조절
+- 현재 프로젝트의 할당량을 Google AI Studio에서 확인
+- 429 응답 시 지수 백오프로 재시도하고 데이터 전체 대신 요약본을 전송
 - 데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화
 
 **증상: GitHub Actions 워크플로우 실패 (상 난이도)**

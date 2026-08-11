@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import math
 import random
 import pandas as pd
@@ -160,9 +161,10 @@ def generate_data():
     df = df.drop(columns=["radius"])
     
     # Create directory if it doesn't exist
-    os.makedirs("d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data", exist_ok=True)
-    
-    output_path = "d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data.csv"
+    output_dir = Path(__file__).resolve().parent / "public" / "data"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_path = output_dir / "siox_thickness_data.csv"
     df.to_csv(output_path, index=False, na_rep="")
     print(f"Dataset generated successfully at {output_path}!")
     print(f"Total Rows: {len(df)}")

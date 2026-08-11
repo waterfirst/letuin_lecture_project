@@ -148,7 +148,7 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:var(--text-body
 
 <h3><span class="step-num">2</span><span class="lang-ko">Chat ID 확인</span><span class="lang-en">Get Chat ID</span></h3>
 <pre><code><span class="lang-ko">봇에게 /start 보내기</span><span class="lang-en">Send /start to bot</span>
-&rarr; https://api.telegram.org/bot{TOKEN}/getUpdates
+&rarr; 로컬 Python 스크립트로 getUpdates 호출
 &rarr; result &rarr; message &rarr; chat &rarr; id</code></pre>
 
 <h3><span class="step-num">3</span><span class="lang-ko">Python 메시지 전송</span><span class="lang-en">Python Message Send</span></h3>
@@ -303,13 +303,13 @@ Include 4+ pages, modular structure, and tech stack."</span></code><button class
 <dd><span class="lang-ko">봇에게 먼저 <code>/start</code> 메시지를 보내세요. <code>getUpdates</code>에서 chat_id 재확인. TOKEN에 공백/줄바꿈 없는지 확인.</span><span class="lang-en">Send <code>/start</code> first. Re-check chat_id from <code>getUpdates</code>. No spaces/newlines in TOKEN.</span></dd>
 
 <dt><span class="lang-ko"><code>ConnectionError</code> 발생</span><span class="lang-en"><code>ConnectionError</code></span></dt>
-<dd><span class="lang-ko">인터넷 연결 확인. 회사/학교 네트워크에서 Telegram API 차단 시 VPN 사용.</span><span class="lang-en">Check internet. Use VPN if Telegram API is blocked.</span></dd>
+<dd><span class="lang-ko">소속 기관의 보안 정책을 준수하고, 차단 시 승인된 개인 실습 환경 또는 대체 메시징 채널을 사용하세요.</span><span class="lang-en">Follow your organization's security policy; use an approved practice environment or messaging channel if blocked.</span></dd>
 
 <dt><span class="lang-ko">Streamlit Cloud에서 텔레그램이 안 됨</span><span class="lang-en">Telegram not working on Streamlit Cloud</span></dt>
 <dd><span class="lang-ko">Streamlit Cloud의 Secrets에 BOT_TOKEN, CHAT_ID 등록 후 <code>st.secrets["BOT_TOKEN"]</code>으로 접근.</span><span class="lang-en">Register in Streamlit Cloud Secrets, access via <code>st.secrets["BOT_TOKEN"]</code>.</span></dd>
 
 <dt><span class="lang-ko">Gemini API 호출 횟수 초과</span><span class="lang-en">Gemini API rate limit exceeded</span></dt>
-<dd><span class="lang-ko">무료 분당 15회 제한. <code>time.sleep(4)</code>로 조절. 전체 대신 요약만 전송.</span><span class="lang-en">Free tier: 15/min. Use <code>time.sleep(4)</code>. Send summary, not full data.</span></dd>
+<dd><span class="lang-ko">Google AI Studio에서 현재 할당량을 확인하고, 429 응답에는 지수 백오프를 적용하세요. 전체 대신 요약만 전송합니다.</span><span class="lang-en">Check the current quota in Google AI Studio and apply exponential backoff to HTTP 429 responses. Send summaries rather than full datasets.</span></dd>
 
 <dt><span class="lang-ko">멀티 페이지 Streamlit이 안 됨</span><span class="lang-en">Multi-page Streamlit not working</span></dt>
 <dd><span class="lang-ko"><code>pages/</code> 폴더명은 정확히 <code>pages</code>여야 합니다 (대소문자 주의). 파일명 앞에 숫자로 순서 지정.</span><span class="lang-en"><code>pages/</code> folder name must be exactly <code>pages</code> (case-sensitive). Prefix filenames with numbers for ordering.</span></dd>

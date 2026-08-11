@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from pathlib import Path
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
@@ -70,11 +71,17 @@ impute_nans = st.sidebar.selectbox(
 def load_data(file_obj):
     if file_obj is not None:
         return pd.read_csv(file_obj)
-    # Default fallback path
-    try:
-        return pd.read_csv("d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data_1.csv")
-    except:
-        return pd.read_csv("project_01/public/data/siox_thickness_data_1.csv")
+    repo_data = (
+        Path(__file__).resolve().parents[4]
+        / "project_01"
+        / "public"
+        / "data"
+        / "siox_thickness_data_1.csv"
+    )
+    if not repo_data.exists():
+        st.error("기본 CSV를 찾을 수 없습니다. 사이드바에서 데이터 파일을 업로드하세요.")
+        st.stop()
+    return pd.read_csv(repo_data)
 
 raw_df = load_data(uploaded_file)
 df = raw_df.copy()

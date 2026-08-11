@@ -158,7 +158,10 @@ P3: 나만의 AI 툴킷 (종합) &rarr; 모니터링 + 알림 + AI 분석 통합
   <li><span class="lang-ko">내가 만든 봇에게 아무 메시지 보내기 (예: <code>/start</code>)</span><span class="lang-en">Send any message to your bot (e.g., <code>/start</code>)</span></li>
   <li><span class="lang-ko">브라우저에서 아래 URL 열기:</span><span class="lang-en">Open the following URL in your browser:</span></li>
 </ol>
-<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code></pre>
+<pre><code>import os, requests
+token = os.environ["BOT_TOKEN"]
+data = requests.get(f"https://api.telegram.org/bot{token}/getUpdates", timeout=10).json()
+print(data["result"][-1]["message"]["chat"]["id"])</code></pre>
 <ol start="3">
   <li><span class="lang-ko"><code>result &rarr; message &rarr; chat &rarr; id</code> 값 복사</span><span class="lang-en">Copy the value at <code>result &rarr; message &rarr; chat &rarr; id</code></span></li>
 </ol>
@@ -297,10 +300,10 @@ url = f"https://api.telegram.org/bot{token}/sendMessage"</code><button class="co
 <dd><span class="lang-ko">@BotFather에서 봇을 만든 후, 봇에게 먼저 <code>/start</code> 또는 아무 메시지를 보내야 합니다. <code>getUpdates</code>에서 chat_id를 재확인하세요. TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인하세요.</span><span class="lang-en">After creating the bot with @BotFather, you must send <code>/start</code> or any message to the bot first. Re-check chat_id from <code>getUpdates</code>. Ensure TOKEN has no spaces or line breaks.</span></dd>
 
 <dt><span class="lang-ko"><code>requests.post</code> 호출 시 <code>ConnectionError</code></span><span class="lang-en"><code>ConnectionError</code> on <code>requests.post</code></span></dt>
-<dd><span class="lang-ko">인터넷 연결을 확인하세요. 회사/학교 네트워크에서 Telegram API가 차단되었을 수 있습니다 (VPN 사용).</span><span class="lang-en">Check your internet connection. Telegram API may be blocked on corporate/school networks (try VPN).</span></dd>
+<dd><span class="lang-ko">소속 기관의 보안 정책을 준수하고, 차단 시 승인된 개인 실습 환경 또는 대체 메시징 채널을 사용하세요.</span><span class="lang-en">Follow your organization's security policy; use an approved practice environment or messaging channel if blocked.</span></dd>
 
 <dt><span class="lang-ko">Gemini API 호출 횟수 초과</span><span class="lang-en">Gemini API rate limit exceeded</span></dt>
-<dd><span class="lang-ko">무료 티어는 분당 15회 제한입니다. <code>time.sleep(4)</code> 등으로 호출 간격을 조절하세요.</span><span class="lang-en">Free tier is limited to 15 calls/min. Use <code>time.sleep(4)</code> to throttle calls.</span></dd>
+<dd><span class="lang-ko">Google AI Studio에서 현재 할당량을 확인하고, 429 응답에는 지수 백오프를 적용하세요.</span><span class="lang-en">Check the current quota in Google AI Studio and use exponential backoff for HTTP 429 responses.</span></dd>
 </dl>
 
 <h3 style="margin-top:20px">FAQ</h3>

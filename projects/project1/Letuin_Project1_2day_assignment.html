@@ -196,6 +196,12 @@
       .grid { grid-template-columns: 1fr; }
       .phase { grid-template-columns: 1fr; }
       section { padding: 20px; }
+      main { padding: 20px 12px 48px; }
+      section,.phase { min-width: 0; }
+      table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      th,td { overflow-wrap: anywhere; }
+      :not(pre)>code { overflow-wrap: anywhere; word-break: break-word; }
+      pre { max-width: 100%; }
     }
   </style>
 </head>

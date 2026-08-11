@@ -37,16 +37,22 @@ sensors = list(SENSOR_CONFIG.keys())
 
 # ── AI 응답 함수 ──────────────────────────────────────────────────
 def call_gemini(prompt: str) -> str:
-    """Gemini API 호출 (키 없으면 모킹)."""
+    """Gemini API 호출 (키가 없을 때만 명시적인 데모 응답 반환)."""
     if GEMINI_API_KEY:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            return model.generate_content(prompt).text
+            from google import genai
+
+            client = genai.Client(api_key=GEMINI_API_KEY)
+            response = client.models.generate_content(
+                model="gemini-3.6-flash",
+                contents=prompt,
+            )
+            if not response.text:
+                raise RuntimeError("Gemini가 텍스트 응답을 반환하지 않았습니다.")
+            return response.text
         except Exception as e:
-            return f"[API 오류] {e}\n\n아래는 모킹 응답입니다:\n\n{_mock_response(prompt)}"
-    return _mock_response(prompt)
+            return f"[Gemini API 오류 — 데모 응답으로 대체하지 않음] {e}"
+    return "[데모 모드 — 실제 Gemini 응답이 아닙니다]\n\n" + _mock_response(prompt)
 
 
 def _mock_response(prompt: str) -> str:

@@ -6,12 +6,12 @@
 
 ## 🏭 개요
 
-실제 반도체 양산 공정에서 널리 쓰이는 **PECVD 실리콘 산화막(SiOx) 박막 증착 두께 데이터**를 분석하는 실무 프로젝트입니다. 엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.
+실제 PECVD 공정과 계측 구조를 모사한 **교육용 합성 SiOx 박막 두께 데이터**를 분석하는 실무 프로젝트입니다. 엘립소메터(Ellipsometer) 계측을 가정해 삽입한 극단적 노이즈(이상치)와 유실 데이터(결측치)를 정제하고, 웨이퍼 박막 균일도(Uniformity)를 계산해 비정상 설비와 공정 원인 후보를 찾습니다. 최종 원인은 설비 로그와 추가 계측으로 검증해야 합니다.
 
 - **수행 기간**: CH.1 이후 주말 2일 (토~일)
 - **사용 데이터셋**: 
-  - [siox_thickness_data_1.csv](file:///d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data_1.csv): CVD_M02 설비 오목형(Edge-High) 이상 데이터
-  - [siox_thickness_data_2.csv](file:///d:/python/2026_letuin/Letuin_AI_Lecture/project_01/public/data/siox_thickness_data_2.csv): CVD_M03 설비 볼록형(Center-High) 이상 데이터
+  - [siox_thickness_data_1.csv](../../project_01/public/data/siox_thickness_data_1.csv): CVD_M02 설비 오목형(Edge-High) 이상 데이터
+  - [siox_thickness_data_2.csv](../../project_01/public/data/siox_thickness_data_2.csv): CVD_M03 설비 볼록형(Center-High) 이상 데이터
 - **핵심 목표**: 데이터 정제(Outlier/NaN 필터링)를 통한 신뢰성 있는 웨이퍼 2D 맵 및 설비 트렌드 시각화와 결함 판정
 
 ---

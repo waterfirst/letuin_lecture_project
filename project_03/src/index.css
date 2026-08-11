@@ -4322,3 +4322,30 @@ footer {
   white-space: normal;
   line-height: 1.15;
 }
+
+.project-three-shell,
+.project-three-content,
+.evaluation-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.project-three-shell {
+  overflow-x: hidden;
+}
+
+.evaluation-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .project-three-shell {
+    padding: 1rem !important;
+  }
+
+  .evaluation-card {
+    padding: 1.25rem !important;
+  }
+}

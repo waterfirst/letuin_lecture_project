@@ -405,14 +405,14 @@ function App() {
   };
 
   return (
-    <div style={{
+    <div className="project-one-shell" style={{
       minHeight: '100vh',
       background: 'radial-gradient(circle at 50% 0%, #1e1b4b, #09090b 70%)',
       color: '#ffffff',
       padding: '2.5rem 1.5rem',
       fontFamily: '"Outfit", "Inter", -apple-system, sans-serif',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+      <div className="project-one-content" style={{ maxWidth: '1280px', margin: '0 auto' }}>
         
         {/* ============================================================================
             HEADER & HUB PROFILE
@@ -1009,7 +1009,7 @@ function App() {
             {/* 2-Column Wafer map & configuration layout */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))',
               gap: '2.5rem'
             }}>
               

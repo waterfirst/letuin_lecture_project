@@ -102,14 +102,14 @@ const ProjectOverview = () => {
         <div>
           <h1 style={{ fontSize: '2.5rem', margin: 0 }}>프로젝트 3 (최종)</h1>
           <p style={{ fontSize: '1.3rem', margin: '0.5rem 0 0 0', opacity: 0.95 }}>
-            나만의 AI 디스플레이 도구
+            나만의 엔지니어 AI 툴킷
           </p>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
         <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
           <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>제출 시기</div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>16강 후 2주일 이내</div>
+          <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>과정 종료 후 2주 이내</div>
         </div>
         <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
           <div style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '0.5rem' }}>기술 조합</div>
@@ -589,7 +589,7 @@ const Presentation = () => {
     >
       <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '2rem', marginBottom: '2rem' }}>
         <Users size={32} />
-        발표 (16강)
+        최종 발표
       </h2>
       <div style={{ display: 'grid', gap: '1.5rem' }}>
         <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '1.5rem', borderRadius: '15px', backdropFilter: 'blur(10px)' }}>
@@ -612,6 +612,7 @@ const Presentation = () => {
 const EvaluationCriteria = () => {
   return (
     <motion.div
+      className="evaluation-card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.9 }}
@@ -624,8 +625,8 @@ const EvaluationCriteria = () => {
       }}
     >
       <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#1a1a1a' }}>평가 기준</h2>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1rem' }}>
+      <div className="evaluation-scroll">
+        <table style={{ width: '100%', minWidth: '520px', borderCollapse: 'collapse', fontSize: '1rem' }}>
           <thead>
             <tr style={{ background: '#FF6B6B', color: 'white' }}>
               <th style={{ padding: '1rem', textAlign: 'left', borderRadius: '10px 0 0 0' }}>항목</th>
@@ -810,13 +811,13 @@ const Summary = () => {
 
 function App() {
   return (
-    <div style={{
+    <div className="project-three-shell" style={{
       minHeight: '100vh',
       background: 'linear-gradient(to bottom, #f8f9fa, #e9ecef)',
       padding: '2rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="project-three-content" style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ProjectOverview />
       <ProjectImage filename="final-ai-tool-overview.png" caption="Final integrated AI tool overview: upload, analysis, vision inspection, forecasting, report, alert, and portfolio output." />
         <HintLink />

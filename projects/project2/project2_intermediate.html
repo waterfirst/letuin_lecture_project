@@ -59,6 +59,13 @@ ol li{margin:6px 0}
   table{font-size:.8rem}
   th,td{padding:6px}
 }
+@media(max-width:640px){
+  .card{min-width:0}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{overflow-wrap:anywhere}
+  :not(pre)>code{overflow-wrap:anywhere;word-break:break-word}
+  pre{max-width:100%}
+}
 /* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
 .top-nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
@@ -192,7 +199,7 @@ ol li{margin:6px 0}
 
   <h3>Step 8. 통계 분석 — 회귀분석</h3>
   <p>yield_score를 종속변수로, 공정 조건 변수를 독립변수로 넣어 OLS 회귀분석을 수행합니다.</p>
-  <div class="highlight">힌트: statsmodels의 <code>OLS</code>를 사용합니다. p-value &lt; 0.05인 변수가 "통계적으로 유의한 인자"입니다. 단, R-squared 값도 함께 확인하여 모델 설명력을 판단하세요.</div>
+  <div class="highlight">힌트: statsmodels의 <code>OLS</code>를 사용합니다. p-value &lt; 0.05는 현재 모델 가정 안에서 관찰된 연관성의 근거이지 원인 증명이 아닙니다. R-squared, 계수 크기, panel·chamber 군집, 공간 패턴을 함께 확인하세요.</div>
 
   <h3>Step 9. HTML 보고서 작성</h3>
   <p>모든 그래프와 분석 결과를 하나의 HTML 파일로 정리합니다. 각 그래프 아래에 해석과 공정 개선 관점의 제안을 추가하세요.</p>
@@ -390,7 +397,7 @@ ax2.set_ylabel('누적 비율 (%)')</code></pre>
   <p>A. 그래프 개수보다 "왜 이 그래프를 선택했고 무엇을 알게 되었는지"가 더 중요합니다. 5종은 최소 기준이며, 각 그래프의 해석이 핵심입니다.</p>
 
   <h3>Q. p-value가 뭔지 잘 모르겠어요.</h3>
-  <p>A. Gemini에게 "p-value를 공정 엔지니어가 이해할 수 있게 해석해줘"라고 요청하세요. 간단히 말하면, p-value가 0.05보다 작으면 "이 변수가 yield에 영향을 준다고 볼 수 있다"는 뜻입니다. 단, AI 답변을 그대로 믿지 말고 그래프와 도메인 상식으로 재확인하세요.</p>
+  <p>A. p-value가 0.05보다 작다면 설정한 모델과 가정 안에서 관찰된 연관성이 우연만으로 설명되기 어렵다는 뜻입니다. 원인이라는 뜻은 아니며, 계수 크기·공간 패턴·panel/chamber 군집·현장 로그로 재확인해야 합니다.</p>
 
   <h3>Q. 실제 회사 데이터를 써도 되나요?</h3>
   <p>A. 공개 저장소에는 절대 올리면 안 됩니다. 제공된 합성 CSV만 사용하세요.</p>

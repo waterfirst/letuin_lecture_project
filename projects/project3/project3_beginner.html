@@ -49,6 +49,13 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
 .faq dd{margin:4px 0 10px 0;color:#c8c8d8}
 .step-num{display:inline-block;background:#3fb950;color:#0a0a14;width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%;font-weight:900;font-size:0.9rem;margin-right:8px}
 @media(max-width:640px){.container{padding:12px 8px}.card{padding:18px 14px}.badge{font-size:1.2rem;padding:10px 24px}h1{font-size:1.4rem}pre{font-size:0.8rem;padding:12px}}
+@media(max-width:640px){
+  .card{min-width:0}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{overflow-wrap:anywhere}
+  :not(pre)>code{overflow-wrap:anywhere;word-break:break-word}
+  pre{max-width:100%}
+}
 /* 다른 난이도 항목은 링크를 제거해 표시만 남긴다 */
 .nav a:not([href]){cursor:default;opacity:.45;pointer-events:none;filter:grayscale(35%)}
 </style>
@@ -173,8 +180,16 @@ P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+
 <p style="color:#9898a8;font-size:0.9rem">[화면: 봇 검색 &rarr; 채팅 시작 &rarr; /start 입력]</p>
 
 <h3><span class="step-num">7</span>Chat ID 확인</h3>
-<p>브라우저에서 아래 URL을 엽니다 (BOT_TOKEN 부분을 실제 토큰으로 교체):</p>
-<pre><code>https://api.telegram.org/bot{BOT_TOKEN}/getUpdates</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p>브라우저 기록에 토큰을 남기지 말고, 로컬 터미널에서 아래 Python 스크립트를 실행합니다:</p>
+<pre><code>import os, requests
+
+token = os.environ["BOT_TOKEN"]
+updates = requests.get(
+    f"https://api.telegram.org/bot{token}/getUpdates",
+    timeout=10,
+).json()
+print(updates["result"][-1]["message"]["chat"]["id"])</code><button class="copy-btn" onclick="copyCode(this)">복사</button></pre>
+<p class="warn">토큰을 브라우저·공유 화면·GitHub에 노출했다면 BotFather에서 즉시 폐기하고 재발급하세요.</p>
 <p>JSON 결과에서 <code>"chat":{"id": 숫자}</code> 부분의 숫자가 Chat ID입니다. 이것을 복사합니다.</p>
 <p style="color:#9898a8;font-size:0.9rem">[화면: 브라우저에 URL 입력 &rarr; JSON에서 chat &rarr; id 값 확인]</p>
 </div>
@@ -364,14 +379,14 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 <h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
 <ul>
   <li>@BotFather에서 봇을 만든 후, 봇에게 먼저 <code>/start</code> 또는 아무 메시지를 보내야 합니다</li>
-  <li><code>https://api.telegram.org/bot{TOKEN}/getUpdates</code>에서 chat_id 재확인</li>
+  <li>위 로컬 Python 스크립트로 chat_id 재확인</li>
   <li>TOKEN에 공백이나 줄바꿈이 포함되지 않았는지 확인</li>
 </ul>
 
 <h3 class="danger">requests.post 호출 시 ConnectionError</h3>
 <ul>
   <li>인터넷 연결 확인</li>
-  <li>회사/학교 네트워크에서 Telegram API가 차단되었을 수 있음 (VPN 사용)</li>
+  <li>회사/학교 보안 정책을 준수하고, 차단 시 승인된 개인 실습 환경 또는 대체 메시징 채널 사용</li>
 </ul>
 
 <h3 class="danger">Streamlit 앱이 실행되지 않음</h3>
@@ -383,8 +398,8 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 
 <h3 class="danger">Gemini API 호출 횟수 초과</h3>
 <ul>
-  <li>무료 티어는 분당 15회 제한</li>
-  <li><code>time.sleep(4)</code> 등으로 호출 간격 조절</li>
+  <li>현재 프로젝트의 할당량을 Google AI Studio에서 확인</li>
+  <li>429 응답 시 지수 백오프로 재시도하고 데이터 전체 대신 요약본을 전송</li>
   <li>데이터 전체가 아닌 요약만 API에 전송하여 호출 최소화</li>
 </ul>
 </div>

@@ -4322,3 +4322,28 @@ footer {
   white-space: normal;
   line-height: 1.15;
 }
+
+.project-one-shell,
+.project-one-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.project-one-shell {
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  .project-one-shell {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .project-one-shell * {
+    min-width: 0;
+  }
+
+  .project-one-shell img,
+  .project-one-shell svg {
+    max-width: 100%;
+  }
+}
