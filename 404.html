@@ -29,9 +29,11 @@
       const raw=location.pathname;
       const corrected=raw
         .replace(/\/(?:%20|%09|%0a|%0d)+/gi,'/')
-        .replace(/%20(?=project[123]_(?:beginner|intermediate|advanced)\.html$)/gi,'');
-      const valid=/^\/letuin_lecture_project\/projects\/project([123])\/project\1_(beginner|intermediate|advanced)\.html$/;
-      if(corrected!==raw&&valid.test(corrected)){
+        .replace(/%20(?=project[123]_(?:beginner|intermediate|advanced)\.html$)/gi,'')
+        .replace(/(?:%20|%09|%0a|%0d)+$/gi,'');
+      const validFile=/^\/letuin_lecture_project\/projects\/project([123])\/project\1_(beginner|intermediate|advanced)\.html$/;
+      const validFolder=/^\/letuin_lecture_project\/projects\/project[123]\/$/;
+      if(corrected!==raw&&(validFile.test(corrected)||validFolder.test(corrected))){
         document.getElementById('message').textContent='잘못 포함된 공백을 제거했습니다. 정상 페이지로 이동합니다.';
         location.replace(corrected+location.search+location.hash);
       }
