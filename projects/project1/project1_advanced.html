@@ -213,7 +213,6 @@
   <p>실제 PECVD 공정과 계측 구조를 모사한 <strong>교육용 합성 SiOx 박막 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
   <p>엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.</p>
   <div class="highlight">
-    <strong>수행 기간:</strong> CH.1 이후 주말 2일 (토~일)<br>
     <strong>핵심 목표:</strong> 어떤 실험 파일을 넣어도 동작하는 <strong>재현 가능한(Reproducible) Streamlit 대시보드 파이프라인</strong> 구축
   </div>
 </div>
@@ -450,7 +449,6 @@ streamlit run app.py</pre>
     <strong>배점 설계 원칙 (상 난이도)</strong>
     <ul>
       <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
-      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
       <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
     </ul>
   </div>
@@ -562,9 +560,6 @@ scipy>=1.11.0</pre>
     <li><strong>하단: 트렌드 차트</strong>: X축 Lot-001~040, Y축 Uniformity(%). 3개 설비 라인이 색상으로 구분되고, 2% 기준선이 빨간 점선으로 표시</li>
     <li><strong>진단 결과</strong>: 초록색(st.success) 또는 노란색(st.warning) 박스에 "CVD_M02 설비에서 오목형(Edge-High) 이상 패턴 감지" 메시지 표시</li>
   </ul>
-  <div class="info">
-    <strong>고급의 차별점:</strong> 초급/중급과 달리 <strong>어떤 CSV를 업로드해도 자동으로 분석</strong>이 수행되는 재현 가능한 파이프라인입니다. 두 데이터 모두 정상 동작해야 합니다.
-  </div>
 </div>
 
 </div><!-- container -->

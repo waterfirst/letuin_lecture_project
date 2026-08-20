@@ -81,10 +81,8 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
 <p>이 강의에서 배운 모든 기술을 <span class="highlight">3가지 이상 조합</span>하여 실제 첨단산업 현장에서 <strong>입사 1일차부터 바로 쓸 수 있는</strong> AI 업무 자동화 도구를 만드는 최종 프로젝트입니다.</p>
 <p style="margin-top:10px">P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로, 자유 주제로 <strong>나만의 엔지니어링 솔루션</strong>을 완성합니다.</p>
 <ul style="margin-top:12px">
-  <li><strong>수행 기간</strong>: 최종 프로젝트 주말 2일 (토~일)</li>
   <li><strong>사용 도구</strong>: Gemini + Streamlit + Telegram Bot + <span class="highlight">Gemini API</span></li>
   <li><strong>결과물</strong>: 데이터 업로드 &rarr; AI 분석 &rarr; 보고서 생성 &rarr; 텔레그램 전송 자동화</li>
-  <li><strong>소요 시간</strong>: 6~8시간</li>
 </ul>
 </div>
 
@@ -185,7 +183,7 @@ print(response.text)</code><button class="copy-btn" onclick="copyCode(this)">복
 도메인 지식 (30%)
  - 문제 정의 및 주제 선정
  - 알림 기준/임계값 설계
- - 결과 해석 및 발표</code></pre>
+ - 결과 해석 및 보고</code></pre>
 </div>
 
 <!-- 5. 텔레그램 봇 생성 가이드 -->
@@ -352,7 +350,6 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
     <strong>배점 설계 원칙 (중 난이도)</strong>
     <ul>
       <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
-      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
       <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
     </ul>
   </div>
@@ -385,23 +382,9 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 <p>GitHub Repository URL + README + 스크린샷 2장 + 프롬프트 기록</p>
 </div>
 
-<!-- 11. 발표 안내 -->
+<!-- 11. 트러블슈팅 -->
 <div class="card">
-<h2>11. 발표 안내 (3분)</h2>
-<p><strong>발표 시간</strong>: 개인당 3분</p>
-<table>
-<tr><th>순서</th><th>시간</th><th>내용</th></tr>
-<tr><td>1. 시연</td><td>1분</td><td>앱 실행 &rarr; CSV 업로드 &rarr; AI 분석 &rarr; 텔레그램 수신 데모</td></tr>
-<tr><td>2. 기술 설명</td><td>1분</td><td>사용한 기술 스택, 프롬프트 설계 전략, 어려웠던 점</td></tr>
-<tr><td>3. 실무 가치</td><td>30초</td><td>이 도구가 현업에서 어떤 문제를 해결하는지</td></tr>
-<tr><td>4. 배운 점</td><td>30초</td><td>이 프로젝트를 통해 성장한 점</td></tr>
-</table>
-<p style="margin-top:10px"><strong>발표 후</strong>: 상호 피드백 교환</p>
-</div>
-
-<!-- 12. 트러블슈팅 -->
-<div class="card">
-<h2>12. 트러블슈팅</h2>
+<h2>11. 트러블슈팅</h2>
 
 <h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
 <ul>
@@ -436,9 +419,9 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 </ul>
 </div>
 
-<!-- 13. FAQ -->
+<!-- 12. FAQ -->
 <div class="card">
-<h2>13. FAQ</h2>
+<h2>12. FAQ</h2>
 <dl class="faq">
   <dt>Q. 주제를 못 정하겠어요.</dt>
   <dd>A. 가장 쉬운 방법: "내가 매일/매주 반복하는 귀찮은 일"을 떠올려보세요. 그것을 자동화하세요.</dd>
@@ -449,9 +432,6 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
   <dt>Q. 텔레그램 봇이 작동하지 않아요.</dt>
   <dd>A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를 보낼 수 없습니다. Chat ID를 다시 확인하세요.</dd>
 
-  <dt>Q. 발표가 부담스러워요.</dt>
-  <dd>A. 3분이면 충분합니다. 화면을 보여주면서 "이 버튼을 누르면 이렇게 됩니다"만 해도 됩니다.</dd>
-
   <dt>Q. 기술 3가지 조합이 어려워요.</dt>
   <dd>A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)입니다. P1, P2에서 이미 2가지를 해봤으니 텔레그램만 추가하면 됩니다.</dd>
 
@@ -460,9 +440,9 @@ git push -u origin main</code><button class="copy-btn" onclick="copyCode(this)">
 </dl>
 </div>
 
-<!-- 14. 모범 답안 폴더 구조 -->
+<!-- 13. 모범 답안 폴더 구조 -->
 <div class="card">
-<h2>14. 모범 답안 폴더 구조 (중)</h2>
+<h2>13. 모범 답안 폴더 구조 (중)</h2>
 <pre><code>examples/중/
 ├── app.py              ← 멀티페이지 Streamlit
 ├── ai_advisor.py       ← Gemini API 분석

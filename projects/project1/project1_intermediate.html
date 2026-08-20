@@ -213,7 +213,6 @@
   <p>실제 PECVD 공정과 계측 구조를 모사한 <strong>교육용 합성 SiOx 박막 두께 데이터</strong>를 분석하는 실무 프로젝트입니다.</p>
   <p>엘립소메터(Ellipsometer) 계측 과정에서 발생한 극단적 노이즈(이상치)와 유실된 계측 데이터(결측치)를 정제하고, 웨이퍼 상의 박막 균일도(Uniformity)를 계산하여 비정상 CVD 설비와 공정 이상 원인을 진단합니다.</p>
   <div class="highlight">
-    <strong>수행 기간:</strong> CH.1 이후 주말 2일 (토~일)<br>
     <strong>핵심 목표:</strong> 데이터 정제(Outlier/NaN 필터링)를 통한 신뢰성 있는 웨이퍼 2D 맵 및 설비 트렌드 시각화와 결함 판정
   </div>
 </div>
@@ -409,7 +408,6 @@
     <strong>배점 설계 원칙 (중 난이도)</strong>
     <ul>
       <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
-      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
       <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
     </ul>
   </div>
@@ -491,9 +489,6 @@ const colorScale = d3.scaleLinear()
     <li><strong>트렌드 타임라인</strong>: X축에 Lot-001~040이 나열되고, 3개 설비 라인이 색상으로 구분. M02 구간에서 Uniformity 급등 구간이 빨간 배경으로 하이라이트</li>
     <li><strong>원인 분석 섹션</strong>: 오목형 패턴 발생 원인과 CVD 챔버 가스 유량 불균형, 히터 온도 편차 등이 텍스트로 설명</li>
   </ul>
-  <div class="info">
-    <strong>중급의 차별점:</strong> 초급과 달리 실제 동적 차트(D3.js/Chart.js)가 브라우저에서 실시간으로 렌더링되며, 사용자 인터랙션(드롭다운, 호버 툴팁)이 동작해야 합니다.
-  </div>
 </div>
 
 </div><!-- container -->

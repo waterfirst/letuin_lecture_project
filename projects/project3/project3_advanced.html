@@ -81,10 +81,8 @@ code{font-family:'Fira Code','Consolas','Monaco',monospace;color:#c8d6e5}
 <p>이 강의에서 배운 모든 기술을 <span class="highlight">3가지 이상 조합</span>하여 실제 첨단산업 현장에서 <strong>입사 1일차부터 바로 쓸 수 있는</strong> AI 업무 자동화 도구를 만드는 최종 프로젝트입니다.</p>
 <p style="margin-top:10px">P1(데이터 분석기) + P2(AI 보고서)에서 쌓은 경험을 바탕으로, 자유 주제로 <strong>나만의 엔지니어링 솔루션</strong>을 완성합니다.</p>
 <ul style="margin-top:12px">
-  <li><strong>수행 기간</strong>: 최종 프로젝트 주말 2일 (토~일)</li>
   <li><strong>사용 도구</strong>: Gemini API + Streamlit + Telegram Bot + <span class="highlight">GitHub + Streamlit Cloud 배포 + 자유 조합</span></li>
   <li><strong>결과물</strong>: 입사 면접에서 시연할 수 있는 수준의 통합 엔지니어링 솔루션</li>
-  <li><strong>소요 시간</strong>: 10~12시간 (2일)</li>
 </ul>
 <div class="challenge-box">
 <strong>도전 수준:</strong> 이 난이도에서는 <strong>주제 아이디어 목록만</strong> 제공됩니다. 힌트 없이 스스로 설계하고 구현해야 합니다.
@@ -152,7 +150,7 @@ P3: 나만의 AI 툴킷 (종합) → 모니터링 + 알림 + AI 분석 통합 (+
   <li>Telegram Bot으로 <strong>이상 알림 + 일일/주간 리포트</strong> 시스템을 구현한다</li>
   <li>설계부터 <strong>Streamlit Cloud 배포</strong>까지 엔드-투-엔드 경험을 완성한다</li>
   <li><strong>GitHub README.md</strong>(영문 권장)를 포함한 포트폴리오 수준의 코드를 만든다</li>
-  <li>결과물을 발표하고 실무적 가치를 설명하는 역량을 기른다</li>
+  <li>결과물의 실무적 가치와 판단 근거를 문서로 설명하는 역량을 기른다</li>
   <li><strong>이상 감지 알고리즘</strong>(Z-score, IQR 등)을 적용한다</li>
 </ol>
 </div>
@@ -198,7 +196,7 @@ Streamlit Cloud      — 웹앱 배포</code><button class="copy-btn" onclick="c
 도메인 지식 (30%)
  - 문제 정의 및 주제 선정
  - 알림 기준/임계값 설계
- - 결과 해석 및 발표</code></pre>
+ - 결과 해석 및 보고</code></pre>
 </div>
 
 <!-- 5. 텔레그램 봇 생성 가이드 -->
@@ -348,8 +346,6 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 <h3><span class="step-num">11</span>Step 11: (선택) 커스텀 CSS 테마</h3>
 <p>Streamlit 앱에 커스텀 테마를 적용하여 전문적인 느낌을 추가합니다.</p>
 
-<h3><span class="step-num">12</span>Step 12: 발표 자료 준비</h3>
-<p>PPT 또는 PDF 발표 자료를 준비합니다. (선택) 2분 데모 영상을 녹화합니다.</p>
 </div>
 
 <!-- 7. 프롬프트 예시 -->
@@ -412,7 +408,6 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
     <strong>배점 설계 원칙 (상 난이도)</strong>
     <ul>
       <li>프롬프트가 골격으로만 제공되므로 <strong>A(프롬프트 설계와 판단 근거)</strong>를 독립 항목으로 평가합니다.</li>
-      <li>난이도가 올라갈수록 A와 D의 비중이 커지고 B의 비중이 줄어듭니다. 상 난이도는 <strong>동작 여부보다 선택의 근거</strong>를 봅니다.</li>
       <li>A는 <strong>설계한 프롬프트 전문 + 기준을 그렇게 정한 이유</strong>를 함께 제출해야 득점됩니다. 결과물만 제출하면 0점입니다.</li>
     </ul>
   </div>
@@ -428,7 +423,6 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 <tr><td>보고서</td><td>불필요</td><td>Markdown</td><td class="highlight">HTML</td></tr>
 <tr><td>코드 구조</td><td>단일 파일</td><td>2~3 파일</td><td class="highlight">모듈 분리</td></tr>
 <tr><td>배포</td><td>불필요</td><td>선택</td><td class="highlight">필수</td></tr>
-<tr><td>발표</td><td>스크린샷</td><td>시연</td><td class="highlight">시연 + 발표</td></tr>
 </table>
 </div>
 
@@ -439,32 +433,15 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
   <li>GitHub Repository URL + README.md (영문 권장)</li>
   <li>Streamlit Cloud 배포 URL</li>
   <li>실행 스크린샷 3장 이상</li>
-  <li>발표 자료 (PPT 또는 PDF)</li>
-  <li>(권장) 2분 데모 영상</li>
 </ul>
 
 <h3>제출 방법</h3>
-<p>GitHub Repository URL + <strong>배포 URL</strong> + README + 스크린샷 3장 + 발표 자료</p>
+<p>GitHub Repository URL + <strong>배포 URL</strong> + README + 스크린샷 3장</p>
 </div>
 
-<!-- 11. 발표 안내 -->
+<!-- 11. 트러블슈팅 -->
 <div class="card">
-<h2>11. 발표 안내 (3분)</h2>
-<p><strong>발표 시간</strong>: 개인당 3분</p>
-<table>
-<tr><th>순서</th><th>시간</th><th>내용</th></tr>
-<tr><td>1. 시연</td><td>1분</td><td>배포 URL로 접속 &rarr; 전체 기능 데모 (4페이지 순회)</td></tr>
-<tr><td>2. 기술 설명</td><td>1분</td><td>아키텍처, 기술 스택 조합, 이상 감지 알고리즘, 해결한 문제</td></tr>
-<tr><td>3. 실무 가치</td><td>30초</td><td>이 도구가 현업에서 어떤 문제를 해결하는지</td></tr>
-<tr><td>4. 배운 점</td><td>30초</td><td>이 프로젝트를 통해 성장한 점</td></tr>
-</table>
-<p style="margin-top:10px"><strong>발표 후</strong>: 상호 피드백 교환</p>
-<p style="margin-top:8px;color:#9898a8">Tip: 배포된 URL로 시연하면 별도 환경 설정 없이 바로 보여줄 수 있어 효과적입니다.</p>
-</div>
-
-<!-- 12. 트러블슈팅 -->
-<div class="card">
-<h2>12. 트러블슈팅</h2>
+<h2>11. 트러블슈팅</h2>
 
 <h3 class="danger">텔레그램 봇에서 메시지가 안 옴</h3>
 <ul>
@@ -512,9 +489,9 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 </ul>
 </div>
 
-<!-- 13. FAQ -->
+<!-- 12. FAQ -->
 <div class="card">
-<h2>13. FAQ</h2>
+<h2>12. FAQ</h2>
 <dl class="faq">
   <dt>Q. 주제를 못 정하겠어요.</dt>
   <dd>A. 가장 쉬운 방법: "내가 매일/매주 반복하는 귀찮은 일"을 떠올려보세요. 그것을 자동화하세요.</dd>
@@ -524,9 +501,6 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 
   <dt>Q. 텔레그램 봇이 작동하지 않아요.</dt>
   <dd>A. 봇에게 먼저 메시지를 보내야 합니다. 봇이 먼저 메시지를 보낼 수 없습니다. Chat ID를 다시 확인하세요.</dd>
-
-  <dt>Q. 발표가 부담스러워요.</dt>
-  <dd>A. 3분이면 충분합니다. 배포 URL로 시연하면 환경 설정 없이 바로 보여줄 수 있습니다.</dd>
 
   <dt>Q. 기술 3가지 조합이 어려워요.</dt>
   <dd>A. 가장 쉬운 조합은 Streamlit(UI) + Gemini API(분석) + Telegram(알림)입니다. 여기에 Plotly(시각화), GitHub(코드 관리), Streamlit Cloud(배포)를 추가하면 됩니다.</dd>
@@ -539,9 +513,9 @@ CHAT_ID = "your-chat-id-here"</code><button class="copy-btn" onclick="copyCode(t
 </dl>
 </div>
 
-<!-- 14. 모범 답안 폴더 구조 -->
+<!-- 13. 모범 답안 폴더 구조 -->
 <div class="card">
-<h2>14. 모범 답안 폴더 구조 (상)</h2>
+<h2>13. 모범 답안 폴더 구조 (상)</h2>
 <pre><code>examples/상/
 ├── app.py              ← 메인 앱
 ├── pages/
