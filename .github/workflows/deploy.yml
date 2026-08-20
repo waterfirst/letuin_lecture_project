@@ -81,6 +81,7 @@ jobs:
         run: |
           mkdir -p public
           cp index.html public/
+          cp 404.html public/
 
           # Copy all built apps to public directory
           for app in lecture_11 lecture_12 lecture_13 lecture_14 lecture_15 lecture_16 lecture_17 project_01 project_02 project_03; do

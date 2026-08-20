@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>주소를 확인하고 있습니다 | 렛유인 프로젝트</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0f172a;--panel:#172033;--line:#334155;--text:#f8fafc;--muted:#cbd5e1;--accent:#38bdf8}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#07111f,#172554);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif}
+    main{width:min(680px,100%);padding:32px;border:1px solid var(--line);border-radius:18px;background:rgba(23,32,51,.96);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+    .code{color:var(--accent);font-weight:800;letter-spacing:.08em}h1{margin:10px 0;font-size:clamp(25px,5vw,38px)}p{color:var(--muted);line-height:1.7}.links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.links a{padding:14px;border:1px solid var(--line);border-radius:10px;color:var(--text);text-align:center;text-decoration:none;font-weight:750}.links a:hover{border-color:var(--accent);color:var(--accent)}.home{display:inline-block;margin-top:20px;color:var(--accent)}
+    @media(max-width:560px){main{padding:24px}.links{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="code">URL RECOVERY</div>
+    <h1>주소를 바로잡고 있습니다</h1>
+    <p id="message">복사 과정에서 주소에 공백이 들어갔는지 확인하고 있습니다. 자동 이동하지 않으면 아래 프로젝트를 선택하세요.</p>
+    <div class="links">
+      <a href="/letuin_lecture_project/projects/project1/">프로젝트 1</a>
+      <a href="/letuin_lecture_project/projects/project2/">프로젝트 2</a>
+      <a href="/letuin_lecture_project/projects/project3/">프로젝트 3</a>
+    </div>
+    <a class="home" href="/letuin_lecture_project/">전체 강의 홈으로 이동</a>
+  </main>
+  <script>
+    (()=>{
+      const raw=location.pathname;
+      const corrected=raw
+        .replace(/\/(?:%20|%09|%0a|%0d)+/gi,'/')
+        .replace(/%20(?=project[123]_(?:beginner|intermediate|advanced)\.html$)/gi,'');
+      const valid=/^\/letuin_lecture_project\/projects\/project([123])\/project\1_(beginner|intermediate|advanced)\.html$/;
+      if(corrected!==raw&&valid.test(corrected)){
+        document.getElementById('message').textContent='잘못 포함된 공백을 제거했습니다. 정상 페이지로 이동합니다.';
+        location.replace(corrected+location.search+location.hash);
+      }
+    })();
+  </script>
+</body>
+</html>
